@@ -96,4 +96,14 @@ describe('ThroughputDetailsSummaryComponent', () => {
 
     expect(fixture.debugElement.query(By.directive(PaginationComponent))).toBeTruthy();
   });
+
+  it('should show interim target header for interim reports', () => {
+    fixture.componentRef.setInput('reportType', 'INTERIM');
+    fixture.detectChanges();
+
+    const content = fixture.nativeElement.textContent;
+
+    expect(content).toContain('Interim target %');
+    expect(content).not.toContain('Improvement target %');
+  });
 });

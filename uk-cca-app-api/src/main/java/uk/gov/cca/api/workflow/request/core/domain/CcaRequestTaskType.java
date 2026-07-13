@@ -40,6 +40,9 @@ public class CcaRequestTaskType {
     // Performance data upload
     public static final String PERFORMANCE_DATA_UPLOAD_SUBMIT = "PERFORMANCE_DATA_UPLOAD_SUBMIT";
 
+    // Performance data facility upload
+    public static final String PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT = "PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT";
+
     // PAT
     public static final String PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT = "PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT";
 
@@ -64,4 +67,7 @@ public class CcaRequestTaskType {
 
     // Performance Data Facility Digital Form
     public static final String PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT = "PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT";
+
+    // CCA3 PAT
+    public static final String FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT = "FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT";
 }

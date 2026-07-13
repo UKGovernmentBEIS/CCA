@@ -4,13 +4,13 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
           <h3 class="govuk-heading-m">Workflow History</h3>
-          <!-- <h3 class="govuk-heading-s">Type</h3>
+          <h3 class="govuk-heading-s">Type</h3>
 
           <div formControlName="requestTypes" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
             @for (type of workflowTypesMap | keyvalue; track type) {
               <govuk-checkbox [value]="type.value" [label]="type.key" />
             }
-          </div> -->
+          </div>
         </div>
 
         <div class="govuk-grid-column-full">
@@ -35,7 +35,43 @@
                     {{ workflow.id }} {{ workflow?.requestType | workflowType }}
                   </a>
 
-                  <div class="govuk-!-margin-bottom-0">Created {{ workflow.creationDate | date }}</div>
+                  @if (workflow?.requestMetadata?.['targetPeriodType']) {
+                    <div class="govuk-!-margin-bottom-0">
+                      Target period:
+                      {{ workflow?.requestMetadata?.['targetPeriodType'] }}
+                    </div>
+                  }
+
+                  @if (workflow?.requestMetadata?.['reportType']) {
+                    <div class="govuk-!-margin-bottom-0">
+                      Report type:
+                      {{ workflow?.requestMetadata?.['reportType'] | titlecase }}
+
+                      @if (workflow?.requestMetadata?.['submissionType']) {
+                        <span>({{ workflow?.requestMetadata?.['submissionType'] | titlecase }})</span>
+                      }
+
+                      @if (workflow?.requestMetadata?.['reportVersion']) {
+                        <span> - v{{ workflow?.requestMetadata?.['reportVersion'] }}</span>
+                      }
+                    </div>
+                  }
+
+                  @if (workflow?.requestMetadata?.['submittedDate']) {
+                    <div class="govuk-!-margin-bottom-0">
+                      Submitted:
+                      {{ workflow?.requestMetadata?.['submittedDate'] | date: 'dd MMM yyyy' }}
+                    </div>
+                  } @else {
+                    <div class="govuk-!-margin-bottom-0">Created {{ workflow.creationDate | date }}</div>
+                  }
+
+                  @if (workflow?.requestMetadata?.['uploadRequestId']) {
+                    <div class="govuk-!-margin-bottom-0">
+                      Sector bulk workflow:
+                      {{ workflow?.requestMetadata?.['uploadRequestId'] }}
+                    </div>
+                  }
                 </div>
 
                 <div class="govuk-grid-column-one-quarter govuk-!-margin-top-2">

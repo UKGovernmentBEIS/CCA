@@ -1,0 +1,23 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    [formGroup]="form"
+    caption="Change"
+    heading="CCA3 sector commitment"
+    submitText="Confirm"
+    (formSubmit)="onSubmit()"
+  >
+    <div formArrayName="commitments">
+      @for (commitment of commitments; track commitment.id; let index = $index) {
+        <div
+          class="govuk-!-margin-bottom-6"
+          [formControlName]="index"
+          inputType="number"
+          widthClass="govuk-!-width-one-quarter"
+          suffix="%"
+          [label]="commitment.targetPeriod"
+          cca-text-input
+        ></div>
+      }
+    </div>
+  </cca-wizard-step>
+</div>

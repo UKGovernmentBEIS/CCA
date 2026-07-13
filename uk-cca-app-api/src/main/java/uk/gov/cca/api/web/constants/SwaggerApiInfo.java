@@ -343,4 +343,31 @@ public final class SwaggerApiInfo {
             "FACILITY1000 | Facility cannot be updated";
     public static final String MI_REPORT_NAME_EXISTS_FOR_CA = BAD_REQUEST + ERROR_CODES_HEADER +
             "MIREPORT1001 | The provided MI Report name already exists";
+    public static final String UPLOAD_SECTOR_ASSOCIATION_SCHEME_DOCUMENT_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "FORM1001 | Form validation failed \t\n " +
+            "NOTFOUND1001 | Resource not found \t\n " +
+            "SECTOR_SCHEME1001 | Invalid sector scheme document file type";
+    public static final String UPDATE_SECTOR_ASSOCIATION_SCHEME_DETAILS_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "FORM1001 | Form validation failed \t\n " +
+            "FILE1001 | Virus found in input stream \t\n " +
+            "FILE1002 | File size is less than minimum \t\n " +
+            "FILE1003 | File size is greater than maximum \t\n" +
+            "FILE1004 | File upload failed \t\n" +
+            "SECTOR_SCHEME1003 | Sector association scheme version is not updatable";
+    public static final String UPDATE_SECTOR_ASSOCIATION_SCHEME_COMMITMENTS_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "FORM1001 | Form validation failed \t\n " +
+            "NOTFOUND1001 | Resource not found \t\n " +
+            "SECTOR_SCHEME1002 | Target commitments are not related to sector scheme \t\n " +
+            "SECTOR_SCHEME1003 | Sector association scheme version is not updatable";
+    public static final String UPDATE_SUBSECTOR_ASSOCIATION_SCHEME_COMMITMENTS_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "FORM1001 | Form validation failed \t\n " +
+            "NOTFOUND1001 | Resource not found \t\n " +
+            "SUBSECTOR_SCHEME1001 | Target commitments are not related to subsector scheme \t\n " +
+            "SUBSECTOR_SCHEME1002 | Subsector association scheme version is not updatable";
+    public static final String GET_SECTOR_ASSOCIATION_SCHEME_DOCUMENT_TOKEN_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "FORM1001 | Form validation failed \t\n " +
+            "NOTFOUND1001 | Resource not found \t\n " +
+            "SECTOR_SCHEME1004 | Submitter is not allowed to access the scheme document";
+    public static final String GET_SECTOR_FACILITY_PERFORMANCE_DATA_REPORT_LIST_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "TPRF1001 | Expected exactly one target year, but found multiple.";
 }

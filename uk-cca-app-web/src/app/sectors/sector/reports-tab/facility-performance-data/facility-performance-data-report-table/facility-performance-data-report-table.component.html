@@ -1,0 +1,53 @@
+<button govukSecondaryButton class="govuk-!-margin-top-5" type="button" (click)="exportToXlsx()">
+  Download search results
+</button>
+
+<govuk-table [columns]="tableColumns()" [data]="state().performanceDataReportItems">
+  <ng-template let-column="column" let-row="row">
+    @switch (column.field) {
+      @case ('facilityBusinessId') {
+        <a
+          [routerLink]="['/target-unit-accounts', row.accountId, 'facilities', row.facilityId]"
+          [fragment]="'reports'"
+          [queryParams]="{ section: 'target-period' }"
+          [replaceUrl]="true"
+          class="govuk-link"
+        >
+          {{ row[column.field] }}
+        </a>
+      }
+
+      @case ('submissionDate') {
+        <span>{{ row[column.field] | govukDate: 'date' }}</span>
+      }
+
+      @case ('reportStatus') {
+        <span>{{ row[column.field] | facilityPerformanceReportStatus }}</span>
+      }
+
+      @case ('submissionType') {
+        <span>{{ row[column.field] | titlecase }}</span>
+      }
+
+      @case ('locked') {
+        <span>{{ row[column.field] ? 'Y' : 'N' }}</span>
+      }
+
+      @case ('variationIndicator') {
+        <span>{{ row[column.field] ? 'Yes' : '' }}</span>
+      }
+
+      @default {
+        <span>{{ row[column.field] }}</span>
+      }
+    }
+  </ng-template>
+</govuk-table>
+
+<cca-pagination
+  [count]="state().totalItems"
+  [currentPage]="state().currentPage"
+  [pageSize]="state().pageSize"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+/>

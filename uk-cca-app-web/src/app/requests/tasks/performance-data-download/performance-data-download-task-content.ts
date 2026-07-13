@@ -4,7 +4,7 @@ import { PerformanceDataDownloadGenerateComponent } from './generate/performance
 
 export const performanceDataDownloadTaskContent: RequestTaskPageContentFactory = () => {
   return {
-    header: 'Download target period reporting (TPR) spreadsheets',
+    header: 'TP reporting - Download spreadsheets',
     contentComponent: PerformanceDataDownloadGenerateComponent,
   };
 };

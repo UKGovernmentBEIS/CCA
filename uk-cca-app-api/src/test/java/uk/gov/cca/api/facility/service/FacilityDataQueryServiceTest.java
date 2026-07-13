@@ -98,6 +98,26 @@ class FacilityDataQueryServiceTest {
     }
 
     @Test
+    void getAllFacilitiesInfoDataBySectorForSchemeVersion() {
+        final Long sectorAssociationId = 2L;
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final FacilityData entity = FacilityData.builder().id(1L).facilityBusinessId("businessId").build();
+
+        final FacilityDTO expected = FacilityDTO.builder().id(1L).facilityBusinessId("businessId").build();
+
+        when(repository.findAllBySectorAssociationIdForSchemeVersion(sectorAssociationId, schemeVersion.name()))
+                .thenReturn(List.of(entity));
+
+        // Invoke
+        List<FacilityDTO> result = service.getAllFacilitiesInfoDataBySectorForSchemeVersion(sectorAssociationId, schemeVersion);
+
+        // Verify
+        assertThat(result).containsExactly(expected);
+        verify(repository, times(1))
+                .findAllBySectorAssociationIdForSchemeVersion(sectorAssociationId, schemeVersion.name());
+    }
+
+    @Test
     void isExistingFacilityBusinessId() {
         String facilityBusinessId = "facilityId";
         when(repository.existsByFacilityBusinessId(facilityBusinessId)).thenReturn(false);

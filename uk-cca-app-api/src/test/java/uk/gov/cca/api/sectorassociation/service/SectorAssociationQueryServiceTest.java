@@ -6,12 +6,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.authorization.ccaauth.core.service.AppUserService;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationHeaderInfoDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoNameDTO;
 import uk.gov.cca.api.sectorassociation.repository.SectorAssociationRepository;
@@ -345,4 +347,37 @@ class SectorAssociationQueryServiceTest {
 		assertTrue(result.isPresent());
 		assertEquals(expected, result.get());
 	}
+	
+	@Test
+    void getResourceHeaderInfo() {
+		long sectorAssociationId = 1L;
+        SectorAssociation sectorAssociation = SectorAssociation.builder()
+                .id(sectorAssociationId)
+                .name("SectorName")
+                .acronym("acronym")
+                .build();
+        SectorAssociationHeaderInfoDTO dto = SectorAssociationHeaderInfoDTO.builder()
+        		.businessId("acronym")
+        		.name("SectorName")
+        		.build();
+
+        when(sectorAssociationRepository.findById(sectorAssociationId)).thenReturn(Optional.of(sectorAssociation));
+        when(sectorAssociationMapper.toSectorAssociationHeaderInfo(sectorAssociation)).thenReturn(dto);
+        
+        // invoke
+        SectorAssociationHeaderInfoDTO requestTaskHeaderInfo = sectorAssociationQueryService
+        		.getResourceHeaderInfo(String.valueOf(sectorAssociationId));
+
+        // verify
+        assertThat(requestTaskHeaderInfo).isNotNull();
+        assertThat(requestTaskHeaderInfo.getName()).isEqualTo(sectorAssociation.getName());
+        assertThat(requestTaskHeaderInfo.getBusinessId()).isEqualTo(sectorAssociation.getAcronym());
+        verify(sectorAssociationRepository, times(1)).findById(sectorAssociationId);
+        verify(sectorAssociationMapper, times(1)).toSectorAssociationHeaderInfo(sectorAssociation);
+    }
+	
+	@Test
+    void getResourceType() {
+        assertThat(sectorAssociationQueryService.getResourceType()).isEqualTo(CcaResourceType.SECTOR_ASSOCIATION);
+    }
 }

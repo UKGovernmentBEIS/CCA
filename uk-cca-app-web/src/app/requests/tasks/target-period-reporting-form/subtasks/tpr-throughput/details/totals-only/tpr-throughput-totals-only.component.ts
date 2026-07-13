@@ -4,7 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { catchError, of } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -12,17 +12,18 @@ import { DetailsComponent, GovukValidators } from '@netz/govuk-components';
 import {
   calculateThroughputValues,
   decideVariableEnergyType,
-  MeasurementTypeToUnitPipe,
+  roundHalfUpTo7Decimals,
   TaskItemStatus,
   TasksApiService,
   toTPRBaselineDataDetails,
   TPR_FORM_THROUGHPUT_DETAILS_SUBTASK,
+  tprFormQuery,
 } from '@requests/common';
 import { SummaryComponent, TextInputComponent, WizardStepComponent } from '@shared/components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { CCAGovukValidators } from '@shared/validators';
 import { produce } from 'immer';
 
-import { tprFormQuery } from '../../../../target-period-reporting-form.selectors';
 import {
   createRequestTaskActionProcessDTO,
   toPerformanceDataFacilityDigitalFormSavePayload,
@@ -70,13 +71,17 @@ export class TprThroughputTotalsOnlyComponent {
     () => this.referenceData()?.baselineAndTargets?.baselineVariableEnergy,
   );
 
-  protected readonly variableEnergyType = computed(() =>
-    decideVariableEnergyType(this.referenceData()?.baselineAndTargets?.variableEnergyType) === 'BY_PRODUCT'
+  private readonly variableEnergyType = computed(() => this.referenceData()?.baselineAndTargets?.variableEnergyType);
+
+  protected readonly variableEnergyTypeLabel = computed(() =>
+    decideVariableEnergyType(this.variableEnergyType()) === 'BY_PRODUCT'
       ? 'Split by product'
       : this.variableEnergyExists()
         ? 'Totals only'
         : 'No variable energy (only fixed energy)',
   );
+
+  protected readonly isTotalsOnlyVariableEnergy = computed(() => this.variableEnergyType() === 'TOTALS');
 
   protected readonly measurementUnit = computed(() => this.referenceData()?.baselineAndTargets?.measurementType);
 
@@ -100,6 +105,10 @@ export class TprThroughputTotalsOnlyComponent {
     }),
   );
 
+  protected readonly targetLabel = computed(() =>
+    this.reportType() === 'INTERIM' ? 'Interim target' : 'Improvement target',
+  );
+
   protected readonly baselineEnergyIntensity = computed(() => this.calculations().baselineEnergyIntensity);
   protected readonly improvementTarget = computed(() => this.calculations().improvementTarget);
   protected readonly adjustedThroughput = computed(() => this.calculations().adjustedThroughput);
@@ -115,9 +124,9 @@ export class TprThroughputTotalsOnlyComponent {
       draft.throughputDetails = {
         ...actionPayload.throughputDetails,
         actualThroughput: this.actualThroughput(),
-        targetImprovement: String(this.improvementTarget()),
-        adjustedThroughput: String(this.adjustedThroughput() ?? null),
-        totalTargetVariableEnergy: String(this.targetVariableEnergy() ?? 0),
+        targetImprovement: roundHalfUpTo7Decimals(this.improvementTarget()),
+        adjustedThroughput: roundHalfUpTo7Decimals(this.adjustedThroughput() ?? 0),
+        totalTargetVariableEnergy: roundHalfUpTo7Decimals(this.targetVariableEnergy() ?? 0),
       };
     });
 
@@ -134,7 +143,7 @@ export class TprThroughputTotalsOnlyComponent {
       .pipe(
         catchError((error) => {
           console.error(error);
-          return of(null);
+          return EMPTY;
         }),
       )
       .subscribe(() => this.router.navigate(['../check-your-answers'], { relativeTo: this.route }));

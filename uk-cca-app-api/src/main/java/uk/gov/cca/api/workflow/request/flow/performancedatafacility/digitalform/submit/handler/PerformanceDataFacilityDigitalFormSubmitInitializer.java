@@ -5,14 +5,14 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityReferenceData;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityReferenceDataService;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityStatusQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityReferenceData;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.service.PerformanceDataFacilityReferenceDataService;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.transform.PerformanceDataFacilityDigitalFormSubmitMapper;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
@@ -37,7 +37,7 @@ public class PerformanceDataFacilityDigitalFormSubmitInitializer implements Init
 
         // Get original data
         final PerformanceDataFacilityReferenceData referenceData = performanceDataFacilityDigitalFormReferenceDataService
-                .getReferenceData(request.getAccountId(), facility.getFacilityBusinessId(), payload.getTargetPeriodYear(), payload.getTargetPeriodType());
+                .getReferenceData(request.getAccountId(), facility.getFacilityBusinessId(), payload.getTargetPeriodYear());
 
         // Get stored performance data if exists
         final PerformanceDataFacilityInputData performanceData = performanceDataFacilityStatusQueryService

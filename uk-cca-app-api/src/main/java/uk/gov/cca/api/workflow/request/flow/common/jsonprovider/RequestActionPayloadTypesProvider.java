@@ -28,6 +28,7 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilitySubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.targetunitmoa.domain.TargetUnitMoaGeneratedRequestActionPayload;
@@ -127,7 +128,9 @@ public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
                 new NamedType(NonComplianceAppealOutcomeSubmittedRequestActionPayload.class, NON_COMPLIANCE_APPEAL_OUTCOME_SUBMITTED_PAYLOAD),
 
                 // Performance Data Facility Digital Form
-                new NamedType(PerformanceDataFacilitySubmittedRequestActionPayload.class, PERFORMANCE_DATA_FACILITY_SUBMITTED_PAYLOAD)
+                new NamedType(PerformanceDataFacilitySubmittedRequestActionPayload.class, PERFORMANCE_DATA_FACILITY_SUBMITTED_PAYLOAD),
+                // Performance Data Facility CSV Form
+                new NamedType(PerformanceDataFacilityDataUploadCompletedRequestActionPayload.class, PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED_PAYLOAD)
         );
     }
 

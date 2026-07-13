@@ -10,14 +10,14 @@ import { ButtonDirective } from '@netz/govuk-components';
 import {
   buildEnergyFuelRows,
   EnergyFuelAmountSummaryComponent,
-  MeasurementTypeToUnitEnum,
   TaskItemStatus,
   TasksApiService,
   TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK,
+  tprFormQuery,
 } from '@requests/common';
+import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
 import { produce } from 'immer';
 
-import { tprFormQuery } from '../../../target-period-reporting-form.selectors';
 import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalFormSavePayload } from '../../../transform';
 
 @Component({
@@ -29,7 +29,7 @@ import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalForm
       <cca-energy-fuel-amount-summary
         [energyFuelDetails]="energyFuelDetails()"
         [isEditable]="isEditable()"
-        [measurementType]="measurementType()"
+        [measurementUnit]="measurementUnit()"
         [usedReportingMechanism]="usedReportingMechanism()"
       />
 
@@ -66,10 +66,10 @@ export class EnergyFuelAmountDetailsCheckYourAnswersComponent {
   );
   protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
 
-  protected readonly measurementType = computed(() => {
+  protected readonly measurementUnit = computed<MeasurementUnit>(() => {
     const measurementType = this.requestTaskStore.select(tprFormQuery.selectReferenceData)()?.baselineAndTargets
       ?.measurementType;
-    return measurementType ? MeasurementTypeToUnitEnum[measurementType] : 'kWh';
+    return measurementType ? MEASUREMENT_TYPE_TO_UNIT_MAP[measurementType] : MEASUREMENT_TYPE_TO_UNIT_MAP.ENERGY_KWH;
   });
 
   protected readonly usedReportingMechanism = computed(

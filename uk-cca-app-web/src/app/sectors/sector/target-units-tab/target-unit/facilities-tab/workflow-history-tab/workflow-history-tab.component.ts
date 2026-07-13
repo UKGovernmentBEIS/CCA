@@ -1,4 +1,4 @@
-import { DatePipe, KeyValuePipe } from '@angular/common';
+import { DatePipe, KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -38,6 +38,7 @@ const DEFAULT_PAGE_SIZE = 10;
     StatusColorPipe,
     StatusPipe,
     DatePipe,
+    TitleCasePipe,
     WorkflowTypePipe,
   ],
   providers: [WorkflowHistoryTabFormProvider],
@@ -74,6 +75,11 @@ export class WorkflowHistoryTabComponent {
           const requestTypes = queryParamMap.getAll('requestTypes');
           const requestStatuses = queryParamMap.getAll('requestStatuses');
 
+          // The API needs both types in case of TPR filter
+          if (requestTypes.includes('PERFORMANCE_DATA_FACILITY_PROCESSING')) {
+            requestTypes.push('PERFORMANCE_DATA_FACILITY_DIGITAL_FORM');
+          }
+
           this.state.update((state) => ({
             ...state,
             currentPage: page,
@@ -102,12 +108,17 @@ export class WorkflowHistoryTabComponent {
     this.filtersForm.valueChanges
       .pipe(
         takeUntilDestroyed(),
-        tap((formValues) =>
-          this.handleQueryParamsNavigation({
+        tap((formValues) => {
+          // The API needs both types in case of TPR filter
+          if (formValues.requestTypes.includes('PERFORMANCE_DATA_FACILITY_PROCESSING')) {
+            formValues.requestTypes.push('PERFORMANCE_DATA_FACILITY_DIGITAL_FORM');
+          }
+
+          return this.handleQueryParamsNavigation({
             requestTypes: formValues.requestTypes,
             requestStatuses: formValues.requestStatuses,
-          }),
-        ),
+          });
+        }),
       )
       .subscribe();
   }

@@ -54,13 +54,13 @@ export default class VariationDetailsCheckYourAnswersComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryData = toVariationDetailsSummaryDataWithDecision(
-    this.store.select(underlyingAgreementVariationQuery.selectVariationDetails)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-    this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('VARIATION_DETAILS'))(),
-    this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
-  );
+  protected readonly summaryData = toVariationDetailsSummaryDataWithDecision({
+    variationDetails: this.store.select(underlyingAgreementVariationQuery.selectVariationDetails)(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+    decision: this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('VARIATION_DETAILS'))(),
+    reviewAttachments: this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
+  });
 
   onSubmit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();

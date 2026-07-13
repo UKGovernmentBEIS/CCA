@@ -2,9 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { TaskItemStatus, TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK } from '@requests/common';
-
-import { tprFormQuery } from '../../target-period-reporting-form.selectors';
+import { TaskItemStatus, TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK, tprFormQuery } from '@requests/common';
 
 export const energyFuelAmountRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const store = inject(RequestTaskStore);

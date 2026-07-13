@@ -7,10 +7,10 @@ import { ErrorSummaryComponent, GovukSelectOption, GovukValidators } from '@netz
 import {
   BaselineEnergyDraftService,
   mapToProductVariableEnergyConsumptionData,
-  MeasurementTypeToUnitPipe,
   underlyingAgreementQuery,
 } from '@requests/common';
 import { AddProductItemComponent } from '@requests/common';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { CCAGovukValidators } from '@shared/validators';
 
 import {

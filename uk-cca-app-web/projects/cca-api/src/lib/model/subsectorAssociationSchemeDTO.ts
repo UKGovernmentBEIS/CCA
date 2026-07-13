@@ -12,5 +12,7 @@
 import { TargetSetDTO } from './targetSetDTO';
 
 export interface SubsectorAssociationSchemeDTO {
+  id: number;
   targetSet: TargetSetDTO;
+  editable?: boolean;
 }

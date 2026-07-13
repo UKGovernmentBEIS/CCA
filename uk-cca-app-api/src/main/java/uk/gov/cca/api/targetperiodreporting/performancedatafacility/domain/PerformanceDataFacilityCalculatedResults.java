@@ -41,17 +41,17 @@ public class PerformanceDataFacilityCalculatedResults {
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal weightedConversionFactor;
 
-    // Target tCO2e emitted
+    // Target CO2 emitted (tCO2e)
     @NotNull
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal targetCo2Emissions;
 
-    // Actual tCO2e emitted
+    // Actual CO2 emitted (tCO2e)
     @NotNull
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal actualCo2Emissions;
 
-    // tCO2e difference
+    // CO2 difference (tCO2e)
     @NotNull
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal co2EmissionsDifference;
@@ -64,12 +64,12 @@ public class PerformanceDataFacilityCalculatedResults {
     // Target period result
     private PerformanceDataFacilityTargetPeriodResultType targetPeriodResultType;
 
-    // Total surplus gained
+    // Total surplus gained (tCO2e)
     @PositiveOrZero
     @Digits(integer = Integer.MAX_VALUE, fraction = 0)
     private BigDecimal surplusGained;
 
-    // Total buy-out required
+    // Total buy-out required (tCO2e)
     @PositiveOrZero
     @Digits(integer = Integer.MAX_VALUE, fraction = 0)
     private BigDecimal buyOutRequired;

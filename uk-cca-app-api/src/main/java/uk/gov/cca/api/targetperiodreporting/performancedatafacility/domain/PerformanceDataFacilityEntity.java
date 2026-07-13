@@ -46,7 +46,7 @@ import java.time.Year;
         }))
 public class PerformanceDataFacilityEntity {
 
-    @Id
+	@Id
     @SequenceGenerator(name = "performance_data_facility_id_generator", sequenceName = "tpr_performance_data_facility_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "performance_data_facility_id_generator")
     private Long id;
@@ -90,4 +90,23 @@ public class PerformanceDataFacilityEntity {
     @Column(name = "performance_outcome", updatable = false, insertable = false)
     @Enumerated(EnumType.STRING)
     private PerformanceDataFacilityTargetPeriodResultType performanceOutcome;
+   
+    
+    public boolean isFinal() {
+        return submissionType != null;
+    }
+
+    public boolean isInterim() {
+        return submissionType == null;
+    }
+
+    public PerformanceDataReportType getReportType() {
+        return isInterim()
+                ? PerformanceDataReportType.INTERIM
+                : PerformanceDataReportType.FINAL;
+    }
+
+    public boolean hasReportType(PerformanceDataReportType reportType) {
+        return getReportType() == reportType;
+    }
 }

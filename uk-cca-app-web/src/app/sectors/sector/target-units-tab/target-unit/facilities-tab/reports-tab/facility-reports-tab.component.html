@@ -1,0 +1,40 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-quarter">
+    <h2>Reports</h2>
+    <nav class="cca-side-navigation" aria-label="Side navigation">
+      <ul class="cca-side-navigation__list">
+        <li
+          class="cca-side-navigation__item"
+          [class.cca-side-navigation__item--active]="currentSection === 'target-period'"
+        >
+          <a
+            class="govuk-link"
+            href="#"
+            (click)="updateSection($event, 'target-period')"
+            [attr.aria-current]="currentSection === 'target-period' ? 'location' : null"
+          >
+            Target period
+          </a>
+        </li>
+        <li class="cca-side-navigation__item" [class.cca-side-navigation__item--active]="currentSection === 'pat'">
+          <a
+            href="#"
+            (click)="updateSection($event, 'pat')"
+            [attr.aria-current]="currentSection === 'pat' ? 'location' : null"
+            >PAT</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  @if (currentSection === 'target-period') {
+    <div class="govuk-grid-column-three-quarters govuk-!-margin-top-5">
+      <cca-target-period-report />
+    </div>
+  } @else {
+    <div class="govuk-grid-column-three-quarters govuk-!-margin-top-5">
+      <!-- <cca-pat-report /> -->
+    </div>
+  }
+</div>

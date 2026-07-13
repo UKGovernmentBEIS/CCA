@@ -10,10 +10,7 @@ import { AssigneeUserInfoDTO } from 'cca-api';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel
-          >{{ confirmationPrefix() }} {{ regulatorUser().firstName }} {{ regulatorUser().lastName }} for peer
-          review</govuk-panel
-        >
+        <govuk-panel>{{ confirmationMessage() }}</govuk-panel>
 
         <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true"> Return to: dashboard </a>
       </div>
@@ -31,6 +28,7 @@ export class PeerReviewConfirmationComponent {
   );
 
   protected readonly confirmationPrefix = computed(() => this.routeData()['confirmationPrefix'] ?? 'Sent to');
+  protected readonly confirmationSuffix = computed(() => this.routeData()['confirmationSuffix'] ?? ' for peer review');
   private readonly selectedAssigneeId = computed(() => this.routeParamMap().get('assigneeId'));
   private readonly candidateAssignees = computed(
     () => (this.parentRouteData()['candidateAssignees'] as AssigneeUserInfoDTO[]) ?? [],
@@ -39,5 +37,9 @@ export class PeerReviewConfirmationComponent {
     () =>
       this.candidateAssignees().find((assignee) => assignee.id === this.selectedAssigneeId()) ||
       ({} as AssigneeUserInfoDTO),
+  );
+  protected readonly confirmationMessage = computed(
+    () =>
+      `${this.confirmationPrefix()} ${this.regulatorUser().firstName} ${this.regulatorUser().lastName}${this.confirmationSuffix()}`,
   );
 }

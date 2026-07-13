@@ -17,7 +17,10 @@ export enum RequestWorkflowHistoryStatus {
   IN_PROGRESS = 'In progress',
 }
 
-export const workflowTypesMap: Record<string, string> = {};
+export const workflowTypesMap: Record<string, string> = {
+  'Subsistence fees': 'SECTOR_MOA',
+  'Target period (TP) reporting': 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD',
+};
 
 export const workflowStatusesMap: Record<string, string> = {
   Cancelled: 'CANCELLED',

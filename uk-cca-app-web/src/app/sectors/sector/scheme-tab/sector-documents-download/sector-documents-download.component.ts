@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { switchMap, tap, timer } from 'rxjs';
 
-import { Configuration, FileToken, SectorAssociationSchemeService } from 'cca-api';
+import { FileToken, SectorAssociationSchemeDocumentsService, SectorAssociationSchemeService } from 'cca-api';
 
 @Component({
   selector: 'cca-sector-documents-download',
@@ -27,12 +27,12 @@ export class SectorDocumentsDownloadComponent {
   private readonly anchor = viewChild<ElementRef>('anchor');
 
   private readonly sectorAssociationSchemeService = inject(SectorAssociationSchemeService);
+  private readonly sectorAssociationSchemeDocumentsService = inject(SectorAssociationSchemeDocumentsService);
   private readonly route = inject(ActivatedRoute);
-  private readonly configuration = inject(Configuration);
 
   private readonly sectorId: number = +this.route.snapshot.paramMap.get('sectorId');
   private readonly uuid: string = this.route.snapshot.paramMap.get('uuid');
-  private readonly basePath: string = `${this.configuration.basePath}/v1.0/sector-documents/document/`;
+  private readonly basePath: string = `${this.sectorAssociationSchemeDocumentsService.configuration.basePath}/v1.0/sector-scheme-documents/document/`;
 
   private hasDownloadedOnce = false;
   private token = signal('');

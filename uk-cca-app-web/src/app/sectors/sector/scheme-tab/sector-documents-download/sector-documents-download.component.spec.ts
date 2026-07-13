@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
 import { Mocked } from 'vitest';
 
-import { Configuration, SectorAssociationSchemeService } from 'cca-api';
+import { SectorAssociationSchemeDocumentsService, SectorAssociationSchemeService } from 'cca-api';
 
 import { toSectorSchemeSummaryData } from '../scheme-summary-data';
 import { SectorDocumentsDownloadComponent } from './sector-documents-download.component';
@@ -15,25 +15,25 @@ describe('SectorDocumentsDownloadComponent', () => {
   let component: SectorDocumentsDownloadComponent;
   let fixture: ComponentFixture<SectorDocumentsDownloadComponent>;
   let sectorAssociationSchemeService: Mocked<SectorAssociationSchemeService>;
-  let configuration: Mocked<Configuration>;
+  let sectorAssociationSchemeDocumentsService: Mocked<SectorAssociationSchemeDocumentsService>;
 
   beforeEach(async () => {
-    configuration = mockClass(Configuration);
-    configuration.basePath = 'api';
+    sectorAssociationSchemeDocumentsService = mockClass(SectorAssociationSchemeDocumentsService);
+    sectorAssociationSchemeDocumentsService.configuration = { basePath: 'api' } as any;
 
     sectorAssociationSchemeService = mockClass(SectorAssociationSchemeService);
     sectorAssociationSchemeService.generateGetSectorAssociationSchemeDocumentToken.mockReturnValue(
       of({ token: 'token', tokenExpirationMinutes: 1 }),
     );
 
-    const activatedRoute = new ActivatedRouteStub({ id: 1, uuid: 'uuid' });
+    const activatedRoute = new ActivatedRouteStub({ sectorId: 1, uuid: 'uuid' });
 
     await TestBed.configureTestingModule({
       imports: [SectorDocumentsDownloadComponent],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: SectorAssociationSchemeService, useValue: sectorAssociationSchemeService },
-        { provide: Configuration, useValue: configuration },
+        { provide: SectorAssociationSchemeDocumentsService, useValue: sectorAssociationSchemeDocumentsService },
       ],
     }).compileComponents();
 
@@ -47,7 +47,7 @@ describe('SectorDocumentsDownloadComponent', () => {
   });
 
   it('should display the download link', async () => {
-    expect(component.downloadURL()).toEqual('api/v1.0/sector-documents/document/token');
+    expect(component.downloadURL()).toEqual('api/v1.0/sector-scheme-documents/document/token');
   });
 
   describe('toSectorSchemeSummaryData', () => {

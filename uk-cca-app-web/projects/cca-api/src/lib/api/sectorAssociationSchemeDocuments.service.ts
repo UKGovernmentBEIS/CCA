@@ -129,7 +129,7 @@ export class SectorAssociationSchemeDocumentsService {
     }
 
     return this.httpClient.get(
-      `${this.configuration.basePath}/v1.0/sector-documents/document/${encodeURIComponent(String(token))}`,
+      `${this.configuration.basePath}/v1.0/sector-scheme-documents/document/${encodeURIComponent(String(token))}`,
       {
         responseType: 'blob',
         withCredentials: this.configuration.withCredentials,

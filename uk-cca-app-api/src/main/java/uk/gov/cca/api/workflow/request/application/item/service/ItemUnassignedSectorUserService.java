@@ -13,6 +13,7 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemAssignmentType;
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemPage;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemSearchCriteriaDTO;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemRequestResourcesService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemResponseService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemUnassignedService;
@@ -30,7 +31,7 @@ public class ItemUnassignedSectorUserService implements ItemUnassignedService {
     private final SectorUserAuthorityResourceAdapter sectorUserAuthorityResourceAdapter;
 
     @Override
-    public ItemDTOResponse getUnassignedItems(AppUser appUser, PagingRequest paging) {
+    public ItemDTOResponse getUnassignedItems(AppUser appUser, PagingRequest paging, ItemSearchCriteriaDTO searchCriteria) {
         Map<Long, Set<String>> scopedRequestTaskTypes =
         		sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypes(appUser);
 
@@ -42,7 +43,7 @@ public class ItemUnassignedSectorUserService implements ItemUnassignedService {
                 appUser.getUserId(),
                 ItemAssignmentType.UNASSIGNED,
                 scopedRequestTaskTypes,
-                paging);
+                paging, searchCriteria);
         
         Map<String, Map<String, String>> itemRequestResources = 
         		itemRequestResourcesService.getItemRequestResources(itemPage);

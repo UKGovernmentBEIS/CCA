@@ -13,5 +13,4 @@ import { PerformanceDataFacilityBaselineAndTargets } from './performanceDataFaci
 
 export interface PerformanceDataFacilityReferenceData {
   baselineAndTargets?: PerformanceDataFacilityBaselineAndTargets;
-  tpMultiplier?: string;
 }

@@ -7,6 +7,7 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.Admin
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.peerreview.domain.AdminTerminationPeerReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsRequestTaskPayload;
@@ -19,6 +20,7 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.peerrev
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivationRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
@@ -79,6 +81,9 @@ public class RequestTaskPayloadSchemasProvider extends SwaggerSchemasAbstractPro
 		// Performance data upload
 		addResolvedShemas(PerformanceDataUploadSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataUploadSubmitRequestTaskPayload.class);
 
+		// Performance data facility upload
+		addResolvedShemas(PerformanceDataFacilityDataUploadSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataFacilityDataUploadSubmitRequestTaskPayload.class);
+
 		// PAT
 		addResolvedShemas(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class.getSimpleName(),
 				PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class);
@@ -102,6 +107,9 @@ public class RequestTaskPayloadSchemasProvider extends SwaggerSchemasAbstractPro
 
 		// Performance Data Facility Digital Form
 		addResolvedShemas(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class);
+
+		// CCA3 PAT
+		addResolvedShemas(FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class.getSimpleName(), FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class);
 	}
 
 }

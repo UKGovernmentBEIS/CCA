@@ -20,7 +20,6 @@ import {
   calculatePerformance,
   getMeasurementAndThroughputUnits,
   isTargetPeriodWizardCompleted,
-  MeasurementTypeToUnitPipe,
   TaskItemStatus,
   TasksApiService,
   UNAVariationRegulatorLedRequestTaskPayload,
@@ -28,6 +27,7 @@ import {
   underlyingAgreementVariationRegulatorLedQuery,
 } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { produce } from 'immer';
 
 import { BaselineData, UnderlyingAgreementVariationSubmitRequestTaskPayload } from 'cca-api';

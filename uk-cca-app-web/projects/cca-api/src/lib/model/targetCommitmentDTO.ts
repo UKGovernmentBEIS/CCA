@@ -11,6 +11,7 @@
  */
 
 export interface TargetCommitmentDTO {
+  id?: number;
   targetPeriod: string;
   targetImprovement?: string;
 }

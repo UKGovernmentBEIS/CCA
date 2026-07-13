@@ -153,6 +153,7 @@
         <flowable:in source="businessKey" target="businessKey"></flowable:in>
         <flowable:out source="reviewDetermination" target="reviewDetermination"></flowable:out>
         <flowable:out source="underlyingAgreementOutcome" target="underlyingAgreementOutcome"></flowable:out>
+        <flowable:out source="requestInitiatorRoleType" target="requestInitiatorRoleType"></flowable:out>
         <design:stencilid>CallActivity</design:stencilid>
       </extensionElements>
     </callActivity>

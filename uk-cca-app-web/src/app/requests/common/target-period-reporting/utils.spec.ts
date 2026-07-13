@@ -7,7 +7,6 @@ import {
 
 import { ThroughputCalculationInputs } from './target-period-reporting-form.types';
 import {
-  calculateActualCo2Emissions,
   calculateActualEnergyTotal,
   calculateAdjustedImprovementTargetForProduct,
   calculateAdjustedThroughput,
@@ -20,6 +19,10 @@ import {
   calculateThroughputValues,
   calculateWeightedConversionFactor,
   co2ConversionFactorForMeasurement,
+  primaryCarbonDisplayUnit,
+  resolveCalculatedResults,
+  resolveMeasurementUnit,
+  roundHalfUpTo7Decimals,
 } from './utils';
 
 const EMPTY_CALCULATED_RESULTS: PerformanceDataFacilityCalculatedResults = {
@@ -63,35 +66,31 @@ function withRequiredInputData(data: {
 }
 
 describe('calculateThroughputAdjustmentFactor', () => {
-  it('should calculate correctly with values from the Excel example', () => {
-    const gridElectricity = 10_000_000;
-    const nonGridElectricity = 1_000_000;
-    const chpElectricity = 5_000_678;
+  it('should calculate correctly with values from the Excel example (delivered energy)', () => {
+    const gridDelivered = 10_000_000;
+    const nonGridDelivered = 1_000_000;
+    const chpDelivered = 5_000_678;
 
-    const result = calculateThroughputAdjustmentFactor(gridElectricity, nonGridElectricity, chpElectricity);
-
+    const result = calculateThroughputAdjustmentFactor(gridDelivered, nonGridDelivered, chpDelivered);
     expect(result).toBeCloseTo(0.6874709, 7);
   });
 
-  it('should calculate correctly with a second set of values', () => {
-    const gridElectricity = 15_000_000;
-    const nonGridElectricity = 1_200_000;
-    const chpElectricity = 5_100_678;
+  it('should calculate correctly with a second set of values (delivered energy)', () => {
+    const gridDelivered = 15_000_000;
+    const nonGridDelivered = 1_200_000;
+    const chpDelivered = 5_100_678;
 
-    const result = calculateThroughputAdjustmentFactor(gridElectricity, nonGridElectricity, chpElectricity);
-
+    const result = calculateThroughputAdjustmentFactor(gridDelivered, nonGridDelivered, chpDelivered);
     expect(result).toBeCloseTo(0.7605392, 7);
   });
 
-  it('should return 0 when only CHP electricity is provided', () => {
+  it('should return 0 when only CHP delivered energy is provided', () => {
     const result = calculateThroughputAdjustmentFactor(0, 0, 10_000);
-
     expect(result).toBe(0);
   });
 
-  it('should return 1 when all electricity components are zero', () => {
+  it('should return 1 when all delivered energy components are zero', () => {
     const result = calculateThroughputAdjustmentFactor(0, 0, 0);
-
     expect(result).toBe(1);
   });
 });
@@ -108,8 +107,8 @@ describe('co2ConversionFactorForMeasurement', () => {
   });
 
   it('should scale the factor by 1000/3.6 for GJ', () => {
-    // 0.10046 kgCO2e/kWh × (1000/3.6) = 27.9055556 kgCO2e/GJ
-    expect(co2ConversionFactorForMeasurement(0.10046, 'GJ')).toBeCloseTo(27.9055556, 7);
+    // 0.10046 kgCO2e/kWh × (1000/3.6), rounded to backend-aligned 5 decimals
+    expect(co2ConversionFactorForMeasurement(0.10046, 'GJ')).toBeCloseTo(27.9055556, 8);
   });
 
   it('should treat carbon measurement types (kg/tonne) as kWh', () => {
@@ -141,6 +140,16 @@ describe('calculatePrimaryCarbon', () => {
   it('should calculate primary carbon for natural gas', () => {
     // 5,000,000 × 1.0 × 0.18254 = 912,700 kgCO2e (≈ 913 in the Excel table)
     expect(calculatePrimaryCarbon(5_000_000, 1.0, 0.18254)).toBeCloseTo(912_700.0, 7);
+  });
+
+  it('should convert primary carbon to tCO2e for tonne measurement', () => {
+    // 5,000,000 × 1.0 × 0.18254 × 0.001 = 912.7 tCO2e
+    expect(calculatePrimaryCarbon(5_000_000, 1.0, 0.18254, 'tonne')).toBeCloseTo(912.7, 7);
+  });
+
+  it('should resolve the primary carbon display unit from the measurement unit', () => {
+    expect(primaryCarbonDisplayUnit('kg')).toBe('kgCO2e');
+    expect(primaryCarbonDisplayUnit('tonne')).toBe('tCO2e');
   });
 });
 
@@ -371,7 +380,38 @@ describe('calculateThroughputValues', () => {
     const result = calculateThroughputValues(inputs);
 
     expect(result.throughputAdjustmentFactor).toBeCloseTo(0.6874709, 7);
-    expect(result.adjustedThroughput).toBeCloseTo(5499.7669, 3); // 0.6874709 × 8000
+    expect(result.adjustedThroughput).toBeCloseTo(5499.767, 3); // 0.6874709 × 8000
+  });
+
+  it('should recalculate SRM electricity inputs from delivered energy, not payload primaryEnergy', () => {
+    const inputsWithPayloadPrimary: ThroughputCalculationInputs = {
+      referenceData: {
+        baselineAndTargets: {
+          improvements: { TP5: '5' },
+          baselineEnergyCarbonIntensity: '0.5',
+          variableEnergyType: 'TOTALS',
+          usedReportingMechanism: true,
+        },
+      },
+      performanceData: withRequiredInputData({
+        energyFuelDetails: withRequiredEnergyFuelDetails({
+          standardFuels: {
+            GRID_ELECTRICITY: { primaryEnergy: '1', deliveredEnergy: '10000000' },
+            NON_GRID_ELECTRICITY: { primaryEnergy: '999999999', deliveredEnergy: '1000000' },
+          },
+          electricitySuppliedFromCHP: '5000678',
+        }),
+        throughputDetails: { actualThroughput: '8000' },
+      }),
+      reportType: 'FINAL',
+      targetPeriodType: 'TP5',
+      actualThroughput: '8000',
+    };
+
+    const result = calculateThroughputValues(inputsWithPayloadPrimary);
+
+    expect(result.throughputAdjustmentFactor).toBeCloseTo(0.6874709, 7);
+    expect(result.adjustedThroughput).toBeCloseTo(5499.767, 3);
   });
 
   it('should keep calculations in MWh scale when baseline values are provided in MWh', () => {
@@ -806,6 +846,21 @@ describe('calculateActualEnergyTotal', () => {
   });
 });
 
+describe('roundHalfUpTo7Decimals', () => {
+  it('should round values to 7 decimal places', () => {
+    expect(roundHalfUpTo7Decimals(1.234567891)).toBe('1.2345679');
+  });
+
+  it('should trim trailing zeros after rounding', () => {
+    expect(roundHalfUpTo7Decimals(1.5)).toBe('1.5');
+    expect(roundHalfUpTo7Decimals(2)).toBe('2');
+  });
+
+  it('should return zero for missing values', () => {
+    expect(roundHalfUpTo7Decimals(undefined)).toBe('0');
+  });
+});
+
 describe('calculateWeightedConversionFactor', () => {
   it('should calculate energy-based weighted conversion factor', () => {
     // Sum(Primary energy × CO2 factor) / Actual energy total
@@ -825,20 +880,43 @@ describe('calculateWeightedConversionFactor', () => {
     expect(result).toBeCloseTo(0.11624, 5);
   });
 
-  it('should calculate carbon-based weighted conversion factor', () => {
-    // Carbon payload stores primary CO2 in primaryEnergy, so the weighted factor is 1
+  it('should calculate carbon-based weighted conversion factor (primary CO2, denominator is delivered × primary factor)', () => {
+    // For carbon-based: numerator = sum of primary CO2, denominator = sumDeliveredTimesPrimaryFactor
+    // GRID_ELECTRICITY: deliveredEnergy = 1000, primaryFactor = 2.1, co2Factor = 0.10046
+    // NATURAL_GAS: deliveredEnergy = 500, primaryFactor = 1, co2Factor = 0.18254
+    // primary CO2 = deliveredEnergy × primaryFactor × co2Factor
+    // GRID_ELECTRICITY: 1000 × 2.1 × 0.10046 = 210.966
+    // NATURAL_GAS: 500 × 1 × 0.18254 = 91.27
+    // Numerator = 210.966 + 91.27 = 302.236
+    // Denominator = (1000 × 2.1) + (500 × 1) = 2100 + 500 = 2600
+    // Weighted factor = 302.236 / 2600 = 0.11624461538461538
     const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
       atLeastSeventyPercentEnergyUsed: false,
       standardFuels: {
-        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '2109660' },
-        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '912700' },
+        GRID_ELECTRICITY: { deliveredEnergy: '1000', primaryEnergy: '210.966' }, // primaryEnergy field is used for CO2 here
+        NATURAL_GAS: { deliveredEnergy: '500', primaryEnergy: '91.27' },
       },
       nonStandardFuels: [],
     };
 
     const result = calculateWeightedConversionFactor(energyFuelDetails, true);
+    expect(result).toBeCloseTo(0.1162446, 7);
+  });
 
-    expect(result).toBeCloseTo(1, 7);
+  it('should fail if denominator is sum of primary CO2 (incorrect)', () => {
+    // If someone (incorrectly) uses sum of primary CO2 as denominator, result would be 1
+    // This test ensures the denominator is delivered × primary factor, not sum of primary CO2
+    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
+      atLeastSeventyPercentEnergyUsed: false,
+      standardFuels: {
+        GRID_ELECTRICITY: { deliveredEnergy: '1000', primaryEnergy: '210.966' },
+        NATURAL_GAS: { deliveredEnergy: '500', primaryEnergy: '91.27' },
+      },
+      nonStandardFuels: [],
+    };
+    // If denominator were 302.236, result would be 1
+    const result = calculateWeightedConversionFactor(energyFuelDetails, true);
+    expect(result).not.toBeCloseTo(1, 7);
   });
 
   it('should include non-standard fuels in weighted calculation', () => {
@@ -892,118 +970,91 @@ describe('calculateWeightedConversionFactor', () => {
 
     expect(result).toBeCloseTo(0.10046, 7);
   });
+
+  it('should use measurement unit-specific factors for MWh', () => {
+    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
+      atLeastSeventyPercentEnergyUsed: false,
+      standardFuels: {
+        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '21000' },
+        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '5000' },
+      },
+      nonStandardFuels: [],
+    };
+
+    const result = calculateWeightedConversionFactor(energyFuelDetails, false, 'MWh');
+
+    expect(result).toBeCloseTo(116.2446154, 7);
+  });
+
+  it('should use measurement unit-specific factors for GJ', () => {
+    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
+      atLeastSeventyPercentEnergyUsed: false,
+      standardFuels: {
+        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '75600' },
+        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '18000' },
+      },
+      nonStandardFuels: [],
+    };
+
+    const result = calculateWeightedConversionFactor(energyFuelDetails, false, 'GJ');
+
+    expect(result).toBeCloseTo(32.290171, 7);
+  });
 });
 
-describe('calculateActualCo2Emissions', () => {
-  it('should calculate energy-based CO2 emissions in tCO2e (divided by 1000)', () => {
-    // (21000000 × 0.10046) + (5000000 × 0.18254) = 3022360 kgCO2e
-    // 3022360 / 1000 = 3022.36 tCO2e
-    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
-      atLeastSeventyPercentEnergyUsed: false,
-      standardFuels: {
-        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '21000000' },
-        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '5000000' },
+describe('resolveMeasurementUnit', () => {
+  it('should resolve API measurement type enum to display unit', () => {
+    const referenceData: Partial<PerformanceDataFacilityReferenceData> = {
+      baselineAndTargets: {
+        measurementType: 'ENERGY_MWH',
       },
-      nonStandardFuels: [],
     };
 
-    const result = calculateActualCo2Emissions(energyFuelDetails, false);
-
-    expect(result).toBeCloseTo(3022.36, 2);
+    expect(resolveMeasurementUnit(referenceData as PerformanceDataFacilityReferenceData)).toBe('MWh');
   });
 
-  it('should calculate carbon-based CO2 emissions in tCO2e', () => {
-    // Sum of stored primary CO2 / 1000
-    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
-      atLeastSeventyPercentEnergyUsed: false,
-      standardFuels: {
-        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '2109660' },
-        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '912700' },
-      },
-      nonStandardFuels: [],
+  it('should default to kWh when measurement type is missing', () => {
+    expect(resolveMeasurementUnit(undefined)).toBe('kWh');
+  });
+});
+
+describe('resolveCalculatedResults', () => {
+  it('should prefer persisted calculated results and fallback to derived for missing fields', () => {
+    const derivedResults: PerformanceDataFacilityCalculatedResults = {
+      actualEnergyCarbon: '120',
+      targetEnergyCarbon: '90',
+      energyCarbonDifference: '30',
+      targetImprovement: '0.12',
+      weightedConversionFactor: '0.2',
+      targetCo2Emissions: '0.09',
+      actualCo2Emissions: '0.12',
+      co2EmissionsDifference: '0.03',
+      actualImprovement: '0.25',
+      targetPeriodResultType: 'TARGET_NOT_MET',
+      buyOutRequired: '8',
     };
 
-    const result = calculateActualCo2Emissions(energyFuelDetails, true);
+    const resolved = resolveCalculatedResults(derivedResults);
 
-    expect(result).toBeCloseTo(3022.36, 2);
+    expect(resolved.actualEnergyCarbon).toBe('120');
+    expect(resolved.targetEnergyCarbon).toBe('90');
+    expect(resolved.targetPeriodResultType).toBe('TARGET_NOT_MET');
+    expect(resolved.buyOutRequired).toBe('8');
   });
 
-  it('should include non-standard fuels in CO2 calculation', () => {
-    // (21000000 × 0.10046) + (5000000 × 0.18254) + (1000000 × 0.2) = 3222360 kgCO2e
-    // 3222360 / 1000 = 3222.36 tCO2e
-    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
-      atLeastSeventyPercentEnergyUsed: false,
-      standardFuels: {
-        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '21000000' },
-        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '5000000' },
-      },
-      nonStandardFuels: [
-        { name: 'Custom fuel', conversionFactor: '0.2', deliveredEnergy: '0', primaryEnergy: '1000000' },
-      ],
+  it('should return derived results when persisted results are absent', () => {
+    const derivedResults: PerformanceDataFacilityCalculatedResults = {
+      actualEnergyCarbon: '1',
+      targetEnergyCarbon: '2',
+      energyCarbonDifference: '-1',
+      targetImprovement: '3',
+      weightedConversionFactor: '4',
+      targetCo2Emissions: '5',
+      actualCo2Emissions: '6',
+      co2EmissionsDifference: '1',
+      actualImprovement: '7',
     };
 
-    const result = calculateActualCo2Emissions(energyFuelDetails, false);
-
-    expect(result).toBeCloseTo(3222.36, 2);
-  });
-
-  it('should return 0 when there are no fuels with energy', () => {
-    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
-      atLeastSeventyPercentEnergyUsed: false,
-      standardFuels: {
-        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
-        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '0' },
-      },
-      nonStandardFuels: [],
-    };
-
-    const result = calculateActualCo2Emissions(energyFuelDetails, false);
-
-    expect(result).toBe(0);
-  });
-
-  it('should ignore zero-value fuels in CO2 calculation', () => {
-    // Only GRID_ELECTRICITY: 21000000 × 0.10046 = 2109660 kgCO2e / 1000 = 2109.66 tCO2e
-    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
-      atLeastSeventyPercentEnergyUsed: false,
-      standardFuels: {
-        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '21000000' },
-        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '0' },
-      },
-      nonStandardFuels: [],
-    };
-
-    const result = calculateActualCo2Emissions(energyFuelDetails, false);
-
-    expect(result).toBeCloseTo(2109.66, 2);
-  });
-
-  it('should handle string primary energy values', () => {
-    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
-      atLeastSeventyPercentEnergyUsed: false,
-      standardFuels: {
-        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '21000000' },
-        NATURAL_GAS: { deliveredEnergy: '0', primaryEnergy: '5000000' },
-      },
-      nonStandardFuels: [],
-    };
-
-    const result = calculateActualCo2Emissions(energyFuelDetails, false);
-
-    expect(result).toBeCloseTo(3022.36, 2);
-  });
-
-  it('should handle mixed energy and carbon measurement modes correctly', () => {
-    const energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails = {
-      atLeastSeventyPercentEnergyUsed: false,
-      standardFuels: {
-        GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '2109660' },
-      },
-      nonStandardFuels: [],
-    };
-
-    const carbonBasedResult = calculateActualCo2Emissions(energyFuelDetails, true);
-
-    expect(carbonBasedResult).toBeCloseTo(2109.66, 2);
+    expect(resolveCalculatedResults(derivedResults)).toEqual(derivedResults);
   });
 });

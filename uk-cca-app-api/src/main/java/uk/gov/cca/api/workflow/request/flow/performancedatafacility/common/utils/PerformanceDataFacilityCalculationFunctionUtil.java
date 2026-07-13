@@ -1,37 +1,53 @@
 package uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils;
 
-import lombok.experimental.UtilityClass;
-
-import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.common.domain.TriFunction;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityThroughputDetails;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityTargetPeriodResultType;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityReferenceData;
-
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.time.Year;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+
+import lombok.experimental.UtilityClass;
+import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.TriFunction;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityTargetPeriodResultType;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityThroughputDetails;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
 
 @UtilityClass
 public class PerformanceDataFacilityCalculationFunctionUtil {
 
+    public Optional<BigDecimal> getTpMultiplier(List<TargetPeriodDetailsDTO> targetPeriods, TargetPeriodType targetPeriodType, Year targetPeriodYear) {
+        return targetPeriods.stream()
+                .filter(tp -> tp.getBusinessId().equals(targetPeriodType)).findFirst()
+                .flatMap(reportingTargetPeriod -> reportingTargetPeriod.getTargetPeriodYearsContainer().getYearMultiplier(targetPeriodYear)
+        );
+    }
+
+    public Map<TargetPeriodType, Integer> getLastYearPerTp(List<TargetPeriodDetailsDTO> targetPeriods) {
+        return targetPeriods.stream().collect(Collectors.toMap(
+                TargetPeriodDetailsDTO::getBusinessId,
+                tp -> tp.getTargetPeriodYearsContainer().getFinalTargetPeriodTargetYear().getValue()));
+    }
+
     public BigDecimal getTargetImprovement(PerformanceDataReportType reportType, TargetPeriodType targetPeriodType,
-                                           PerformanceDataFacilityReferenceData referenceData) {
-        final Map<TargetImprovementType, BigDecimal> improvements = referenceData.getBaselineAndTargets().getImprovements();
+                                           PerformanceDataFacilityBaselineAndTargets baselineAndTargets) {
+        final Map<TargetImprovementType, BigDecimal> improvements = baselineAndTargets.getImprovements();
 
         if(reportType.equals(PerformanceDataReportType.FINAL)) {
             TargetImprovementType targetImprovementType = Arrays.stream(TargetImprovementType.values())
@@ -130,7 +146,8 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
                             .orElse(BigDecimal.ZERO);
 
                     return entry.get().getValue().add(previous)
-                            .divide(BigDecimal.TWO, MathContext.DECIMAL128);
+                            .divide(BigDecimal.TWO, MathContext.DECIMAL128)
+                            .divide(BigDecimal.valueOf(100), MathContext.DECIMAL128);
                 }
 
                 return BigDecimal.ZERO;
@@ -156,26 +173,30 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
                         .multiply(fuel.getConversionFactor(), MathContext.DECIMAL128));
 
         return sumOfStandardFuels.add(sumOfNonStandardFuels).divide(actualEnergyCarbon, MathContext.DECIMAL128);
+				
     };
 
     /**
      * Energy based: Target tCO2e emitted = Target energy at TP throughput x Weighted Average conversion factor / 1000
-     * Carbon based: Target tCO2e emitted = Target carbon at TP throughput
+     * Carbon based: Target tCO2e emitted = Target carbon at TP throughput ( / 1000 if the unit is kg)
+     * Always expressed in tonnes
+     * 
      */
-    public final TriFunction<BigDecimal, BigDecimal, MeasurementType, BigDecimal> TARGET_CO2_EMISSIONS =
-            (targetEnergyCarbonThroughput, weightedConversionFactor, measurementType) ->
-                    switch (measurementType) {
-                        case ENERGY_KWH, ENERGY_MWH, ENERGY_GJ ->
-                                targetEnergyCarbonThroughput.multiply(weightedConversionFactor, MathContext.DECIMAL128)
-                                        .divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128);
-                        case CARBON_KG, CARBON_TONNE -> targetEnergyCarbonThroughput.divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128);
-    };
+	public final TriFunction<BigDecimal, BigDecimal, MeasurementType, BigDecimal> TARGET_TCO2_EMISSIONS = (
+			targetEnergyCarbonThroughput, weightedConversionFactor, measurementType) -> 
+				switch (measurementType) {
+					case ENERGY_KWH, ENERGY_MWH, ENERGY_GJ ->
+						targetEnergyCarbonThroughput.multiply(weightedConversionFactor, MathContext.DECIMAL128)
+								.divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128);
+					case CARBON_KG -> targetEnergyCarbonThroughput.divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128);
+					case CARBON_TONNE -> targetEnergyCarbonThroughput;
+	};
 
     /**
      * Energy based: For each fuel where Total consumption (1) value is not blank, tCO2e =Total consumption x Conversion factor / 1000= tCO2e for the specific fuel
      * Carbon based: For each fuel where Total consumption (1) value is not blank, tCO2e =Total consumption/ 1000= tCO2e for the specific fuel
      */
-    public final BiFunction<PerformanceDataFacilityInputEnergyFuelDetails, MeasurementType, BigDecimal> ACTUAL_CO2_EMISSIONS =
+    public final BiFunction<PerformanceDataFacilityInputEnergyFuelDetails, MeasurementType, BigDecimal> ACTUAL_TCO2_EMISSIONS =
             (fuelDetails, measurementType) -> {
         if(fuelDetails == null) {
             return BigDecimal.ZERO;
@@ -185,27 +206,37 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
                 BigDecimal sumOfStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getStandardFuels(),
                         entry -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
                                 .apply(entry, measurementType)
-                                .multiply(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(entry.getKey(), measurementType), MathContext.DECIMAL128)
-                                .divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128));
+                                .multiply(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(entry.getKey(), measurementType), MathContext.DECIMAL128));
 
                 BigDecimal sumOfNonStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_NON_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getNonStandardFuels(),
                         fuel -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
                                 .apply(fuel, measurementType)
-                                .multiply(fuel.getConversionFactor(), MathContext.DECIMAL128)
-                                .divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128));
+                                .multiply(fuel.getConversionFactor(), MathContext.DECIMAL128));
 
-                yield  sumOfStandardFuels.add(sumOfNonStandardFuels);
+                yield  sumOfStandardFuels.add(sumOfNonStandardFuels).divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128);
             }
-            case CARBON_KG, CARBON_TONNE -> {
+            case CARBON_KG -> {
                 BigDecimal sumOfStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getStandardFuels(),
                         entry -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
                                 .apply(entry, measurementType)
-                                .divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128));
+                                .divide(BigDecimal.valueOf(1000), 20, RoundingMode.HALF_UP));
 
                 BigDecimal sumOfNonStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_NON_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getNonStandardFuels(),
                         fuel -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
                                 .apply(fuel, measurementType)
-                                .divide(BigDecimal.valueOf(1000), MathContext.DECIMAL128));
+                                .divide(BigDecimal.valueOf(1000), 20, RoundingMode.HALF_UP));
+               
+
+                yield  sumOfStandardFuels.add(sumOfNonStandardFuels);
+            }
+            case CARBON_TONNE -> {
+                BigDecimal sumOfStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getStandardFuels(),
+                        entry -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
+                                .apply(entry, measurementType));
+
+                BigDecimal sumOfNonStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_NON_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getNonStandardFuels(),
+                        fuel -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
+                                .apply(fuel, measurementType));
 
                 yield  sumOfStandardFuels.add(sumOfNonStandardFuels);
             }
@@ -215,7 +246,7 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
     /**
      * tCO2e difference = Actual Target tCO2e minus Target Actual tCO2e
      */
-    public final BinaryOperator<BigDecimal> CO2_EMISSIONS_DIFFERENCE = BigDecimal::subtract;
+    public final BinaryOperator<BigDecimal> TCO2_EMISSIONS_DIFFERENCE = BigDecimal::subtract;
 
     /**
      * Actual improvement % = 1 - (Actual TP energy/carbon /BY energy/carbon at TP throughput)

@@ -52,32 +52,33 @@ export default class FacilitySummaryComponent {
   );
 
   protected readonly summaryDataOriginal = computed(() =>
-    toFacilitySummaryDataWithStatus(
-      this.facility().status === 'NEW' ? this.facility() : this.originalFacility(),
-      this.sectorSchemeData(),
-      this.facility()?.facilityDetails?.participatingSchemeVersions,
-      this.countries(),
-      this.facility().status === 'NEW'
-        ? this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)()
-        : this.requestTaskStore.select(
-            underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
-          )(),
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-      { changeName: true },
-    ),
+    toFacilitySummaryDataWithStatus({
+      facility: this.facility().status === 'NEW' ? this.facility() : this.originalFacility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.facility()?.facilityDetails?.participatingSchemeVersions,
+      countries: this.countries(),
+      attachments:
+        this.facility().status === 'NEW'
+          ? this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)()
+          : this.requestTaskStore.select(
+              underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
+            )(),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+      opts: { changeName: true },
+    }),
   );
 
   protected readonly summaryDataCurrent = computed(() =>
-    toFacilitySummaryDataWithStatus(
-      this.facility(),
-      this.sectorSchemeData(),
-      this.facility()?.facilityDetails?.participatingSchemeVersions,
-      this.countries(),
-      this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-      { changeName: true },
-    ),
+    toFacilitySummaryDataWithStatus({
+      facility: this.facility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.facility()?.facilityDetails?.participatingSchemeVersions,
+      countries: this.countries(),
+      attachments: this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+      opts: { changeName: true },
+    }),
   );
 }

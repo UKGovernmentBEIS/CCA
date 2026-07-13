@@ -14,12 +14,14 @@ import {
   calculateAdjustedImprovementTargetForProduct,
   calculateAdjustedThroughput,
   calculateFacilityImprovementTarget,
+  calculateFacilityTargetVariableEnergy,
   calculateTargetEnergyForProduct,
   calculateThroughputAdjustmentFactor,
-  MeasurementTypeToUnitPipe,
-  toNumber,
+  resolveProductEnergyCarbonIntensity,
 } from '@requests/common';
 import { PaginationComponent } from '@shared/components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
+import { toNumber } from '@shared/utils';
 
 import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
 
@@ -53,11 +55,14 @@ export class ThroughputDetailsSummaryComponent {
 
   protected readonly measurementUnit = computed(() => this.referenceData()?.baselineAndTargets?.measurementType);
 
-  protected readonly tableColumns: Signal<GovukTableColumn[]> = signal([
+  protected readonly tableColumns: Signal<GovukTableColumn[]> = computed(() => [
     { field: 'productName', header: 'Product name' },
     { field: 'baselineYear', header: 'Baseline year' },
     { field: 'energy', header: 'Baseline energy intensity' },
-    { field: 'improvementTarget', header: 'Improvement target %' },
+    {
+      field: 'improvementTarget',
+      header: this.reportType() === 'INTERIM' ? 'Interim target %' : 'Improvement target %',
+    },
     { field: 'throughput', header: 'Actual throughput' },
     { field: 'adjustedThroughput', header: 'Adjusted throughput' },
     { field: 'targetEnergy', header: 'Target energy' },
@@ -96,7 +101,7 @@ export class ThroughputDetailsSummaryComponent {
         const productBaseYear = product.baselineYear;
         let improvementTarget = facilityImprovementTarget;
 
-        if (facilityBaseYear && productBaseYear !== facilityBaseYear) {
+        if (facilityBaseYear && productBaseYear > facilityBaseYear) {
           improvementTarget = calculateAdjustedImprovementTargetForProduct(
             referenceData,
             this.reportType(),
@@ -108,24 +113,41 @@ export class ThroughputDetailsSummaryComponent {
 
         const adjustedThroughput =
           calculateAdjustedThroughput(actualThroughput, throughputAdjustmentFactor, useSRM) ?? 0;
-        const targetEnergy = calculateTargetEnergyForProduct(product.energy, adjustedThroughput, improvementTarget);
+
+        const baselineEnergyIntensity = resolveProductEnergyCarbonIntensity(product);
+
+        const targetEnergy = calculateTargetEnergyForProduct(
+          baselineEnergyIntensity,
+          adjustedThroughput,
+          improvementTarget,
+        );
 
         return {
           productName: product.productName,
           baselineYear: product.baselineYear,
-          energy: product.energy,
+          energy: baselineEnergyIntensity,
           throughputUnit: product.throughputUnit,
           improvementTarget,
           throughput: actualThroughput,
           adjustedThroughput,
           targetEnergy,
+          intensityTimesAdjustedThroughput: baselineEnergyIntensity * adjustedThroughput,
         };
       });
   });
 
-  protected readonly totalTargetVariableEnergy = computed(() =>
-    this.tableRows().reduce((sum, row) => sum + (row.targetEnergy ?? 0), 0),
-  );
+  protected readonly totalTargetVariableEnergy = computed(() => {
+    const sumOfIntensityTimesAdjustedThroughput = this.tableRows().reduce(
+      (sum, row) => sum + (row.intensityTimesAdjustedThroughput ?? 0),
+      0,
+    );
+
+    return calculateFacilityTargetVariableEnergy(
+      sumOfIntensityTimesAdjustedThroughput,
+      calculateFacilityImprovementTarget(this.referenceData(), this.reportType(), this.targetPeriodType()),
+      this.tableRows().length > 0,
+    );
+  });
 
   protected readonly shouldShowPagination = computed(() => this.tableRows().length > 10);
 

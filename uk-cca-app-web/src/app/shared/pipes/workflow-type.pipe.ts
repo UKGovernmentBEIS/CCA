@@ -2,52 +2,56 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { RequestDetailsDTO } from 'cca-api';
 
+export function workflowType(type: RequestDetailsDTO['requestType'], initiatorRoleType?: string): string {
+  switch (type) {
+    case 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING':
+      return 'CCA2 extension';
+
+    case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING':
+      return 'CCA3 Migration';
+
+    case 'TARGET_UNIT_ACCOUNT_CREATION':
+      return 'Account creation';
+
+    case 'UNDERLYING_AGREEMENT':
+      return 'Underlying agreement';
+
+    case 'UNDERLYING_AGREEMENT_VARIATION':
+      return `Underlying agreement variation${initiatorRoleType === 'REGULATOR' ? ' by regulator' : ''}`;
+
+    case 'ADMIN_TERMINATION':
+      return 'Admin Termination';
+
+    case 'TARGET_UNIT_MOA':
+    case 'SECTOR_MOA':
+      return 'Subsistence fees';
+
+    case 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING':
+      return 'Buy-out and surplus';
+
+    case 'FACILITY_AUDIT':
+      return 'Facility audit';
+
+    case 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING':
+      return 'Performance Data';
+
+    case 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING':
+      return 'PAT';
+
+    case 'NON_COMPLIANCE':
+      return 'Non Compliance';
+
+    case 'CCA2_TERMINATION_ACCOUNT_PROCESSING':
+      return 'CCA2 End';
+
+    default:
+      return '';
+  }
+}
+
 @Pipe({ name: 'workflowType' })
 export class WorkflowTypePipe implements PipeTransform {
   transform(type: RequestDetailsDTO['requestType'], initiatorRoleType?: string): string {
-    switch (type) {
-      case 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING':
-        return 'CCA2 extension';
-
-      case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING':
-        return 'CCA3 Migration';
-
-      case 'TARGET_UNIT_ACCOUNT_CREATION':
-        return 'Account creation';
-
-      case 'UNDERLYING_AGREEMENT':
-        return 'Underlying agreement';
-
-      case 'UNDERLYING_AGREEMENT_VARIATION':
-        return `Underlying agreement variation${initiatorRoleType === 'REGULATOR' ? ' by regulator' : ''}`;
-
-      case 'ADMIN_TERMINATION':
-        return 'Admin Termination';
-
-      case 'TARGET_UNIT_MOA':
-      case 'SECTOR_MOA':
-        return 'Subsistence fees';
-
-      case 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING':
-        return 'Buy-out and surplus';
-
-      case 'FACILITY_AUDIT':
-        return 'Facility audit';
-
-      case 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING':
-        return 'Performance Data';
-
-      case 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING':
-        return 'PAT';
-
-      case 'NON_COMPLIANCE':
-        return 'Non Compliance';
-
-      case 'CCA2_TERMINATION_ACCOUNT_PROCESSING':
-        return 'CCA2 End';
-
-      default:
-        return '';
-    }
+    return workflowType(type, initiatorRoleType);
   }
 }

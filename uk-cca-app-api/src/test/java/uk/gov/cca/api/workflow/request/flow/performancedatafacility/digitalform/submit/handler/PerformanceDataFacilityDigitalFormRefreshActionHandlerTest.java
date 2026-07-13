@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.service.PerformanceDataFacilityDigitalFormSubmitService;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.validation.PerformanceDataFacilityDigitalFormRefreshValidator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
@@ -30,6 +31,9 @@ class PerformanceDataFacilityDigitalFormRefreshActionHandlerTest {
     @Mock
     private PerformanceDataFacilityDigitalFormSubmitService performanceDataFacilityDigitalFormSubmitService;
 
+    @Mock
+    private PerformanceDataFacilityDigitalFormRefreshValidator performanceDataFacilityDigitalFormRefreshValidator;
+
     @Test
     void process() {
         final AppUser appUser = AppUser.builder().build();
@@ -46,6 +50,7 @@ class PerformanceDataFacilityDigitalFormRefreshActionHandlerTest {
 
         // Verify
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
+        verify(performanceDataFacilityDigitalFormRefreshValidator, times(1)).validate(requestTask);
         verify(performanceDataFacilityDigitalFormSubmitService, times(1)).refreshBaselineData(requestTask);
     }
 

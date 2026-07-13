@@ -380,6 +380,38 @@ describe('ItemActionHeaderPipe', () => {
         type: 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED',
       }),
     ).toEqual('CCA2 Underlying agreement terminated');
+
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'PERFORMANCE_DATA_FACILITY_SUBMITTED',
+      }),
+    ).toEqual('Target period reporting submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED',
+      }),
+    ).toEqual('Target period reporting cancelled by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED',
+      }),
+    ).toEqual('Target period reporting expired');
+
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED',
+      }),
+    ).toEqual('Target period reporting submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('Target period reporting submitted by John Bolt');
   });
 
   it('should display the approved application title', () => {

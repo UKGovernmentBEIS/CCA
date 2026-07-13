@@ -5,13 +5,25 @@ import { fileUtils } from '@shared/utils';
 
 import { UnderlyingAgreementFacilityReviewDecision, UnderlyingAgreementReviewDecision } from 'cca-api';
 
-export function addDecisionSummaryData(
-  factory: SummaryFactory,
-  decision: UnderlyingAgreementReviewDecision,
-  attachments: Record<string, string>,
-  isEditable: boolean,
-  downloadUrl: string,
-): SummaryFactory {
+type AddDecisionSummaryDataArgs = {
+  factory: SummaryFactory;
+  decision: UnderlyingAgreementReviewDecision;
+  attachments: Record<string, string>;
+  isEditable: boolean;
+  downloadUrl: string;
+};
+
+type AddFacilityDecisionSummaryDataArgs = {
+  factory: SummaryFactory;
+  decision: UnderlyingAgreementFacilityReviewDecision;
+  attachments: Record<string, string>;
+  isEditable: boolean;
+  downloadUrl: string;
+};
+
+export function addDecisionSummaryData(args: AddDecisionSummaryDataArgs): SummaryFactory {
+  const { factory, decision, attachments, isEditable, downloadUrl } = args;
+
   return factory
     .addSection('Decision Summary', '../decision')
     .addRow(
@@ -31,13 +43,8 @@ export function addDecisionSummaryData(
     );
 }
 
-export function addFacilityDecisionSummaryData(
-  factory: SummaryFactory,
-  decision: UnderlyingAgreementFacilityReviewDecision,
-  attachments: Record<string, string>,
-  isEditable: boolean,
-  downloadUrl: string,
-): SummaryFactory {
+export function addFacilityDecisionSummaryData(args: AddFacilityDecisionSummaryDataArgs): SummaryFactory {
+  const { factory, decision, attachments, isEditable, downloadUrl } = args;
   const datePipe = new DatePipe('en-GB');
 
   const f = factory.addSection('Decision Summary', '../decision');

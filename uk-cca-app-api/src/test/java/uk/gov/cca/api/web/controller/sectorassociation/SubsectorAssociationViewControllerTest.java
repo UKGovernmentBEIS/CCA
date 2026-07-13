@@ -15,6 +15,7 @@ import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.*;
 import uk.gov.cca.api.sectorassociation.service.SubsectorAssociationSchemeService;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class SubsectorAssociationViewControllerTest {
 
-    private static final String CONTROLLER_PATH = "/v1.0/sector-association/{sectorId}/subsector-association/{subsectorId}/";
+    private static final String CONTROLLER_PATH = "/v1.0/subsector-association/{subsectorId}/";
 
     private MockMvc mockMvc;
 
@@ -46,24 +47,25 @@ class SubsectorAssociationViewControllerTest {
     @Test
     void getSubsectorAssociationSchemeBySubsectorAssociationId() throws Exception {
         Long sectorAssociationId = 1L;
-        Long subsectorAssociationd = 2L;
+        Long subsectorAssociationId = 2L;
+        AppUser appUser = AppUser.builder().build();
         SubsectorAssociationSchemesDTO subsectorAssociationSchemesDTO = SubsectorAssociationSchemesDTO.builder()
-        		.subsectorAssociationSchemeMap(Map.of(SchemeVersion.CCA_2, createSubsectorAssociationSchemeDTO()))
+        		.subsectorAssociationSchemeMap(Map.of(SchemeVersion.CCA_2, createSubsectorAssociationSchemeViewDTO()))
         		.build(); 
 
-        when(subsectorAssociationSchemeService.getSubsectorAssociationSchemesBySubsectorAssociationId(sectorAssociationId, subsectorAssociationd))
+        when(subsectorAssociationSchemeService.getSubsectorAssociationSchemesBySubsectorAssociationId(subsectorAssociationId, appUser))
         		.thenReturn(subsectorAssociationSchemesDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get(CONTROLLER_PATH.replace("{sectorId}", sectorAssociationId.toString()).replace("{subsectorId}", subsectorAssociationd.toString()) + "scheme")
+                        .get(CONTROLLER_PATH.replace("{sectorId}", sectorAssociationId.toString()).replace("{subsectorId}", subsectorAssociationId.toString()) + "scheme")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(subsectorAssociationSchemeService, times(1))
-        		.getSubsectorAssociationSchemesBySubsectorAssociationId(sectorAssociationId, subsectorAssociationd);
+        		.getSubsectorAssociationSchemesBySubsectorAssociationId(subsectorAssociationId, appUser);
     }
 
-    private SubsectorAssociationSchemeDTO createSubsectorAssociationSchemeDTO() {
+    private SubsectorAssociationSchemeDTO createSubsectorAssociationSchemeViewDTO() {
         return SubsectorAssociationSchemeDTO.builder()
                 .targetSet(TargetSetDTO.builder()
                         .targetCurrencyType("Novem")

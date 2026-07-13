@@ -22,7 +22,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@RequestMapping(path = "/v1.0/sector-documents/document")
+@RequestMapping(path = "/v1.0/sector-scheme-documents/document")
 @RequiredArgsConstructor
 @Tag(name = "Sector Association Scheme Documents")
 @Description("Check ApiSecurityConfig for authorization")

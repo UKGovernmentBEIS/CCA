@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { isEditableSummaryRedirectGuard } from '@requests/common';
+import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
 
 export const TARGET_PERIOD_REPORTING_FORM_ROUTES: Routes = [
   {
@@ -17,6 +17,18 @@ export const TARGET_PERIOD_REPORTING_FORM_ROUTES: Routes = [
         canActivate: [isEditableSummaryRedirectGuard],
         loadChildren: () =>
           import('./subtasks/tpr-throughput/tpr-throughput.routes').then((r) => r.TPR_THROUGHPUT_ROUTES),
+      },
+      {
+        path: 'submit',
+        canActivate: [isEditableGuard],
+        loadChildren: () => import('./submit/submit.routes').then((r) => r.SUBMIT_ROUTES),
+      },
+      {
+        path: 'refresh-baseline-data',
+        canActivate: [isEditableGuard],
+        data: { breadcrumb: false, backlink: '../../' },
+        loadComponent: () =>
+          import('./refresh-baseline-data/refresh-baseline-data.component').then((c) => c.RefreshBaselineDataComponent),
       },
     ],
   },

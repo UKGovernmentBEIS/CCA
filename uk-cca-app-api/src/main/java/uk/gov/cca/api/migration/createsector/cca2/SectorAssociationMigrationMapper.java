@@ -4,7 +4,6 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-
 import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociationScheme;

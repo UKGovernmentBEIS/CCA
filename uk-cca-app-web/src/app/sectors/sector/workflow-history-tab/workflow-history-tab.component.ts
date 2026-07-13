@@ -1,4 +1,4 @@
-import { DatePipe, KeyValuePipe } from '@angular/common';
+import { DatePipe, KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -38,6 +38,7 @@ const DEFAULT_PAGE_SIZE = 30;
     StatusPipe,
     DatePipe,
     WorkflowTypePipe,
+    TitleCasePipe,
   ],
   providers: [WorkflowHistoryTabFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -82,38 +82,38 @@ export default class FacilityCheckAnswersComponent {
   )();
 
   protected readonly summaryDataOriginal = computed(() =>
-    toFacilityWizardSummaryDataWithDecision(
-      this.facility().status === 'NEW' ? this.facility() : this.originalFacility(),
-      this.sectorSchemeData(),
-      this.participatingSchemeVersions(),
-      this.decision,
-      this.countries(),
-      {
+    toFacilityWizardSummaryDataWithDecision({
+      facility: this.facility().status === 'NEW' ? this.facility() : this.originalFacility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.participatingSchemeVersions(),
+      decision: this.decision,
+      countries: this.countries(),
+      attachments: {
         submit:
           this.facility().status === 'NEW'
             ? this.store.select(underlyingAgreementQuery.selectAttachments)()
             : this.store.select(underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments)(),
         review: this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
       },
-      this.store.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-    ),
+      isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+    }),
   );
 
   protected readonly summaryDataCurrent = computed(() =>
-    toFacilityWizardSummaryDataWithDecision(
-      this.facility(),
-      this.sectorSchemeData(),
-      this.participatingSchemeVersions(),
-      this.decision,
-      this.countries(),
-      {
+    toFacilityWizardSummaryDataWithDecision({
+      facility: this.facility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.participatingSchemeVersions(),
+      decision: this.decision,
+      countries: this.countries(),
+      attachments: {
         submit: this.store.select(underlyingAgreementQuery.selectAttachments)(),
         review: this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
       },
-      this.store.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-    ),
+      isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+    }),
   );
 
   onSubmit() {

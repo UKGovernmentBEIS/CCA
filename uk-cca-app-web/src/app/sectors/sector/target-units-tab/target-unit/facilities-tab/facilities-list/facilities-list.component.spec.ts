@@ -96,9 +96,10 @@ describe('FacilitiesListComponent', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should load data and update state when effect triggers', () => {
+    it('should load data and update state when effect triggers', async () => {
       setupComponent();
 
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(facilityInfoViewService.searchFacilities).toHaveBeenCalledWith(123, 0, 50, null);

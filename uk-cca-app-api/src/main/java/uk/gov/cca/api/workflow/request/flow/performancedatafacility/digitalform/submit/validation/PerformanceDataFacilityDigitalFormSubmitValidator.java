@@ -10,13 +10,13 @@ import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityReferenceDataService;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation.PerformanceDataFacilityValidator;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.service.PerformanceDataFacilityReferenceDataService;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.validation.PerformanceDataFacilityInputDataValidator;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.validation.PerformanceDataFacilityDigitalFormValidator;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.transform.PerformanceDataFacilityDigitalFormSubmitMapper;
@@ -34,7 +34,7 @@ public class PerformanceDataFacilityDigitalFormSubmitValidator {
 
     private final TargetPeriodService targetPeriodService;
     private final FacilityDataQueryService facilityDataQueryService;
-    private final PerformanceDataFacilityDigitalFormValidator performanceDataFacilityDigitalFormValidator;
+    private final PerformanceDataFacilityValidator performanceDataFacilityValidator;
     private final PerformanceDataFacilityReferenceDataService performanceDataFacilityDigitalFormReferenceDataService;
     private final PerformanceDataFacilityInputDataValidator performanceDataFacilityDigitalFormDataValidator;
     private final PerformanceDataFacilityDigitalFormInputCalculatedDataValidator performanceDataFacilityDigitalFormInputCalculatedDataValidator;
@@ -48,7 +48,7 @@ public class PerformanceDataFacilityDigitalFormSubmitValidator {
                 (PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload) requestTask.getPayload();
         final TargetPeriodDetailsDTO targetPeriod = targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(taskPayload.getTargetPeriodType());
 
-        BusinessValidationResult validationReportTypeResult = performanceDataFacilityDigitalFormValidator
+        BusinessValidationResult validationReportTypeResult = performanceDataFacilityValidator
                 .validateReportSubmission(targetPeriod, taskPayload.getReportType(), submissionDate);
 
         return !validationReportTypeResult.isValid();
@@ -98,6 +98,44 @@ public class PerformanceDataFacilityDigitalFormSubmitValidator {
         }
     }
 
+    public void validateFacilityEligibility(final PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload taskPayload, final List<TargetPeriodDetailsDTO> targetPeriods) {
+        final TargetPeriodDetailsDTO targetPeriod = targetPeriods.stream()
+                .filter(tp -> tp.getBusinessId().equals((taskPayload.getTargetPeriodType())))
+                .findFirst().orElse(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(taskPayload.getTargetPeriodType()));
+        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(taskPayload.getFacility().getId());
+        final TargetPeriodYear targetPeriodYear = targetPeriod.getTargetPeriodYearsContainer()
+                .getTargetPeriodYear(taskPayload.getTargetPeriodYear())
+                .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
+
+        BusinessValidationResult validationLockingResults = performanceDataFacilityValidator
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+
+        if(!validationLockingResults.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_REPORTING_LOCKED);
+        }
+
+        BusinessValidationResult validationFacilityResults = performanceDataFacilityValidator
+                .validateFacilityEligibility(facility, targetPeriodYear);
+
+        if(!validationFacilityResults.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE);
+        }
+
+        BusinessValidationResult validationFacilityBaselineDateResults = performanceDataFacilityValidator
+                .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+
+        if(!validationFacilityBaselineDateResults.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE);
+        }
+
+        BusinessValidationResult validationFacilityProductsResults = performanceDataFacilityValidator
+                .validateFacilityProductsEligibility(facility, targetPeriodYear);
+
+        if(!validationFacilityProductsResults.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE);
+        }
+    }
+
     private void validateOriginalBaselineAndTargets(final RequestTask requestTask) {
         final PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload taskPayload =
                 (PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload) requestTask.getPayload();
@@ -109,30 +147,6 @@ public class PerformanceDataFacilityDigitalFormSubmitValidator {
         // If baseline data differ throw refresh exception
         if(!originalBaselineTargets.equals(persistedBaselineTargets)) {
             throw new BusinessException(CcaErrorCode.INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_ORIGINAL_BASELINE_AND_TARGETS_IS_OUTDATED);
-        }
-    }
-
-    private void validateFacilityEligibility(final PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload taskPayload, final List<TargetPeriodDetailsDTO> targetPeriods) {
-        final TargetPeriodDetailsDTO targetPeriod = targetPeriods.stream()
-                .filter(tp -> tp.getBusinessId().equals((taskPayload.getTargetPeriodType())))
-                .findFirst().orElse(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(taskPayload.getTargetPeriodType()));
-        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(taskPayload.getFacility().getId());
-        final TargetPeriodYear targetPeriodYear = targetPeriod.getTargetPeriodYearsContainer()
-                .getTargetPeriodYear(taskPayload.getTargetPeriodYear())
-                .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
-
-        BusinessValidationResult validationFacilityResults = performanceDataFacilityDigitalFormValidator
-                .validateFacilityEligibility(facility, targetPeriodYear);
-
-        if(!validationFacilityResults.isValid()) {
-            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE);
-        }
-
-        BusinessValidationResult validationFacilityBaselineDateResults = performanceDataFacilityDigitalFormValidator
-                .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
-
-        if(!validationFacilityBaselineDateResults.isValid()) {
-            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE);
         }
     }
 }

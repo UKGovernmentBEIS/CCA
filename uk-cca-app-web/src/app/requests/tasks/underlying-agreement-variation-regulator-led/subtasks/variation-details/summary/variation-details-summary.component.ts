@@ -22,8 +22,10 @@ import { SummaryComponent } from '@shared/components';
 export default class VariationDetailsSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
-  protected readonly summaryData = toVariationDetailsSummaryData(
-    this.requestTaskStore.select(underlyingAgreementVariationRegulatorLedQuery.selectVariationDetails)(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-  );
+  protected readonly summaryData = toVariationDetailsSummaryData({
+    variationDetails: this.requestTaskStore.select(
+      underlyingAgreementVariationRegulatorLedQuery.selectVariationDetails,
+    )(),
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+  });
 }

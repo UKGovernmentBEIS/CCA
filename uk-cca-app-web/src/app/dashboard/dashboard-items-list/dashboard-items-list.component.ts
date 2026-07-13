@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DaysRemainingPipe, ItemLinkPipe, ItemNamePipe } from '@netz/common/pipes';
 import { GovukTableColumn, TableComponent, TagComponent } from '@netz/govuk-components';
 
-import { ItemDTO } from 'cca-api';
+import { CcaItemDTO } from 'cca-api';
 
 @Component({
   selector: 'cca-dashboard-items-list',
@@ -13,6 +13,6 @@ import { ItemDTO } from 'cca-api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardItemsListComponent {
-  protected readonly items = input.required<ItemDTO[]>();
-  protected readonly tableColumns = input.required<GovukTableColumn<ItemDTO>[]>();
+  protected readonly items = input.required<CcaItemDTO[]>();
+  protected readonly tableColumns = input.required<GovukTableColumn<CcaItemDTO>[]>();
 }

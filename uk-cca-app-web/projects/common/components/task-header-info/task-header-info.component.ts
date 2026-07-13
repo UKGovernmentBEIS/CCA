@@ -1,5 +1,5 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import { DaysRemainingPipe } from '@netz/common/pipes';
 
@@ -16,7 +16,7 @@ import { DaysRemainingPipe } from '@netz/common/pipes';
       </p>
     }
 
-    @if (startDate() !== undefined && startDate() !== null) {
+    @if (isTPRTask() && startDate() !== undefined && startDate() !== null) {
       <p class="govuk-body govuk-!-margin-bottom-1">
         <strong>Date initiated:</strong> {{ startDate() | date: 'dd/MM/yyyy' }}
       </p>
@@ -39,5 +39,8 @@ export class TaskHeaderInfoComponent {
   protected readonly assignee = input<string>();
   protected readonly daysRemaining = input<number>();
   protected readonly startDate = input<string>();
+  protected readonly requestType = input<string>();
   protected readonly payload = input<any>();
+
+  protected readonly isTPRTask = computed(() => this.requestType() === 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM');
 }

@@ -22,7 +22,7 @@ const basePayload = {
   allRelevantWorkflows: {
     'WF-001': 'Workflow 1',
     'WF-002': 'Workflow 2',
-    'WF-003': 'Workflow 3',
+    'WF-003': 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING',
   },
   allRelevantFacilities: {
     'FAC-001': 'Facility 1',

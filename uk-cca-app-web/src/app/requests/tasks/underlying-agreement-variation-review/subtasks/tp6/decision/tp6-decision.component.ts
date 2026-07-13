@@ -82,25 +82,25 @@ export class TP6DecisionComponent {
 
   private readonly multipleFilesDownloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData(
-    false,
-    this.originalBaselineExists,
-    this.sectorAssociationDetailsSchemeData,
-    this.originalTargetPeriodDetails,
-    this.originalAttachments,
-    this.isEditable,
-    this.multipleFilesDownloadUrl,
-  );
+  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData({
+    isTp5Period: false, // TP6
+    baselineExists: this.originalBaselineExists,
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.originalTargetPeriodDetails,
+    attachments: this.originalAttachments,
+    isEditable: this.isEditable,
+    multiFileDownloadUrl: this.multipleFilesDownloadUrl,
+  });
 
-  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData(
-    false,
-    this.baselineExists,
-    this.sectorAssociationDetailsSchemeData,
-    this.targetPeriodDetails,
-    this.attachments,
-    this.isEditable,
-    this.multipleFilesDownloadUrl,
-  );
+  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData({
+    isTp5Period: false, // TP6
+    baselineExists: this.baselineExists,
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.targetPeriodDetails,
+    attachments: this.attachments,
+    isEditable: this.isEditable,
+    multiFileDownloadUrl: this.multipleFilesDownloadUrl,
+  });
 
   submit() {
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();

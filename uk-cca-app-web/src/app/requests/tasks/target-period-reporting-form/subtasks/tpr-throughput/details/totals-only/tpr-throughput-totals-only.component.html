@@ -11,10 +11,10 @@
 
     <p class="govuk-hint govuk-!-margin-top-1">This has been selected when applied for your underlying agreement</p>
 
-    <p>{{ variableEnergyType() }}</p>
+    <p>{{ variableEnergyTypeLabel() }}</p>
   </div>
 
-  @if (referenceData()?.baselineAndTargets?.variableEnergyType !== 'BY_PRODUCT') {
+  @if (isTotalsOnlyVariableEnergy()) {
     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
       Baseline {{ hasEnergyMeasurement() ? 'energy' : 'carbon dioxide (C02)' }} intensity
     </h3>
@@ -25,7 +25,7 @@
     </p>
   }
 
-  <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Improvement target</h3>
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-0">{{ targetLabel() }}</h3>
   <p class="govuk-!-margin-top-1">{{ improvementTarget() | percent: '1.0-3' }}</p>
 
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Actual throughput</h3>
@@ -39,7 +39,7 @@
     {{ referenceData()?.baselineAndTargets?.throughputUnit }}
   </p>
 
-  @if (referenceData()?.baselineAndTargets?.baselineVariableEnergy) {
+  @if (isTotalsOnlyVariableEnergy()) {
     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Total target variable energy</h3>
     <p class="govuk-!-margin-top-1">
       {{ targetVariableEnergy() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}

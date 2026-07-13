@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -13,7 +13,7 @@ import { toOperatorAssentDecisionSummaryData } from '../../underlying-agreement/
   template: `
     <div>
       <netz-page-heading>Determine operator assent</netz-page-heading>
-      <cca-summary [data]="summaryData" />
+      <cca-summary [data]="summaryData()" />
     </div>
     <netz-return-to-task-or-action-page />
   `,
@@ -25,19 +25,21 @@ export class OperatorAssentDecisionComponent {
 
   private readonly determination = this.requestTaskStore.select(
     underlyingAgreementVariationRegulatorLedQuery.selectDetermination,
-  )();
+  );
   private readonly attachments = this.requestTaskStore.select(
     underlyingAgreementVariationRegulatorLedQuery.selectRegulatorLedSubmitAttachments,
-  )();
+  );
 
   private readonly downloadUrl = generateDownloadUrl(
     this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
 
-  protected readonly summaryData = toOperatorAssentDecisionSummaryData(
-    this.determination,
-    this.attachments,
-    this.downloadUrl,
-    false,
+  protected readonly summaryData = computed(() =>
+    toOperatorAssentDecisionSummaryData({
+      determination: this.determination(),
+      attachments: this.attachments(),
+      downloadUrl: this.downloadUrl,
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    }),
   );
 }

@@ -55,6 +55,9 @@ class UnderlyingAgreementVariationServiceTest {
 
     @Mock
     private UnderlyingAgreementService underlyingAgreementService;
+    
+    @Mock
+    private UnderlyingAgreementVariationIndicatorService underlyingAgreementVariationIndicatorService;
 
     @Test
     void updateFacilitiesAndAccount() {
@@ -142,5 +145,18 @@ class UnderlyingAgreementVariationServiceTest {
         verify(accountSearchAdditionalKeywordService, times(1)).storeKeywordsForAccount(accountId, searchKeywordPairs);
         verify(targetUnitAccountUpdateService, times(1)).updateTargetUnitAccountUponUnderlyingAgreementVariation(
                 accountId, TargetUnitAccountUpdateDTO.builder().operatorName(operatorName).build());
+    }
+    
+    @Test
+    void updatePerformanceDataFacilityVariationIndicator() {
+    	final UnderlyingAgreementContainer originalUnaContainer = UnderlyingAgreementContainer.builder().build();
+		final UnderlyingAgreementContainer currentUnaContainer = UnderlyingAgreementContainer.builder().build();
+
+		// Invoke
+		service.updateVariationIndicatorForPerformanceDataFacility(originalUnaContainer, currentUnaContainer);
+
+		// Verify
+		verify(underlyingAgreementVariationIndicatorService, times(1))
+				.updateVariationIndicatorForPerformanceDataFacility(originalUnaContainer, currentUnaContainer);
     }
 }

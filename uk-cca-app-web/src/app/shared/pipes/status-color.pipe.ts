@@ -28,6 +28,7 @@ export class StatusColorPipe implements PipeTransform {
       case 'withdrawn':
       case 'overpaid':
       case 'cancelled':
+      case 'expired':
         return 'red';
 
       case 'refunded':

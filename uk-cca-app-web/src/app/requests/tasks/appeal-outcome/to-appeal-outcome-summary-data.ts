@@ -30,7 +30,7 @@ export function toAppealOutcomeSummaryData(
       changeLink,
     })
     .addFileListRow(
-      'Uploaded files',
+      'Uploaded file',
       fileUtils.toDownloadableFiles(
         fileUtils.extractAttachments([appealOutcome?.file], attachments ?? {}),
         downloadUrl,

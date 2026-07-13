@@ -7,11 +7,10 @@ import {
   TaskItemStatus,
   TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK,
   TPR_FORM_THROUGHPUT_DETAILS_SUBTASK,
+  tprFormQuery,
 } from '@requests/common';
 
 import { PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload } from 'cca-api';
-
-import { tprFormQuery } from './target-period-reporting-form.selectors';
 
 const tprFormRoutePrefix = 'target-period-reporting-form';
 
@@ -19,7 +18,7 @@ export const targetPeriodReportingFormTaskContent: RequestTaskPageContentFactory
   const payload = inject(RequestTaskStore).select(tprFormQuery.selectPayload)();
 
   return {
-    header: 'Target period reporting (TPR) form',
+    header: 'TP reporting - Submit form',
     sections: getAllTPRFormSections(payload),
   };
 };

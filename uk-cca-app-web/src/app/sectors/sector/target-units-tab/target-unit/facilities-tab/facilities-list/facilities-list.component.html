@@ -26,59 +26,57 @@
     <!-- <div class="max-content-width"> -->
     <!-- TODO: This style is a temp solution, due to the headings wrong styling -->
     <div style="min-width: 110%">
-      <div class="overflow-auto overflow-auto-table">
-        <govuk-table [columns]="tableColumns()" [data]="state().facilities" data-testid="facilities-list-table">
-          <ng-template let-column="column" let-index="index" let-row="row">
-            @switch (column.field) {
-              @case ('facilityBusinessId') {
-                <a [routerLink]="['facilities', row.id]" class="govuk-link">{{ row[column.field] }}</a>
-              }
+      <govuk-table [columns]="tableColumns()" [data]="state().facilities" data-testid="facilities-list-table">
+        <ng-template let-column="column" let-index="index" let-row="row">
+          @switch (column.field) {
+            @case ('facilityBusinessId') {
+              <a [routerLink]="['facilities', row.id]" class="govuk-link">{{ row[column.field] }}</a>
+            }
 
-              @case ('siteName') {
-                {{ row[column.field] }}
-              }
+            @case ('siteName') {
+              {{ row[column.field] }}
+            }
 
-              @case ('status') {
-                <govuk-tag [color]="row[column.field] === 'LIVE' ? 'green' : 'red'">
-                  {{ row[column.field] | status }}
-                </govuk-tag>
-              }
-
-              @case ('auditRequired') {
-                @if (isAllowedUser()) {
-                  {{ row[column.field] ? 'Yes' : 'No' }}
-                }
-              }
-
-              @case ('schemeExitDate') {
-                {{ row[column.field] | date: 'dd/MM/yyyy' }}
-              }
-
-              @case ('certifiedStatus') {
-                {{ row[column.field] | titlecase }}
-              }
-
-              @case ('certificationStatus') {
+            @case ('status') {
+              <govuk-tag [color]="row[column.field] === 'LIVE' ? 'green' : 'red'">
                 {{ row[column.field] | status }}
-              }
+              </govuk-tag>
+            }
 
-              @default {
-                {{ row[column.field] }}
+            @case ('auditRequired') {
+              @if (isAllowedUser()) {
+                {{ row[column.field] ? 'Yes' : 'No' }}
               }
             }
-          </ng-template>
-        </govuk-table>
 
-        <!-- TODO: This style is a temp solution, due to the headings wrong styling -->
-        <div style="padding-right: 100px">
-          <cca-pagination
-            [count]="state().totalItems"
-            [currentPage]="currentPage()"
-            [pageSize]="pageSize()"
-            (pageChange)="onPageChange($event)"
-            (pageSizeChange)="onPageSizeChange($event)"
-          />
-        </div>
+            @case ('schemeExitDate') {
+              {{ row[column.field] | date: 'dd/MM/yyyy' }}
+            }
+
+            @case ('certifiedStatus') {
+              {{ row[column.field] | titlecase }}
+            }
+
+            @case ('certificationStatus') {
+              {{ row[column.field] | status }}
+            }
+
+            @default {
+              {{ row[column.field] }}
+            }
+          }
+        </ng-template>
+      </govuk-table>
+
+      <!-- TODO: This style is a temp solution, due to the headings wrong styling -->
+      <div style="padding-right: 100px">
+        <cca-pagination
+          [count]="state().totalItems"
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        />
       </div>
     </div>
   </div>

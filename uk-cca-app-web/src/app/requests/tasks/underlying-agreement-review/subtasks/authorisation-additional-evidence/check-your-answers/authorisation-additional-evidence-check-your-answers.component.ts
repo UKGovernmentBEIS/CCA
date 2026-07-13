@@ -49,14 +49,20 @@ export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
   private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryData = toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-    this.store.select(underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence)(),
-    this.store.select(underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-    this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'))(),
-    this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
-  );
+  protected readonly summaryData = toAuthorisationAdditionalEvidenceSummaryDataWithDecision({
+    authorisationAndAdditionalEvidence: this.store.select(
+      underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence,
+    )(),
+    underlyingAgreementAttachments: this.store.select(
+      underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments,
+    )(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+    decision: this.store.select(
+      underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
+    )(),
+    reviewAttachments: this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
+  });
 
   onSubmit() {
     const currentReviewSectionsCompleted = this.store.select(

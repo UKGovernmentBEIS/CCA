@@ -12,5 +12,6 @@ import { DashboardFetchFn, DashboardTaskListComponent } from '../dashboard-task-
 })
 export class AssignedToMeComponent {
   private readonly service = inject(ItemsAssignedToMeService);
-  protected readonly fetchFn: DashboardFetchFn = (page, size) => this.service.getAssignedItems(page, size);
+  protected readonly fetchFn: DashboardFetchFn = (page, size, criteria) =>
+    this.service.getAssignedItems(page, size, criteria);
 }

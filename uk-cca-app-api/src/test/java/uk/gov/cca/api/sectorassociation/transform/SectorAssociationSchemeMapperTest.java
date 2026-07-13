@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.test.util.ReflectionTestUtils;
-
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.Location;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociationContact;
@@ -13,6 +13,7 @@ import uk.gov.cca.api.sectorassociation.domain.SectorAssociationSchemeDocument;
 import uk.gov.cca.api.sectorassociation.domain.TargetCommitment;
 import uk.gov.cca.api.sectorassociation.domain.TargetSet;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.FileStatus;
 
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SectorAssociationSchemeMapperTest {
 
@@ -33,7 +35,7 @@ class SectorAssociationSchemeMapperTest {
     }
     
     @Test
-    void test_toSectorAssociationSchemeDTO() {
+    void test_toSectorAssociationSchemeInfo() {
     	LocalDate umaDate = LocalDate.now();
         SectorAssociationSchemeDocument umbrellaAgreement = SectorAssociationSchemeDocument.builder()
                 .uuid("test")
@@ -54,6 +56,7 @@ class SectorAssociationSchemeMapperTest {
         TargetSet sectorTargetSet = TargetSet.builder()
                 .targetCurrencyType("Novem")
                 .energyOrCarbonUnit("kWh")
+                .throughputUnit("tonne")
                 .targetCommitments(Collections.singletonList(targetCommitment))
                 .build();
 
@@ -94,7 +97,82 @@ class SectorAssociationSchemeMapperTest {
                 .umaDate(umaDate)
                 .build();
 
-        SectorAssociationSchemeDTO dto = sectorAssociationSchemeMapper.toSectorAssociationSchemeDTO(sectorAssociationScheme);
+        SectorAssociationSchemeInfo sectorAssociationSchemeInfo = sectorAssociationSchemeMapper.toSectorAssociationSchemeInfo(sectorAssociationScheme);
+
+        // Assertions for TargetSetDTO within SectorAssociationSchemeDTO
+        assertEquals(sectorAssociationScheme.getTargetSet().getEnergyOrCarbonUnit(), sectorAssociationSchemeInfo.getTargetSet().getEnergyOrCarbonUnit());
+        assertEquals(sectorAssociationScheme.getTargetSet().getThroughputUnit(), sectorAssociationSchemeInfo.getTargetSet().getThroughputUnit());
+
+        // Assertions for umaDate and sectorDefinition
+        assertEquals(umaDate, sectorAssociationSchemeInfo.getUmaDate());
+        assertEquals(sectorAssociationScheme.getSectorDefinition(), sectorAssociationSchemeInfo.getSectorDefinition());
+    }
+
+    @Test
+    void test_toSectorAssociationSchemeDTO() {
+        LocalDate umaDate = LocalDate.now();
+        SectorAssociationSchemeDocument umbrellaAgreement = SectorAssociationSchemeDocument.builder()
+                .uuid("test")
+                .id(1L)
+                .fileName("umbrellaAgreement")
+                .fileType(".pdf")
+                .status(FileStatus.SUBMITTED)
+                .fileSize(1)
+                .createdBy("test user")
+                .build();
+
+
+        TargetCommitment targetCommitment = TargetCommitment.builder()
+                .id(56698L)
+                .targetImprovement(BigDecimal.valueOf(19.000))
+                .targetPeriod("2013-2014")
+                .build();
+
+        TargetSet sectorTargetSet = TargetSet.builder()
+                .targetCurrencyType("Novem")
+                .energyOrCarbonUnit("kWh")
+                .targetCommitments(Collections.singletonList(targetCommitment))
+                .build();
+
+        Location location = Location.builder()
+                .postcode("12345")
+                .line1("123 Main St")
+                .city("Springfield")
+                .county("CountyName")
+                .build();
+
+        SectorAssociationContact contact = SectorAssociationContact.builder()
+                .title("Mr.")
+                .firstName("John")
+                .lastName("Doe")
+                .jobTitle("Director")
+                .organisationName("Acme Corp")
+                .phoneNumber("123456789")
+                .email("john.doe@example.com")
+                .location(location)
+                .build();
+
+        SectorAssociation sectorAssociation = SectorAssociation.builder()
+                .competentAuthority(CompetentAuthorityEnum.ENGLAND)
+                .legalName("Some Association Legal")
+                .name("Some Association")
+                .acronym("SA")
+                .facilitatorUserId("Facilitator User Id")
+                .energyEprFactor("Energy Factor")
+                .location(location)
+                .sectorAssociationContact(contact)
+                .build();
+
+        SectorAssociationScheme sectorAssociationScheme = SectorAssociationScheme.builder()
+                .umbrellaAgreement(umbrellaAgreement)
+                .sectorAssociation(sectorAssociation)
+                .targetSet(sectorTargetSet)
+                .sectorDefinition("This is the sector definition")
+                .umaDate(umaDate)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .build();
+
+        SectorAssociationSchemeDTO dto = sectorAssociationSchemeMapper.toSectorAssociationSchemeDTO(sectorAssociationScheme, true);
 
         // Assertions for SectorAssociationSchemeDocumentDTO within SectorAssociationSchemeDTO
         assertEquals(sectorAssociationScheme.getUmbrellaAgreement().getId(), dto.getUmbrellaAgreement().getId());
@@ -106,13 +184,16 @@ class SectorAssociationSchemeMapperTest {
         assertEquals(sectorAssociationScheme.getTargetSet().getEnergyOrCarbonUnit(), dto.getTargetSet().getEnergyOrCarbonUnit());
         assertEquals(sectorAssociationScheme.getTargetSet().getTargetCurrencyType(), dto.getTargetSet().getTargetCurrencyType());
         assertEquals(sectorAssociationScheme.getTargetSet().getTargetCommitments().size(), dto.getTargetSet().getTargetCommitments().size());
+        assertEquals(sectorAssociationScheme.getTargetSet().getTargetCommitments().get(0).getId(),
+                dto.getTargetSet().getTargetCommitments().get(0).getId());
         assertEquals(sectorAssociationScheme.getTargetSet().getTargetCommitments().get(0).getTargetPeriod(),
                 dto.getTargetSet().getTargetCommitments().get(0).getTargetPeriod());
         assertEquals(sectorAssociationScheme.getTargetSet().getTargetCommitments().get(0).getTargetImprovement(),
                 dto.getTargetSet().getTargetCommitments().get(0).getTargetImprovement());
-        
-        // Assertions for umaDate and sectorDefiniton
+
+        // Assertions for umaDate and sectorDefiniton and isEditable
         assertEquals(umaDate, dto.getUmaDate());
         assertEquals(sectorAssociationScheme.getSectorDefinition(), dto.getSectorDefinition());
+        assertTrue(dto.isEditable());
     }
 }

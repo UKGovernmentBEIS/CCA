@@ -36,6 +36,12 @@ export const TPR_THROUGHPUT_ROUTES: Routes = [
         loadComponent: () =>
           import('./details/tpr-throughput-details.component').then((c) => c.TprThroughputDetailsComponent),
       },
+      {
+        path: 'products',
+        title: 'View Products',
+        data: { breadcrumb: false, backlink: '../details' },
+        loadComponent: () => import('@requests/common').then((c) => c.TprProductsComponent),
+      },
     ],
   },
 ];

@@ -8,6 +8,7 @@ type RequestTaskPageContent = {
   postContentComponent?: Type<unknown>;
   header: string;
   sections?: TaskSection[];
+  hideRelatedActions?: boolean;
 };
 
 export type RequestTaskPageContentFactory = () => RequestTaskPageContent;

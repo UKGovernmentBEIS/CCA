@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportTypeDTO;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataService;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.dto.PerformanceDataReportTypeDTO;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityService;
 import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.util.List;
@@ -38,7 +38,7 @@ import static uk.gov.cca.api.web.constants.SwaggerApiInfo.OK;
 @Tag(name = "Performance data reporting view info")
 public class PerformanceDataReportingViewController {
 
-    private final PerformanceDataService performanceDataReportService;
+    private final PerformanceDataFacilityService performanceDataReportService;
 
     @GetMapping(path = "/available-target-periods")
     @Operation(summary = "Retrieves the eligible target periods for performance data reporting")

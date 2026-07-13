@@ -46,6 +46,11 @@ export class RequestTypeToHeadingPipe implements PipeTransform {
 
       case 'NON_COMPLIANCE':
         return 'Non-Compliance';
+
+      case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM':
+      case 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD':
+      case 'PERFORMANCE_DATA_FACILITY_PROCESSING':
+        return 'Target period report';
     }
   }
 }

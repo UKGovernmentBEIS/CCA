@@ -1,9 +1,8 @@
 import { CurrencyPipe, DecimalPipe, PercentPipe, TitleCasePipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
-import { MeasurementTypeToUnitPipe } from '@requests/common';
 import { SummaryFactory } from '@shared/components';
-import { PerformanceOutcomePipe } from '@shared/pipes';
+import { MeasurementTypeToUnitPipe, PerformanceOutcomePipe } from '@shared/pipes';
 import { fileUtils } from '@shared/utils';
 
 import { AccountPerformanceDataReportDetailsDTO } from 'cca-api';

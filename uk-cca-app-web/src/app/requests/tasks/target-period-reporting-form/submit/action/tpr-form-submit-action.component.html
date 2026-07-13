@@ -1,0 +1,99 @@
+@if (isErrorSummaryDisplayed()) {
+  <div class="govuk-!-width-three-quarters">
+    <cca-error-summary [errorSummaryInfo]="errorSummaryInfo()" />
+  </div>
+}
+
+<netz-page-heading caption="Confirm results and submit">TPR calculated results</netz-page-heading>
+
+<div class="govuk-!-width-three-quarters">
+  <p>Review and confirm the below calculated results we get from the information you provided so far.</p>
+  <govuk-details summary="I need help with the energy terms">
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        Actual energy
+        <p class="govuk-hint">
+          This is the amount of energy consumed during the reporting period expressed in primary energy units.
+        </p>
+      </li>
+
+      <li>
+        Target energy
+        <p class="govuk-hint">
+          This is the amount of energy consumed which would exactly meet the required improvement target.
+        </p>
+      </li>
+
+      <li>
+        Energy difference
+        <p class="govuk-hint">This is the difference between the actual energy and the target energy.</p>
+      </li>
+
+      <li>
+        Weighted average conversion factor
+        <p class="govuk-hint">
+          This is the sum product of the amount of each fuel consumed and its conversion factor divided by the actual
+          energy consumed.
+        </p>
+      </li>
+
+      <li>
+        CO2 difference
+        <p class="govuk-hint">
+          This is the difference between the actual carbon dioxide and the target carbon dioxide.
+        </p>
+      </li>
+
+      <li>
+        Improvement target %
+        <p class="govuk-hint">This is the expected improvement from the baseline period.</p>
+      </li>
+
+      <li>
+        Actual improvement
+        <p class="govuk-hint">This is the actual improvement from the baseline period.</p>
+      </li>
+    </ul>
+  </govuk-details>
+</div>
+
+<div class="govuk-!-width-three-quarters">
+  <cca-summary [data]="comparisonData()" />
+
+  @if (!isInterimReport()) {
+    <h3 class="govuk-heading-m">Results details</h3>
+    <p class="govuk-hint">
+      The values reflected below are based on the baseline data and input values at the time when this report is
+      submitted only. Any subsequent variations and/or corrections may change these values when the buy-out run is
+      executed.
+    </p>
+
+    <cca-summary [data]="resultsDetails()" />
+  }
+</div>
+
+<div class="govuk-!-width-three-quarters">
+  <govuk-details summary="View baseline details">
+    <cca-summary [data]="baselineDetails()" />
+  </govuk-details>
+</div>
+
+<div class="govuk-!-width-three-quarters">
+  <p>
+    By selecting 'Confirm and submit TPR' you confirm that the information in your report is correct to the best of your
+    knowledge.
+  </p>
+</div>
+
+@if (isCancelError()) {
+  <button netzPendingButton govukWarnButton type="button" (click)="onCancel()" class="govuk-!-margin-top-6">
+    Go to cancel task
+  </button>
+} @else {
+  <button netzPendingButton govukButton type="button" (click)="onSubmit()" class="govuk-!-margin-top-6">
+    Confirm and submit TPR
+  </button>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

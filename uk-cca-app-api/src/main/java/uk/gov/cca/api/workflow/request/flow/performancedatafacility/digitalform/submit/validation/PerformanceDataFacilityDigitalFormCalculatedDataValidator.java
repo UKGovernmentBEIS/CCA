@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.validation.PerformanceDataFacilityViolation;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityCalculatedResults;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation.PerformanceDataFacilityViolation;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.transform.PerformanceDataFacilityCalculationMapper;
 
@@ -18,8 +18,14 @@ public class PerformanceDataFacilityDigitalFormCalculatedDataValidator {
 
     public List<BusinessValidationResult> validateCalculatedData(final PerformanceDataFacilityInputData performanceData,
                                                                  final PerformanceDataFacilityCalculationParameters calculationParameters) {
-
         final PerformanceDataFacilityCalculatedResults inputResults = performanceData.getCalculatedResults();
+        if(inputResults == null) {
+            return List.of(BusinessValidationResult.invalid(List.of(
+                    new PerformanceDataFacilityViolation(PerformanceDataFacilityCalculatedResults.class.getName(),
+                            PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.INVALID_PERFORMANCE_DATA)
+            )));
+        }
+
         PerformanceDataFacilityCalculatedResults expectedResults = PerformanceDataFacilityCalculationMapper
                 .toPerformanceDataFacilityCalculatedResults(calculationParameters, performanceData);
 

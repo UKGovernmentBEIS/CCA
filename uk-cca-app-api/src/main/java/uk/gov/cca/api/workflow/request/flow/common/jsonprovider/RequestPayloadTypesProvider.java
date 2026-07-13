@@ -7,11 +7,17 @@ import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA2_EXTENSION_NOTICE_RUN_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_RUN_REQUEST_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_AUDIT_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_CERTIFICATION_RUN_REQUEST_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.NON_COMPLIANCE_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_DOWNLOAD_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_DATA_PROCESSING_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REQUEST_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_GENERATE_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_SPREADSHEET_GENERATE_PAYLOAD;
@@ -38,6 +44,9 @@ import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.common.domain.Cc
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.domain.FacilityPerformanceAccountTemplateDataProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.common.domain.FacilityAuditRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceRequestPayload;
@@ -49,6 +58,9 @@ import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownl
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.common.domain.PerformanceDataProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.common.domain.PerformanceDataFacilityDataProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.domain.PerformanceDataFacilityProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunRequestPayload;
@@ -75,6 +87,10 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
 				new NamedType(PerformanceDataProcessingRequestPayload.class, PERFORMANCE_DATA_PROCESSING_PAYLOAD),
 				new NamedType(PerformanceDataSpreadsheetProcessingRequestPayload.class, PERFORMANCE_DATA_SPREADSHEET_PROCESSING_PAYLOAD),
 
+				new NamedType(PerformanceDataFacilityDataUploadRequestPayload.class, PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_PAYLOAD),
+				new NamedType(PerformanceDataFacilityDataProcessingRequestPayload.class, PERFORMANCE_DATA_FACILITY_DATA_PROCESSING_PAYLOAD),
+				new NamedType(PerformanceDataFacilityProcessingRequestPayload.class, PERFORMANCE_DATA_FACILITY_PROCESSING_PAYLOAD),
+
 				new NamedType(PerformanceAccountTemplateDataUploadRequestPayload.class,
 						CcaRequestPayloadType.PERFORMANCE_ACCCOUNT_TEMPLATE_DATA_UPLOAD_PAYLOAD),
 				new NamedType(PerformanceAccountTemplateDataProcessingRequestPayload.class,
@@ -99,7 +115,11 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
 
 				new NamedType(NonComplianceRequestPayload.class, NON_COMPLIANCE_REQUEST_PAYLOAD),
 
-				new NamedType(PerformanceDataFacilityDigitalFormRequestPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REQUEST_PAYLOAD)
+				new NamedType(PerformanceDataFacilityDigitalFormRequestPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REQUEST_PAYLOAD),
+
+				new NamedType(FacilityPerformanceAccountTemplateDataUploadRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PAYLOAD),
+				new NamedType(FacilityPerformanceAccountTemplateDataProcessingRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_PAYLOAD),
+				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_PAYLOAD)
 		);
 	}
 

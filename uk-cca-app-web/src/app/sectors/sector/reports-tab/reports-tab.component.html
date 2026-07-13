@@ -1,21 +1,50 @@
 <h2 class="govuk-heading-m">Reports</h2>
 <form [formGroup]="reportTypeForm">
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-column-one-quarter">
       <div
         govuk-select
-        widthClass="govuk-!-width-one-quarter"
+        widthClass="govuk-!-width-full"
         [options]="reportTypeOptions"
         formControlName="reportType"
-        label="Report type"
+        label="Report category"
       ></div>
     </div>
+
+    @if (reportTypeValue() === 'Performance') {
+      <div class="govuk-grid-column-one-quarter">
+        <div
+          govuk-select
+          widthClass="govuk-!-width-full"
+          [options]="targetPeriodTypeOptions"
+          formControlName="targetPeriodType"
+          label="Period"
+        ></div>
+      </div>
+    }
+
+    @if (showTargetPeriodReportType()) {
+      <div class="govuk-grid-column-one-quarter">
+        <div
+          govuk-select
+          widthClass="govuk-!-width-full"
+          [options]="targetPeriodReportTypeOptions()"
+          formControlName="targetPeriodReportType"
+          label="Target period report type"
+        ></div>
+      </div>
+    }
   </div>
 </form>
 
-@if (reportTypeValue() === 'Performance') {
+@if (showAccountPerformanceReport()) {
   <cca-performance-report-filters />
   <cca-performance-data-report-table />
+}
+
+@if (showFacilityPerformanceReport()) {
+  <cca-facility-performance-report-filters />
+  <cca-facility-performance-data-report-table />
 }
 
 @if (reportTypeValue() === 'PAT') {

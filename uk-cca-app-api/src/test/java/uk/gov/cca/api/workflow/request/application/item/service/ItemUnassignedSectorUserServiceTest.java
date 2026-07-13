@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -30,9 +31,11 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.workflow.request.application.item.domain.Item;
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemAssignmentType;
+import uk.gov.netz.api.workflow.request.application.item.domain.ItemOrderBy;
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemPage;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTO;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemSearchCriteriaDTO;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemRequestResourcesService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemResponseService;
 
@@ -74,13 +77,15 @@ class ItemUnassignedSectorUserServiceTest {
         when(sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypes(appUser))
                 .thenReturn(scopedRequestTaskTypes);
         when(itemRequestResourcesService.getItemRequestResources(expectedItemPage)).thenReturn(expectedItemRequestResources);
-        when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
+        when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, 
+        		PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria()))
                 .thenReturn(expectedItemPage);
         when(itemResponseService.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser))
                 .thenReturn(expectedItemDTOResponse);
 
         // Invoke
-        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+        ItemDTOResponse actualResponse = itemService.getUnassignedItems(
+        		appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
 
         // Assert
         assertThat(actualResponse).isEqualTo(expectedItemDTOResponse);
@@ -100,14 +105,15 @@ class ItemUnassignedSectorUserServiceTest {
                 .thenReturn(scopedRequestTaskTypes);
 
         // Invoke
-        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+        ItemDTOResponse actualResponse = itemService.getUnassignedItems(
+        		appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
 
         // Assert
         assertThat(actualResponse).isEqualTo(ItemDTOResponse.emptyItemDTOResponse());
 
         verify(sectorUserAuthorityResourceAdapter, times(1))
             .getUserScopedRequestTaskTypes(appUser);
-        verify(itemRepository, never()).findItems(anyString(), Mockito.any(), anyMap(), any(PagingRequest.class));
+        verify(itemRepository, never()).findItems(anyString(), Mockito.any(), anyMap(), any(PagingRequest.class), eq(getItemSearchCriteria()));
         verify(itemResponseService, never()).toItemDTOResponse(any(), any(), any());
     }
 
@@ -127,13 +133,15 @@ class ItemUnassignedSectorUserServiceTest {
         when(sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypes(appUser))
                 .thenReturn(scopedRequestTaskTypes);
         when(itemRequestResourcesService.getItemRequestResources(itemPage)).thenReturn(expectedItemRequestResources);
-        when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
+        when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, 
+        		PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria()))
                 .thenReturn(itemPage);
         when(itemResponseService.toItemDTOResponse(itemPage, expectedItemRequestResources, appUser))
                 .thenReturn(expectedItemDTOResponse);
 
         // Invoke
-        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+        ItemDTOResponse actualResponse = itemService.getUnassignedItems(
+        		appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
 
         // Assert
         assertThat(actualResponse).isEqualTo(expectedItemDTOResponse);
@@ -142,5 +150,13 @@ class ItemUnassignedSectorUserServiceTest {
     @Test
     void getRoleType() {
         assertEquals(SECTOR_USER, itemService.getRoleType());
+    }
+    
+    private ItemSearchCriteriaDTO getItemSearchCriteria() {
+        return ItemSearchCriteriaDTO.builder()
+        		.orderBy(ItemOrderBy.NEWEST_FIRST)
+        		.requestType("requestType")
+        		.searchTerm("searchTerm")
+        		.build();
     }
 }

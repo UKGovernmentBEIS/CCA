@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
 import { SummaryFactory } from '@shared/components';
+import { MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { fileUtils } from '@shared/utils';
 
 import {
@@ -14,28 +15,40 @@ import {
 } from 'cca-api';
 
 import { boolToString } from '../../utils';
-import { AgreementCompositionTypePipe, MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '../pipes';
+import { AgreementCompositionTypePipe } from '../pipes';
 import { getBaselineUnits, getMeasurementAndThroughputUnits } from '../target-periods';
 import { BaseLineAndTargetsStep } from '../types';
 import { addDecisionSummaryData } from './decision-summary-data';
 
 type BaselineAndTargetsSummaryMetadata = {
   isTp5Period: boolean;
-  baselineExists: boolean;
+  baselineExists: boolean | null;
   isEditable: boolean;
   attachments: { submit: Record<string, string>; review: Record<string, string> };
   downloadUrl: string;
 };
 
-export function toBaselineAndTargetsSummaryData(
-  isTp5Period: boolean,
-  baselineExists: boolean,
-  sectorSchemeData: SchemeData,
-  targetPeriodDetails: TargetPeriod6Details,
-  attachments: Record<string, string>,
-  isEditable: boolean,
-  multiFileDownloadUrl?: string,
-) {
+type ToBaselineAndTargetsSummaryDataArgs = {
+  isTp5Period: boolean;
+  baselineExists: boolean | null;
+  sectorSchemeData: SchemeData;
+  targetPeriodDetails: TargetPeriod6Details;
+  attachments: Record<string, string>;
+  isEditable: boolean;
+  multiFileDownloadUrl?: string;
+};
+
+export function toBaselineAndTargetsSummaryData(args: ToBaselineAndTargetsSummaryDataArgs) {
+  const {
+    isTp5Period,
+    baselineExists,
+    sectorSchemeData,
+    targetPeriodDetails,
+    attachments,
+    isEditable,
+    multiFileDownloadUrl,
+  } = args;
+
   const factory = new SummaryFactory();
 
   if (!isTp5Period) {
@@ -70,12 +83,21 @@ export function toBaselineAndTargetsSummaryData(
   return factory.create();
 }
 
-export function toBaselineAndTargetsSummaryDataWithDecision(
-  sectorSchemeData: SchemeData,
-  targetPeriodDetails: TargetPeriod6Details,
-  decision: UnderlyingAgreementReviewDecision,
-  { isTp5Period, attachments, baselineExists, downloadUrl, isEditable }: BaselineAndTargetsSummaryMetadata,
-) {
+type ToBaselineAndTargetsSummaryDataWithDecisionArgs = {
+  sectorSchemeData: SchemeData;
+  targetPeriodDetails: TargetPeriod6Details;
+  decision: UnderlyingAgreementReviewDecision;
+  metadata: BaselineAndTargetsSummaryMetadata;
+};
+
+export function toBaselineAndTargetsSummaryDataWithDecision(args: ToBaselineAndTargetsSummaryDataWithDecisionArgs) {
+  const {
+    sectorSchemeData,
+    targetPeriodDetails,
+    decision,
+    metadata: { isTp5Period, attachments, baselineExists, downloadUrl, isEditable },
+  } = args;
+
   let factory = new SummaryFactory();
 
   if (isTp5Period) {
@@ -84,15 +106,18 @@ export function toBaselineAndTargetsSummaryDataWithDecision(
       .addRow(
         'Are you providing baseline and target information for TP5 (2021 to 2022)?',
         boolToString(baselineExists),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
+        { change: isEditable, appendChangeParam: true },
       );
 
     if (!baselineExists) {
       if (decision?.type) {
-        return addDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
+        return addDecisionSummaryData({
+          factory,
+          decision,
+          attachments: attachments.review,
+          isEditable,
+          downloadUrl,
+        }).create();
       }
 
       return factory.create();
@@ -109,7 +134,13 @@ export function toBaselineAndTargetsSummaryDataWithDecision(
 
     if (!decision?.type) return factory.create();
 
-    return addDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
+    return addDecisionSummaryData({
+      factory,
+      decision,
+      attachments: attachments.review,
+      isEditable,
+      downloadUrl,
+    }).create();
   } else {
     factory = targetPeriodSummaryData(
       factory,
@@ -122,7 +153,13 @@ export function toBaselineAndTargetsSummaryDataWithDecision(
 
     if (!decision?.type) return factory.create();
 
-    return addDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
+    return addDecisionSummaryData({
+      factory,
+      decision,
+      attachments: attachments.review,
+      isEditable,
+      downloadUrl,
+    }).create();
   }
 }
 

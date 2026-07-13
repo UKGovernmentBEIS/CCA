@@ -31,11 +31,11 @@ export default class ProvideEvidenceSummaryComponent {
   private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   protected readonly summaryData = computed(() =>
-    toProvideEvidenceSummaryData(
-      this.requestTaskStore.select(underlyingAgreementActivationQuery.selectDetails)(),
-      this.requestTaskStore.select(underlyingAgreementActivationQuery.selectAttachments)(),
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-    ),
+    toProvideEvidenceSummaryData({
+      details: this.requestTaskStore.select(underlyingAgreementActivationQuery.selectDetails)(),
+      attachments: this.requestTaskStore.select(underlyingAgreementActivationQuery.selectAttachments)(),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+    }),
   );
 }

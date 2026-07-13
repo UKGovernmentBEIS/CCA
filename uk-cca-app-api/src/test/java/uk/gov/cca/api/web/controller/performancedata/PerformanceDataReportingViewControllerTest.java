@@ -17,11 +17,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.dto.PerformanceDataReportTypeDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportTypeDTO;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataService;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.netz.api.security.AppSecurityComponent;
@@ -55,7 +55,7 @@ class PerformanceDataReportingViewControllerTest {
     private RoleAuthorizationService roleAuthorizationService;
 
     @Mock
-    private PerformanceDataService performanceDataReportService;
+    private PerformanceDataFacilityService performanceDataReportService;
 
     @BeforeEach
     void setUp() {

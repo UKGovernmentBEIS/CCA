@@ -88,16 +88,16 @@ export class FacilityDecisionComponent {
   );
 
   protected readonly summaryData = computed(() =>
-    toFacilityWizardSummaryData(
-      this.facility(),
-      this.sectorSchemeData(),
-      this.participatingSchemeVersions(),
-      this.countries(),
-      this.store.select(underlyingAgreementQuery.selectAttachments)(),
-      this.store.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-      { changeName: true },
-    ),
+    toFacilityWizardSummaryData({
+      facility: this.facility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.participatingSchemeVersions(),
+      countries: this.countries(),
+      attachments: this.store.select(underlyingAgreementQuery.selectAttachments)(),
+      isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+      opts: { changeName: true },
+    }),
   );
 
   submit() {

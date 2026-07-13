@@ -56,9 +56,12 @@ export class ItemNamePipe implements PipeTransform {
         return 'Peer review of underlying agreement variation';
 
       case 'PERFORMANCE_DATA_DOWNLOAD_SUBMIT':
-        return 'Download target period reporting (TPR) spreadsheets';
+        return 'TP reporting (TP6) - Download spreadsheets';
       case 'PERFORMANCE_DATA_UPLOAD_SUBMIT':
-        return 'Target period reporting (TPR) spreadsheets upload';
+        return 'TP reporting (TP6) - Upload spreadsheets';
+      case 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT':
+        return 'TP reporting (TP7, TP8, TP9) - Upload CSV file';
+
       case 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT':
         return 'Performance account template (PAT) upload';
 
@@ -93,7 +96,7 @@ export class ItemNamePipe implements PipeTransform {
         return 'Provide appeal outcome';
 
       case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT':
-        return 'Target period reporting (TPR) form';
+        return 'TP reporting (TP7, TP8, TP9) - Submit form';
 
       default:
         return null;

@@ -9,10 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { PerformanceDataFacilityInputData } from './performanceDataFacilityInputData';
+import { PerformanceDataFacilityInputEnergyFuelDetails } from './performanceDataFacilityInputEnergyFuelDetails';
+import { PerformanceDataFacilityThroughputDetails } from './performanceDataFacilityThroughputDetails';
 
 export interface PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload {
   payloadType?: string;
-  performanceData?: PerformanceDataFacilityInputData;
+  energyFuelDetails?: PerformanceDataFacilityInputEnergyFuelDetails;
+  throughputDetails?: PerformanceDataFacilityThroughputDetails;
   sectionsCompleted?: Record<string, string>;
 }

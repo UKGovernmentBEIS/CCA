@@ -23,11 +23,11 @@ export class OverallDecisionComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   protected readonly summaryData = computed(() =>
-    toOverallDecisionSummaryData(
-      this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectDetermination)(),
-      this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectReviewAttachments)(),
-      '../../file-download',
-      false,
-    ),
+    toOverallDecisionSummaryData({
+      determination: this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectDetermination)(),
+      attachments: this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectReviewAttachments)(),
+      downloadUrl: '../../file-download',
+      isEditable: false,
+    }),
   );
 }

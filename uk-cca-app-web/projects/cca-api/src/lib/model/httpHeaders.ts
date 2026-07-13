@@ -49,12 +49,12 @@ export interface HttpHeaders {
   lastModified?: number;
   date?: number;
   contentLength?: number;
-  connection?: string[];
-  ifModifiedSince?: number;
-  contentType?: MediaType;
   origin?: string;
   contentLanguage?: HttpHeadersAcceptLanguageAsLocales;
   bearerAuth?: string;
   basicAuth?: string;
   cacheControl?: string;
+  connection?: string[];
+  ifModifiedSince?: number;
+  contentType?: MediaType;
 }

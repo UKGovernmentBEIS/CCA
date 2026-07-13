@@ -1,15 +1,22 @@
 import { boolToString, OverallDecisionWizardStep } from '@requests/common';
-import { SummaryFactory } from '@shared/components';
+import { SummaryData, SummaryFactory } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
 import { VariationRegulatorLedDetermination } from 'cca-api';
 
-export function toOperatorAssentDecisionSummaryData(
+type ToOperatorAssentDecisionSummaryDataArgs = {
+  determination: VariationRegulatorLedDetermination;
+  attachments: Record<string, string>;
+  downloadUrl: string;
+  isEditable: boolean;
+};
+
+function toSummaryData(
   determination: VariationRegulatorLedDetermination,
   attachments: Record<string, string>,
   downloadUrl: string,
   isEditable: boolean,
-) {
+): SummaryFactory {
   return new SummaryFactory()
     .addSection('')
     .addRow(
@@ -31,6 +38,9 @@ export function toOperatorAssentDecisionSummaryData(
         change: isEditable,
         changeLink: `../${OverallDecisionWizardStep.ADDITIONAL_INFO}`,
       },
-    )
-    .create();
+    );
+}
+
+export function toOperatorAssentDecisionSummaryData(args: ToOperatorAssentDecisionSummaryDataArgs): SummaryData {
+  return toSummaryData(args.determination, args.attachments, args.downloadUrl, args.isEditable).create();
 }

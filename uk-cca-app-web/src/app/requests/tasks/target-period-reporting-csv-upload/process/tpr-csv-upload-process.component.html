@@ -1,0 +1,79 @@
+@if (processingStatus() === 'NOT_STARTED_YET') {
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    [hideSubmit]="!isUserAssignee()"
+    [submitText]="'Upload and submit'"
+  >
+    <div
+      widthClass="govuk-!-width-one-quarter"
+      label="Select the target period you want to upload data for"
+      [options]="targetPeriodsOptions()"
+      formControlName="targetPeriodType"
+      govuk-select
+      [class.govuk-!-margin-bottom-9]="!isUserAssignee()"
+    ></div>
+
+    @if (isUserAssignee()) {
+      <govuk-details summary="The target period I need isn't displayed" data-testid="target-period-details">
+        <p>
+          TP6 reporting should be done through the 'Download target period reporting (TPR) spreadsheets' and 'Upload
+          target period reporting (TPR) spreadsheets' tasks.
+        </p>
+
+        <p>
+          The available target period list only includes the current target periods for which you can submit a report or
+          correction. Additional target periods will become available once their respective reporting periods start.
+        </p>
+      </govuk-details>
+
+      <section class="govuk-!-margin-bottom-9">
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Report type</h3>
+        <p class="govuk-hint govuk-!-margin-bottom-2 govuk-!-margin-top-1">
+          This is based on the target period you selected and the date when you select it.
+        </p>
+        @if (reportType()) {
+          <p>{{ reportType() | titlecase }}</p>
+        } @else {
+          <p>Not yet decided</p>
+        }
+      </section>
+
+      <cca-multiple-file-input
+        [baseDownloadUrl]="downloadUrl()"
+        [listTitle]="'Uploaded files'"
+        hint="Your documents must be CSV files, no more than 20MB."
+        formControlName="uploadedFiles"
+        [accepted]="'.csv'"
+      />
+
+      <govuk-details summary="I need help with the TPR file" data-testid="target-period-files-details">
+        <p>
+          When reporting for the whole sector you need to fill in a CSV file with your data using a specific predefined
+          structure.
+        </p>
+      </govuk-details>
+
+      <section class="govuk-!-margin-top-9">
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Now make your submission</h3>
+        <p class="govuk-hint govuk-!-margin-bottom-9 govuk-!-margin-top-1">
+          By selecting 'Upload and submit' you confirm that the data you are uploading for each facility is correct to
+          the best of your knowledge.
+        </p>
+      </section>
+    }
+  </cca-wizard-step>
+}
+
+@if (processingStatus() === 'IN_PROGRESS') {
+  <cca-loading-spinner>
+    <netz-page-heading caption="TP Reporting CSV file">Your files are being uploaded</netz-page-heading>
+    <p>
+      The upload may take several minutes to complete. You can wait here or return later.<br />The page will
+      automatically update once your files are uploaded.
+    </p>
+  </cca-loading-spinner>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true">Return to: Dashboard</a>
+}

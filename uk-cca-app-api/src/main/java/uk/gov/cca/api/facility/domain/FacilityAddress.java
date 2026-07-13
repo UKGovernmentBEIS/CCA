@@ -14,7 +14,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uk.gov.netz.api.referencedata.service.Country;
 import uk.gov.netz.api.referencedata.service.UKCountry;
 
 @Getter

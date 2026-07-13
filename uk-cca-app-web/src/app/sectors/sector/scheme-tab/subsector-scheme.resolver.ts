@@ -9,11 +9,7 @@ export function SubsectorAssociationSchemeResolver(
   route: ActivatedRouteSnapshot,
 ): Observable<SubsectorAssociationSchemesDTO> {
   const subsectorAssociationInfoViewService = inject(SubsectorAssociationInfoViewService);
-  const sectorId = +route.paramMap.get('sectorId');
   const subSectorId = +route.paramMap.get('subId');
 
-  return subsectorAssociationInfoViewService.getSubsectorAssociationSchemeBySubsectorAssociationId(
-    sectorId,
-    subSectorId,
-  );
+  return subsectorAssociationInfoViewService.getSubsectorAssociationSchemeBySubsectorAssociationId(subSectorId);
 }

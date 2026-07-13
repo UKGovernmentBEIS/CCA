@@ -10,15 +10,19 @@ import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociationScheme;
 import uk.gov.cca.api.sectorassociation.domain.SubsectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemesDTO;
 import uk.gov.netz.api.common.config.MapperConfig;
 
-@Mapper(componentModel = "spring", uses = {SubsectorAssociationSchemeMapper.class}, config = MapperConfig.class)
+@Mapper(componentModel = "spring", uses = {SubsectorAssociationSchemeMapper.class, SchemeVersion.class}, config = MapperConfig.class)
 public interface SectorAssociationSchemeMapper {
-    
-    SectorAssociationSchemeDTO toSectorAssociationSchemeDTO(SectorAssociationScheme sectorAssociationScheme);
 
-    @Mapping(target = "subsectorAssociations", source = "subsectors")
+    SectorAssociationSchemeInfo toSectorAssociationSchemeInfo(SectorAssociationScheme sectorAssociationScheme);
+
+    @Mapping(target = "editable", expression = "java(sectorAssociationScheme.getSchemeVersion() != SchemeVersion.CCA_2 && hasEditPermission)")
+    SectorAssociationSchemeDTO toSectorAssociationSchemeDTO(SectorAssociationScheme sectorAssociationScheme, boolean hasEditPermission);
+
+	@Mapping(target = "subsectorAssociations", source = "subsectors")
 	SectorAssociationSchemesDTO toSectorAssociationSchemesDTO(
 			Map<SchemeVersion, SectorAssociationSchemeDTO> sectorAssociationSchemeMap,
 			List<SubsectorAssociation> subsectors);

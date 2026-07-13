@@ -1,10 +1,10 @@
 import { DecimalPipe, PercentPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { catchError, map, of } from 'rxjs';
+import { catchError, EMPTY, map } from 'rxjs';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -17,17 +17,19 @@ import {
   calculateTargetEnergyForProduct,
   calculateThroughputAdjustmentFactor,
   decideVariableEnergyType,
-  MeasurementTypeToUnitPipe,
+  resolveProductEnergyCarbonIntensity,
+  roundHalfUpTo7Decimals,
   TaskItemStatus,
   TasksApiService,
-  toNumber,
   toTPRBaselineDataDetails,
   TPR_FORM_THROUGHPUT_DETAILS_SUBTASK,
+  tprFormQuery,
 } from '@requests/common';
 import { SummaryComponent, TextInputComponent, WizardStepComponent } from '@shared/components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
+import { toNumber } from '@shared/utils';
 import { produce } from 'immer';
 
-import { tprFormQuery } from '../../../../target-period-reporting-form.selectors';
 import {
   createRequestTaskActionProcessDTO,
   toPerformanceDataFacilityDigitalFormSavePayload,
@@ -69,8 +71,11 @@ export class TprThroughputSplitByProductComponent {
   protected readonly reportType = this.requestTaskStore.select(tprFormQuery.selectReportType);
   protected readonly targetPeriodType = this.requestTaskStore.select(tprFormQuery.selectTargetPeriodType);
 
-  protected readonly baselineProducts = computed(
-    () => this.referenceData()?.baselineAndTargets?.variableEnergyConsumptionDataByProduct ?? [],
+  protected readonly baselineProducts = computed(() =>
+    (this.referenceData()?.baselineAndTargets?.variableEnergyConsumptionDataByProduct ?? []).map((product) => ({
+      ...product,
+      baselineEnergyIntensity: resolveProductEnergyCarbonIntensity(product),
+    })),
   );
 
   private readonly currentThroughputValues = toSignal(
@@ -80,14 +85,17 @@ export class TprThroughputSplitByProductComponent {
     { initialValue: this.form.controls.products.controls.map((c) => c.getRawValue().actualThroughput) },
   );
 
-  protected readonly tableColumns: Signal<GovukTableColumn[]> = signal([
+  protected readonly tableColumns: Signal<GovukTableColumn[]> = computed(() => [
     { field: 'productName', header: 'Product name' },
     { field: 'baselineYear', header: 'Baseline year' },
     {
       field: 'energy',
       header: 'Baseline energy intensity',
     },
-    { field: 'improvementTarget', header: 'Improvement target %' },
+    {
+      field: 'improvementTarget',
+      header: this.reportType() === 'INTERIM' ? 'Interim target %' : 'Improvement target %',
+    },
     { field: 'throughput', header: 'Actual throughput' },
     {
       field: 'adjustedThroughput',
@@ -136,13 +144,13 @@ export class TprThroughputSplitByProductComponent {
     const facilityBaseYear = this.facilityBaseYear();
     const facilityImprovementTarget = this.improvementTarget();
     const throughputFactor = this.throughputAdjustmentFactor();
-    const useSRM = this.referenceData()?.baselineAndTargets?.usedReportingMechanism;
+    const useSRM = this.referenceData()?.baselineAndTargets?.usedReportingMechanism ?? false;
 
     return this.baselineProducts().map((product, i) => {
       const productBaseYear = product.baselineYear;
       let improvementTarget = facilityImprovementTarget;
 
-      if (productBaseYear !== facilityBaseYear && facilityBaseYear) {
+      if (facilityBaseYear && productBaseYear > facilityBaseYear) {
         improvementTarget = calculateAdjustedImprovementTargetForProduct(
           this.referenceData(),
           this.reportType(),
@@ -154,32 +162,28 @@ export class TprThroughputSplitByProductComponent {
 
       const throughputValue = throughputValues[i] == null ? null : String(throughputValues[i]);
       const adjustedThroughput = calculateAdjustedThroughput(throughputValue, throughputFactor, useSRM) ?? 0;
-      const targetEnergy = calculateTargetEnergyForProduct(product.energy, adjustedThroughput, improvementTarget);
+      const baselineEnergyIntensity = resolveProductEnergyCarbonIntensity(product);
 
-      return { improvementTarget, adjustedThroughput, targetEnergy };
+      const targetEnergy = calculateTargetEnergyForProduct(
+        baselineEnergyIntensity,
+        adjustedThroughput,
+        improvementTarget,
+      );
+
+      return { improvementTarget, adjustedThroughput, baselineEnergyIntensity, targetEnergy };
     });
   });
 
   protected readonly totalTargetVariableEnergy = computed(() => {
-    const throughputValues = this.currentThroughputValues();
-    const facilityImprovementTarget = this.improvementTarget();
-    const throughputFactor = this.throughputAdjustmentFactor();
-    const useSRM = this.referenceData()?.baselineAndTargets?.usedReportingMechanism;
-    const hasVariableEnergy = this.referenceData()?.baselineAndTargets?.variableEnergyType != null;
+    const sumOfIntensityTimesAdjustedThroughput = this.productCalculations().reduce(
+      (sum, product) => sum + product.baselineEnergyIntensity * product.adjustedThroughput,
+      0,
+    );
 
-    // Sum of (baseline intensity x adjusted throughput) for all products
-    const sumOfIntensityTimesAdjustedThroughput = this.baselineProducts().reduce((sum, product, i) => {
-      const throughputValue = throughputValues[i] == null ? null : String(throughputValues[i]);
-      const adjustedThroughput = calculateAdjustedThroughput(throughputValue, throughputFactor, useSRM ?? false) ?? 0;
-      const intensity = toNumber(product.energy);
-      return sum + intensity * adjustedThroughput;
-    }, 0);
-
-    // Apply facility improvement target once to the sum, return 0 if no variable energy
     return calculateFacilityTargetVariableEnergy(
       sumOfIntensityTimesAdjustedThroughput,
-      facilityImprovementTarget,
-      hasVariableEnergy,
+      this.improvementTarget(),
+      this.baselineProducts().length > 0,
     );
   });
 
@@ -193,15 +197,17 @@ export class TprThroughputSplitByProductComponent {
     const productVariableEnergyData = this.form.controls.products.controls.map((control, index) => ({
       productName: control.getRawValue().productName,
       actualThroughput: String(control.getRawValue().actualThroughput),
-      targetImprovement: String(productCalculations[index]?.improvementTarget ?? 0),
-      adjustedThroughput: String(productCalculations[index]?.adjustedThroughput ?? 0),
-      targetEnergy: String(productCalculations[index]?.targetEnergy ?? 0),
+      targetImprovement: roundHalfUpTo7Decimals(productCalculations[index]?.improvementTarget ?? 0),
+      adjustedThroughput: roundHalfUpTo7Decimals(productCalculations[index]?.adjustedThroughput ?? 0),
+      targetEnergy: roundHalfUpTo7Decimals(productCalculations[index]?.targetEnergy ?? 0),
     }));
 
     const updatedPayload = produce(actionPayload, (draft) => {
       draft.throughputDetails = {
-        ...actionPayload.throughputDetails,
-        totalTargetVariableEnergy: String(this.totalTargetVariableEnergy()),
+        actualThroughput: null,
+        adjustedThroughput: null,
+        targetImprovement: null,
+        totalTargetVariableEnergy: roundHalfUpTo7Decimals(this.totalTargetVariableEnergy()),
         variableEnergyConsumptionDataByProduct: productVariableEnergyData,
       };
     });
@@ -219,7 +225,7 @@ export class TprThroughputSplitByProductComponent {
       .pipe(
         catchError((error) => {
           console.error(error);
-          return of(null);
+          return EMPTY;
         }),
       )
       .subscribe(() => {

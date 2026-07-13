@@ -53,10 +53,14 @@ public class CcaFileDocumentGeneratorService {
         return fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
     }
 
-    public CompletableFuture<FileInfoDTO> generateAsync(final String signatory, final Long sectorAssociationId, final String documentTemplateType, TemplateParams documentTemplateParams, String fileNameToGenerate) {
-        final TemplateParams templateParams = documentTemplateCommonParamsProvider.getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, documentTemplateParams);
+    public CompletableFuture<FileInfoDTO> generateAsync(final String signatory, final Long sectorAssociationId, final String documentTemplateType, TemplateParams documentTemplateParams, String fileNameToGenerate, SchemeVersion schemeVersion) {
+        final TemplateParams templateParams = documentTemplateCommonParamsProvider.getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, documentTemplateParams, schemeVersion);
 
         return fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
+    }
+
+    public CompletableFuture<FileInfoDTO> generateAsync(final String signatory, final Long sectorAssociationId, final String documentTemplateType, TemplateParams documentTemplateParams, String fileNameToGenerate) {
+        return generateAsync(signatory, sectorAssociationId, documentTemplateType, documentTemplateParams, fileNameToGenerate, null);
     }
 
     public CompletableFuture<FileInfoDTO> generateAsync(final Request request, String signatory, final String documentTemplateType, TemplateParams documentTemplateParams, String fileNameToGenerate) {

@@ -51,15 +51,15 @@ export class FacilitySubmittedComponent {
   );
 
   protected readonly summaryData = computed(() =>
-    toFacilitySummaryDataWithStatus(
-      this.facility(),
-      this.sectorSchemeData(),
-      this.participatingSchemeVersions(),
-      this.countries(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
-      false,
-      '../../../file-download',
-      { productsLink: './products' },
-    ),
+    toFacilitySummaryDataWithStatus({
+      facility: this.facility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.participatingSchemeVersions(),
+      countries: this.countries(),
+      attachments: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
+      isEditable: false,
+      downloadUrl: '../../../file-download',
+      opts: { productsLink: './products' },
+    }),
   );
 }

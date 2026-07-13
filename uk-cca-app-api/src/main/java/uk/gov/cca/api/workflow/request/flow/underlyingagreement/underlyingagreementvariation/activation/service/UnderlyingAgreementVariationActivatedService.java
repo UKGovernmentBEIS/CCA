@@ -52,5 +52,9 @@ public class UnderlyingAgreementVariationActivatedService {
 
         // Update facility data and account
         underlyingAgreementVariationService.updateFacilitiesAndAccount(accountId, unaContainerFinal, requestPayload);
+        
+        // Update performance data facility variation indicator
+        underlyingAgreementVariationService.updateVariationIndicatorForPerformanceDataFacility(
+        		requestPayload.getOriginalUnderlyingAgreementContainer(), unaContainerFinal);
     }
 }

@@ -100,8 +100,11 @@ export class BreadcrumbsComponent {
 function removeSameRouteBreadcrumb(breadcrumbData: Link[], path: string): Link[] {
   const bd = structuredClone(breadcrumbData);
   const index = bd.findIndex((b) => b.link === path);
+
   if (index >= 0) bd.splice(index);
-  return bd;
+
+  const isDashboardPage = path === '/dashboard' && bd.length === 1 && bd[0].link === '/';
+  return isDashboardPage ? [] : bd;
 }
 
 /**

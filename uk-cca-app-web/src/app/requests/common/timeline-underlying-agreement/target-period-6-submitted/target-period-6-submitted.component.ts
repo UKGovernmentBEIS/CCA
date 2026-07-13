@@ -23,16 +23,18 @@ export class TargetPeriod6SubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
   protected readonly summaryData = computed(() =>
-    toBaselineAndTargetsSummaryData(
-      false,
-      true,
-      this.requestActionStore.select(
+    toBaselineAndTargetsSummaryData({
+      isTp5Period: false,
+      baselineExists: true,
+      sectorSchemeData: this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
       )(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectTargetPeriod6Details)(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
-      false,
-      '../../file-download',
-    ),
+      targetPeriodDetails: this.requestActionStore.select(
+        underlyingAgreementRequestActionQuery.selectTargetPeriod6Details,
+      )(),
+      attachments: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
+      isEditable: false,
+      multiFileDownloadUrl: '../../file-download',
+    }),
   );
 }

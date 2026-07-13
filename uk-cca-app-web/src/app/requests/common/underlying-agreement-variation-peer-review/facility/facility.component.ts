@@ -50,23 +50,23 @@ export class FacilityComponent {
       underlyingAgreementVariationPeerReviewQuery.selectSectorAssociationDetailsSchemeData(this.schemeVersion()),
     )();
 
-    return toFacilityWizardSummaryDataWithDecisionAndStatus(
-      this.facility(),
+    return toFacilityWizardSummaryDataWithDecisionAndStatus({
+      facility: this.facility(),
       sectorSchemeData,
-      this.participatingSchemeVersions(),
-      this.requestTaskStore.select(
+      schemeVersions: this.participatingSchemeVersions(),
+      decision: this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectFacilityDecision(this.facilityId),
       )(),
-      this.countries(),
-      {
+      countries: this.countries(),
+      attachments: {
         submit: this.requestTaskStore.select(
           underlyingAgreementVariationPeerReviewQuery.selectUnderlyingAgreementVariationAttachments,
         )(),
         review: this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectReviewAttachments)(),
       },
-      false,
-      '../../../file-download',
-      { productsLink: './products' },
-    );
+      isEditable: false,
+      downloadUrl: '../../../file-download',
+      opts: { productsLink: './products' },
+    });
   });
 }

@@ -35,15 +35,17 @@ export class TargetPeriod6Component {
   };
 
   protected readonly summaryData = computed(() =>
-    toBaselineAndTargetsSummaryDataWithDecision(
-      this.requestActionStore.select(
+    toBaselineAndTargetsSummaryDataWithDecision({
+      sectorSchemeData: this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
       )(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectTargetPeriod6Details)(),
-      this.requestActionStore.select(
+      targetPeriodDetails: this.requestActionStore.select(
+        underlyingAgreementRequestActionQuery.selectTargetPeriod6Details,
+      )(),
+      decision: this.requestActionStore.select(
         underlyingAgreementReviewedRequestActionQuery.selectSubtaskDecision('TARGET_PERIOD6_DETAILS'),
       )(),
-      this.summaryMetadata,
-    ),
+      metadata: this.summaryMetadata,
+    }),
   );
 }

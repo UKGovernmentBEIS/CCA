@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.Comparator;
@@ -53,4 +54,20 @@ public class TargetPeriodYearsContainer {
                 .max(Comparator.comparing(TargetPeriodYear::getTargetYear))
                 .map(TargetPeriodYear::getReportingEndDate);
     }
+    
+	@JsonIgnore
+	public Optional<BigDecimal> getYearMultiplier(Year targetYear) {
+		List<Year> years = targetPeriodYears.stream()
+				.map(TargetPeriodYear::getTargetYear)
+				.toList();
+
+		if (!years.contains(targetYear)) {
+			return Optional.empty();
+		}
+
+		return years.stream()
+				.min(Comparator.naturalOrder())
+				.map(minYear -> BigDecimal.valueOf((long) targetYear.getValue() - minYear.getValue() + 1));
+
+	}
 }

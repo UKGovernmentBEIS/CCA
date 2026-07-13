@@ -3,6 +3,7 @@ export * from './crypto';
 export * from './download-url-generator';
 export * from './files';
 export * from './object';
+export * from './number';
 export * from './phone';
 export * from './summary/target-unit/target-unit-create-submitted-summary-data';
 export * from './summary/target-unit/target-unit-create-summary-data';

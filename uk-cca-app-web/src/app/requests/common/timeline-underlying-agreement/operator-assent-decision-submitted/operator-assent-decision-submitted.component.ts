@@ -22,11 +22,11 @@ export class OperatorAssentDecisionSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
   protected readonly summaryData = computed(() =>
-    toOperatorAssentDecisionSummaryData(
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectDetermination)(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectRegulatorAttachments)(),
-      '../../file-download',
-      false,
-    ),
+    toOperatorAssentDecisionSummaryData({
+      determination: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectDetermination)(),
+      attachments: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectRegulatorAttachments)(),
+      downloadUrl: '../../file-download',
+      isEditable: false,
+    }),
   );
 }

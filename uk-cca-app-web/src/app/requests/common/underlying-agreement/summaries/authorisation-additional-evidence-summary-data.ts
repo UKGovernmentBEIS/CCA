@@ -6,6 +6,24 @@ import { AuthorisationAndAdditionalEvidence, UnderlyingAgreementReviewDecision }
 import { AuthorisationAdditionalEvidenceWizardStep } from '../types';
 import { addDecisionSummaryData } from './decision-summary-data';
 
+type ToAuthorisationAdditionalEvidenceSummaryDataArgs = {
+  authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence;
+  underlyingAgreementAttachments: Record<string, string>;
+  isEditable: boolean;
+  downloadUrl: string;
+  prefix?: string;
+};
+
+type ToAuthorisationAdditionalEvidenceSummaryDataWithDecisionArgs = {
+  authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence;
+  underlyingAgreementAttachments: Record<string, string>;
+  isEditable: boolean;
+  downloadUrl: string;
+  decision: UnderlyingAgreementReviewDecision;
+  reviewAttachments: Record<string, string>;
+  prefix?: string;
+};
+
 function toSummaryData(
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence,
   underlyingAgreementAttachments: Record<string, string>,
@@ -40,39 +58,35 @@ function toSummaryData(
 }
 
 export function toAuthorisationAdditionalEvidenceSummaryData(
-  authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence,
-  underlyingAgreementAttachments: Record<string, string>,
-  isEditable: boolean,
-  downloadUrl: string,
-  prefix = '../',
+  args: ToAuthorisationAdditionalEvidenceSummaryDataArgs,
 ): SummaryData {
   return toSummaryData(
-    authorisationAndAdditionalEvidence,
-    underlyingAgreementAttachments,
-    isEditable,
-    downloadUrl,
-    prefix,
+    args.authorisationAndAdditionalEvidence,
+    args.underlyingAgreementAttachments,
+    args.isEditable,
+    args.downloadUrl,
+    args.prefix ?? '../',
   ).create();
 }
 
 export function toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-  authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence,
-  underlyingAgreementAttachments: Record<string, string>,
-  isEditable: boolean,
-  downloadUrl: string,
-  decision: UnderlyingAgreementReviewDecision,
-  reviewAttachments: Record<string, string>,
-  prefix = '../',
+  args: ToAuthorisationAdditionalEvidenceSummaryDataWithDecisionArgs,
 ): SummaryData {
   const factory = toSummaryData(
-    authorisationAndAdditionalEvidence,
-    underlyingAgreementAttachments,
-    isEditable,
-    downloadUrl,
-    prefix,
+    args.authorisationAndAdditionalEvidence,
+    args.underlyingAgreementAttachments,
+    args.isEditable,
+    args.downloadUrl,
+    args.prefix ?? '../',
   );
 
-  if (!decision?.type) return factory.create();
+  if (!args.decision?.type) return factory.create();
 
-  return addDecisionSummaryData(factory, decision, reviewAttachments, isEditable, downloadUrl).create();
+  return addDecisionSummaryData({
+    factory,
+    decision: args.decision,
+    attachments: args.reviewAttachments,
+    isEditable: args.isEditable,
+    downloadUrl: args.downloadUrl,
+  }).create();
 }

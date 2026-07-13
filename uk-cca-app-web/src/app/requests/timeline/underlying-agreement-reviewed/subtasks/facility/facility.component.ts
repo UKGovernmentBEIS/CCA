@@ -54,21 +54,21 @@ export class FacilityComponent {
   );
 
   protected readonly summaryData = computed(() =>
-    toFacilityWizardSummaryDataWithDecisionAndStatus(
-      this.facility(),
-      this.sectorSchemeData(),
-      this.participatingSchemeVersions(),
-      this.requestActionStore.select(
+    toFacilityWizardSummaryDataWithDecisionAndStatus({
+      facility: this.facility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.participatingSchemeVersions(),
+      decision: this.requestActionStore.select(
         underlyingAgreementReviewedRequestActionQuery.selectFacilitySubtaskDecision(this.facilityId),
       )(),
-      this.countries(),
-      {
+      countries: this.countries(),
+      attachments: {
         submit: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
         review: this.requestActionStore.select(underlyingAgreementReviewedRequestActionQuery.selectReviewAttachments)(),
       },
-      false,
-      '../../../file-download',
-      { productsLink: './products' },
-    ),
+      isEditable: false,
+      downloadUrl: '../../../file-download',
+      opts: { productsLink: './products' },
+    }),
   );
 }

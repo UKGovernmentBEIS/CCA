@@ -9,6 +9,7 @@ import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation.PerformanceDataFacilityValidator;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
@@ -34,7 +35,7 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
     private final TargetPeriodService targetPeriodService;
     private final FacilityDataQueryService facilityDataQueryService;
     private final RequestQueryService requestQueryService;
-    private final PerformanceDataFacilityDigitalFormValidator performanceDataFacilityDigitalFormValidator;
+    private final PerformanceDataFacilityValidator performanceDataFacilityValidator;
 
     @Override
     public RequestCreateValidationResult validateAction(Long facilityId) {
@@ -70,35 +71,35 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
         }
 
         // Check target period and report type
-        BusinessValidationResult validationReportTypeResult = performanceDataFacilityDigitalFormValidator
+        BusinessValidationResult validationReportTypeResult = performanceDataFacilityValidator
                 .validateReportSubmission(targetPeriod, payload.getReportType(), submissionDate);
         if(!validationReportTypeResult.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REPORT_NOT_ELIGIBLE, validationReportTypeResult.getViolations());
         }
 
         // Check facility reporting lock status
-        BusinessValidationResult validationSecondaryLockResult = performanceDataFacilityDigitalFormValidator
+        BusinessValidationResult validationSecondaryLockResult = performanceDataFacilityValidator
                 .validateFacilityReportingLock(facility, targetPeriod, submissionDate);
         if(!validationSecondaryLockResult.isValid()) {
-            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SECONDARY_REPORTING_LOCKED, validationSecondaryLockResult.getViolations());
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_REPORTING_LOCKED, validationSecondaryLockResult.getViolations());
         }
 
         // Check facility eligibility
-        BusinessValidationResult validationFacilityResult = performanceDataFacilityDigitalFormValidator
+        BusinessValidationResult validationFacilityResult = performanceDataFacilityValidator
                 .validateFacilityEligibility(facility, targetPeriod, submissionDate);
         if(!validationFacilityResult.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE, validationFacilityResult.getViolations());
         }
 
         // Check facility baseline date eligibility
-        BusinessValidationResult validationFacilityBaselineDateResult = performanceDataFacilityDigitalFormValidator
+        BusinessValidationResult validationFacilityBaselineDateResult = performanceDataFacilityValidator
                 .validateFacilityBaselineDateEligibility(facility, targetPeriod, submissionDate);
         if(!validationFacilityBaselineDateResult.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE, validationFacilityBaselineDateResult.getViolations());
         }
 
         // Check facility products
-        BusinessValidationResult validationFacilityProductsResult = performanceDataFacilityDigitalFormValidator
+        BusinessValidationResult validationFacilityProductsResult = performanceDataFacilityValidator
                 .validateFacilityProductsEligibility(facility, targetPeriod, submissionDate);
         if(!validationFacilityProductsResult.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE, validationFacilityProductsResult.getViolations());

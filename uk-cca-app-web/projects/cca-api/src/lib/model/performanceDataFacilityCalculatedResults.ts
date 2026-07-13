@@ -20,7 +20,7 @@ export interface PerformanceDataFacilityCalculatedResults {
   actualCo2Emissions: string;
   co2EmissionsDifference: string;
   actualImprovement: string;
-  targetPeriodResultType?: 'TARGET_MET' | 'TARGET_NOT_MET';
+  targetPeriodResultType?: 'TARGET_MET' | 'TARGET_NOT_MET' | 'SUBMITTED' | 'OUTSTANDING';
   surplusGained?: string;
   buyOutRequired?: string;
 }

@@ -15,7 +15,7 @@ import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
 import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
@@ -196,7 +196,7 @@ class CcaDocumentTemplateCommonParamsProviderTest {
                 .sectorAssociationContact(sectorAssociationContact)
                 .build();
         
-        final SectorAssociationSchemeDTO scheme = SectorAssociationSchemeDTO.builder()
+        final SectorAssociationSchemeInfo scheme = SectorAssociationSchemeInfo.builder()
                 .umaDate(date)
                 .sectorDefinition("definition")
                 .build();
@@ -258,7 +258,7 @@ class CcaDocumentTemplateCommonParamsProviderTest {
         		.thenReturn("03/02/2024");
 
         // invoke
-        TemplateParams actual = ccaDocumentTemplateCommonParamsProvider.getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, TemplateParams.builder().build());
+        TemplateParams actual = ccaDocumentTemplateCommonParamsProvider.getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, TemplateParams.builder().build(), SchemeVersion.CCA_2);
 
         // verify
         assertThat(actual.getParams()).isEqualTo(expected.getParams());

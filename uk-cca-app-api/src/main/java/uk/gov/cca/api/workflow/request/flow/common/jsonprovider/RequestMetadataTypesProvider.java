@@ -15,11 +15,15 @@ import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2Te
 import uk.gov.cca.api.workflow.request.flow.cca2termination.processing.domain.Cca2TerminationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.generate.common.domain.PerformanceDataSpreadsheetGenerateRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.domain.PerformanceDataFacilityProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.common.domain.SectorMoaRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.common.domain.SubsistenceFeesRunRequestMetadata;
@@ -37,9 +41,13 @@ import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA2_TERMINATION_RUN;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA3_EXISTING_FACILITIES_MIGRATION_RUN;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_CERTIFICATION_ACCOUNT_PROCESSING;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_CERTIFICATION_RUN;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_FACILITY_DATA_UPLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_FACILITY_PROCESSING;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_GENERATE;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_PROCESSING;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.SECTOR_MOA;
@@ -74,8 +82,12 @@ public class RequestMetadataTypesProvider implements JsonSubTypesProvider {
 				new NamedType(Cca2ExtensionNoticeAccountProcessingRequestMetadata.class, CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING),
 				new NamedType(Cca2TerminationRunRequestMetadata.class, CCA2_TERMINATION_RUN),
 				new NamedType(Cca2TerminationAccountProcessingRequestMetadata.class, CCA2_TERMINATION_ACCOUNT_PROCESSING),
-				new NamedType(PerformanceDataFacilityDigitalFormRequestMetadata.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM)
-		);
+				new NamedType(PerformanceDataFacilityDataUploadRequestMetadata.class, PERFORMANCE_DATA_FACILITY_DATA_UPLOAD),
+				new NamedType(PerformanceDataFacilityProcessingRequestMetadata.class, PERFORMANCE_DATA_FACILITY_PROCESSING),
+				new NamedType(PerformanceDataFacilityDigitalFormRequestMetadata.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM),
+				new NamedType(FacilityPerformanceAccountTemplateDataUploadRequestMetadata.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD),
+				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestMetadata.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING)
+				);
 	}
 
 }

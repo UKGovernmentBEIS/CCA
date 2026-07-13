@@ -2,100 +2,114 @@ import { SummaryData, SummaryFactory } from '@shared/components';
 import { OperatorTypePipe, transformAddress } from '@shared/pipes';
 import { Country } from '@shared/types';
 
-import { AccountReferenceData, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
+import { AccountAddressDTO, AccountReferenceData, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
 
 import { ReviewTargetUnitDetailsWizardStep } from '../types';
 
-export function toVariationTargetUnitDetailsSummaryData(
-  targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+type ToVariationTargetUnitDetailsSummaryDataArgs = {
+  targetUnitDetails: UnderlyingAgreementTargetUnitDetails;
+  countries: Country[];
+  isEditable: boolean;
+  prefix?: string;
+};
+
+type ToVariationTargetUnitDetailsOriginalSummaryDataArgs = {
+  accountReferenceData: AccountReferenceData;
+  countries: Country[];
+  isEditable: boolean;
+  prefix?: string;
+};
+
+type TargetUnitSummaryData = {
+  operatorName: string;
+  operatorType: 'LIMITED_COMPANY' | 'PARTNERSHIP' | 'SOLE_TRADER' | 'NONE';
+  companyRegistrationNumber?: string;
+  registrationNumberMissingReason?: string;
+  subsectorAssociationName?: string;
+  operatorAddress: AccountAddressDTO;
+  responsiblePerson: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    address: AccountAddressDTO;
+  };
+};
+
+function toSummaryData(
+  data: TargetUnitSummaryData,
   countries: Country[],
   isEditable: boolean,
   prefix = '../',
-): SummaryData {
+): SummaryFactory {
   const operatorTypePipe = new OperatorTypePipe();
 
   const factory = new SummaryFactory()
-    .addSection('Target unit details', prefix + ReviewTargetUnitDetailsWizardStep?.TARGET_UNIT_DETAILS)
-    .addRow('Operator name', targetUnitDetails?.operatorName, {
-      change: isEditable,
-    })
-    .addRow('Operator type', operatorTypePipe.transform(targetUnitDetails?.operatorType))
-    .addRow('Company number', targetUnitDetails?.companyRegistrationNumber ?? 'Not provided')
-    .addRow('Reason for not having a registration number', targetUnitDetails?.registrationNumberMissingReason);
+    .addSection('Target unit details', prefix + ReviewTargetUnitDetailsWizardStep.TARGET_UNIT_DETAILS)
+    .addRow('Operator name', data.operatorName, { change: isEditable })
+    .addRow('Operator type', operatorTypePipe.transform(data.operatorType))
+    .addRow('Company number', data.companyRegistrationNumber ?? 'Not provided')
+    .addRow('Reason for not having a registration number', data.registrationNumberMissingReason);
 
-  if (targetUnitDetails?.subsectorAssociationName) {
-    factory.addRow('Subsector', targetUnitDetails?.subsectorAssociationName);
+  if (data.subsectorAssociationName) {
+    factory.addRow('Subsector', data.subsectorAssociationName);
   }
 
-  factory
-    .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress, countries), {
-      change: isEditable,
-    })
+  return factory
+    .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS)
+    .addRow('Address', transformAddress(data.operatorAddress, countries), { change: isEditable })
+    .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON)
+    .addRow('First name', data.responsiblePerson.firstName, { change: isEditable })
+    .addRow('Last name', data.responsiblePerson.lastName, { change: isEditable })
+    .addRow('Email address', data.responsiblePerson.email, { change: isEditable })
+    .addRow('Address', transformAddress(data.responsiblePerson.address, countries), { change: isEditable });
+}
 
-    .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep?.RESPONSIBLE_PERSON)
-    .addRow('First name', targetUnitDetails?.responsiblePersonDetails?.firstName, {
-      change: isEditable,
-    })
-    .addRow('Last name', targetUnitDetails?.responsiblePersonDetails?.lastName, {
-      change: isEditable,
-    })
-    .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
-      change: isEditable,
-    })
-    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address, countries), {
-      change: isEditable,
-    });
-
-  return factory.create();
+export function toVariationTargetUnitDetailsSummaryData(
+  args: ToVariationTargetUnitDetailsSummaryDataArgs,
+): SummaryData {
+  return toSummaryData(
+    {
+      operatorName: args.targetUnitDetails?.operatorName,
+      operatorType: args.targetUnitDetails?.operatorType,
+      companyRegistrationNumber: args.targetUnitDetails?.companyRegistrationNumber,
+      registrationNumberMissingReason: args.targetUnitDetails?.registrationNumberMissingReason,
+      subsectorAssociationName: args.targetUnitDetails?.subsectorAssociationName,
+      operatorAddress: args.targetUnitDetails?.operatorAddress,
+      responsiblePerson: {
+        firstName: args.targetUnitDetails?.responsiblePersonDetails?.firstName,
+        lastName: args.targetUnitDetails?.responsiblePersonDetails?.lastName,
+        email: args.targetUnitDetails?.responsiblePersonDetails?.email,
+        address: args.targetUnitDetails?.responsiblePersonDetails?.address,
+      },
+    },
+    args.countries,
+    args.isEditable,
+    args.prefix ?? '../',
+  ).create();
 }
 
 export function toVariationTargetUnitDetailsOriginalSummaryData(
-  accountReferenceData: AccountReferenceData,
-  countries: Country[],
-  isEditable: boolean,
-  prefix = '../',
+  args: ToVariationTargetUnitDetailsOriginalSummaryDataArgs,
 ): SummaryData {
-  const operatorTypePipe = new OperatorTypePipe();
+  const { accountReferenceData } = args;
 
-  const factory = new SummaryFactory()
-    .addSection('Target unit details', prefix + ReviewTargetUnitDetailsWizardStep?.TARGET_UNIT_DETAILS)
-    .addRow('Operator name', accountReferenceData.targetUnitAccountDetails.operatorName, {
-      change: isEditable,
-    })
-    .addRow('Operator type', operatorTypePipe.transform(accountReferenceData.targetUnitAccountDetails.operatorType))
-    .addRow('Company number', accountReferenceData.targetUnitAccountDetails.companyRegistrationNumber ?? 'Not provided')
-    .addRow(
-      'Reason for not having a registration number',
-      accountReferenceData.targetUnitAccountDetails.registrationNumberMissingReason,
-    );
-
-  if (accountReferenceData.sectorAssociationDetails.subsectorAssociationName) {
-    factory.addRow('Subsector', accountReferenceData.sectorAssociationDetails.subsectorAssociationName);
-  }
-
-  factory
-    .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(accountReferenceData.targetUnitAccountDetails.address, countries), {
-      change: isEditable,
-    })
-    .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep?.RESPONSIBLE_PERSON)
-    .addRow('First name', accountReferenceData.targetUnitAccountDetails.responsiblePerson.firstName, {
-      change: isEditable,
-    })
-    .addRow('Last name', accountReferenceData.targetUnitAccountDetails.responsiblePerson.lastName, {
-      change: isEditable,
-    })
-    .addRow('Email address', accountReferenceData.targetUnitAccountDetails.responsiblePerson.email, {
-      change: isEditable,
-    })
-    .addRow(
-      'Address',
-      transformAddress(accountReferenceData.targetUnitAccountDetails.responsiblePerson.address, countries),
-      {
-        change: isEditable,
+  return toSummaryData(
+    {
+      operatorName: accountReferenceData.targetUnitAccountDetails.operatorName,
+      operatorType: accountReferenceData.targetUnitAccountDetails.operatorType,
+      companyRegistrationNumber: accountReferenceData.targetUnitAccountDetails.companyRegistrationNumber,
+      registrationNumberMissingReason: accountReferenceData.targetUnitAccountDetails.registrationNumberMissingReason,
+      subsectorAssociationName: accountReferenceData.sectorAssociationDetails.subsectorAssociationName,
+      operatorAddress: accountReferenceData.targetUnitAccountDetails.address,
+      responsiblePerson: {
+        firstName: accountReferenceData.targetUnitAccountDetails.responsiblePerson.firstName,
+        lastName: accountReferenceData.targetUnitAccountDetails.responsiblePerson.lastName,
+        email: accountReferenceData.targetUnitAccountDetails.responsiblePerson.email,
+        address: accountReferenceData.targetUnitAccountDetails.responsiblePerson.address,
       },
-    );
-
-  return factory.create();
+    },
+    args.countries,
+    args.isEditable,
+    args.prefix ?? '../',
+  ).create();
 }

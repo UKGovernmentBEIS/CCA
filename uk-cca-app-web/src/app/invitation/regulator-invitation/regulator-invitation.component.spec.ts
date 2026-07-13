@@ -46,6 +46,7 @@ describe('RegulatorInvitationComponent', () => {
 
   beforeEach(async () => {
     mockValidatePasswordService.validatePassword.mockReturnValue(of(null));
+
     regulatorUsersRegistrationService = mockClass(RegulatorUsersRegistrationService);
     regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite.mockReturnValue(of({}));
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -25,7 +25,7 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
   template: `
     <div>
       <netz-page-heading caption="Determine operator assent">Check your answers</netz-page-heading>
-      <cca-summary [data]="summaryData" />
+      <cca-summary [data]="summaryData()" />
       <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
     </div>
 
@@ -49,23 +49,25 @@ export class OverallDecisionCheckYourAnswersComponent {
 
   private readonly determination = this.requestTaskStore.select(
     underlyingAgreementVariationRegulatorLedQuery.selectDetermination,
-  )();
+  );
 
   private readonly attachments = this.requestTaskStore.select(
     underlyingAgreementVariationRegulatorLedQuery.selectRegulatorLedSubmitAttachments,
-  )();
-
-  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
-
-  private readonly downloadUrl = generateDownloadUrl(
-    this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
 
-  protected readonly summaryData = toOperatorAssentDecisionSummaryData(
-    this.determination,
-    this.attachments,
-    this.downloadUrl,
-    this.isEditable,
+  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
+
+  private readonly downloadUrl = computed(() =>
+    generateDownloadUrl(this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString()),
+  );
+
+  protected readonly summaryData = computed(() =>
+    toOperatorAssentDecisionSummaryData({
+      determination: this.determination(),
+      attachments: this.attachments(),
+      downloadUrl: this.downloadUrl(),
+      isEditable: this.isEditable(),
+    }),
   );
 
   onSubmit() {
@@ -81,7 +83,12 @@ export class OverallDecisionCheckYourAnswersComponent {
     });
 
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
-    const dto = createRequestTaskActionProcessDTO(requestTaskId, actionPayload, sectionsCompleted, this.determination);
+    const dto = createRequestTaskActionProcessDTO(
+      requestTaskId,
+      actionPayload,
+      sectionsCompleted,
+      this.determination(),
+    );
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
       this.router.navigate(['../../../'], { relativeTo: this.activatedRoute });

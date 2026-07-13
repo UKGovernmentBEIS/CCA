@@ -2,9 +2,9 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { catchError, map, of } from 'rxjs';
+import { catchError, EMPTY, map, of } from 'rxjs';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -20,16 +20,19 @@ import {
   calculatePrimaryCarbon,
   calculatePrimaryEnergy,
   calculateThroughputAdjustmentFactor,
-  MeasurementTypeToUnitEnum,
+  isCarbonMeasurementType,
+  primaryCarbonDisplayUnit,
+  roundHalfUpTo7Decimals,
   TaskItemStatus,
   TasksApiService,
-  toNumber,
   TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK,
+  tprFormQuery,
 } from '@requests/common';
 import { TextInputComponent, WizardStepComponent } from '@shared/components';
+import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
+import { toNumber } from '@shared/utils';
 import { produce } from 'immer';
 
-import { tprFormQuery } from '../../../target-period-reporting-form.selectors';
 import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalFormSavePayload } from '../../../transform';
 import {
   applyNonStandardFuelRowValidators,
@@ -51,7 +54,6 @@ import {
     TextInputComponent,
     DecimalPipe,
     ButtonDirective,
-    RouterLink,
     RadioComponent,
     RadioOptionComponent,
   ],
@@ -68,16 +70,21 @@ export class EnergyFuelAmountDetailsComponent {
   protected readonly form = inject<FuelForm>(ENERGY_FUEL_AMOUNT_DETAILS_FORM);
 
   private readonly selectReferenceData = this.requestTaskStore.select(tprFormQuery.selectReferenceData);
-  private readonly measurementType = computed(() => {
+
+  protected readonly measurementUnit = computed<MeasurementUnit>(() => {
     const measurementType = this.selectReferenceData()?.baselineAndTargets?.measurementType;
-    return measurementType ? MeasurementTypeToUnitEnum[measurementType] : 'kWh';
+    return measurementType ? MEASUREMENT_TYPE_TO_UNIT_MAP[measurementType] : MEASUREMENT_TYPE_TO_UNIT_MAP.ENERGY_KWH;
   });
+
   protected readonly usesReportingMechanism = computed(
     () => this.selectReferenceData()?.baselineAndTargets?.usedReportingMechanism,
   );
 
-  private readonly isCarbonMeasurement = computed(() => ['kg', 'tonne'].includes(this.measurementType()));
-  protected readonly measurementUnit = computed(() => (this.isCarbonMeasurement() ? 'kWh' : this.measurementType()));
+  private readonly isCarbonMeasurement = computed(() => isCarbonMeasurementType(this.measurementUnit()));
+
+  protected readonly resolvedMeasurementUnit = computed<MeasurementUnit>(() =>
+    this.isCarbonMeasurement() ? MEASUREMENT_TYPE_TO_UNIT_MAP.ENERGY_KWH : this.measurementUnit(),
+  );
 
   protected readonly calculatePrimaryEnergy = calculatePrimaryEnergy;
   protected readonly calculatePrimaryCarbon = calculatePrimaryCarbon;
@@ -126,13 +133,15 @@ export class EnergyFuelAmountDetailsComponent {
     { field: 'fuelType', header: 'Fuel type' },
     {
       field: 'co2ConversionFactor',
-      header: `CO2 conversion factor (kgCO2e/${this.measurementUnit()})`,
+      header: `CO2 conversion factor (kgCO2e/${this.resolvedMeasurementUnit()})`,
     },
     { field: 'deliveredEnergy', header: 'Delivered energy (excluding UK ETS)' },
     { field: 'primaryEnergyConversionFactor', header: 'Primary energy conversion factor' },
     {
       field: 'primaryEnergy',
-      header: this.isCarbonMeasurement() ? 'Primary carbon (kgCO2e)' : `Primary energy (${this.measurementType()})`,
+      header: this.isCarbonMeasurement()
+        ? `Primary CO2e (${primaryCarbonDisplayUnit(this.measurementUnit())})`
+        : `Primary energy (${this.measurementUnit()})`,
     },
     { field: 'actions', header: 'Actions' },
   ]);
@@ -169,12 +178,14 @@ export class EnergyFuelAmountDetailsComponent {
         const conversionFactor = toNumber(ctrl.value.co2ConversionFactor);
 
         const primaryEnergy = this.isCarbonPrimaryOutput()
-          ? calculatePrimaryCarbon(deliveredEnergy, primaryFactor, conversionFactor)
-          : calculatePrimaryEnergy(deliveredEnergy, primaryFactor);
+          ? roundHalfUpTo7Decimals(
+              calculatePrimaryCarbon(deliveredEnergy, primaryFactor, conversionFactor, this.measurementUnit()),
+            )
+          : roundHalfUpTo7Decimals(calculatePrimaryEnergy(deliveredEnergy, primaryFactor));
 
         acc[ctrl.value.fuelKey] = {
           deliveredEnergy: String(deliveredEnergy),
-          primaryEnergy: String(primaryEnergy),
+          primaryEnergy,
         };
       }
 
@@ -191,11 +202,11 @@ export class EnergyFuelAmountDetailsComponent {
           deliveredEnergy: String(deliveredEnergy),
           name: ctrl.value.fuelType.trim(),
           conversionFactor: String(conversionFactor),
-          primaryEnergy: String(
-            this.isCarbonPrimaryOutput()
-              ? calculatePrimaryCarbon(deliveredEnergy, 1, conversionFactor)
-              : calculatePrimaryEnergy(deliveredEnergy, 1),
-          ),
+          primaryEnergy: this.isCarbonPrimaryOutput()
+            ? roundHalfUpTo7Decimals(
+                calculatePrimaryCarbon(deliveredEnergy, 1, conversionFactor, this.measurementUnit()),
+              )
+            : roundHalfUpTo7Decimals(calculatePrimaryEnergy(deliveredEnergy, 1)),
         };
       });
 
@@ -207,7 +218,9 @@ export class EnergyFuelAmountDetailsComponent {
         electricitySuppliedFromCHP: this.usesReportingMechanism()
           ? String(this.form.controls.specialReportingMethodology.value ?? 0)
           : null,
-        throughputAdjustmentFactor: this.usesReportingMechanism() ? String(this.throughputAdjustmentFactor()) : null,
+        throughputAdjustmentFactor: this.usesReportingMechanism()
+          ? roundHalfUpTo7Decimals(this.throughputAdjustmentFactor())
+          : null,
       };
     });
 
@@ -224,7 +237,7 @@ export class EnergyFuelAmountDetailsComponent {
       .pipe(
         catchError((error) => {
           console.error(error);
-          return of(null);
+          return EMPTY;
         }),
       )
       .subscribe(() => this.router.navigate(['../check-your-answers'], { relativeTo: this.route }));

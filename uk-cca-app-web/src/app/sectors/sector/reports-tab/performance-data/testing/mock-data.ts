@@ -2,7 +2,7 @@ export const mockSectorAccountsPerformanceReport = {
   performanceDataReportItems: [
     {
       accountId: 1,
-      targetUnitBusinessId: 'ADS-T0003',
+      targetUnitAccountBusinessId: 'ADS-T0003',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 2,
@@ -11,7 +11,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 2,
-      targetUnitBusinessId: 'ADS-T0004',
+      targetUnitAccountBusinessId: 'ADS-T0004',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 3,
@@ -20,7 +20,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 3,
-      targetUnitBusinessId: 'ADS-T0005',
+      targetUnitAccountBusinessId: 'ADS-T0005',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 1,
@@ -29,7 +29,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 4,
-      targetUnitBusinessId: 'ADS-T0006',
+      targetUnitAccountBusinessId: 'ADS-T0006',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-07-05',
       reportVersion: 2,
@@ -38,7 +38,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 5,
-      targetUnitBusinessId: 'ADS-T0007',
+      targetUnitAccountBusinessId: 'ADS-T0007',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 1,
@@ -47,7 +47,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 6,
-      targetUnitBusinessId: 'ADS-T0008',
+      targetUnitAccountBusinessId: 'ADS-T0008',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 1,
@@ -56,7 +56,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 7,
-      targetUnitBusinessId: 'ADS-T0009',
+      targetUnitAccountBusinessId: 'ADS-T0009',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 1,
@@ -65,7 +65,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 8,
-      targetUnitBusinessId: 'ADS-T0010',
+      targetUnitAccountBusinessId: 'ADS-T0010',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 0,
@@ -74,7 +74,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 9,
-      targetUnitBusinessId: 'ADS-T0011',
+      targetUnitAccountBusinessId: 'ADS-T0011',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 0,
@@ -83,7 +83,7 @@ export const mockSectorAccountsPerformanceReport = {
     },
     {
       accountId: 10,
-      targetUnitBusinessId: 'ADS-T0012',
+      targetUnitAccountBusinessId: 'ADS-T0012',
       operatorName: 'Lorem Ipsum',
       submissionDate: '2025-04-25',
       reportVersion: 1,

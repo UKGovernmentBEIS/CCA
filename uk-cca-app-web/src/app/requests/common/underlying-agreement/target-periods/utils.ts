@@ -1,8 +1,7 @@
+import { transformMeasurementTypeToUnit } from '@shared/pipes';
 import BigNumber from 'bignumber.js';
 
 import { TargetComposition } from 'cca-api';
-
-import { transformMeasurementTypeToUnit } from '../pipes';
 
 export function calculatePerformance(energyOrCarbon: string, throughput: string) {
   const energyOrCarbonBig = new BigNumber(energyOrCarbon);

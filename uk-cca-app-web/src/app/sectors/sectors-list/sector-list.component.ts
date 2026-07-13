@@ -9,45 +9,51 @@ import { SectorAssociationInfoDTO, SectorAssociationInfoViewService } from 'cca-
 
 @Component({
   selector: 'cca-sector-list',
-  template: ` <netz-page-heading size="xl">Manage Sectors</netz-page-heading>
+  template: `
+    <netz-page-heading size="xl">Manage Sectors</netz-page-heading>
+
     <govuk-table [columns]="tableColumns" [data]="sectors()" (sort)="sortBy($event)" data-testid="sector-list">
-      <ng-template let-column="column" let-index="index" let-row="row">
+      <ng-template let-column="column" let-row="row">
         @if (column.field === 'sector') {
-          <a [routerLink]="row.id" class="govuk-link">{{ row[column.field] }}</a>
+          <a [routerLink]="row.id" class="govuk-link">{{ row.sector }}</a>
         } @else {
           {{ row[column.field] }}
         }
       </ng-template>
-    </govuk-table>`,
+    </govuk-table>
+  `,
   imports: [PageHeadingComponent, TableComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorListComponent {
   private readonly sectorAssociationInfoViewService = inject(SectorAssociationInfoViewService);
 
-  private _sectors = toSignal(this.sectorAssociationInfoViewService.getSectorAssociations());
+  private readonly _sectors = toSignal(this.sectorAssociationInfoViewService.getSectorAssociations(), {
+    initialValue: [],
+  });
 
-  protected readonly tableColumns: GovukTableColumn[] = [
+  protected readonly tableColumns: GovukTableColumn<SectorAssociationInfoDTO>[] = [
     { field: 'sector', header: 'Sector', isSortable: true },
     { field: 'mainContact', header: 'Main Contact', isSortable: true },
   ];
 
-  protected readonly sorting = signal<SortEvent | null>(null);
+  protected readonly sorting = signal<SortEvent>({ column: 'sector', direction: 'ascending' });
 
-  protected readonly sectors = computed(() => {
-    const sorting = this.sorting();
-    const sortingColumn = sorting?.column ?? this.tableColumns[0].field;
-    const sectors: SectorAssociationInfoDTO[] = this._sectors();
-
-    if (!sorting) return sectors;
-
-    return sectors.slice().sort((a, b) => {
-      const diff = a[sortingColumn].localeCompare(b[sortingColumn], 'en-GB', { numeric: true, sensitivity: 'base' });
-      return diff * (sorting?.direction === 'descending' ? -1 : 1);
-    });
+  private readonly collator = new Intl.Collator('en-GB', {
+    numeric: true,
+    sensitivity: 'base',
   });
 
-  sortBy(sorting: SortEvent) {
-    this.sorting.set(sorting);
+  protected readonly sectors = computed(() => {
+    const { column, direction } = this.sorting();
+    const multiplier = direction === 'ascending' ? 1 : -1;
+
+    return [...this._sectors()].sort(
+      (a, b) => this.collator.compare(String(a[column] ?? ''), String(b[column] ?? '')) * multiplier,
+    );
+  });
+
+  protected sortBy(sort: SortEvent): void {
+    this.sorting.set(sort);
   }
 }

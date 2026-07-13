@@ -42,7 +42,9 @@ import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.workflow.request.application.item.domain.ItemOrderBy;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemSearchCriteriaDTO;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemUnassignedRegulatorService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemUnassignedService;
 
@@ -105,19 +107,19 @@ class ItemUnassignedControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemUnassignedRegulatorService.getUnassignedItems(appUser, PAGING))
+        when(itemUnassignedRegulatorService.getUnassignedItems(appUser, PAGING, getItemSearchCriteria()))
                 .thenReturn(itemDTOResponse);
         when(itemUnassignedRegulatorService.getRoleType()).thenReturn(REGULATOR);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get(BASE_PATH + "/" + UNASSIGNED + "?page=0&size=10")
+                .get(BASE_PATH + "/" + UNASSIGNED + "?page=0&size=10&requestType=REQUEST_TYPE&searchTerm=searchTerm")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(itemUnassignedRegulatorService, times(1))
-                .getUnassignedItems(appUser, PAGING);
+                .getUnassignedItems(appUser, PAGING, getItemSearchCriteria());
         verify(itemUnassignedSectorUserService, never())
-        		.getUnassignedItems(appUser, PAGING);
+        		.getUnassignedItems(any(), any(PagingRequest.class), any());
     }
     
     @Test
@@ -126,20 +128,20 @@ class ItemUnassignedControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemUnassignedSectorUserService.getUnassignedItems(appUser, PAGING))
+        when(itemUnassignedSectorUserService.getUnassignedItems(appUser, PAGING, getItemSearchCriteria()))
                 .thenReturn(itemDTOResponse);
         when(itemUnassignedSectorUserService.getRoleType()).thenReturn(SECTOR_USER);
         when(itemUnassignedRegulatorService.getRoleType()).thenReturn(REGULATOR);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get(BASE_PATH + "/" + UNASSIGNED + "?page=0&size=10")
+                .get(BASE_PATH + "/" + UNASSIGNED + "?page=0&size=10&requestType=REQUEST_TYPE&searchTerm=searchTerm")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(itemUnassignedRegulatorService, never())
-                .getUnassignedItems(appUser, PAGING);
+                .getUnassignedItems(any(), any(PagingRequest.class), any());
         verify(itemUnassignedSectorUserService, times(1))
-        		.getUnassignedItems(appUser, PAGING);
+        		.getUnassignedItems(appUser, PAGING, getItemSearchCriteria());
     }
 
     @Test
@@ -153,12 +155,12 @@ class ItemUnassignedControllerTest {
 
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/" + UNASSIGNED + "?page=0&size=10")
+            .get(BASE_PATH + "/" + UNASSIGNED + "?page=0&size=10&requestType=REQUEST_TYPE&searchTerm=searchTerm")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(itemUnassignedRegulatorService, never()).getUnassignedItems(any(), any(PagingRequest.class));
-        verify(itemUnassignedSectorUserService, never()).getUnassignedItems(any(), any(PagingRequest.class));
+        verify(itemUnassignedRegulatorService, never()).getUnassignedItems(any(), any(PagingRequest.class), any());
+        verify(itemUnassignedSectorUserService, never()).getUnassignedItems(any(), any(PagingRequest.class), any());
     }
 
     private AppUser buildMockappUser(String roleType) {
@@ -171,5 +173,13 @@ class ItemUnassignedControllerTest {
             .authorities(List.of(appAuthority))
             .roleType(roleType)
             .build();
+    }
+    
+    private ItemSearchCriteriaDTO getItemSearchCriteria() {
+        return ItemSearchCriteriaDTO.builder()
+        		.orderBy(ItemOrderBy.NEWEST_FIRST)
+        		.requestType("REQUEST_TYPE")
+        		.searchTerm("searchTerm")
+        		.build();
     }
 }

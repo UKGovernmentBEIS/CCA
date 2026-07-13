@@ -6,6 +6,8 @@ export * from './final-decision-type.pipe';
 export * from './facility-audit-reason.pipe';
 export * from './include.pipe';
 export * from './marking-of-facilities-status.pipe';
+export * from './measurement-type-to-unit.pipe';
+export * from './measurement-type-to-option-text.pipe';
 export * from './notice-recipients-type.pipe';
 export * from './operator-type.pipe';
 export * from './performance-outcome.pipe';

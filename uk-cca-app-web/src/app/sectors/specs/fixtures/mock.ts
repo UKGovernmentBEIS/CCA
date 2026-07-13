@@ -99,6 +99,9 @@ export const mockSectorScheme: SectorAssociationSchemesDTO = {
           },
         ],
       },
+      umaDate: '2026-01-01',
+      sectorDefinition: 'sector definition',
+      schemeVersion: 'CCA_2',
     },
   },
   subsectorAssociations: [
@@ -117,6 +120,7 @@ export const mockSubSectorDetails: SubsectorAssociationSchemesDTO = {
   name: 'sub-sector-name',
   subsectorAssociationSchemeMap: {
     ['CCA_2']: {
+      id: 1,
       targetSet: {
         id: 0,
         targetCurrencyType: 'Relative',

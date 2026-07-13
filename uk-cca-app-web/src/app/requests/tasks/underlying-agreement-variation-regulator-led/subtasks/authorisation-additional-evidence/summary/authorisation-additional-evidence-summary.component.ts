@@ -31,23 +31,25 @@ export default class AuthorisationAdditionalEvidenceSummaryComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryData(
-    this.requestTaskStore.select(
+  protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryData({
+    authorisationAndAdditionalEvidence: this.requestTaskStore.select(
       underlyingAgreementVariationRegulatorLedQuery.selectOriginalAuthorisationAndAdditionalEvidence,
     )(),
-    this.requestTaskStore.select(
+    underlyingAgreementAttachments: this.requestTaskStore.select(
       underlyingAgreementVariationRegulatorLedQuery.selectOriginalUnderlyingAgreementAttachments,
     )(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-  );
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+  });
 
-  protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryData(
-    this.requestTaskStore.select(
+  protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryData({
+    authorisationAndAdditionalEvidence: this.requestTaskStore.select(
       underlyingAgreementVariationRegulatorLedQuery.selectAuthorisationAndAdditionalEvidence,
     )(),
-    this.requestTaskStore.select(underlyingAgreementVariationRegulatorLedQuery.selectUnderlyingAgreementAttachments)(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-  );
+    underlyingAgreementAttachments: this.requestTaskStore.select(
+      underlyingAgreementVariationRegulatorLedQuery.selectUnderlyingAgreementAttachments,
+    )(),
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+  });
 }

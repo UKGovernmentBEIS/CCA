@@ -62,6 +62,10 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
     case 'NON_COMPLIANCE_APPEAL_OUTCOME_SUBMITTED':
     case 'NON_COMPLIANCE_CLOSED':
     case 'NON_COMPLIANCE_CANCELLED':
+    case 'PERFORMANCE_DATA_FACILITY_SUBMITTED':
+    case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED':
+    case 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED':
+    case 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED':
       return `${ItemActionEnum[item.type]} by ${item.submitter}`;
 
     case 'UNDERLYING_AGREEMENT_APPLICATION_MIGRATED':
@@ -91,6 +95,9 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
 
     case 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED':
       return 'CCA2 Underlying agreement terminated';
+
+    case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED':
+      return 'Target period reporting expired';
 
     default:
       return ItemActionEnum[item.type] || 'Approved Application';

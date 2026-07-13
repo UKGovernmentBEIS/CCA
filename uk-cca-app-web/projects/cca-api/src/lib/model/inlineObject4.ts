@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RegulatorInvitedUserDTO } from './regulatorInvitedUserDTO';
+import { RegulatorUserUpdateDTO } from './regulatorUserUpdateDTO';
 
 export interface InlineObject4 {
-  regulatorInvitedUser: RegulatorInvitedUserDTO;
+  regulatorUserUpdateDTO: RegulatorUserUpdateDTO;
   /**
    * The signature file
    */
-  signature: Blob;
+  signature?: Blob;
 }

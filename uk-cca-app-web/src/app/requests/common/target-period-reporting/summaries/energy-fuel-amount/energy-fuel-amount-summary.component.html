@@ -6,12 +6,16 @@
       <govuk-table [columns]="tableColumns()" [data]="tableRows()">
         <ng-template let-column="column" let-row="row">
           @switch (column.field) {
+            @case ('fuelType') {
+              <strong>{{ row.fuelType }}</strong>
+            }
+
             @case ('co2ConversionFactor') {
               {{ row.co2ConversionFactor | number: '1.0-7' }}
             }
 
             @case ('deliveredEnergy') {
-              {{ row.deliveredEnergy | number: '1.0-7' }}
+              {{ row.deliveredEnergy | number: '1.0-7' }} {{ resolvedMeasurementUnit() }}
             }
 
             @case ('primaryEnergyConversionFactor') {
@@ -71,9 +75,13 @@
   <dl govuk-summary-list>
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>
-        Electricity supplied from combined heat and power plant and dedicated generator electricity
+        Electricity supplied from combined heat and power plant and dedicated generator electricity ({{
+          resolvedMeasurementUnit()
+        }})
       </dt>
-      <dd govukSummaryListRowValue>{{ electricitySuppliedFromCHP() | number: '1.0-7' }}</dd>
+      <dd govukSummaryListRowValue>
+        {{ electricitySuppliedFromCHP() | number: '1.0-7' }}
+      </dd>
 
       @if (isEditable()) {
         <dd govukSummaryListRowActions>

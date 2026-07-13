@@ -4,8 +4,12 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.domain.PerformanceDataFacilityProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.common.domain.SubsistenceFeesRunRequestMetadata;
 import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
@@ -24,8 +28,14 @@ public class RequestMetadataSchemasProvider extends SwaggerSchemasAbstractProvid
         addResolvedShemas(BuyOutSurplusAccountProcessingRequestMetadata.class.getSimpleName(), BuyOutSurplusAccountProcessingRequestMetadata.class);
         // Performance Account Template Upload
         addResolvedShemas(PerformanceAccountTemplateProcessingRequestMetadata.class.getSimpleName(), PerformanceAccountTemplateProcessingRequestMetadata.class);
+        // Performance Data Facility Data Upload
+        addResolvedShemas(PerformanceDataFacilityDataUploadRequestMetadata.class.getSimpleName(), PerformanceDataFacilityDataUploadRequestMetadata.class);
+        addResolvedShemas(PerformanceDataFacilityProcessingRequestMetadata.class.getSimpleName(), PerformanceDataFacilityProcessingRequestMetadata.class);
         // Performance Data Facility Digital Form
         addResolvedShemas(PerformanceDataFacilityDigitalFormRequestMetadata.class.getSimpleName(), PerformanceDataFacilityDigitalFormRequestMetadata.class);
+        // CCA3 Performance Account Template Upload
+        addResolvedShemas(FacilityPerformanceAccountTemplateDataUploadRequestMetadata.class.getSimpleName(), FacilityPerformanceAccountTemplateDataUploadRequestMetadata.class);
+        addResolvedShemas(FacilityPerformanceAccountTemplateProcessingRequestMetadata.class.getSimpleName(), FacilityPerformanceAccountTemplateProcessingRequestMetadata.class);
     }
     
 }

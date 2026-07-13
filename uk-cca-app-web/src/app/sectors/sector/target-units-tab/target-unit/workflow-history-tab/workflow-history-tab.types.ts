@@ -40,7 +40,7 @@ export const workflowTypesMap: Record<string, string> = {
   'Underlying agreement application': 'UNDERLYING_AGREEMENT',
   Variation: 'UNDERLYING_AGREEMENT_VARIATION',
   'Voluntary termination': 'VOLUNTARY_TERMINATION',
-  'Target period reporting (TPR)': 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING',
+  'Target period (TP) reporting': 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING',
   'Target period account reporting (PAT)': 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING',
   'CCA3 migration': 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING',
   'CCA2 extension': 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING',

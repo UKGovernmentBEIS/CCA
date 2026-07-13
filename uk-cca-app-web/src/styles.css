@@ -17,12 +17,14 @@
 }
 
 .x-scroll {
-  overflow-x: scroll;
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
 
-  .max-content-width {
-    min-width: 100%;
-    width: max-content;
-  }
+.max-content-width {
+  min-width: 100%;
+  width: max-content;
 }
 
 .selection-text {
@@ -51,15 +53,6 @@ a[role='button'] {
 
 .pre-line {
   white-space: pre-line;
-}
-
-.overflow-auto {
-  overflow: auto;
-}
-
-.overflow-auto-table {
-  padding-left: 1px;
-  padding-right: 1px;
 }
 
 .govuk-tag-heading-align > h1 {

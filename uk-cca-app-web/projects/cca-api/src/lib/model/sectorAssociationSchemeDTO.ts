@@ -18,4 +18,6 @@ export interface SectorAssociationSchemeDTO {
   targetSet?: TargetSetDTO;
   umaDate?: string;
   sectorDefinition?: string;
+  schemeVersion: 'CCA_2' | 'CCA_3';
+  editable?: boolean;
 }

@@ -80,43 +80,57 @@ function reviewTargetUnitDetailsSummaryFactory(
   return factory;
 }
 
+type ToReviewTargetUnitDetailsUNAReviewSummaryDataArgs = {
+  targetUnitDetails: UnderlyingAgreementTargetUnitDetails;
+  countries: Country[];
+  isEditable: boolean;
+  companiesHouseState?: CompaniesHouseState;
+  toggleCompaniesHouseDetails?: boolean;
+  prefix?: string;
+};
+
+type ToReviewTargetUnitDetailsSummaryDataWithDecisionArgs = {
+  targetUnitDetails: UnderlyingAgreementTargetUnitDetails;
+  decision: UnderlyingAgreementReviewDecision;
+  countries: Country[];
+  attachments: Record<string, string>;
+  downloadUrl: string;
+  isEditable: boolean;
+  companiesHouseState?: CompaniesHouseState;
+  toggleCompaniesHouseDetails?: boolean;
+  prefix?: string;
+};
+
 export function toReviewTargetUnitDetailsUNAReviewSummaryData(
-  targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
-  countries: Country[],
-  isEditable: boolean,
-  companiesHouseState?: CompaniesHouseState,
-  toggleCompaniesHouseDetails?: boolean,
-  prefix = '../',
+  args: ToReviewTargetUnitDetailsUNAReviewSummaryDataArgs,
 ): SummaryData {
   return reviewTargetUnitDetailsSummaryFactory(
-    targetUnitDetails,
-    countries,
-    isEditable,
-    companiesHouseState,
-    toggleCompaniesHouseDetails,
-    prefix,
+    args.targetUnitDetails,
+    args.countries,
+    args.isEditable,
+    args.companiesHouseState,
+    args.toggleCompaniesHouseDetails,
+    args.prefix ?? '../',
   ).create();
 }
 
 export function toReviewTargetUnitDetailsSummaryDataWithDecision(
-  targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
-  decision: UnderlyingAgreementReviewDecision,
-  countries: Country[],
-  attachments: Record<string, string>,
-  downloadUrl: string,
-  isEditable: boolean,
-  companiesHouseState?: CompaniesHouseState,
-  toggleCompaniesHouseDetails?: boolean,
-  prefix = '../',
+  args: ToReviewTargetUnitDetailsSummaryDataWithDecisionArgs,
 ): SummaryData {
   const factory = reviewTargetUnitDetailsSummaryFactory(
-    targetUnitDetails,
-    countries,
-    isEditable,
-    companiesHouseState,
-    toggleCompaniesHouseDetails,
-    prefix,
+    args.targetUnitDetails,
+    args.countries,
+    args.isEditable,
+    args.companiesHouseState,
+    args.toggleCompaniesHouseDetails,
+    args.prefix ?? '../',
   );
 
-  return addDecisionSummaryData(factory, decision, attachments, isEditable, downloadUrl).create();
+  return addDecisionSummaryData({
+    factory,
+    decision: args.decision,
+    attachments: args.attachments,
+    isEditable: args.isEditable,
+    downloadUrl: args.downloadUrl,
+  }).create();
 }

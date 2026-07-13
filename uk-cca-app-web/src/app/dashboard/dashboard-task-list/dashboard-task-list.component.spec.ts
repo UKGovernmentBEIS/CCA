@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, ParamMap } from '@angular/router';
+import { By } from '@angular/platform-browser';
+import { ActivatedRoute, convertToParamMap, ParamMap, provideRouter } from '@angular/router';
 
 import { of, Subject } from 'rxjs';
 
-import { CcaItemDTO, ItemDTOResponse } from 'cca-api';
+import { CcaItemDTO, ItemDTOResponse, ItemSearchCriteriaDTO } from 'cca-api';
 
 import { DashboardFetchFn, DashboardTaskListComponent } from './dashboard-task-list.component';
 
 class ActivatedRouteTestStub {
   private readonly queryParamSubject = new Subject<ParamMap>();
   readonly queryParamMap = this.queryParamSubject.asObservable();
-  readonly snapshot = { fragment: null } as any;
+  readonly snapshot = { fragment: null, queryParamMap: convertToParamMap({}) } as any;
 
   emitQueryParams(params?: Record<string, string | number>) {
     this.queryParamSubject.next(convertToParamMap(params ?? {}));
@@ -28,6 +29,11 @@ class DashboardTaskListHostComponent {
   fetchFn: DashboardFetchFn = () => of({ items: [], totalItems: 0 });
 }
 
+const getDashboardTaskListComponent = (fixture: ComponentFixture<DashboardTaskListHostComponent>) =>
+  fixture.debugElement.query(By.directive(DashboardTaskListComponent)).componentInstance as unknown as {
+    state: () => { criteria: ItemSearchCriteriaDTO };
+  };
+
 describe('DashboardTaskListComponent', () => {
   let fixture: ComponentFixture<DashboardTaskListHostComponent>;
   let routeStub: ActivatedRouteTestStub;
@@ -37,7 +43,7 @@ describe('DashboardTaskListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [DashboardTaskListHostComponent],
-      providers: [{ provide: ActivatedRoute, useValue: routeStub }],
+      providers: [provideRouter([]), { provide: ActivatedRoute, useValue: routeStub }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardTaskListHostComponent);
@@ -197,5 +203,28 @@ describe('DashboardTaskListComponent', () => {
       '3',
       'ADS_3',
     ]);
+  });
+
+  it('should pass dashboard criteria from query params to fetchFn', () => {
+    const fetchFn = vi.fn().mockReturnValue(of({ items: [], totalItems: 0 }));
+    fixture.componentInstance.fetchFn = fetchFn;
+    fixture.detectChanges();
+    const component = getDashboardTaskListComponent(fixture);
+
+    routeStub.emitQueryParams({
+      page: 2,
+      pageSize: 10,
+      searchTerm: 'steel',
+      requestType: 'ADMIN_TERMINATION',
+      orderBy: 'OLDEST_FIRST',
+    });
+    const expectedCriteria = {
+      searchTerm: 'steel',
+      requestType: 'ADMIN_TERMINATION',
+      orderBy: 'OLDEST_FIRST',
+    };
+
+    expect(fetchFn).toHaveBeenCalledWith(1, 10, expectedCriteria);
+    expect(component.state().criteria).toEqual(expectedCriteria);
   });
 });

@@ -36,12 +36,16 @@ export default class ReviewTargetUnitDetailsSummaryComponent {
 
   private readonly attachments = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
 
-  protected readonly summaryData = toReviewTargetUnitDetailsSummaryDataWithDecision(
-    this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
-    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
-    this.countries(),
-    this.attachments,
-    this.downloadUrl,
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-  );
+  protected readonly summaryData = toReviewTargetUnitDetailsSummaryDataWithDecision({
+    targetUnitDetails: this.requestTaskStore.select(
+      underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
+    )(),
+    decision: this.requestTaskStore.select(
+      underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'),
+    )(),
+    countries: this.countries(),
+    attachments: this.attachments,
+    downloadUrl: this.downloadUrl,
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+  });
 }

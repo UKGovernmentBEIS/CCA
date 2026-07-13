@@ -5,7 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukSelectOption } from '@netz/govuk-components';
-import { nonComplianceDetailsQuery, TaskItemStatus, TasksApiService, transformWorkflowLabel } from '@requests/common';
+import {
+  alphabeticalCompare,
+  nonComplianceDetailsQuery,
+  TaskItemStatus,
+  TasksApiService,
+  transformWorkflowLabel,
+} from '@requests/common';
 import { ComboboxComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
@@ -38,7 +44,7 @@ export class ChooseRelevantWorkflowsComponent {
   protected readonly form = inject<ChooseRelevantWorkflowsFormModel>(CHOOSE_RELEVANT_WORKFLOWS_FORM);
   protected readonly allWorkflows =
     this.requestTaskStore.select(nonComplianceDetailsQuery.selectAllRelevantWorkflows)() ?? {};
-  private readonly workflowIds = Object.keys(this.allWorkflows);
+  private readonly workflowIds = Object.keys(this.allWorkflows).sort(alphabeticalCompare);
   private readonly workflowIdsSet = new Set(this.workflowIds);
   private readonly workflowOptionsById = new Map<string, GovukSelectOption<string | null>>(
     this.workflowIds.map((workflowId) => [

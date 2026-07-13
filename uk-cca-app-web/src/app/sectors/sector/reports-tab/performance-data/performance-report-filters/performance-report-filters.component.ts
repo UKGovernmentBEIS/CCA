@@ -25,8 +25,6 @@ export class PerformanceReportFiltersComponent {
 
   readonly filtersForm = inject<PerformanceDataReportFormModel>(PERFORMANCE_DATA_REPORT_FORM);
 
-  protected readonly targetPeriodTypeOptions: GovukSelectOption[] = [{ value: 'TP6', text: 'TP6' }];
-
   protected readonly performanceOutcomeOptions: GovukSelectOption[] = [
     { value: null, text: 'All' },
     { value: 'TARGET_MET', text: 'Target met' },
@@ -46,7 +44,7 @@ export class PerformanceReportFiltersComponent {
     this.filtersForm.reset(performanceDataInitialValues);
 
     this.router.navigate([], {
-      queryParams: { reportType: 'Performance', ...this.filtersForm.value },
+      queryParams: { reportType: 'Performance', ...this.filtersForm.value, page: 1 },
       queryParamsHandling: 'merge',
       relativeTo: this.activatedRoute,
       fragment: 'reports',
@@ -54,8 +52,10 @@ export class PerformanceReportFiltersComponent {
   }
 
   apply() {
+    if (this.filtersForm.invalid) return;
+
     this.router.navigate([], {
-      queryParams: { reportType: 'Performance', ...this.filtersForm.value },
+      queryParams: { reportType: 'Performance', ...this.filtersForm.value, page: 1 },
       queryParamsHandling: 'merge',
       relativeTo: this.activatedRoute,
       fragment: 'reports',

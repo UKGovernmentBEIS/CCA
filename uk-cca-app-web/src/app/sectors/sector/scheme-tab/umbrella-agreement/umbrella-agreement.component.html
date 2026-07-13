@@ -1,0 +1,29 @@
+<div class="govuk-!-width-two-thirds">
+  <netz-page-heading caption="Change">Umbrella agreement CCA3</netz-page-heading>
+
+  <govuk-warning-text assistiveText="">
+    Changes to the umbrella agreement date or sector definition will only apply to underlying agreements you activate
+    after you select 'Confirm'. The changes will not be automatically applied to any underlying agreements you have
+    already activated.
+  </govuk-warning-text>
+
+  <cca-wizard-step
+    [formGroup]="form"
+    caption="Change"
+    heading="Umbrella agreement CCA3"
+    submitText="Confirm"
+    (formSubmit)="onSubmit()"
+  >
+    <cca-file-input
+      formControlName="file"
+      label="Upload the umbrella agreement CCA3"
+      hint="Your document must be a PDF, no more than 20MB."
+      accepted="application/pdf"
+      [downloadUrl]="getDownloadUrl"
+    />
+
+    <div class="govuk-!-margin-top-6" formControlName="umaDate" govuk-date-input label="Umbrella agreement date"></div>
+
+    <div class="govuk-!-margin-top-6" formControlName="sectorDefinition" govuk-textarea label="Sector definition"></div>
+  </cca-wizard-step>
+</div>

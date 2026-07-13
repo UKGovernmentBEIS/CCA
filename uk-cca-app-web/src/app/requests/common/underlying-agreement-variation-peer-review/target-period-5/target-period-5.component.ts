@@ -41,15 +41,15 @@ export class TargetPeriod5Component {
     const targetPeriod5 = this.requestTaskStore.select(
       underlyingAgreementVariationPeerReviewQuery.selectTargetPeriod5,
     )();
-    return toBaselineAndTargetsSummaryDataWithDecision(
-      this.requestTaskStore.select(
+    return toBaselineAndTargetsSummaryDataWithDecision({
+      sectorSchemeData: this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
       )(),
-      targetPeriod5?.details,
-      this.requestTaskStore.select(
+      targetPeriodDetails: targetPeriod5?.details,
+      decision: this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectSubtaskDecision('TARGET_PERIOD5_DETAILS'),
       )(),
-      this.summaryMetadata,
-    );
+      metadata: this.summaryMetadata,
+    });
   });
 }

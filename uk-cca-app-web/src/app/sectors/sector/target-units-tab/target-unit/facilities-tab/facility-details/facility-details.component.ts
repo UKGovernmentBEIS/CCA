@@ -11,6 +11,7 @@ import { CountryService } from '@shared/services';
 import { FacilityInfoDTO } from 'cca-api';
 
 import { AuditSummaryComponent } from '../facility-audit/audit-summary.component';
+import { FacilityReportsTabComponent } from '../reports-tab/facility-reports-tab.component';
 import { WorkflowHistoryTabComponent } from '../workflow-history-tab/workflow-history-tab.component';
 import { toFacilityDetailsSummaryData } from './facility-details-summary-data';
 
@@ -28,6 +29,7 @@ import { toFacilityDetailsSummaryData } from './facility-details-summary-data';
     ButtonDirective,
     RouterLink,
     WorkflowHistoryTabComponent,
+    FacilityReportsTabComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

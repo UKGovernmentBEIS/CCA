@@ -8,7 +8,10 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { expect, Mocked } from 'vitest';
 
-import { PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload } from 'cca-api';
+import {
+  PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload,
+  PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload,
+} from 'cca-api';
 
 import {
   mockTprRequestTaskState,
@@ -223,8 +226,20 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       fixture.detectChanges();
 
       const element: HTMLElement = fixture.nativeElement;
-      expect(element.textContent).toContain('Primary carbon (kgCO2e)');
+      expect(element.textContent).toContain('Primary CO2e (kgCO2e)');
       expect(element.textContent).toContain('182.54');
+    });
+
+    it('should use kWh as the delivered energy suffix', () => {
+      fixture.detectChanges();
+
+      const element: HTMLElement = fixture.nativeElement;
+      const suffixes = Array.from(element.querySelectorAll('.govuk-input__suffix')).map((suffix) =>
+        suffix.textContent?.trim(),
+      );
+
+      expect(suffixes).toContain('kWh');
+      expect(suffixes).not.toContain('kg');
     });
   });
 
@@ -292,8 +307,9 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       component.onSubmit();
 
       const dto = tasksApiService.saveRequestTaskAction.mock.calls[0][0];
-      const standardFuels = (dto.requestTaskActionPayload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload)
-        .performanceData.energyFuelDetails.standardFuels;
+      const standardFuels = (
+        dto.requestTaskActionPayload as PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload
+      ).energyFuelDetails.standardFuels;
 
       expect(standardFuels['NATURAL_GAS']).toBeDefined();
       expect(standardFuels['GRID_ELECTRICITY']).toBeDefined();
@@ -398,9 +414,14 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       component.onSubmit();
 
       const dto = tasksApiService.saveRequestTaskAction.mock.calls[0][0];
-      const standardFuels = (dto.requestTaskActionPayload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload)
-        .performanceData.energyFuelDetails.standardFuels;
+      const standardFuels = (
+        dto.requestTaskActionPayload as PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload
+      ).energyFuelDetails.standardFuels;
 
+      // When the form was originally created with ENERGY_KWH, the form controls already
+      // have the kWh-based co2ConversionFactors. Since the form was not recreated after
+      // the store state change, the onSubmit still uses those values. This mirrors the
+      // real-world scenario where a measurement type would never change mid-session.
       expect(Number(standardFuels['NATURAL_GAS'].primaryEnergy)).toBeCloseTo(182.54, 7);
       expect(Number(standardFuels['GRID_ELECTRICITY'].primaryEnergy)).toBeCloseTo(105.483, 7);
     });
@@ -414,7 +435,7 @@ describe('EnergyFuelAmountDetailsComponent', () => {
 
       const dto = tasksApiService.saveRequestTaskAction.mock.calls[0][0];
       expect(
-        (dto.requestTaskActionPayload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload).performanceData
+        (dto.requestTaskActionPayload as PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload)
           .energyFuelDetails.electricitySuppliedFromCHP,
       ).toBeNull();
     });

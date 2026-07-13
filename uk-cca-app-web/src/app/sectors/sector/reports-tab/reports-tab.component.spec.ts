@@ -8,6 +8,14 @@ import { of } from 'rxjs';
 
 import { getByLabelText, getByText, queryByRole } from '@testing';
 
+import {
+  SectorLevelPerformanceAccountTemplateDataViewPagesService,
+  SectorLevelPerformanceDataViewPagesService,
+} from 'cca-api';
+
+import { mockSectorFacilitiesPerformanceReport } from './facility-performance-data/testing/mock-data';
+import { mockPatData } from './pat/testing/mock-data';
+import { mockSectorAccountsPerformanceReport } from './performance-data/testing/mock-data';
 import { ReportsTabComponent } from './reports-tab.component';
 
 describe('PerformanceDataReportsComponent', () => {
@@ -17,17 +25,27 @@ describe('PerformanceDataReportsComponent', () => {
   beforeEach(async () => {
     const mockActivatedRoute = {
       snapshot: {
-        queryParams: { reportType: 'Performance' },
+        queryParams: { reportType: 'Performance', targetPeriodType: 'TP6' },
         paramMap: convertToParamMap({ page: '1', sectorId: '1' }),
         queryParamMap: convertToParamMap({
-          targetUnitBusinessId: '1',
+          reportType: 'Performance',
+          targetUnitAccountBusinessId: '1',
           targetPeriodType: 'TP6',
           performanceOutcome: 'TARGET_MET',
           submissionType: 'PRIMARY',
         }),
       },
-      queryParams: of({ reportType: 'Performance', page: '1' }),
-      queryParamMap: of(convertToParamMap({ reportType: 'Performance' })),
+      queryParams: of({ reportType: 'Performance', targetPeriodType: 'TP6', page: '1' }),
+      queryParamMap: of(convertToParamMap({ reportType: 'Performance', targetPeriodType: 'TP6' })),
+    };
+
+    const performanceDataService = {
+      getSectorAccountPerformanceDataReportList: vi.fn().mockReturnValue(of(mockSectorAccountsPerformanceReport)),
+      getSectorFacilityPerformanceDataReportList: vi.fn().mockReturnValue(of(mockSectorFacilitiesPerformanceReport)),
+    };
+
+    const patDataService = {
+      getSectorPerformanceAccountTemplateDataReportList: vi.fn().mockReturnValue(of(mockPatData)),
     };
 
     await TestBed.configureTestingModule({
@@ -37,6 +55,8 @@ describe('PerformanceDataReportsComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: SectorLevelPerformanceDataViewPagesService, useValue: performanceDataService },
+        { provide: SectorLevelPerformanceAccountTemplateDataViewPagesService, useValue: patDataService },
       ],
     }).compileComponents();
 
@@ -58,13 +78,18 @@ describe('PerformanceDataReportsComponent', () => {
     expect(heading).toBeTruthy();
   });
 
-  it('should have a select dropdown for "Report type"', () => {
-    const reportTypeSelect = getByLabelText('Report type');
+  it('should have a select dropdown for "Report category"', () => {
+    const reportTypeSelect = getByLabelText('Report category');
     expect(reportTypeSelect).toBeTruthy();
   });
 
-  it('should have a download button with "Download to spreadsheet"', () => {
-    const downloadButton = queryByRole('button', { name: /Download to spreadsheet/i });
+  it('should have a select dropdown for "Period"', () => {
+    const periodSelect = getByLabelText('Period');
+    expect(periodSelect).toBeTruthy();
+  });
+
+  it('should have a download button with "Download search results"', () => {
+    const downloadButton = queryByRole('button', { name: /Download search results/i });
     expect(downloadButton).toBeTruthy();
   });
 });

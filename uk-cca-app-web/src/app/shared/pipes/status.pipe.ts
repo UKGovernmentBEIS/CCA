@@ -74,6 +74,9 @@ export class StatusPipe implements PipeTransform {
       case 'excluded':
         return 'Excluded';
 
+      case 'expired':
+        return 'Expired';
+
       case 'inactive':
         return 'Inactive';
 

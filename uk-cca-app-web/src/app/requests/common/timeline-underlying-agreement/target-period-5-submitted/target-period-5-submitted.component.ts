@@ -23,16 +23,19 @@ export class TargetPeriod5SubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
   protected readonly summaryData = computed(() =>
-    toBaselineAndTargetsSummaryData(
-      true,
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectTargetPeriod5Details)().exist,
-      this.requestActionStore.select(
+    toBaselineAndTargetsSummaryData({
+      isTp5Period: true,
+      baselineExists: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectTargetPeriod5Details)()
+        .exist,
+      sectorSchemeData: this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
       )(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectTargetPeriod5Details)().details,
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
-      false,
-      '../../file-download',
-    ),
+      targetPeriodDetails: this.requestActionStore.select(
+        underlyingAgreementRequestActionQuery.selectTargetPeriod5Details,
+      )().details,
+      attachments: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
+      isEditable: false,
+      multiFileDownloadUrl: '../../file-download',
+    }),
   );
 }

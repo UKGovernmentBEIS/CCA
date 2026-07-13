@@ -51,12 +51,12 @@ export default class ProvideEvidenceCheckAnswersComponent {
   private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   protected readonly summaryData = computed(() =>
-    toProvideEvidenceSummaryData(
-      this.requestTaskStore.select(underlyingAgreementVariationActivationQuery.selectDetails)(),
-      this.requestTaskStore.select(underlyingAgreementVariationActivationQuery.selectAttachments)(),
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-    ),
+    toProvideEvidenceSummaryData({
+      details: this.requestTaskStore.select(underlyingAgreementVariationActivationQuery.selectDetails)(),
+      attachments: this.requestTaskStore.select(underlyingAgreementVariationActivationQuery.selectAttachments)(),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+    }),
   );
 
   onSubmit() {

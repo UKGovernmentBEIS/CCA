@@ -18,11 +18,11 @@
       [max]="today"
     ></div>
 
-    <cca-multiple-file-input
+    <cca-file-input
       formControlName="file"
-      [baseDownloadUrl]="downloadUrl()"
+      [downloadUrl]="getDownloadUrl"
       label="Upload a file (optional)"
-      listTitle="Uploaded files"
+      listTitle="Uploaded file"
     />
 
     <div

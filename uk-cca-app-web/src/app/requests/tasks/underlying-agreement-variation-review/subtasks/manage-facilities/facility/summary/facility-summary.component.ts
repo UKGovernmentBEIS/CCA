@@ -61,13 +61,13 @@ export default class FacilitySummaryComponent {
   )();
 
   protected readonly summaryDataOriginal = computed(() =>
-    toFacilityWizardSummaryDataWithDecision(
-      this.facility().status === 'NEW' ? this.facility() : this.originalFacility(),
-      this.sectorSchemeData(),
-      this.participatingSchemeVersions(),
-      this.decision,
-      this.countries(),
-      {
+    toFacilityWizardSummaryDataWithDecision({
+      facility: this.facility().status === 'NEW' ? this.facility() : this.originalFacility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.participatingSchemeVersions(),
+      decision: this.decision,
+      countries: this.countries(),
+      attachments: {
         submit:
           this.facility().status === 'NEW'
             ? this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)()
@@ -76,24 +76,24 @@ export default class FacilitySummaryComponent {
               )(),
         review: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
       },
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-    ),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+    }),
   );
 
   protected readonly summaryDataCurrent = computed(() =>
-    toFacilityWizardSummaryDataWithDecision(
-      this.facility(),
-      this.sectorSchemeData(),
-      this.participatingSchemeVersions(),
-      this.decision,
-      this.countries(),
-      {
+    toFacilityWizardSummaryDataWithDecision({
+      facility: this.facility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.participatingSchemeVersions(),
+      decision: this.decision,
+      countries: this.countries(),
+      attachments: {
         submit: this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
         review: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
       },
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-    ),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+    }),
   );
 }

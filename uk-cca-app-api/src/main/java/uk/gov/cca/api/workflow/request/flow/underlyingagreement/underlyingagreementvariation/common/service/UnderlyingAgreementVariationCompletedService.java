@@ -1,6 +1,7 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service;
 
 import lombok.RequiredArgsConstructor;
+
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +46,9 @@ public class UnderlyingAgreementVariationCompletedService {
 
         // Update facility data and account
         underlyingAgreementVariationService.updateFacilitiesAndAccount(accountId, unaContainerFinal, requestPayload);
+        
+        // Update performance data facility variation indicator
+        underlyingAgreementVariationService.updateVariationIndicatorForPerformanceDataFacility(
+        		requestPayload.getOriginalUnderlyingAgreementContainer(), unaContainerFinal);
     }
 }

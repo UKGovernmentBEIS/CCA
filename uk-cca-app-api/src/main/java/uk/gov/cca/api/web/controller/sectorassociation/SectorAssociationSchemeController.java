@@ -17,8 +17,9 @@ import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeDocumentS
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.netz.api.token.FileToken;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.token.FileToken;
 
 import java.util.UUID;
 
@@ -43,14 +44,17 @@ public class SectorAssociationSchemeController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#sectorId")
     public ResponseEntity<SectorAssociationSchemesDTO> getSectorAssociationSchemeBySectorAssociationId(
+            @Parameter(hidden = true) AppUser appUser,
             @PathVariable("sectorId") @Parameter(description = "The sector association id") Long sectorId) {
-        return new ResponseEntity<>(sectorAssociationSchemeService.getSectorAssociationSchemesBySectorAssociationId(sectorId), HttpStatus.OK);
+        return new ResponseEntity<>(sectorAssociationSchemeService.getSectorAssociationSchemesBySectorAssociationId(sectorId, appUser), HttpStatus.OK);
     }
 
     @GetMapping(path = "/document")
     @Operation(summary = "Generate the token to get the document of the sector association with the provided sector association id")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FileToken.class))})
+    @ApiResponse(responseCode = "400", description = SwaggerApiInfo.GET_SECTOR_ASSOCIATION_SCHEME_DOCUMENT_TOKEN_BAD_REQUEST,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = org.springframework.web.ErrorResponse.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND,
@@ -59,10 +63,11 @@ public class SectorAssociationSchemeController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#sectorId")
     public ResponseEntity<FileToken> generateGetSectorAssociationSchemeDocumentToken(
+            @Parameter(hidden = true) AppUser appUser,
             @PathVariable("sectorId") @Parameter(description = "The sector association id the document belongs to") @NotNull Long sectorId,
             @RequestParam("documentUuid") @Parameter(name = "documentUuid", description = "The sector association document uuid") @NotNull UUID documentUuid) {
         FileToken getFileToken =
-                sectorAssociationSchemeDocumentService.generateDocumentFileToken(sectorId, documentUuid);
+                sectorAssociationSchemeDocumentService.generateDocumentFileToken(sectorId, documentUuid, appUser);
         return new ResponseEntity<>(getFileToken, HttpStatus.OK);
     }
 }

@@ -6,17 +6,30 @@ import { Observable, switchMap, tap } from 'rxjs';
 
 import { PaginationComponent } from '@shared/components';
 
-import { ItemDTOResponse } from 'cca-api';
+import { CcaItemDTO, ItemDTOResponse, ItemSearchCriteriaDTO } from 'cca-api';
 
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, DEFAULT_TABLE_COLUMNS } from '../+store';
+import { DEFAULT_CRITERIA, DEFAULT_PAGE, DEFAULT_PAGE_SIZE, DEFAULT_TABLE_COLUMNS } from '../+store';
+import { DashboardFiltersComponent } from '../dashboard-filters/dashboard-filters.component';
 import { DashboardItemsListComponent } from '../dashboard-items-list';
+import { extractDashboardCriteria } from '../utils';
 
-export type DashboardFetchFn = (page: number, size: number) => Observable<ItemDTOResponse>;
+export type DashboardFetchFn = (
+  page: number,
+  size: number,
+  criteria: ItemSearchCriteriaDTO,
+) => Observable<ItemDTOResponse>;
+
+type DashboardTaskListState = {
+  items: CcaItemDTO[];
+  totalItems: number;
+  isLoading: boolean;
+  criteria: ItemSearchCriteriaDTO;
+};
 
 @Component({
   selector: 'cca-dashboard-task-list',
   templateUrl: './dashboard-task-list.component.html',
-  imports: [DashboardItemsListComponent, PaginationComponent],
+  imports: [DashboardFiltersComponent, DashboardItemsListComponent, PaginationComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardTaskListComponent implements OnInit {
@@ -27,10 +40,11 @@ export class DashboardTaskListComponent implements OnInit {
   protected readonly heading = input.required<string>();
   protected readonly fetchFn = input.required<DashboardFetchFn>();
 
-  protected readonly state = signal({
+  protected readonly state = signal<DashboardTaskListState>({
     items: [],
     totalItems: 0,
     isLoading: false,
+    criteria: DEFAULT_CRITERIA,
   });
 
   protected readonly currentPage = signal(DEFAULT_PAGE);
@@ -41,17 +55,20 @@ export class DashboardTaskListComponent implements OnInit {
     this.activatedRoute.queryParamMap
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        tap(() => this.state.set({ ...this.state(), isLoading: true })),
         switchMap((params) => {
           const page = +params.get('page') || this.currentPage();
           const pageSize = +params.get('pageSize') || this.pageSize();
+          const criteria = extractDashboardCriteria(params);
 
           this.currentPage.set(page);
           this.pageSize.set(pageSize);
+          this.state.update((state) => ({ ...state, criteria, isLoading: true }));
 
-          return this.fetchFn()(page - 1, pageSize);
+          return this.fetchFn()(page - 1, pageSize, criteria);
         }),
-        tap(({ items, totalItems }) => this.state.set({ items, totalItems, isLoading: false })),
+        tap(({ items, totalItems }) =>
+          this.state.update((state) => ({ ...state, items, totalItems, isLoading: false })),
+        ),
       )
       .subscribe();
   }

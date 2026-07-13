@@ -16,7 +16,7 @@ import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoNameDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationMeasurementInfoDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationInfoService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
@@ -145,7 +145,7 @@ class SectorReferenceDetailsServiceTest {
         final long sectorId = 2L;
         
         when(sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorId, SchemeVersion.CCA_2))
-                .thenReturn(SectorAssociationSchemeDTO.builder().build());
+                .thenReturn(SectorAssociationSchemeInfo.builder().build());
 
         service.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorId, SchemeVersion.CCA_2);
 

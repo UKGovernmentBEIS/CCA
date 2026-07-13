@@ -35,6 +35,7 @@ describe('ComboboxComponent', () => {
     Array.from(fixture.nativeElement.querySelectorAll('.cca-combobox-option')) as HTMLLIElement[];
   const getActiveOption = () =>
     fixture.nativeElement.querySelector('.cca-combobox-option--active') as HTMLLIElement | null;
+  const getListbox = () => fixture.nativeElement.querySelector('.cca-combobox-listbox') as HTMLUListElement;
 
   const focusInput = async () => {
     getInput().dispatchEvent(new FocusEvent('focus'));
@@ -162,6 +163,18 @@ describe('ComboboxComponent', () => {
     expect(hostComponent.form.controls.item.value).toBe('FAC-001');
   });
 
+  it('keeps dropdown open when the listbox scrollbar is clicked', async () => {
+    await focusInput();
+
+    getListbox().dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    getInput().dispatchEvent(new FocusEvent('blur'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(getOptions().length).toBe(3);
+  });
+
   it('handles disabled state', async () => {
     hostComponent.form.controls.item.disable();
     fixture.detectChanges();
@@ -242,6 +255,38 @@ describe('ComboboxComponent', () => {
     await keydown('ArrowDown');
 
     expect(getInput().value).toBe('Alp');
+  });
+
+  it('scrolls the listbox to keep the active option visible during keyboard navigation', async () => {
+    hostComponent.options.set(
+      Array.from({ length: 10 }, (_, index) => ({
+        value: `FAC-${index}`,
+        text: `Facility ${index}`,
+      })),
+    );
+    fixture.detectChanges();
+
+    await focusInput();
+
+    const listbox = getListbox();
+    Object.defineProperty(listbox, 'clientHeight', { value: 90, configurable: true });
+    getOptions().forEach((option, index) => {
+      Object.defineProperty(option, 'offsetTop', { value: index * 30, configurable: true });
+      Object.defineProperty(option, 'offsetHeight', { value: 30, configurable: true });
+    });
+
+    await keydown('ArrowDown');
+    await keydown('ArrowDown');
+    await keydown('ArrowDown');
+    await keydown('ArrowDown');
+
+    expect(listbox.scrollTop).toBe(30);
+
+    listbox.scrollTop = 150;
+
+    await keydown('ArrowUp');
+
+    expect(listbox.scrollTop).toBe(60);
   });
 
   it('shows all matching options in dropdown while inline autocomplete is active', async () => {

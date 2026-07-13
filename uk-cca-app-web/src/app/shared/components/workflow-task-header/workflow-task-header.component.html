@@ -5,7 +5,10 @@
       <span class="govuk-!-padding-left-3 govuk-!-font-weight-bold" data-testId="businessId">{{
         headerInfo.businessId
       }}</span>
-      <span class="govuk-!-padding-left-3" data-testId="status">{{ 'Status: ' + headerInfo.status }}</span>
+
+      @if (headerInfo.status) {
+        <span class="govuk-!-padding-left-3" data-testId="status">{{ 'Status: ' + headerInfo.status }}</span>
+      }
     </p>
   </div>
 }

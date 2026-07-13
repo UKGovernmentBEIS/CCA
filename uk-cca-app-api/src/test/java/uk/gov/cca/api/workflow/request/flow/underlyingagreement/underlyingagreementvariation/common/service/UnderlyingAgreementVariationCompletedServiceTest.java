@@ -11,9 +11,11 @@ import uk.gov.cca.api.common.domain.SchemeData;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.ApplicationReasonType;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Cca3FacilityBaselineAndTargets;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityBaselineEnergyConsumption;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
@@ -67,11 +69,20 @@ class UnderlyingAgreementVariationCompletedServiceTest {
                         .cca3BaselineAndTargets(Cca3FacilityBaselineAndTargets.builder()
                                 .facilityBaselineEnergyConsumption(FacilityBaselineEnergyConsumption.builder().build())
                                 .build())
+                        .facilityDetails(FacilityDetails.builder()
+                                .previousFacilityId("Prv1")
+                                .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
+                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
+                                .build())
                         .build())
                 .build();
-        final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
+        UnderlyingAgreementContainer originalUnderlyingAgreementContainer = UnderlyingAgreementContainer.builder()
+				.underlyingAgreement(UnderlyingAgreement.builder().facilities(Set.of(facility))
+						.build())
+				.build();
+		final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .workflowSchemeVersion(schemeVersion)
-                .originalUnderlyingAgreementContainer(UnderlyingAgreementContainer.builder().build())
+                .originalUnderlyingAgreementContainer(originalUnderlyingAgreementContainer)
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreement(UnderlyingAgreement.builder()
                                 .facilities(Set.of(facility))
@@ -117,6 +128,8 @@ class UnderlyingAgreementVariationCompletedServiceTest {
                 .updateUnderlyingAgreement(unaContainerFinal, accountId, underlyingAgreementValidationContext, false);
         verify(underlyingAgreementVariationService, times(1))
                 .updateFacilitiesAndAccount(accountId, unaContainerFinal, requestPayload);
+        verify(underlyingAgreementVariationService, times(1)).updateVariationIndicatorForPerformanceDataFacility(
+        		originalUnderlyingAgreementContainer, unaContainerFinal);
     }
 
     private void addResourcesToRequest(Long accountId, Request request) {

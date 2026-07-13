@@ -52,11 +52,13 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   private readonly countries = inject(CountryService).countries;
 
   protected readonly summaryData = computed(() =>
-    toReviewTargetUnitDetailsSummaryData(
-      this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
-      this.countries(),
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-    ),
+    toReviewTargetUnitDetailsSummaryData({
+      targetUnitDetails: this.requestTaskStore.select(
+        underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
+      )(),
+      countries: this.countries(),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    }),
   );
 
   onSubmit() {

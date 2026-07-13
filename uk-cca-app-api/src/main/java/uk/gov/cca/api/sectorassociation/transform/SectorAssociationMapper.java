@@ -2,9 +2,11 @@ package uk.gov.cca.api.sectorassociation.transform;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationHeaderInfoDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoNameDTO;
 import uk.gov.netz.api.common.config.MapperConfig;
 
@@ -38,4 +40,7 @@ public interface SectorAssociationMapper {
     SectorAssociation toSectorAssociation(SectorAssociationDTO sectorAssociationDTO);
 
     SectorAssociationInfoNameDTO toSectorAssociationInfoNameDTO(SectorAssociation sectorAssociation);
+
+    @Mapping(source = "sectorAssociation.acronym", target = "businessId")
+    SectorAssociationHeaderInfoDTO toSectorAssociationHeaderInfo(SectorAssociation sectorAssociation);
 }

@@ -7,10 +7,9 @@ import {
   decideVariableEnergyType,
   ThroughputDetailsSummaryComponent,
   toTotalsOnlySummaryData,
+  tprFormQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
-
-import { tprFormQuery } from '../../../target-period-reporting-form.selectors';
 
 @Component({
   selector: 'cca-tpr-throughput-details-summary',
@@ -67,11 +66,11 @@ export class TprThroughputDetailsSummaryComponent {
   );
 
   protected readonly summaryData = computed(() =>
-    toTotalsOnlySummaryData(
-      this.referenceData(),
-      this.performanceData(),
-      this.calculations().targetVariableEnergy,
-      this.isEditable(),
-    ),
+    toTotalsOnlySummaryData({
+      referenceData: this.referenceData(),
+      performanceData: this.performanceData(),
+      targetVariableEnergy: this.calculations().targetVariableEnergy,
+      isEditable: this.isEditable(),
+    }),
   );
 }

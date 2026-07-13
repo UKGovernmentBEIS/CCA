@@ -1,0 +1,35 @@
+<netz-page-heading>TP report results</netz-page-heading>
+
+<div class="govuk-!-width-three-quarters">
+  <h2 class="govuk-heading-m govuk-!-margin-top-6">Report details</h2>
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Reporting period</dt>
+      <dd govukSummaryListRowValue>{{ details()?.targetPeriod }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>70% confirmation</dt>
+      <dd govukSummaryListRowValue>{{ atLeastSeventyPercentEnergyUsed() }}</dd>
+    </div>
+  </dl>
+
+  <cca-summary [data]="comparisonData()" />
+
+  @if (!isInterimReport()) {
+    <h3 class="govuk-heading-m">Results details</h3>
+    <p class="govuk-hint">
+      The values reflected below are based on the baseline data and input values at the time when this report is
+      submitted only. Any subsequent variations and/or corrections may change these values when the buy-out run is
+      executed.
+    </p>
+
+    <cca-summary [data]="resultsDetails()" />
+  }
+</div>
+
+<div class="govuk-!-width-three-quarters">
+  <govuk-details summary="View baseline details">
+    <cca-summary [data]="baselineDetails()" />
+  </govuk-details>
+</div>

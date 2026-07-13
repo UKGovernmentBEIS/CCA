@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ItemLinkPipe, ItemNamePipe } from '@netz/common/pipes';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TableComponent } from '@netz/govuk-components';
+import { getAllByRole, within } from '@testing';
 
 import * as mocks from '../mocks';
 import { DashboardItemsListComponent } from './dashboard-items-list.component';
@@ -40,7 +41,24 @@ describe('WorkflowItemsListComponent', () => {
   });
 
   it('should show data in table', () => {
-    const cells = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('td'));
-    expect(cells.map((cell) => cell.textContent.trim())).toEqual(['', '[object Object]', '10']);
+    const cells = getAllByRole('row', {}, fixture.nativeElement)
+      .slice(1)
+      .flatMap((row) => within(row).getAllByRole('cell'));
+    const cellText = cells.map((cell) => cell.textContent.replace(/\s+/g, ' ').trim());
+
+    expect(cellText).toEqual([
+      'Review application for underlying agreement New',
+      'TU-001',
+      'Acme Manufacturing Ltd',
+      'F-001 - Leeds Works',
+      '10',
+      'FBS',
+      'TP reporting (TP6) - Upload spreadsheets',
+      'TU-002',
+      'North Energy Ltd',
+      'F-002 - Cardiff Site',
+      '',
+      'CHEM',
+    ]);
   });
 });

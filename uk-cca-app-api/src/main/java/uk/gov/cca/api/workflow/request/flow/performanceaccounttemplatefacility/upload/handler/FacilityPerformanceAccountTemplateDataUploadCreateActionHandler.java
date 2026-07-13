@@ -1,0 +1,64 @@
+package uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.handler;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
+import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
+import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
+import uk.gov.cca.api.workflow.request.flow.common.actionhandler.RequestSectorCreateActionHandler;
+import uk.gov.cca.api.workflow.request.flow.common.domain.CcaRequestParams;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestPayload;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
+import uk.gov.netz.api.workflow.request.StartProcessRequestService;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEmptyPayload;
+
+import java.time.Year;
+import java.util.Map;
+
+@Component
+@RequiredArgsConstructor
+public class FacilityPerformanceAccountTemplateDataUploadCreateActionHandler implements RequestSectorCreateActionHandler<RequestCreateActionEmptyPayload> {
+
+    private final StartProcessRequestService startProcessRequestService;
+    private final SectorReferenceDetailsService sectorReferenceDetailsService;
+
+    @Override
+    public String process(Long sectorId, RequestCreateActionEmptyPayload payload, AppUser appUser) {
+        SectorAssociationInfo sectorAssociationInfo = sectorReferenceDetailsService.getSectorAssociationInfo(sectorId);
+        Year targetYear = Year.now().minusYears(1);
+
+        // Create process for performance data upload
+        CcaRequestParams requestParams = CcaRequestParams.builder()
+                .type(CcaRequestType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD)
+                .requestResources(Map.of(
+                        CcaResourceType.SECTOR_ASSOCIATION, sectorId.toString(),
+                        ResourceType.CA, sectorAssociationInfo.getCompetentAuthority().name()
+                ))
+                .requestMetadata(FacilityPerformanceAccountTemplateDataUploadRequestMetadata.builder()
+                        .type(CcaRequestMetadataType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD)
+                        .targetYear(targetYear)
+                        .build())
+                .requestPayload(FacilityPerformanceAccountTemplateDataUploadRequestPayload.builder()
+                        .payloadType(CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PAYLOAD)
+                        .sectorAssociationInfo(sectorAssociationInfo)
+                        .targetYear(targetYear)
+                        .sectorUserAssignee(appUser.getUserId())
+                        .build())
+                .build();
+
+        final Request request = startProcessRequestService.startProcess(requestParams);
+
+        return request.getId();
+    }
+
+    @Override
+    public String getRequestType() {
+        return CcaRequestType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD;
+    }
+}

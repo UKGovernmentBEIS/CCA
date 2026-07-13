@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -11,7 +11,7 @@ import { generateDownloadUrl } from '@shared/utils';
   template: `
     <div>
       <netz-page-heading caption="Determine operator assent">Summary</netz-page-heading>
-      <cca-summary [data]="summaryData" />
+      <cca-summary [data]="summaryData()" />
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
@@ -25,20 +25,24 @@ export class OverallDecisionSummaryComponent {
 
   private readonly determination = this.requestTaskStore.select(
     underlyingAgreementVariationRegulatorLedQuery.selectDetermination,
-  )();
-  private readonly attachments = this.requestTaskStore.select(
-    underlyingAgreementVariationRegulatorLedQuery.selectRegulatorLedSubmitAttachments,
-  )();
-  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
-
-  private readonly downloadUrl = generateDownloadUrl(
-    this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
 
-  protected readonly summaryData = toOperatorAssentDecisionSummaryData(
-    this.determination,
-    this.attachments,
-    this.downloadUrl,
-    this.isEditable,
+  private readonly attachments = this.requestTaskStore.select(
+    underlyingAgreementVariationRegulatorLedQuery.selectRegulatorLedSubmitAttachments,
+  );
+
+  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
+
+  private readonly downloadUrl = computed(() =>
+    generateDownloadUrl(this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString()),
+  );
+
+  protected readonly summaryData = computed(() =>
+    toOperatorAssentDecisionSummaryData({
+      determination: this.determination(),
+      attachments: this.attachments(),
+      downloadUrl: this.downloadUrl(),
+      isEditable: this.isEditable(),
+    }),
   );
 }

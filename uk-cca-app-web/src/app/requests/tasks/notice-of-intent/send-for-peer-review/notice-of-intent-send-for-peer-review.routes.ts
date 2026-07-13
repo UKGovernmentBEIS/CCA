@@ -19,7 +19,12 @@ export const NOTICE_OF_INTENT_SEND_FOR_PEER_REVIEW_ROUTES: Routes = [
       {
         path: 'confirmation/:assigneeId',
         title: 'Peer review request sent',
-        data: { backlink: false, breadcrumb: false, confirmationPrefix: 'Application sent to' },
+        data: {
+          backlink: false,
+          breadcrumb: false,
+          confirmationPrefix: 'Notice of Intent sent to',
+          confirmationSuffix: ' for peer review.',
+        },
         loadComponent: () => import('@requests/common').then((c) => c.PeerReviewConfirmationComponent),
       },
     ],

@@ -25,12 +25,12 @@ export class ReviewTargetUnitDetailsSubmittedComponent {
   private readonly countries = inject(CountryService).countries;
 
   protected readonly summaryData = computed(() =>
-    toReviewTargetUnitDetailsUNAReviewSummaryData(
-      this.requestActionStore.select(
+    toReviewTargetUnitDetailsUNAReviewSummaryData({
+      targetUnitDetails: this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectUnderlyingAgreementTargetUnitDetails,
       )(),
-      this.countries(),
-      false,
-    ),
+      countries: this.countries(),
+      isEditable: false,
+    }),
   );
 }

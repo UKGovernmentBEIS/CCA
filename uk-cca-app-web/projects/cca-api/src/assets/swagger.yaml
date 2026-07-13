@@ -564,6 +564,102 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/facilities/{facilityId}/performance-data-report/variation-indicator:
+    put:
+      tags:
+        - Target Period Performance Data Report of the Facility
+      summary: >-
+        Sets the variation indicator for the facility performance data for the
+        specified target period year
+      operationId: updateFacilityPerformanceDataVariationIndicator
+      parameters:
+        - name: facilityId
+          in: path
+          description: The facility id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/facilities/{facilityId}/performance-data-report/lock:
+    put:
+      tags:
+        - Target Period Performance Data Report of the Facility
+      summary: >-
+        Locks/unlocks the facility for reporting performance data for the
+        specified target period year
+      operationId: updateFacilityPerformanceDataLock
+      parameters:
+        - name: facilityId
+          in: path
+          description: The facility id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacilityPerformanceDataUpdateLockDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacilityPerformanceDataUpdateLockDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/facilities/{facilityId}/audit/:
     get:
       tags:
@@ -1464,6 +1560,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/subsector-schemes/{id}/target-commitments:
+    post:
+      tags:
+        - Subsector association scheme details update
+      summary: Update the subsector association scheme commitments
+      operationId: updateSubsectorAssociationSchemeTargetCommitments
+      parameters:
+        - name: id
+          in: path
+          description: The subsector association scheme id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TargetCommitmentsUpdateDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n NOTFOUND1001 | Resource not found \t\n SUBSECTOR_SCHEME1001 | Target commitments are not related to subsector scheme \t\n SUBSECTOR_SCHEME1002 | Subsector association scheme version is not updatable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/sector-users/registration/accept-invitation:
     post:
       tags:
@@ -1526,6 +1669,149 @@ paths:
           description: No Content
         '400':
           description: Bad Request
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/sector-schemes/{id}/target-commitments:
+    post:
+      tags:
+        - Sector association scheme details update
+      summary: Update the sector association scheme commitments
+      operationId: updateSectorAssociationSchemeTargetCommitments
+      parameters:
+        - name: id
+          in: path
+          description: The sector association scheme id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TargetCommitmentsUpdateDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n NOTFOUND1001 | Resource not found \t\n SECTOR_SCHEME1002 | Target commitments are not related to sector scheme \t\n SECTOR_SCHEME1003 | Sector association scheme version is not updatable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/sector-schemes/{id}/details:
+    post:
+      tags:
+        - Sector association scheme details update
+      summary: Update the sector association scheme details
+      operationId: updateSectorAssociationSchemeDetails
+      parameters:
+        - name: id
+          in: path
+          description: The sector association scheme id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectorAssociationSchemeDetailsUpdateDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n FILE1001 | Virus found in input stream \t\n FILE1002 | File size is less than minimum \t\n FILE1003 | File size is greater than maximum \t\nFILE1004 | File upload failed \t\nSECTOR_SCHEME1003 | Sector association scheme version is not updatable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/sector-scheme-document/upload:
+    post:
+      tags:
+        - Sector scheme document upload
+      summary: Upload a sector scheme document file
+      operationId: uploadSectorSchemeDocumentFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: The umbrella agreement file
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUuidDTO'
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n NOTFOUND1001 | Resource not found \t\n SECTOR_SCHEME1001 | Invalid sector scheme document file type"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: Forbidden
           content:
@@ -1789,7 +2075,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/sector-association/{sectorAssociationId}/performance-data-report/:
+  /v1.0/sector-association/{sectorAssociationId}/performance-data-report/facilities:
+    post:
+      tags:
+        - Sector-Level Performance Data View Pages
+      summary: Populates the target period performance data of sector facilities
+      operationId: getSectorFacilityPerformanceDataReportList
+      parameters:
+        - name: sectorAssociationId
+          in: path
+          description: The sector association id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/SectorFacilityPerformanceDataReportSearchCriteria
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/SectorFacilityPerformanceDataReportListDTO
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nTPRF1001 | Expected exactly one target year, but found multiple."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/sector-association/{sectorAssociationId}/performance-data-report/accounts:
     post:
       tags:
         - Sector-Level Performance Data View Pages
@@ -5663,6 +5996,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/subsector-association/{subsectorId}/scheme:
+    get:
+      tags:
+        - Subsector association info view
+      summary: >-
+        Retrieves the subsector association schemes that correspond to the
+        provided subsector id
+      operationId: getSubsectorAssociationSchemeBySubsectorAssociationId
+      parameters:
+        - name: subsectorId
+          in: path
+          description: The subsector association id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubsectorAssociationSchemesDTO'
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nAUTHORITY1003 | User is not related to competent authority"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/sector-users/sector-association/{sectorAssociationId}:
     get:
       tags:
@@ -5702,7 +6076,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/sector-documents/document/{token}:
+  /v1.0/sector-scheme-documents/document/{token}:
     get:
       tags:
         - Sector Association Scheme Documents
@@ -5744,54 +6118,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       security: []
-  /v1.0/sector-association/{sectorId}/subsector-association/{subsectorId}/scheme:
-    get:
-      tags:
-        - Subsector association info view
-      summary: >-
-        Retrieves the subsector association schemes that correspond to the
-        provided subsector id
-      operationId: getSubsectorAssociationSchemeBySubsectorAssociationId
-      parameters:
-        - name: sectorId
-          in: path
-          description: The sector association id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: subsectorId
-          in: path
-          description: The subsector association id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SubsectorAssociationSchemesDTO'
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nAUTHORITY1003 | User is not related to competent authority"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/sector-association/{sectorId}/scheme:
     get:
       tags:
@@ -5863,6 +6189,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileToken'
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n NOTFOUND1001 | Resource not found \t\n SECTOR_SCHEME1004 | Submitter is not allowed to access the scheme document"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: Forbidden
           content:
@@ -6542,6 +6874,12 @@ paths:
             minimum: 1
             type: integer
             format: int32
+        - name: searchCriteria
+          in: query
+          description: The task search criteria
+          required: true
+          schema:
+            $ref: '#/components/schemas/ItemSearchCriteriaDTO'
       responses:
         '200':
           description: OK
@@ -6586,6 +6924,12 @@ paths:
             minimum: 1
             type: integer
             format: int32
+        - name: searchCriteria
+          in: query
+          description: The task search criteria
+          required: true
+          schema:
+            $ref: '#/components/schemas/ItemSearchCriteriaDTO'
       responses:
         '200':
           description: OK
@@ -6628,6 +6972,12 @@ paths:
             minimum: 1
             type: integer
             format: int32
+        - name: searchCriteria
+          in: query
+          description: The task search criteria
+          required: true
+          schema:
+            $ref: '#/components/schemas/ItemSearchCriteriaDTO'
       responses:
         '200':
           description: OK
@@ -6967,6 +7317,109 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/facilities/{facilityId}/performance-data-report/status:
+    get:
+      tags:
+        - Target Period Performance Data Report of the Facility
+      summary: Retrieves the facility performance data status info
+      operationId: getFacilityPerformanceDataStatus
+      parameters:
+        - name: facilityId
+          in: path
+          description: The facility id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: targetPeriodType
+          in: query
+          description: The target period business id
+          required: true
+          schema:
+            type: string
+            enum:
+              - TP5
+              - TP6
+              - TP7
+              - TP8
+              - TP9
+        - name: reportType
+          in: query
+          description: The performance data report type
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERIM
+              - FINAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FacilityPerformanceDataStatusInfoDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/facilities/{facilityId}/performance-data-report/details:
+    get:
+      tags:
+        - Target Period Performance Data Report of the Facility
+      summary: >-
+        Retrieves the latest performance data for the facility and the target
+        period year.
+      operationId: getFacilityPerformanceDataReportDetails
+      parameters:
+        - name: facilityId
+          in: path
+          description: The facility id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: targetPeriodYear
+          in: query
+          description: The target period year
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacilityPerformanceDataReportDetailsDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/facilities/account/{accountId}:
     get:
       tags:
@@ -7172,6 +7625,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReferenceDataDTO'
       security: []
   /v1.0/company-information/{registrationNumber}:
     get:
@@ -8065,15 +8525,6 @@ components:
         contentLength:
           type: integer
           format: int64
-        connection:
-          type: array
-          items:
-            type: string
-        ifModifiedSince:
-          type: integer
-          format: int64
-        contentType:
-          $ref: '#/components/schemas/MediaType'
         origin:
           type: string
         contentLanguage:
@@ -8124,6 +8575,15 @@ components:
           writeOnly: true
         cacheControl:
           type: string
+        connection:
+          type: array
+          items:
+            type: string
+        ifModifiedSince:
+          type: integer
+          format: int64
+        contentType:
+          $ref: '#/components/schemas/MediaType'
       additionalProperties:
         type: array
         items:
@@ -8378,9 +8838,6 @@ components:
       properties:
         baselineAndTargets:
           $ref: '#/components/schemas/PerformanceDataFacilityBaselineAndTargets'
-        tpMultiplier:
-          type: string
-          format: decimal
     NonComplianceAppealOutcomeDetails:
       required:
         - appealOutcomeDate
@@ -8507,6 +8964,18 @@ components:
         refundedTransactions:
           type: integer
           format: int64
+    TargetCommitmentUpdateDTO:
+      required:
+        - id
+        - targetImprovement
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        targetImprovement:
+          type: string
+          format: decimal
     SubsectorAssociationInfoDTO:
       type: object
       properties:
@@ -8515,6 +8984,23 @@ components:
           format: int64
         name:
           type: string
+    SectorAssociationSchemeDetailsUpdateDTO:
+      required:
+        - sectorDefinition
+        - umaDate
+        - umbrellaAgreementUuid
+      type: object
+      properties:
+        umbrellaAgreementUuid:
+          type: string
+        umaDate:
+          type: string
+          format: date
+        sectorDefinition:
+          maxLength: 10000
+          minLength: 0
+          type: string
+      description: The sector association scheme details fields
     NotificationTemplateUpdateDTO:
       required:
         - subject
@@ -8561,6 +9047,70 @@ components:
           type: string
         userId:
           type: string
+    SectorFacilityPerformanceDataReportItemDTO:
+      type: object
+      properties:
+        facilityId:
+          type: integer
+          format: int64
+        facilityBusinessId:
+          type: string
+        siteName:
+          type: string
+        accountId:
+          type: integer
+          format: int64
+        submissionDate:
+          type: string
+          format: date-time
+        reportVersion:
+          type: integer
+          format: int32
+        reportStatus:
+          type: string
+          enum:
+            - TARGET_MET
+            - TARGET_NOT_MET
+            - SUBMITTED
+            - OUTSTANDING
+        submissionType:
+          type: string
+          enum:
+            - PRIMARY
+            - SECONDARY
+        locked:
+          type: boolean
+        variationIndicator:
+          type: boolean
+        atLeastSeventyPercentEnergyUsed:
+          type: boolean
+        surplusGained:
+          type: string
+          format: decimal
+        actualEnergyCarbon:
+          type: string
+          format: decimal
+        targetEnergyCarbon:
+          type: string
+          format: decimal
+        energyCarbonDifference:
+          type: string
+          format: decimal
+        targetCo2Emissions:
+          type: string
+          format: decimal
+        actualCo2Emissions:
+          type: string
+          format: decimal
+        co2EmissionsDifference:
+          type: string
+          format: decimal
+        actualImprovement:
+          type: string
+          format: decimal
+        buyOutRequired:
+          type: string
+          format: decimal
     HttpMethod:
       type: object
     UnderlyingAgreementApplySavePayload:
@@ -9073,6 +9623,8 @@ components:
           enum:
             - TARGET_MET
             - TARGET_NOT_MET
+            - SUBMITTED
+            - OUTSTANDING
         surplusGained:
           type: string
           format: decimal
@@ -9985,6 +10537,36 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
+    FacilityPerformanceDataStatusInfoDTO:
+      type: object
+      properties:
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        targetPeriodName:
+          type: string
+        targetPeriodYear:
+          type: integer
+          format: int16
+        variationIndicator:
+          type: boolean
+        locked:
+          type: boolean
+        reportVersion:
+          type: integer
+          format: int32
+        submissionDate:
+          type: string
+          format: date
+        lockEditable:
+          type: boolean
+        variationIndicatorEditable:
+          type: boolean
     MoaReport:
       type: object
       properties:
@@ -10067,6 +10649,23 @@ components:
           type: object
           additionalProperties:
             type: string
+    ItemSearchCriteriaDTO:
+      type: object
+      properties:
+        orderBy:
+          type: string
+          enum:
+            - NEWEST_FIRST
+            - OLDEST_FIRST
+            - NEAREST_DUE_DATE
+        requestType:
+          maxLength: 255
+          minLength: 0
+          type: string
+        searchTerm:
+          maxLength: 255
+          minLength: 0
+          type: string
     NonComplianceNoticeOfIntent:
       required:
         - file
@@ -10507,6 +11106,7 @@ components:
     SectorAssociationSchemeDTO:
       required:
         - id
+        - schemeVersion
         - umbrellaAgreement
       type: object
       properties:
@@ -10522,6 +11122,49 @@ components:
           format: date
         sectorDefinition:
           type: string
+        schemeVersion:
+          type: string
+          enum:
+            - CCA_2
+            - CCA_3
+        editable:
+          type: boolean
+    PerformanceDataFacilityDataUploadSubmitRequestTaskPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        sendEmailNotification:
+          type: boolean
+        sectorAssociationInfo:
+          $ref: '#/components/schemas/SectorAssociationInfo'
+        performanceDataUpload:
+          $ref: '#/components/schemas/PerformanceDataFacilityUpload'
+        processingStatus:
+          type: string
+          enum:
+            - NOT_STARTED_YET
+            - IN_PROGRESS
+            - COMPLETED
+        results:
+          $ref: '#/components/schemas/PerformanceDataFacilityUploadResults'
+        errorMessage:
+          type: string
+          enum:
+            - CSV_FAILED
+            - MESSAGE_PROCESSING_FAILED
+        facilityReports:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FacilityUploadReport'
+        csvRowErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerformanceDataFacilityCsvErrorEntry'
+        uploadAttachments:
+          type: object
+          additionalProperties:
+            type: string
     RdeForceDecisionPayload:
       required:
         - decision
@@ -10661,8 +11304,10 @@ components:
       properties:
         payloadType:
           type: string
-        performanceData:
-          $ref: '#/components/schemas/PerformanceDataFacilityInputData'
+        energyFuelDetails:
+          $ref: '#/components/schemas/PerformanceDataFacilityInputEnergyFuelDetails'
+        throughputDetails:
+          $ref: '#/components/schemas/PerformanceDataFacilityThroughputDetails'
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -11391,6 +12036,53 @@ components:
           format: date
         fileDocument:
           $ref: '#/components/schemas/FileInfoDTO'
+    PerformanceDataFacilityUpload:
+      required:
+        - files
+        - reportType
+        - targetPeriodType
+      type: object
+      properties:
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        reportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
+        files:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uuid
+    FacilityUploadReport:
+      type: object
+      properties:
+        facilityId:
+          type: integer
+          format: int64
+        facilityBusinessId:
+          type: string
+        accountId:
+          type: integer
+          format: int64
+        csvFileName:
+          type: string
+        csvData:
+          $ref: '#/components/schemas/PerformanceDataFacilityUploadCsvData'
+        succeeded:
+          type: boolean
+        errors:
+          type: array
+          items:
+            type: string
     RequestInfoDTO:
       type: object
       properties:
@@ -11590,6 +12282,52 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
+    SectorFacilityPerformanceDataReportSearchCriteria:
+      required:
+        - pageNumber
+        - pageSize
+        - targetPeriodReportType
+        - targetPeriodType
+      type: object
+      properties:
+        facilityOrTargetUnitAccountBusinessId:
+          maxLength: 255
+          minLength: 3
+          type: string
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        targetPeriodReportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
+        reportStatus:
+          type: string
+          enum:
+            - TARGET_MET
+            - TARGET_NOT_MET
+            - SUBMITTED
+            - OUTSTANDING
+        subType:
+          type: string
+          enum:
+            - PRIMARY
+            - SECONDARY
+        pageNumber:
+          minimum: 0
+          type: integer
+          format: int32
+        pageSize:
+          minimum: 1
+          type: integer
+          format: int32
+      description: The search criteria
     AdminTerminationWithdrawRequestTaskPayload:
       type: object
       properties:
@@ -11922,6 +12660,15 @@ components:
         primaryEnergy:
           type: string
           format: decimal
+    PerformanceDataFacilityDataUploadProcessingRequestTaskActionPayload:
+      required:
+        - performanceDataUpload
+      type: object
+      properties:
+        payloadType:
+          type: string
+        performanceDataUpload:
+          $ref: '#/components/schemas/PerformanceDataFacilityUpload'
     RdeResponsePayload:
       required:
         - currentDueDate
@@ -12767,6 +13514,23 @@ components:
         total:
           type: integer
           format: int64
+    FacilityPerformanceDataReportDetailsDTO:
+      type: object
+      properties:
+        targetPeriod:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        atLeastSeventyPercentEnergyUsed:
+          type: boolean
+        calculatedResults:
+          $ref: '#/components/schemas/PerformanceDataFacilityCalculatedResults'
+        baselineAndTargets:
+          $ref: '#/components/schemas/PerformanceDataFacilityBaselineAndTargets'
     CcaItemDTO:
       type: object
       properties:
@@ -13054,6 +13818,9 @@ components:
         - targetPeriod
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
         targetPeriod:
           maxLength: 255
           minLength: 0
@@ -13099,6 +13866,17 @@ components:
           type: integer
           format: int32
       description: Search criteria for transactions
+    FacilityPerformanceDataUpdateVariationIndicatorDTO:
+      required:
+        - targetPeriodYear
+        - variationIndicator
+      type: object
+      properties:
+        variationIndicator:
+          type: boolean
+        targetPeriodYear:
+          type: integer
+          format: int16
     MediaType:
       type: object
       properties:
@@ -13372,6 +14150,37 @@ components:
           items:
             $ref: '#/components/schemas/AccountOperatorAuthorityUpdateDTO'
       description: The account operator authorities to update
+    PerformanceDataFacilityProcessingRequestMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        reportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
+        submissionType:
+          type: string
+          enum:
+            - PRIMARY
+            - SECONDARY
+        reportVersion:
+          type: integer
+          format: int32
+        submittedDate:
+          type: string
+          format: date
+        uploadRequestId:
+          type: string
     AdminTerminationSubmittedRequestActionPayload:
       required:
         - adminTerminationReasonDetails
@@ -13886,6 +14695,34 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+    PasswordValidationResponseDTO:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PasswordValidationErrorDTO'
+    PerformanceDataFacilityCsvErrorEntry:
+      type: object
+      properties:
+        filename:
+          type: string
+        message:
+          type: string
+        facilityBusinessId:
+          type: string
+    SectorFacilityPerformanceDataReportListDTO:
+      type: object
+      properties:
+        performanceDataReportItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/SectorFacilityPerformanceDataReportItemDTO'
+        total:
+          type: integer
+          format: int64
     MiReportUserDefinedResult:
       type: object
       properties:
@@ -13931,6 +14768,27 @@ components:
           type: object
           additionalProperties:
             type: string
+    PerformanceDataFacilityDataUploadRequestMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        reportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
+        submittedDate:
+          type: string
+          format: date-time
     SubsistenceFeesMoaSearchResults:
       type: object
       properties:
@@ -14103,6 +14961,247 @@ components:
           items:
             $ref: >-
               #/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO
+    PerformanceDataFacilityUploadCsvData:
+      type: object
+      properties:
+        facilityBusinessId:
+          type: string
+        gridElectricity:
+          type: string
+          format: decimal
+        nonGridElectricity:
+          type: string
+          format: decimal
+        naturalGas:
+          type: string
+          format: decimal
+        lpg:
+          type: string
+          format: decimal
+        gasDieselOil:
+          type: string
+          format: decimal
+        fuelOil:
+          type: string
+          format: decimal
+        kerosene:
+          type: string
+          format: decimal
+        coal:
+          type: string
+          format: decimal
+        coke:
+          type: string
+          format: decimal
+        petrol:
+          type: string
+          format: decimal
+        nitrogen:
+          type: string
+          format: decimal
+        carbonDioxide:
+          type: string
+          format: decimal
+        ethane:
+          type: string
+          format: decimal
+        naphtha:
+          type: string
+          format: decimal
+        petroleumCoke:
+          type: string
+          format: decimal
+        refineryGas:
+          type: string
+          format: decimal
+        otherFuelName1:
+          type: string
+        otherFuelConversionFactor1:
+          type: string
+          format: decimal
+        otherFuelAmount1:
+          type: string
+          format: decimal
+        otherFuelName2:
+          type: string
+        otherFuelConversionFactor2:
+          type: string
+          format: decimal
+        otherFuelAmount2:
+          type: string
+          format: decimal
+        otherFuelName3:
+          type: string
+        otherFuelConversionFactor3:
+          type: string
+          format: decimal
+        otherFuelAmount3:
+          type: string
+          format: decimal
+        otherFuelName4:
+          type: string
+        otherFuelConversionFactor4:
+          type: string
+          format: decimal
+        otherFuelAmount4:
+          type: string
+          format: decimal
+        otherFuelName5:
+          type: string
+        otherFuelConversionFactor5:
+          type: string
+          format: decimal
+        otherFuelAmount5:
+          type: string
+          format: decimal
+        otherFuelName6:
+          type: string
+        otherFuelConversionFactor6:
+          type: string
+          format: decimal
+        otherFuelAmount6:
+          type: string
+          format: decimal
+        otherFuelName7:
+          type: string
+        otherFuelConversionFactor7:
+          type: string
+          format: decimal
+        otherFuelAmount7:
+          type: string
+          format: decimal
+        otherFuelName8:
+          type: string
+        otherFuelConversionFactor8:
+          type: string
+          format: decimal
+        otherFuelAmount8:
+          type: string
+          format: decimal
+        otherFuelName9:
+          type: string
+        otherFuelConversionFactor9:
+          type: string
+          format: decimal
+        otherFuelAmount9:
+          type: string
+          format: decimal
+        otherFuelName10:
+          type: string
+        otherFuelConversionFactor10:
+          type: string
+          format: decimal
+        otherFuelAmount10:
+          type: string
+          format: decimal
+        atLeastSeventyPercentEnergyUsed:
+          type: boolean
+        electricitySuppliedFromCHP:
+          type: string
+          format: decimal
+        actualThroughput:
+          type: string
+          format: decimal
+        productName1:
+          type: string
+        productActualThroughput1:
+          type: string
+          format: decimal
+        productName2:
+          type: string
+        productActualThroughput2:
+          type: string
+          format: decimal
+        productName3:
+          type: string
+        productActualThroughput3:
+          type: string
+          format: decimal
+        productName4:
+          type: string
+        productActualThroughput4:
+          type: string
+          format: decimal
+        productName5:
+          type: string
+        productActualThroughput5:
+          type: string
+          format: decimal
+        productName6:
+          type: string
+        productActualThroughput6:
+          type: string
+          format: decimal
+        productName7:
+          type: string
+        productActualThroughput7:
+          type: string
+          format: decimal
+        productName8:
+          type: string
+        productActualThroughput8:
+          type: string
+          format: decimal
+        productName9:
+          type: string
+        productActualThroughput9:
+          type: string
+          format: decimal
+        productName10:
+          type: string
+        productActualThroughput10:
+          type: string
+          format: decimal
+        productName11:
+          type: string
+        productActualThroughput11:
+          type: string
+          format: decimal
+        productName12:
+          type: string
+        productActualThroughput12:
+          type: string
+          format: decimal
+        productName13:
+          type: string
+        productActualThroughput13:
+          type: string
+          format: decimal
+        productName14:
+          type: string
+        productActualThroughput14:
+          type: string
+          format: decimal
+        productName15:
+          type: string
+        productActualThroughput15:
+          type: string
+          format: decimal
+        productName16:
+          type: string
+        productActualThroughput16:
+          type: string
+          format: decimal
+        productName17:
+          type: string
+        productActualThroughput17:
+          type: string
+          format: decimal
+        productName18:
+          type: string
+        productActualThroughput18:
+          type: string
+          format: decimal
+        productName19:
+          type: string
+        productActualThroughput19:
+          type: string
+          format: decimal
+        productName20:
+          type: string
+        productActualThroughput20:
+          type: string
+          format: decimal
     PaymentConfirmRequestTaskPayload:
       type: object
       properties:
@@ -15508,6 +16607,25 @@ components:
           $ref: '#/components/schemas/RequestedDocuments'
         auditDetermination:
           $ref: '#/components/schemas/AuditDetermination'
+    PerformanceDataFacilityDataUploadCompletedRequestActionPayload:
+      required:
+        - performanceDataUpload
+        - results
+        - uploadAttachments
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        performanceDataUpload:
+          $ref: '#/components/schemas/PerformanceDataFacilityUpload'
+        results:
+          $ref: '#/components/schemas/PerformanceDataFacilityUploadResults'
+        uploadAttachments:
+          type: object
+          additionalProperties:
+            type: string
     PerformanceDataUploadSubmitRequestTaskPayload:
       type: object
       properties:
@@ -15671,6 +16789,18 @@ components:
         totalItems:
           type: integer
           format: int64
+    PerformanceDataFacilityInputData:
+      required:
+        - energyFuelDetails
+        - throughputDetails
+      type: object
+      properties:
+        energyFuelDetails:
+          $ref: '#/components/schemas/PerformanceDataFacilityInputEnergyFuelDetails'
+        throughputDetails:
+          $ref: '#/components/schemas/PerformanceDataFacilityThroughputDetails'
+        calculatedResults:
+          $ref: '#/components/schemas/PerformanceDataFacilityCalculatedResults'
     NonComplianceNoticeOfIntentPeerReviewRequestTaskPayload:
       type: object
       properties:
@@ -15696,19 +16826,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    PerformanceDataFacilityInputData:
-      required:
-        - calculatedResults
-        - energyFuelDetails
-        - throughputDetails
-      type: object
-      properties:
-        energyFuelDetails:
-          $ref: '#/components/schemas/PerformanceDataFacilityInputEnergyFuelDetails'
-        throughputDetails:
-          $ref: '#/components/schemas/PerformanceDataFacilityThroughputDetails'
-        calculatedResults:
-          $ref: '#/components/schemas/PerformanceDataFacilityCalculatedResults'
     SubsistenceFeesMoaFacilityMarkingStatusDTO:
       required:
         - filterResourceIds
@@ -16072,6 +17189,13 @@ components:
         total:
           type: integer
           format: int64
+    SectorAssociationHeaderInfoDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        businessId:
+          type: string
     AuditDetailsCorrectiveActionsSubmittedRequestActionPayload:
       required:
         - auditDetailsAndCorrectiveActions
@@ -16272,6 +17396,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DefaultNoticeRecipient'
+    FacilityPerformanceDataUpdateLockDTO:
+      required:
+        - locked
+        - targetPeriodType
+        - targetPeriodYear
+      type: object
+      properties:
+        locked:
+          type: boolean
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        targetPeriodYear:
+          type: integer
+          format: int16
     FacilityDetails:
       required:
         - applicationReason
@@ -17384,11 +18528,17 @@ components:
         propertyName: reportType
     SubsectorAssociationSchemeDTO:
       required:
+        - id
         - targetSet
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
         targetSet:
           $ref: '#/components/schemas/TargetSetDTO'
+        editable:
+          type: boolean
     CcaOperatorUserDetailsDTO:
       required:
         - contactType
@@ -17606,6 +18756,16 @@ components:
             - TEMP_DISABLED
         userId:
           type: string
+    TargetCommitmentsUpdateDTO:
+      required:
+        - targetCommitments
+      type: object
+      properties:
+        targetCommitments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetCommitmentUpdateDTO'
+      description: The sector association scheme commitments fields
     CustomMiReportQuery:
       required:
         - sqlQuery
@@ -17865,6 +19025,24 @@ components:
           format: int16
         data:
           $ref: '#/components/schemas/PerformanceAccountTemplateDataContainer'
+    PerformanceDataFacilityUploadResults:
+      type: object
+      properties:
+        totalFilesUploaded:
+          type: integer
+          format: int32
+        facilitiesSucceeded:
+          type: integer
+          format: int32
+        facilitiesFailed:
+          type: integer
+          format: int32
+        uploadSummaryFile:
+          type: string
+          format: uuid
+        submittedDate:
+          type: string
+          format: date-time
     TargetUnitMoaGeneratedRequestActionPayload:
       required:
         - chargingYear

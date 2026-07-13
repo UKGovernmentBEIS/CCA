@@ -1,20 +1,21 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 import { EMPTY, map, Observable, switchMap, take, timer } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchTaskReassignedBadRequest } from '@error/business-errors';
 import { catchNotFoundRequest, ErrorCode } from '@error/not-found-error';
+import { AuthStore, selectUserId } from '@netz/common/auth';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, GovukSelectOption, SelectComponent } from '@netz/govuk-components';
 import { PerformanceDataDownloadPayload, PerformanceDataTargetPeriodEnum } from '@requests/common';
 import { UploadProcessingComponent } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { requestTaskReassignedError, taskNotFoundError } from '@shared/errors';
-import { fileUtils } from '@shared/utils';
+import { fileUtils, generateDownloadUrl } from '@shared/utils';
 
 import { RequestTaskActionPayload, TasksService } from 'cca-api';
 
@@ -46,15 +47,18 @@ export class PerformanceDataUploadProcessComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly tasksService = inject(TasksService);
   private readonly businessErrorService = inject(BusinessErrorService);
-  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly authStore = inject(AuthStore);
 
   protected readonly form = inject<UploadProcessPerformanceDataFormModel>(UPLOAD_PROCESS_PERFORMANCE_DATA_FORM);
 
-  private readonly taskId = +this.activatedRoute.snapshot.paramMap.get('taskId');
+  private readonly taskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId);
   private readonly interval = 10000; // ms
+  protected readonly downloadUrl = computed(() => generateDownloadUrl(this.taskId().toString()));
 
   protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
+  private readonly assigneeUserId = this.requestTaskStore.select(requestTaskQuery.selectAssigneeUserId);
+  protected readonly isUserAssignee = computed(() => this.authStore.select(selectUserId)() === this.assigneeUserId());
 
   protected readonly performanceDataUpload = this.requestTaskStore.select(
     performanceDataUploadQuery.selectPerformanceDataUpload,
@@ -77,7 +81,7 @@ export class PerformanceDataUploadProcessComponent implements OnInit {
     this.tasksService
       .processRequestTaskAction({
         requestTaskActionType: 'PERFORMANCE_DATA_UPLOAD_PROCESSING',
-        requestTaskId: this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
+        requestTaskId: this.taskId(),
         requestTaskActionPayload: {
           payloadType: 'PERFORMANCE_DATA_UPLOAD_PROCESSING_PAYLOAD',
           ...{
@@ -105,7 +109,7 @@ export class PerformanceDataUploadProcessComponent implements OnInit {
   private fetchTaskItemInfo(): Observable<unknown> {
     return timer(this.interval).pipe(
       take(1),
-      switchMap(() => this.tasksService.getTaskItemInfoById(this.taskId)),
+      switchMap(() => this.tasksService.getTaskItemInfoById(this.taskId())),
       takeUntilDestroyed(this.destroyRef),
       map((r) => r.requestTask.payload),
       switchMap((payload: PerformanceDataDownloadPayload) => {

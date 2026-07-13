@@ -26,7 +26,7 @@
     </govuk-details>
 
     <cca-multiple-file-input
-      baseDownloadUrl="file-download"
+      [baseDownloadUrl]="downloadUrl()"
       [listTitle]="'Uploaded files'"
       label="Upload a file"
       hint="The selected file must be a ZIP smaller than 20MB.

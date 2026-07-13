@@ -27,7 +27,7 @@ public class PerformanceDataFacilityFuel {
 
     @NotNull
     @PositiveOrZero
-    @Digits(integer = Integer.MAX_VALUE, fraction = 7)
+    @Digits(integer = Integer.MAX_VALUE, fraction = 20)
     private BigDecimal conversionFactor;
 
     @NotNull
@@ -41,7 +41,7 @@ public class PerformanceDataFacilityFuel {
     private BigDecimal primaryConversionFactor;
 
     @NotNull
-    @Positive
+    @PositiveOrZero
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal primaryEnergy;
 }

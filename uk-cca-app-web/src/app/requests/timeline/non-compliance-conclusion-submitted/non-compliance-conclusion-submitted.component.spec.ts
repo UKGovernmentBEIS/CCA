@@ -6,7 +6,10 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { getSummaryListData } from '@testing';
 
 import { NonComplianceConclusionSubmittedComponent } from './non-compliance-conclusion-submitted.component';
-import { nonComplianceConclusionSubmittedActionStateMock } from './tests/mock-data';
+import {
+  nonComplianceConclusionSubmittedActionStateMock,
+  nonComplianceConclusionWithdrawSubmittedPayload,
+} from './tests/mock-data';
 
 describe('NonComplianceConclusionSubmittedComponent', () => {
   let component: NonComplianceConclusionSubmittedComponent;
@@ -45,6 +48,42 @@ describe('NonComplianceConclusionSubmittedComponent', () => {
           'Would you like to reissue or withdraw the penalty?',
         ],
         ['Yes', '02 Mar 2025', 'Yes', '02 Mar 2025', 'A Martini. Shaken, Not Stirred.', 'None of the above'],
+      ],
+    ]);
+  });
+
+  it('should display recipients for a withdrawal conclusion', () => {
+    actionStore.setState({
+      action: {
+        ...nonComplianceConclusionSubmittedActionStateMock.action,
+        payload: nonComplianceConclusionWithdrawSubmittedPayload,
+      },
+    });
+    fixture.detectChanges();
+
+    const summaryValues = getSummaryListData(fixture.nativeElement);
+
+    expect(summaryValues).toEqual([
+      [
+        [
+          'Has compliance been restored?',
+          'When did the operator become compliant?',
+          'Has the operator paid the penalty?',
+          'When did the operator pay?',
+          'Your comments on the status of compliance',
+          'Would you like to reissue or withdraw the penalty?',
+        ],
+        ['Yes', '02 Mar 2025', 'Yes', '02 Mar 2025', 'A Martini. Shaken, Not Stirred.', 'Withdraw'],
+      ],
+      [
+        ['Upload file', 'Comments'],
+        ['withdrawal-notice.pdf', 'Withdrawal notice comments'],
+      ],
+      [
+        ['Users notified'],
+        [
+          'John William, Responsible person, williamsj@abc.comMatthew Johnson, Administrative contact, mjohnson@def.comAlex Turner, Operator user',
+        ],
       ],
     ]);
   });

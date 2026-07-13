@@ -108,6 +108,7 @@ describe('ChooseRelevantWorkflowsComponent', () => {
       expect.arrayContaining([
         expect.objectContaining({ value: 'WF-001', text: 'WF-001 - Workflow 1' }),
         expect.objectContaining({ value: 'WF-002', text: 'WF-002 - Workflow 2' }),
+        expect.objectContaining({ value: 'WF-003', text: 'WF-003 - Performance Data' }),
       ]),
     );
   });

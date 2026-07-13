@@ -71,21 +71,21 @@ export default class AuthorisationAdditionalEvidenceSummaryComponent {
     underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
   )();
 
-  protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-    this.originalAdditionalEvidence,
-    this.originalAttachments,
-    this.isEditable,
-    this.downloadUrl,
-    this.decision,
-    this.reviewAttachments,
-  );
+  protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryDataWithDecision({
+    authorisationAndAdditionalEvidence: this.originalAdditionalEvidence,
+    underlyingAgreementAttachments: this.originalAttachments,
+    isEditable: this.isEditable,
+    downloadUrl: this.downloadUrl,
+    decision: this.decision,
+    reviewAttachments: this.reviewAttachments,
+  });
 
-  protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-    this.currentAdditionalEvidence,
-    this.currentAttachments,
-    this.isEditable,
-    this.downloadUrl,
-    this.decision,
-    this.reviewAttachments,
-  );
+  protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryDataWithDecision({
+    authorisationAndAdditionalEvidence: this.currentAdditionalEvidence,
+    underlyingAgreementAttachments: this.currentAttachments,
+    isEditable: this.isEditable,
+    downloadUrl: this.downloadUrl,
+    decision: this.decision,
+    reviewAttachments: this.reviewAttachments,
+  });
 }

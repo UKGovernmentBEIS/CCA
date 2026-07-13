@@ -4,7 +4,7 @@ import { SummaryData, SummaryFactory } from '@shared/components';
 
 import { NonComplianceDetails } from 'cca-api';
 
-import { boolToString } from '../utils';
+import { alphabeticalCompare, boolToString } from '../utils';
 import { formatRelevantFacility, formatRelevantWorkflow } from './format-relevant-items';
 import { NON_COMPLIANCE_TYPE_LABELS } from './non-compliance-type-labels';
 
@@ -21,13 +21,13 @@ export function toNonComplianceSummaryData(
     ? NON_COMPLIANCE_TYPE_LABELS[details.nonComplianceType]
     : '';
 
-  const relevantWorkflows = (details?.relevantWorkflows ?? []).map((workflowId) =>
-    formatRelevantWorkflow(workflowId, allRelevantWorkflows),
-  );
+  const relevantWorkflows = (details?.relevantWorkflows ?? [])
+    .map((workflowId) => formatRelevantWorkflow(workflowId, allRelevantWorkflows))
+    .sort(alphabeticalCompare);
 
-  const relevantFacilities = (details?.relevantFacilities ?? []).map((facility) =>
-    formatRelevantFacility(facility, allRelevantFacilities),
-  );
+  const relevantFacilities = (details?.relevantFacilities ?? [])
+    .map((facility) => formatRelevantFacility(facility, allRelevantFacilities))
+    .sort(alphabeticalCompare);
 
   factory
     .addSection('Non-compliance details')

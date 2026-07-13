@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { of, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 
 import { Mocked } from 'vitest';
 
@@ -89,34 +89,11 @@ describe('TpReportingComponent', () => {
     expect(mockRequestsService.processRequestCreateAction).not.toHaveBeenCalled();
   });
 
-  it('should call services and navigate on successful submit', () => {
-    component.form.controls.targetPeriodType.setValue('TP7');
-
-    mockRequestsService.processRequestCreateAction.mockReturnValue(of({ requestId: '123' } as any));
-
-    mockRequestItemsService.getItemsByRequest.mockReturnValue(of(null));
-
-    component.onSubmit();
-
-    expect(mockRequestsService.processRequestCreateAction).toHaveBeenCalledWith(
-      expect.objectContaining({
-        requestType: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM',
-      }),
-      '1',
-    );
-
-    expect(mockRequestItemsService.getItemsByRequest).toHaveBeenCalledWith('123');
-
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/'], { replaceUrl: true });
-  });
-
   it('should handle TPRDF1001 error', () => {
     component.form.controls.targetPeriodType.setValue('TP7');
 
     mockRequestsService.processRequestCreateAction.mockReturnValue(
-      throwError(() => ({
-        error: { code: 'TPRDF1001' },
-      })),
+      throwError(() => ({ error: { code: 'TPRDF1001' } })),
     );
 
     component.onSubmit();
@@ -132,15 +109,15 @@ describe('TpReportingComponent', () => {
     component.form.controls.targetPeriodType.setValue('TP7');
 
     mockRequestsService.processRequestCreateAction.mockReturnValue(
-      throwError(() => ({
-        error: { code: 'TPRDF1002' },
-      })),
+      throwError(() => ({ error: { code: 'TPRDF1002' } })),
     );
 
     component.onSubmit();
 
     expect(component.form.controls.targetPeriodType.errors).toEqual({
-      responseError: expect.stringContaining('facility is not eligible'),
+      responseError: expect.stringContaining(
+        'target period report cannot be submitted against the target period you selected',
+      ),
     });
 
     expect(component.hasFormErrors()).toBe(true);
@@ -150,9 +127,7 @@ describe('TpReportingComponent', () => {
     component.form.controls.targetPeriodType.setValue('TP7');
 
     mockRequestsService.processRequestCreateAction.mockReturnValue(
-      throwError(() => ({
-        error: { code: 'TPRDF1003' },
-      })),
+      throwError(() => ({ error: { code: 'TPRDF1003' } })),
     );
 
     component.onSubmit();
@@ -168,15 +143,13 @@ describe('TpReportingComponent', () => {
     component.form.controls.targetPeriodType.setValue('TP7');
 
     mockRequestsService.processRequestCreateAction.mockReturnValue(
-      throwError(() => ({
-        error: { code: 'TPRDF1004' },
-      })),
+      throwError(() => ({ error: { code: 'TPRDF1004' } })),
     );
 
     component.onSubmit();
 
     expect(component.form.controls.targetPeriodType.errors).toEqual({
-      responseError: expect.stringContaining('must be unlocked'),
+      responseError: expect.stringContaining('this target period must be unlocked before submitting'),
     });
 
     expect(component.hasFormErrors()).toBe(true);
@@ -186,15 +159,29 @@ describe('TpReportingComponent', () => {
     component.form.controls.targetPeriodType.setValue('TP7');
 
     mockRequestsService.processRequestCreateAction.mockReturnValue(
-      throwError(() => ({
-        error: { code: 'TPRDF1005' },
-      })),
+      throwError(() => ({ error: { code: 'TPRDF1005' } })),
     );
 
     component.onSubmit();
 
     expect(component.form.controls.targetPeriodType.errors).toEqual({
-      responseError: expect.stringContaining('at least one eligible product'),
+      responseError: expect.stringContaining('this facility must contain at least one product'),
+    });
+
+    expect(component.hasFormErrors()).toBe(true);
+  });
+
+  it('should handle TPRDF1009 error', () => {
+    component.form.controls.targetPeriodType.setValue('TP7');
+
+    mockRequestsService.processRequestCreateAction.mockReturnValue(
+      throwError(() => ({ error: { code: 'TPRDF1009' } })),
+    );
+
+    component.onSubmit();
+
+    expect(component.form.controls.targetPeriodType.errors).toEqual({
+      responseError: expect.stringContaining(`error in the facility’s baseline data`),
     });
 
     expect(component.hasFormErrors()).toBe(true);

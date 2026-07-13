@@ -28,13 +28,15 @@ export class ReviewTargetUnitDetailsComponent {
   private readonly countries = inject(CountryService).countries;
 
   protected readonly summaryData = computed(() =>
-    toReviewTargetUnitDetailsSummaryDataWithDecision(
-      this.store.select(underlyingAgreementPeerReviewQuery.selectUnderlyingAgreementTargetUnitDetails)(),
-      this.store.select(underlyingAgreementPeerReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
-      this.countries(),
-      this.store.select(underlyingAgreementPeerReviewQuery.selectReviewAttachments)(),
-      '../../file-download',
-      false,
-    ),
+    toReviewTargetUnitDetailsSummaryDataWithDecision({
+      targetUnitDetails: this.store.select(
+        underlyingAgreementPeerReviewQuery.selectUnderlyingAgreementTargetUnitDetails,
+      )(),
+      decision: this.store.select(underlyingAgreementPeerReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+      countries: this.countries(),
+      attachments: this.store.select(underlyingAgreementPeerReviewQuery.selectReviewAttachments)(),
+      downloadUrl: '../../file-download',
+      isEditable: false,
+    }),
   );
 }

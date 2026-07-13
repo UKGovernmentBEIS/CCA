@@ -48,19 +48,27 @@ export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryData(
-    this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalAuthorisationAndAdditionalEvidence)(),
-    this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments)(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-  );
+  protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryData({
+    authorisationAndAdditionalEvidence: this.requestTaskStore.select(
+      underlyingAgreementVariationQuery.selectOriginalAuthorisationAndAdditionalEvidence,
+    )(),
+    underlyingAgreementAttachments: this.requestTaskStore.select(
+      underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
+    )(),
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+  });
 
-  protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryData(
-    this.requestTaskStore.select(underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence)(),
-    this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments)(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-  );
+  protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryData({
+    authorisationAndAdditionalEvidence: this.requestTaskStore.select(
+      underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence,
+    )(),
+    underlyingAgreementAttachments: this.requestTaskStore.select(
+      underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments,
+    )(),
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+  });
 
   onSubmit() {
     const payload = this.requestTaskStore.select(

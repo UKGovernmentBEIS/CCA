@@ -63,25 +63,31 @@ class UnderlyingAgreementVariationActivatedServiceTest {
     void activateUnderlyingAgreementVariation() {
         final String requestId = "1";
         final Long accountId = 2L;
+        final String facilityBusinessId = "fid";
         final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final LocalDateTime creationDate = LocalDateTime.now();
 
         final Facility facility = Facility.builder()
                 .status(FacilityStatus.LIVE)
                 .facilityItem(FacilityItem.builder()
+                		.facilityId(facilityBusinessId)
                         .facilityDetails(FacilityDetails.builder()
                                 .previousFacilityId("Prv1")
                                 .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
-                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
+                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
                                 .build())
                         .build())
                 .build();
         final UnderlyingAgreement una = UnderlyingAgreement.builder()
                 .facilities(Set.of(facility))
                 .build();
-        final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
+        UnderlyingAgreementContainer originalUnderlyingAgreementContainer = UnderlyingAgreementContainer.builder()
+				.underlyingAgreement(UnderlyingAgreement.builder().facilities(Set.of(facility))
+						.build())
+				.build();
+		final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .workflowSchemeVersion(schemeVersion)
-                .originalUnderlyingAgreementContainer(UnderlyingAgreementContainer.builder().build())
+                .originalUnderlyingAgreementContainer(originalUnderlyingAgreementContainer)
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreement(una)
                         .build())
@@ -125,6 +131,8 @@ class UnderlyingAgreementVariationActivatedServiceTest {
                 .updateUnderlyingAgreement(unaContainerFinal, accountId, underlyingAgreementValidationContext, true);
         verify(underlyingAgreementVariationService, times(1))
                 .updateFacilitiesAndAccount(accountId, unaContainerFinal, requestPayload);
+        verify(underlyingAgreementVariationService, times(1)).updateVariationIndicatorForPerformanceDataFacility(
+        		originalUnderlyingAgreementContainer, unaContainerFinal);
         verify(underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService, times(1)).handleCca2FacilitiesAfterTerminationDate(una);
     }
 

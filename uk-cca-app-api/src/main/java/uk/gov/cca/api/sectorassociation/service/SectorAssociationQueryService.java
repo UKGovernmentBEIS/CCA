@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.authorization.ccaauth.core.service.AppUserService;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.authorityinfo.providers.SectorAssociationAuthorityInfoProvider;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.ResourceHeaderInfoProvider;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationHeaderInfoDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoNameDTO;
 import uk.gov.cca.api.sectorassociation.repository.SectorAssociationCustomRepository;
@@ -28,7 +31,7 @@ import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
-public class SectorAssociationQueryService implements SectorAssociationAuthorityInfoProvider {
+public class SectorAssociationQueryService implements SectorAssociationAuthorityInfoProvider, ResourceHeaderInfoProvider {
 
     private final SectorAssociationRepository sectorAssociationRepository;
     private final SectorAssociationCustomRepository sectorAssociationCustomRepository;
@@ -122,5 +125,17 @@ public class SectorAssociationQueryService implements SectorAssociationAuthority
     
     List<SectorAssociation> getByIds(List<Long> ids) {
         return sectorAssociationRepository.findAllByIdIn(ids);
+    }
+    
+    @Override
+    public SectorAssociationHeaderInfoDTO getResourceHeaderInfo(String resourceId) {
+        return sectorAssociationRepository.findById(Long.parseLong(resourceId))
+                .map(sectorAssociationMapper::toSectorAssociationHeaderInfo)
+                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+    }
+    
+    @Override
+    public String getResourceType() {
+        return CcaResourceType.SECTOR_ASSOCIATION;
     }
 }

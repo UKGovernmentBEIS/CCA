@@ -19,13 +19,16 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 import uk.gov.netz.api.common.config.MapperConfig;
+import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 @Mapper(componentModel = "spring", config = MapperConfig.class)
 public interface PerformanceDataFacilityDigitalFormSubmitMapper {
@@ -40,17 +43,19 @@ public interface PerformanceDataFacilityDigitalFormSubmitMapper {
                                      PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload payload,
                                      List<TargetPeriodDetailsDTO> targetPeriods) {
         // Set multiplier from target period years
-        parameters.setTpMultiplier(payload.getReferenceData().getTpMultiplier());
+        BigDecimal tpMultiplier = PerformanceDataFacilityCalculationFunctionUtil
+                .getTpMultiplier(targetPeriods, payload.getTargetPeriodType(), payload.getTargetPeriodYear())
+                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+        parameters.setTpMultiplier(tpMultiplier);
 
         // Set Interim or facility target
         BigDecimal targetImprovement = PerformanceDataFacilityCalculationFunctionUtil
-                .getTargetImprovement(payload.getReportType(), payload.getTargetPeriodType(),  payload.getReferenceData());
+                .getTargetImprovement(payload.getReportType(), payload.getTargetPeriodType(),  payload.getReferenceData().getBaselineAndTargets());
         parameters.setTargetImprovement(targetImprovement);
 
         // Set last Year Per Target Period
-        Map<TargetPeriodType, Integer> lastYearPerTp = targetPeriods.stream().collect(Collectors.toMap(
-                TargetPeriodDetailsDTO::getBusinessId,
-                tp -> tp.getTargetPeriodYearsContainer().getFinalTargetPeriodTargetYear().getValue()));
+        Map<TargetPeriodType, Integer> lastYearPerTp = PerformanceDataFacilityCalculationFunctionUtil
+                .getLastYearPerTp(targetPeriods);
         parameters.setLastYearPerTp(lastYearPerTp);
     }
 
@@ -68,6 +73,7 @@ public interface PerformanceDataFacilityDigitalFormSubmitMapper {
         Map<PerformanceDataFacilityFixedConversionFactor, PerformanceDataFacilityFuelEnergyConsumption> standardFuels = new EnumMap<>(PerformanceDataFacilityFixedConversionFactor.class);
         container.getEnergyFuelDetails().getFuels().stream()
                 .filter(f -> ObjectUtils.isNotEmpty(f.getFixedConversionFactorCode()))
+                .sorted(Comparator.comparing(PerformanceDataFacilityFuel::getFixedConversionFactorCode))
                 .forEach(f-> standardFuels.put(f.getFixedConversionFactorCode(), toPerformanceDataFacilityFuelEnergyConsumption(f)));
 
         data.getEnergyFuelDetails().setStandardFuels(standardFuels);

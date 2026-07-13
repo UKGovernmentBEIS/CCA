@@ -30,6 +30,6 @@ export class UnARegulatorLedVariationPeerReviewPrecontentComponent {
   private readonly authStore = inject(AuthStore);
   protected readonly activatedRoute = inject(ActivatedRoute);
 
-  private readonly assigneeUserId = this.requestTaskStore.select(requestTaskQuery.selectAssigneeUserId)();
-  protected readonly isUserAssignee = computed(() => this.authStore.select(selectUserId)() === this.assigneeUserId);
+  private readonly assigneeUserId = this.requestTaskStore.select(requestTaskQuery.selectAssigneeUserId);
+  protected readonly isUserAssignee = computed(() => this.authStore.select(selectUserId)() === this.assigneeUserId());
 }

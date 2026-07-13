@@ -25,11 +25,11 @@ export class OverallDecisionComponent {
   private readonly store = inject(RequestTaskStore);
 
   protected readonly summaryData = computed(() =>
-    toOverallDecisionSummaryData(
-      this.store.select(underlyingAgreementPeerReviewQuery.selectDetermination)(),
-      this.store.select(underlyingAgreementPeerReviewQuery.selectReviewAttachments)(),
-      '../../file-download',
-      false,
-    ),
+    toOverallDecisionSummaryData({
+      determination: this.store.select(underlyingAgreementPeerReviewQuery.selectDetermination)(),
+      attachments: this.store.select(underlyingAgreementPeerReviewQuery.selectReviewAttachments)(),
+      downloadUrl: '../../file-download',
+      isEditable: false,
+    }),
   );
 }

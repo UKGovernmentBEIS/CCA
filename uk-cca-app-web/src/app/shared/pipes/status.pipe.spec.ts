@@ -30,6 +30,7 @@ describe('StatusPipe', () => {
     expect(pipe.transform('live')).toEqual('Live');
     expect(pipe.transform('new')).toEqual('New');
     expect(pipe.transform('excluded')).toEqual('Excluded');
+    expect(pipe.transform('expired')).toEqual('Expired');
     expect(pipe.transform('inactive')).toEqual('Inactive');
     expect(pipe.transform('non_financially_independent')).toEqual('Non-financially independent');
     expect(pipe.transform('financially_independent')).toEqual('Financially independent');

@@ -38,15 +38,17 @@ export class TargetPeriod5Component {
   };
 
   protected readonly summaryData = computed(() =>
-    toBaselineAndTargetsSummaryDataWithDecision(
-      this.requestActionStore.select(
+    toBaselineAndTargetsSummaryDataWithDecision({
+      sectorSchemeData: this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
       )(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectTargetPeriod5Details)().details,
-      this.requestActionStore.select(
+      targetPeriodDetails: this.requestActionStore.select(
+        underlyingAgreementRequestActionQuery.selectTargetPeriod5Details,
+      )().details,
+      decision: this.requestActionStore.select(
         underlyingAgreementVariationReviewedRequestActionQuery.selectSubtaskDecision('TARGET_PERIOD5_DETAILS'),
       )(),
-      this.summaryMetadata,
-    ),
+      metadata: this.summaryMetadata,
+    }),
   );
 }

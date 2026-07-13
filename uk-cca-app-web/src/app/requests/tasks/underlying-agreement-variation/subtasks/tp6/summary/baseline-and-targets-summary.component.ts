@@ -45,25 +45,29 @@ export class BaselineAndTargetsSummaryComponent {
 
   private readonly multipleFilesDownloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData(
-    this.isTargetPeriod5,
-    this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalBaselineExists)(),
-    this.sectorAssociationDetailsSchemeData,
-    this.requestTaskStore.select(
+  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData({
+    isTp5Period: this.isTargetPeriod5,
+    baselineExists: this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalBaselineExists)(),
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.requestTaskStore.select(
       underlyingAgreementVariationQuery.selectOriginalTargetPeriodDetails(this.isTargetPeriod5),
     )(),
-    this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments)(),
-    this.isEditable,
-    this.multipleFilesDownloadUrl,
-  );
+    attachments: this.requestTaskStore.select(
+      underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
+    )(),
+    isEditable: this.isEditable,
+    multiFileDownloadUrl: this.multipleFilesDownloadUrl,
+  });
 
-  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData(
-    this.isTargetPeriod5,
-    this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodExists)(),
-    this.sectorAssociationDetailsSchemeData,
-    this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodDetails(this.isTargetPeriod5))(),
-    this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
-    this.isEditable,
-    this.multipleFilesDownloadUrl,
-  );
+  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData({
+    isTp5Period: this.isTargetPeriod5,
+    baselineExists: this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodExists)(),
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.requestTaskStore.select(
+      underlyingAgreementQuery.selectTargetPeriodDetails(this.isTargetPeriod5),
+    )(),
+    attachments: this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
+    isEditable: this.isEditable,
+    multiFileDownloadUrl: this.multipleFilesDownloadUrl,
+  });
 }

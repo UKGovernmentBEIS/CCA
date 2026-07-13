@@ -5,20 +5,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemeDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationMeasurementInfoDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
+import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemeInfo;
 import uk.gov.cca.api.sectorassociation.domain.dto.TargetSetDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.TargetSetInfo;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
 class SectorAssociationInfoServiceTest {
@@ -40,12 +41,12 @@ class SectorAssociationInfoServiceTest {
     void getSectorAssociationMeasurementInfo_from_sector() {
         final Long sectorAssociationId = 1L;
 
-        Map<SchemeVersion, SectorAssociationSchemeDTO> sectorAssociationSchemeMap = 
-        		Map.of(SchemeVersion.CCA_2, SectorAssociationSchemeDTO.builder()
-        				.targetSet(TargetSetDTO.builder().build())
+        Map<SchemeVersion, SectorAssociationSchemeInfo> sectorAssociationSchemeMap =
+        		Map.of(SchemeVersion.CCA_2, SectorAssociationSchemeInfo.builder()
+        				.targetSet(TargetSetInfo.builder().build())
         				.build(), 
-        				SchemeVersion.CCA_3, SectorAssociationSchemeDTO.builder()
-        				.targetSet(TargetSetDTO.builder().build())
+        				SchemeVersion.CCA_3, SectorAssociationSchemeInfo.builder()
+        				.targetSet(TargetSetInfo.builder().build())
         				.build()) ;
 
         when(sectorAssociationSchemeService.getSectorAssociationSchemesMap(sectorAssociationId)).thenReturn(sectorAssociationSchemeMap);
@@ -70,9 +71,9 @@ class SectorAssociationInfoServiceTest {
         final String subsectorAssociationName = "SUBSECTOR";
         final String unit = "kWh";
 
-        Map<SchemeVersion, SubsectorAssociationSchemeDTO> subsectorAssociationSchemeMap = 
-        		Map.of(SchemeVersion.CCA_2, SubsectorAssociationSchemeDTO.builder()
-        				.targetSet(TargetSetDTO.builder()
+        Map<SchemeVersion, SubsectorAssociationSchemeInfo> subsectorAssociationSchemeMap =
+        		Map.of(SchemeVersion.CCA_2, SubsectorAssociationSchemeInfo.builder()
+        				.targetSet(TargetSetInfo.builder()
         						.energyOrCarbonUnit(unit)
         						.build())
         				.build()) ;

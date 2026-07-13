@@ -11,6 +11,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 @RestController
 @RequestMapping(path = "/v1.0/file-evidence/upload")
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "File Evidences upload")
 public class FileEvidenceUploadController {
 

@@ -38,7 +38,8 @@ public class UnderlyingAgreementVariationService {
     private final FacilityDataUpdateService facilityDataUpdateService;
     private final AccountSearchAdditionalKeywordService accountSearchAdditionalKeywordService;
     private final UnderlyingAgreementFacilityCertificationTransferService facilityCertificationTransferService;
-    private final UnderlyingAgreementService underlyingAgreementService;
+    private final UnderlyingAgreementService underlyingAgreementService; 
+    private final UnderlyingAgreementVariationIndicatorService underlyingAgreementVariationIndicatorService;
 
     private static final UnderlyingAgreementAccountReferenceDataMapper ACCOUNT_MAPPER = Mappers
             .getMapper(UnderlyingAgreementAccountReferenceDataMapper.class);
@@ -58,8 +59,14 @@ public class UnderlyingAgreementVariationService {
         final TargetUnitAccountUpdateDTO targetUnitAccountUpdateDTO = ACCOUNT_MAPPER.toTargetUnitAccountUpdateDTO(targetUnitDetails);
         targetUnitAccountUpdateService.updateTargetUnitAccountUponUnderlyingAgreementVariation(accountId, targetUnitAccountUpdateDTO);
     }
+    
+    public void updateVariationIndicatorForPerformanceDataFacility(final UnderlyingAgreementContainer originalUnaContainer, 
+    		final UnderlyingAgreementContainer currentUnaContainer) {
+		underlyingAgreementVariationIndicatorService.updateVariationIndicatorForPerformanceDataFacility(
+				originalUnaContainer, currentUnaContainer);
+	}
 
-    private void saveFacilityData(final Long accountId, final UnderlyingAgreementVariationRequestPayload requestPayload) {
+	private void saveFacilityData(final Long accountId, final UnderlyingAgreementVariationRequestPayload requestPayload) {
         final Set<Facility> facilities = requestPayload.getUnderlyingAgreementProposed()
                 .getUnderlyingAgreement().getFacilities();
 

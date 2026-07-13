@@ -47,10 +47,10 @@ export default class VariationDetailsCheckYourAnswersComponent {
   protected readonly router = inject(Router);
   protected readonly route = inject(ActivatedRoute);
 
-  protected readonly summaryData = toVariationDetailsSummaryData(
-    this.store.select(underlyingAgreementVariationRegulatorLedQuery.selectVariationDetails)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-  );
+  protected readonly summaryData = toVariationDetailsSummaryData({
+    variationDetails: this.store.select(underlyingAgreementVariationRegulatorLedQuery.selectVariationDetails)(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+  });
 
   onSubmit() {
     const payload = this.store.select(

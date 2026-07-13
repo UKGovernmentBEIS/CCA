@@ -161,6 +161,16 @@ describe('ItemActionTypePipe', () => {
     expect(pipe.transform('NON_COMPLIANCE_CLOSED')).toEqual('Non-compliance closed');
     expect(pipe.transform('NON_COMPLIANCE_CANCELLED')).toEqual('Non-compliance details cancelled');
 
+    expect(pipe.transform('PERFORMANCE_DATA_FACILITY_SUBMITTED')).toEqual('Target period reporting submitted');
+    expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED')).toEqual(
+      'Target period reporting cancelled',
+    );
+
+    expect(pipe.transform('PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED')).toEqual('Target period reporting submitted');
+    expect(pipe.transform('PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED')).toEqual(
+      'Target period reporting submitted',
+    );
+
     expect(pipe.transform(undefined)).toEqual('Approved Application');
   });
 });

@@ -62,4 +62,9 @@ export const taskRelatedActionsMap: RelatedActionsMap = {
     path: ['non-compliance-conclusion', 'provide-appeal-details'],
   },
   PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCEL_APPLICATION: { text: 'Cancel task', path: ['cancel'] },
+  PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REFRESH_APPLICATION: {
+    text: 'Refresh baseline data',
+    path: ['target-period-reporting-form', 'refresh-baseline-data'],
+  },
+  PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_CLOSE: { text: 'Close task', path: ['tpr-csv-upload', 'close-task'] },
 };

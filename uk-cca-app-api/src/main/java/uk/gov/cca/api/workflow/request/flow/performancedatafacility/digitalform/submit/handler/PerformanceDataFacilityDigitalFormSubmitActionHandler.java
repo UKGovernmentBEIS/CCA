@@ -39,7 +39,7 @@ public class PerformanceDataFacilityDigitalFormSubmitActionHandler implements Re
         boolean isExpired = performanceDataFacilityDigitalFormSubmitValidator.isReportSubmissionExpired(requestTask, submissionDate.toLocalDate());
         if(isExpired) {
             // Complete task as EXPIRED
-            performanceDataFacilityDigitalFormSubmitService.markTaskAsExpired(requestTask, submissionDate);
+            performanceDataFacilityDigitalFormSubmitService.markTaskAsExpired(appUser, requestTask, submissionDate);
             workflowService.completeTask(requestTask.getProcessTaskId(), Map.of(
                     BpmnProcessConstants.REQUEST_ID, requestTask.getRequest().getId(),
                     CcaBpmnProcessConstants.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_OUTCOME, PerformanceDataFacilityDigitalFormOutcome.EXPIRED));

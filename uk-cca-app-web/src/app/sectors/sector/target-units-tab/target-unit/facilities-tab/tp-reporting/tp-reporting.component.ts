@@ -8,6 +8,7 @@ import { catchError, EMPTY, switchMap, take } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
+import { ItemLinkPipe } from '@netz/common/pipes';
 import {
   ButtonDirective,
   DetailsComponent,
@@ -15,6 +16,7 @@ import {
   GovukValidators,
   SelectComponent,
 } from '@netz/govuk-components';
+import { TP_REPORTING_ERROR_MESSAGES, TpReportingErrorCode } from '@requests/common';
 
 import {
   PerformanceDataFacilityDigitalFormRequestCreateActionPayload,
@@ -90,46 +92,19 @@ export class TpReportingComponent {
         take(1),
         switchMap(({ requestId }) => this.requestItemsService.getItemsByRequest(requestId)),
         catchError((err) => {
-          switch (err.error.code) {
-            case 'TPRDF1001':
-              this.form.controls.targetPeriodType.setErrors({
-                responseError:
-                  'There is already a TPR task in progress for the target period you selected. You can locate the relevant task through the main dashboard.',
-              });
-              break;
-
-            case 'TPRDF1002':
-              this.form.controls.targetPeriodType.setErrors({
-                responseError:
-                  'The selected facility is not eligible to report for this target period. Select a different target period or exit the task.',
-              });
-              break;
-
-            case 'TPRDF1003':
-              this.form.controls.targetPeriodType.setErrors({
-                responseError: 'The combination you selected has expired. Make a new selection.',
-              });
-              break;
-
-            case 'TPRDF1004':
-              this.form.controls.targetPeriodType.setErrors({
-                responseError:
-                  'The secondary reporting for this target period must be unlocked before submitting reports or corrections. Contact your regulator to make an unlocking request.',
-              });
-              break;
-
-            case 'TPRDF1005':
-              this.form.controls.targetPeriodType.setErrors({
-                responseError:
-                  'Facility must have at least one eligible product for this period. Correct product data through a variation.',
-              });
-              break;
+          const message = TP_REPORTING_ERROR_MESSAGES[err.error.code as TpReportingErrorCode];
+          if (message) {
+            this.form.controls.targetPeriodType.setErrors({ responseError: message });
           }
 
           this.hasFormErrors.set(true);
           return EMPTY;
         }),
       )
-      .subscribe(() => this.router.navigate(['/'], { replaceUrl: true }));
+      .subscribe(({ items }) => {
+        const link = items?.length === 1 ? new ItemLinkPipe().transform(items[0]) : ['/dashboard'];
+
+        this.router.navigate(link, { relativeTo: this.activatedRoute, replaceUrl: true });
+      });
   }
 }

@@ -35,7 +35,28 @@
                     {{ workflow.id }} {{ workflow?.requestType | workflowType }}
                   </a>
 
-                  <div class="govuk-!-margin-bottom-0">Created {{ workflow.creationDate | date }}</div>
+                  @if (workflow?.requestMetadata?.['targetPeriodType']) {
+                    <div class="govuk-!-margin-bottom-0">
+                      Target period:
+                      {{ workflow?.requestMetadata?.['targetPeriodType'] }}
+                    </div>
+                  }
+
+                  @if (workflow?.requestMetadata?.['reportType']) {
+                    <div class="govuk-!-margin-bottom-0">
+                      Report type:
+                      {{ workflow?.requestMetadata?.['reportType'] | titlecase }}
+                    </div>
+                  }
+
+                  @if (workflow?.requestMetadata?.['submittedDate']) {
+                    <div class="govuk-!-margin-bottom-0">
+                      Submitted:
+                      {{ workflow?.requestMetadata?.['submittedDate'] | date: 'dd MMM yyyy' }}
+                    </div>
+                  } @else {
+                    <div class="govuk-!-margin-bottom-0">Created {{ workflow.creationDate | date }}</div>
+                  }
                 </div>
 
                 <div class="govuk-grid-column-one-quarter govuk-!-margin-top-2">

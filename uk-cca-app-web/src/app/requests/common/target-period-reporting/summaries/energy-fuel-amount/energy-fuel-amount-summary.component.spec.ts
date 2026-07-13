@@ -66,6 +66,9 @@ describe('EnergyFuelAmountSummaryComponent', () => {
 
     const element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toContain('Special reporting methodology');
+    expect(element.textContent).toContain(
+      'Electricity supplied from combined heat and power plant and dedicated generator electricity (kWh)',
+    );
     expect(element.textContent).toContain('Throughput adjustment factor');
   });
 
@@ -137,7 +140,7 @@ describe('EnergyFuelAmountSummaryComponent', () => {
   });
 
   it('should display kWh CO2 conversion factors from canonical base values', () => {
-    fixture.componentRef.setInput('measurementType', 'kWh');
+    fixture.componentRef.setInput('measurementUnit', 'kWh');
     fixture.componentRef.setInput('energyFuelDetails', {
       standardFuels: { NATURAL_GAS: { deliveredEnergy: '1000', primaryEnergy: '1000' } },
       nonStandardFuels: [],
@@ -150,7 +153,28 @@ describe('EnergyFuelAmountSummaryComponent', () => {
   });
 
   it('should calculate primary carbon using delivered x primary factor x CO2 factor', () => {
-    fixture.componentRef.setInput('measurementType', 'kg');
+    fixture.componentRef.setInput('measurementUnit', 'kg');
+    fixture.componentRef.setInput('energyFuelDetails', {
+      standardFuels: { NATURAL_GAS: { deliveredEnergy: '1000', primaryEnergy: '1000' } },
+      nonStandardFuels: [],
+      electricitySuppliedFromCHP: '200',
+    });
+    fixture.componentRef.setInput('usedReportingMechanism', true);
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    const text = element.textContent?.replace(/\s+/g, ' ') ?? '';
+
+    expect(element.textContent).toContain('Primary CO2e (kgCO2e)');
+    expect(element.textContent).toContain(
+      'Electricity supplied from combined heat and power plant and dedicated generator electricity (kWh)',
+    );
+    expect(text).toContain('1,000 kWh');
+    expect(element.textContent).toContain('182.54');
+  });
+
+  it('should display tonne primary carbon in tCO2e', () => {
+    fixture.componentRef.setInput('measurementUnit', 'tonne');
     fixture.componentRef.setInput('energyFuelDetails', {
       standardFuels: { NATURAL_GAS: { deliveredEnergy: '1000', primaryEnergy: '1000' } },
       nonStandardFuels: [],
@@ -159,7 +183,10 @@ describe('EnergyFuelAmountSummaryComponent', () => {
     fixture.detectChanges();
 
     const element: HTMLElement = fixture.nativeElement;
-    expect(element.textContent).toContain('Primary carbon (kgCO2e)');
-    expect(element.textContent).toContain('182.54');
+    const text = element.textContent?.replace(/\s+/g, ' ') ?? '';
+
+    expect(element.textContent).toContain('Primary CO2e (tCO2e)');
+    expect(text).toContain('1,000 kWh');
+    expect(element.textContent).toContain('0.18254');
   });
 });

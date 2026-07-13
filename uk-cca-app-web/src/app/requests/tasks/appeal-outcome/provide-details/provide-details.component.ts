@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DateInputComponent, RadioComponent, RadioOptionComponent, TextareaComponent } from '@netz/govuk-components';
 import { TasksApiService } from '@requests/common';
-import { FileUploadEvent, MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
+import { FileInputComponent, WizardStepComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 
 import { createSaveActionDTO } from '../transform';
@@ -26,7 +26,7 @@ import {
     RadioComponent,
     RadioOptionComponent,
     DateInputComponent,
-    MultipleFileInputComponent,
+    FileInputComponent,
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],
@@ -44,14 +44,14 @@ export class ProvideDetailsComponent {
   protected readonly today = new Date();
 
   private readonly requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId);
-  protected readonly downloadUrl = computed(() => generateDownloadUrl(this.requestTaskId()?.toString()));
+  protected readonly getDownloadUrl = (uuid: string) =>
+    `${generateDownloadUrl(this.requestTaskId()?.toString())}${uuid}`;
 
   onSubmit() {
-    const file = this.getUploadedFile();
     const appealOutcome: AppealOutcome = {
       tribunalDecision: this.form.controls.tribunalDecision.value,
       appealOutcomeDate: new DatePipe('en-GB').transform(this.form.controls.appealOutcomeDate.value, 'yyyy-MM-dd'),
-      file: file?.uuid ?? null,
+      file: this.form.controls.file.value?.uuid ?? null,
       comments: this.form.controls.comments.value ?? null,
     };
 
@@ -60,12 +60,5 @@ export class ProvideDetailsComponent {
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
       this.router.navigate(['../check-your-answers'], { relativeTo: this.activatedRoute });
     });
-  }
-
-  private getUploadedFile(): FileUploadEvent {
-    const value = this.form.controls.file.value;
-    const files = Array.isArray(value) ? value : value ? [value] : [];
-
-    return files[0];
   }
 }

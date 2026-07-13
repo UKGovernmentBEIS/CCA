@@ -8,6 +8,7 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.Admin
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.peerreview.domain.AdminTerminationPeerReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitRequestTaskPayload;
@@ -21,6 +22,7 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.peerrev
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivationRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
@@ -36,39 +38,7 @@ import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
 
 import java.util.List;
 
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.ADMIN_TERMINATION_FINAL_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.ADMIN_TERMINATION_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.ADMIN_TERMINATION_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.ADMIN_TERMINATION_WITHDRAW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.AUDIT_TRACK_CORRECTIVE_ACTIONS_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_CONCLUSION_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_DETAILS_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.NON_COMPLIANCE_NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.PERFORMANCE_DATA_DOWNLOAD_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.PERFORMANCE_DATA_UPLOAD_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.PRE_AUDIT_REVIEW_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_WAIT_FOR_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_WAIT_FOR_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_WAIT_FOR_PEER_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType.*;
 
 @Component
 public class RequestTaskPayloadTypesProvider implements JsonSubTypesProvider {
@@ -106,6 +76,9 @@ public class RequestTaskPayloadTypesProvider implements JsonSubTypesProvider {
                 // Performance data upload
                 new NamedType(PerformanceDataUploadSubmitRequestTaskPayload.class, PERFORMANCE_DATA_UPLOAD_SUBMIT_PAYLOAD),
 
+                // Performance data facility upload
+                new NamedType(PerformanceDataFacilityDataUploadSubmitRequestTaskPayload.class, PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT_PAYLOAD),
+
                 // PAT
                 new NamedType(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class, CcaRequestTaskPayloadType.PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT_PAYLOAD),
 
@@ -129,7 +102,10 @@ public class RequestTaskPayloadTypesProvider implements JsonSubTypesProvider {
                 new NamedType(NonComplianceAppealOutcomeSubmitRequestTaskPayload.class, NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT_PAYLOAD),
 
                 // Performance Data Facility Digital Form
-                new NamedType(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT_PAYLOAD)
+                new NamedType(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT_PAYLOAD),
+
+                // CCA3 PAT
+                new NamedType(FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class, CcaRequestTaskPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT_PAYLOAD)
         );
     }
 

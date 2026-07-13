@@ -23,14 +23,18 @@ export class VariationDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   protected readonly summaryData = computed(() =>
-    toVariationDetailsSummaryDataWithDecision(
-      this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectVariationDetails)(),
-      false,
-      '../../file-download',
-      this.requestTaskStore.select(
+    toVariationDetailsSummaryDataWithDecision({
+      variationDetails: this.requestTaskStore.select(
+        underlyingAgreementVariationPeerReviewQuery.selectVariationDetails,
+      )(),
+      isEditable: false,
+      downloadUrl: '../../file-download',
+      decision: this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectSubtaskDecision('VARIATION_DETAILS'),
       )(),
-      this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectReviewAttachments)(),
-    ),
+      reviewAttachments: this.requestTaskStore.select(
+        underlyingAgreementVariationPeerReviewQuery.selectReviewAttachments,
+      )(),
+    }),
   );
 }

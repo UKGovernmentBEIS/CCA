@@ -1,0 +1,76 @@
+<netz-page-heading>Throughput details</netz-page-heading>
+
+@if (variableEnergyType() === 'BY_PRODUCT') {
+  <h2 class="govuk-heading-m">Target period throughput details</h2>
+
+  @if (tableRows().length) {
+    <div class="x-scroll">
+      <div class="overflow-auto overflow-auto-table">
+        <govuk-table [columns]="tableColumns()" [data]="tableRows()">
+          <ng-template let-column="column" let-row="row">
+            @switch (column.field) {
+              @case ('productName') {
+                <strong>{{ row[column.field] }}</strong>
+              }
+
+              @case ('baselineEnergyIntensity') {
+                {{ row.baselineEnergyIntensity | number: '1.0-7' }} {{ measurementType() | measurementTypeToUnit }}/{{
+                  row.throughputUnit
+                }}
+              }
+
+              @case ('targetImprovement') {
+                {{ row.targetImprovement * 100 | number: '1.0-3' }}%
+              }
+
+              @case ('adjustedThroughput') {
+                {{ row.adjustedThroughput | number: '1.0-3' }}
+              }
+
+              @case ('targetEnergy') {
+                {{ row.targetEnergy | number: '1.0-3' }}
+              }
+
+              @default {
+                {{ row[column.field] }}
+              }
+            }
+          </ng-template>
+        </govuk-table>
+      </div>
+    </div>
+  } @else {
+    <dl govuk-summary-list>
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Target period throughput details</dt>
+        <dd govukSummaryListRowValue>Not provided</dd>
+      </div>
+    </dl>
+  }
+
+  <h2 class="govuk-heading-m govuk-!-margin-top-6">Calculated energy amounts</h2>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Total target variable energy ({{ measurementType() | measurementTypeToUnit }})
+      </dt>
+      <dd class="govuk-summary-list__value">{{ totalsTargetVariableEnergy() | number: '1.0-7' }}</dd>
+    </div>
+  </dl>
+} @else {
+  <h2 class="govuk-heading-m">Target period throughput details</h2>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Total throughput ({{ throughputUnit() }})</dt>
+      <dd class="govuk-summary-list__value">{{ totalsActualThroughput() | number: '1.0-7' }}</dd>
+    </div>
+  </dl>
+
+  <h2 class="govuk-heading-m govuk-!-margin-top-6">Calculated energy amounts</h2>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Total target variable energy ({{ measurementUnitLabel() }})</dt>
+      <dd class="govuk-summary-list__value">{{ totalsTargetVariableEnergy() | number: '1.0-7' }}</dd>
+    </div>
+  </dl>
+}

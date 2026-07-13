@@ -23,6 +23,8 @@ describe('StatusColorPipe', () => {
     expect(pipe.transform('rejected')).toEqual('red');
     expect(pipe.transform('withdrawn')).toEqual('red');
     expect(pipe.transform('overpaid')).toEqual('red');
+    expect(pipe.transform('cancelled')).toEqual('red');
+    expect(pipe.transform('expired')).toEqual('red');
 
     expect(pipe.transform('refunded')).toEqual('turquoise');
 
@@ -33,7 +35,5 @@ describe('StatusColorPipe', () => {
     expect(pipe.transform('not_required')).toEqual('grey');
     expect(pipe.transform('closed')).toEqual('grey');
     expect(pipe.transform('new')).toEqual('grey');
-
-    expect(pipe.transform('cancelled')).toEqual('red');
   });
 });

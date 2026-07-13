@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationInfoService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
@@ -39,7 +39,7 @@ public class SectorReferenceDetailsService {
                 sectorAssociationQueryService.getSectorAssociationInfoNameDTO(sectorAssociationId));
     }
     
-    public SectorAssociationSchemeDTO getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(Long sectorAssociationId, SchemeVersion version) {
+    public SectorAssociationSchemeInfo getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(Long sectorAssociationId, SchemeVersion version) {
         return sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorAssociationId, version);
     }
     

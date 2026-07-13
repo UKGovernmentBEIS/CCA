@@ -1,22 +1,8 @@
 package uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils;
 
-import lombok.experimental.UtilityClass;
-
-import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.common.domain.TriFunction;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityProductVariableEnergyData;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityNonStandardFuel;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
-
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +12,27 @@ import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.ObjectUtils;
+
+import lombok.experimental.UtilityClass;
+import uk.gov.cca.api.common.domain.FourFunction;
+import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.TriFunction;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityProductVariableEnergyData;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityNonStandardFuel;
+
 @UtilityClass
 public class PerformanceDataFacilityCalculationCommonFunctionUtil {
-
-    private final BigDecimal CUSTOM_FUEL_PRIMARY_FACTOR = BigDecimal.ONE;
+	
+	public final BigDecimal NON_STANDARD_FUEL_PRIMARY_FACTOR = BigDecimal.ONE;
 
     public final BiFunction<Map<PerformanceDataFacilityFixedConversionFactor, PerformanceDataFacilityFuelEnergyConsumption>, Function<Map.Entry<PerformanceDataFacilityFixedConversionFactor, PerformanceDataFacilityFuelEnergyConsumption>, BigDecimal>, BigDecimal> TOTAL_STANDARD_FUELS_DELIVERED_ENERGY =
             (standardFuels, predicate) ->
@@ -138,12 +141,26 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
             progressAtProductBaseYear = progressAtProductBaseYear.add(progressAtProductBaseYearTP, MathContext.DECIMAL128);
         }
 
-        BigDecimal result = calculatedParameters.getTargetImprovement().subtract(progressAtProductBaseYear, MathContext.DECIMAL128)
+        BigDecimal result = (calculatedParameters.getTargetImprovement().subtract(progressAtProductBaseYear, MathContext.DECIMAL128))
                 .divide(BigDecimal.ONE.subtract(progressAtProductBaseYear, MathContext.DECIMAL128), MathContext.DECIMAL128);
 
         return result.compareTo(BigDecimal.ZERO) < 0
                 ? BigDecimal.ZERO
                 : result;
+    };
+    
+    public final FourFunction<PerformanceDataFacilityCalculationParameters, ProductVariableEnergyConsumptionData, PerformanceDataFacilityInputEnergyFuelDetails, BigDecimal, BigDecimal> PRODUCT_ENERGY_ =
+            (calculatedParameters, originalProduct, fuelDetails, actualThroughput) -> {
+
+        Boolean usedReportingMechanism = calculatedParameters.getUsedReportingMechanism();
+        BigDecimal productImprovement = PRODUCT_TARGET_IMPROVEMENT.apply(calculatedParameters, originalProduct);
+        BigDecimal improvementSubtract = BigDecimal.ONE.subtract(productImprovement);
+        BigDecimal actualThroughputOrZero = Optional.ofNullable(actualThroughput).orElse(BigDecimal.ZERO);
+        BigDecimal adjustedThroughput = PerformanceDataFacilityCalculationCommonFunctionUtil.ADJUSTED_THROUGHPUT.apply(usedReportingMechanism, fuelDetails, actualThroughputOrZero);
+
+        return originalProduct.getEnergyCarbonIntensity()
+                .multiply(adjustedThroughput, MathContext.DECIMAL128)
+                .multiply(improvementSubtract, MathContext.DECIMAL128);
     };
 
     /**
@@ -153,19 +170,13 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
             (calculatedParameters, originalProduct, data) -> {
         // Get product's details
         Optional<PerformanceDataFacilityProductVariableEnergyData> productVariable = data.getThroughputDetails().getVariableEnergyConsumptionDataByProduct().stream()
-                .filter(p -> p.getProductName().equals(originalProduct.getProductName()))
+                .filter(p -> ObjectUtils.compare(p.getProductName(), originalProduct.getProductName()) == 0)
                 .findFirst();
-
-        Boolean usedReportingMechanism = calculatedParameters.getUsedReportingMechanism();
+        
         BigDecimal actualThroughput = productVariable.map(PerformanceDataFacilityProductVariableEnergyData::getActualThroughput)
                 .orElse(BigDecimal.ZERO);
-        BigDecimal productImprovement = PRODUCT_TARGET_IMPROVEMENT.apply(calculatedParameters, originalProduct);
-        BigDecimal improvementSubtract = BigDecimal.ONE.subtract(productImprovement);
-
-        return originalProduct.getEnergyCarbonIntensity()
-                .multiply(PerformanceDataFacilityCalculationCommonFunctionUtil.ADJUSTED_THROUGHPUT
-                        .apply(usedReportingMechanism, data.getEnergyFuelDetails(), actualThroughput), MathContext.DECIMAL128)
-                .multiply(improvementSubtract, MathContext.DECIMAL128);
+        
+        return PRODUCT_ENERGY_.apply(calculatedParameters, originalProduct, data.getEnergyFuelDetails(), actualThroughput);
     };
 
     /**
@@ -188,9 +199,13 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
                     switch (measurementType) {
                         case ENERGY_KWH, ENERGY_MWH, ENERGY_GJ ->
                                 entry.getValue().getDeliveredEnergy().multiply(entry.getKey().getPrimaryFactor(), MathContext.DECIMAL128);
-                        case CARBON_KG, CARBON_TONNE -> entry.getValue().getDeliveredEnergy()
+                        case CARBON_KG -> entry.getValue().getDeliveredEnergy()
                                 .multiply(entry.getKey().getPrimaryFactor(), MathContext.DECIMAL128)
                                 .multiply(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(entry.getKey(), measurementType), MathContext.DECIMAL128);
+                        case CARBON_TONNE -> entry.getValue().getDeliveredEnergy()
+		                        .multiply(entry.getKey().getPrimaryFactor(), MathContext.DECIMAL128)
+		                        .multiply(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(entry.getKey(), measurementType), MathContext.DECIMAL128)
+		                        .divide(BigDecimal.valueOf(1000), 20, RoundingMode.HALF_UP);
     };
 
     /**
@@ -201,10 +216,14 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
             (nonStandardFuel, measurementType) ->
                     switch (measurementType) {
                         case ENERGY_KWH, ENERGY_MWH, ENERGY_GJ -> nonStandardFuel.getDeliveredEnergy()
-                                .multiply(CUSTOM_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128);
-                        case CARBON_KG, CARBON_TONNE -> nonStandardFuel.getDeliveredEnergy()
-                                .multiply(CUSTOM_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128)
+                                .multiply(NON_STANDARD_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128);
+                        case CARBON_KG -> nonStandardFuel.getDeliveredEnergy()
+                                .multiply(NON_STANDARD_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128)
                                 .multiply(nonStandardFuel.getConversionFactor(), MathContext.DECIMAL128);
+                        case CARBON_TONNE -> nonStandardFuel.getDeliveredEnergy()
+		                        .multiply(NON_STANDARD_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128)
+		                        .multiply(nonStandardFuel.getConversionFactor(), MathContext.DECIMAL128)
+		                        .divide(BigDecimal.valueOf(1000), 20, RoundingMode.HALF_UP);
     };
 
     /**
@@ -236,7 +255,7 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
                         .map(originalProduct -> {
                             // Get product's details
                             Optional<PerformanceDataFacilityProductVariableEnergyData> productVariable = data.getThroughputDetails().getVariableEnergyConsumptionDataByProduct().stream()
-                                    .filter(p -> p.getProductName().equals(originalProduct.getProductName()))
+                                    .filter(p -> ObjectUtils.compare(p.getProductName(), originalProduct.getProductName()) == 0)
                                     .findFirst();
                             BigDecimal actualThroughput = productVariable.map(PerformanceDataFacilityProductVariableEnergyData::getActualThroughput)
                                     .orElse(BigDecimal.ZERO);

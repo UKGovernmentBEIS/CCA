@@ -67,12 +67,16 @@ export class AuthorizationAdditionalEvidenceDecisionComponent {
 
   private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryData = toAuthorisationAdditionalEvidenceSummaryData(
-    this.store.select(underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence)(),
-    this.store.select(underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-  );
+  protected readonly summaryData = toAuthorisationAdditionalEvidenceSummaryData({
+    authorisationAndAdditionalEvidence: this.store.select(
+      underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence,
+    )(),
+    underlyingAgreementAttachments: this.store.select(
+      underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments,
+    )(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+  });
 
   submit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();

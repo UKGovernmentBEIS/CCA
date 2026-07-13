@@ -113,7 +113,7 @@ class Cca3SectorAssociationSchemeDataMigrationServiceTest {
 		List<String> result = migrationService.migrate("");
 
 		// Verify
-		assertThat(result).containsExactly("[2] Field 'sectorAcronym' is mandatory but no value was provided.");
+		assertThat(result).containsExactly("migration.csv [row: 2] Field 'sectorAcronym' is mandatory but no value was provided.");
 		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationDirectory();
 		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationSourceFile();
 		verify(ftpFileService, times(1)).fetchFile(filePath);

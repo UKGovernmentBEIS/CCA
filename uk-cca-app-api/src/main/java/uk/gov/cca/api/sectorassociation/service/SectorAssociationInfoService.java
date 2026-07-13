@@ -2,20 +2,19 @@ package uk.gov.cca.api.sectorassociation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemeDTO;
+import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeData;
+import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationMeasurementInfoDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.TargetSetDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
+import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemeInfo;
+import uk.gov.cca.api.sectorassociation.domain.dto.TargetSetInfo;
 
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.common.domain.SchemeData;
-import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class SectorAssociationInfoService {
     }
 
     private SectorAssociationMeasurementInfoDTO getMeasurementInfoDTOFromSubsector(Long subsectorAssociationId) {
-        final Map<SchemeVersion, SubsectorAssociationSchemeDTO> subsectorAssociationSchemeMap =
+        final Map<SchemeVersion, SubsectorAssociationSchemeInfo> subsectorAssociationSchemeMap =
                 subsectorAssociationSchemeService.getSubsectorAssociationSchemesMap(subsectorAssociationId);
         
         final String subsectorAssociationName = subsectorAssociationService.getSubsectorById(subsectorAssociationId).getName();
@@ -52,7 +51,7 @@ public class SectorAssociationInfoService {
     }
 
     private SectorAssociationMeasurementInfoDTO getMeasurementInfoDTOFromSector(Long sectorAssociationId) {
-        final Map<SchemeVersion, SectorAssociationSchemeDTO> sectorAssociationSchemeMap =
+        final Map<SchemeVersion, SectorAssociationSchemeInfo> sectorAssociationSchemeMap =
                 sectorAssociationSchemeService.getSectorAssociationSchemesMap(sectorAssociationId);
 
 		return SectorAssociationMeasurementInfoDTO.builder()
@@ -61,7 +60,7 @@ public class SectorAssociationInfoService {
     }
 
 	private Map<SchemeVersion, SchemeData> getSectorSchemeDataMap(
-			Map<SchemeVersion, SectorAssociationSchemeDTO> sectorAssociationSchemeMap) {
+			Map<SchemeVersion, SectorAssociationSchemeInfo> sectorAssociationSchemeMap) {
 		return sectorAssociationSchemeMap.entrySet().stream()
 			.collect(Collectors.toMap(Entry::getKey, entry -> SchemeData.builder()
 					.sectorMeasurementType(MeasurementType.getMeasurementTypeByUnit(getMeasurementUnit(entry.getValue().getTargetSet())))
@@ -70,7 +69,7 @@ public class SectorAssociationInfoService {
 	}
 
 	private Map<SchemeVersion, SchemeData> getSubsectorSchemeDataMap(
-			Map<SchemeVersion, SubsectorAssociationSchemeDTO> subsectorAssociationSchemeMap) {
+			Map<SchemeVersion, SubsectorAssociationSchemeInfo> subsectorAssociationSchemeMap) {
 		return subsectorAssociationSchemeMap.entrySet().stream()
 			.collect(Collectors.toMap(Entry::getKey, entry -> SchemeData.builder()
 					.sectorMeasurementType(MeasurementType.getMeasurementTypeByUnit(getMeasurementUnit(entry.getValue().getTargetSet())))
@@ -78,15 +77,15 @@ public class SectorAssociationInfoService {
 					.build()));
 	}
 	
-	private String getMeasurementUnit(final TargetSetDTO targetSetDTO) {
-		return Optional.ofNullable(targetSetDTO)
-                .map(TargetSetDTO::getEnergyOrCarbonUnit)
+	private String getMeasurementUnit(final TargetSetInfo targetSetInfo) {
+		return Optional.ofNullable(targetSetInfo)
+                .map(TargetSetInfo::getEnergyOrCarbonUnit)
                 .orElse(null);
 	}
 	
-	private String getThroughputUnit(final TargetSetDTO targetSetDTO) {
-		return Optional.ofNullable(targetSetDTO)
-                .map(TargetSetDTO::getThroughputUnit)
+	private String getThroughputUnit(final TargetSetInfo targetSetInfo) {
+		return Optional.ofNullable(targetSetInfo)
+                .map(TargetSetInfo::getThroughputUnit)
                 .orElse(null);
 	}
 

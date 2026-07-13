@@ -24,11 +24,9 @@ import {
   BaseLineAndTargetsStep,
   filterFieldsWithFalsyValues,
   isTargetPeriodWizardCompleted,
-  MeasurementTypeEnum,
   OVERALL_DECISION_SUBTASK,
   TaskItemStatus,
   TasksApiService,
-  transformMeasurementType,
   UNAVariationReviewRequestTaskPayload,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
@@ -39,6 +37,7 @@ import {
   TextInputComponent as CcaTextInputComponent,
   WizardStepComponent,
 } from '@shared/components';
+import { MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP, transformMeasurementType } from '@shared/pipes';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -117,23 +116,23 @@ export class TargetCompositionComponent {
   protected readonly measurementTypeOptions: GovukSelectOption<TargetComposition['measurementType']>[] = [
     {
       value: 'ENERGY_KWH',
-      text: MeasurementTypeEnum['ENERGY_KWH'],
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.ENERGY_KWH,
     },
     {
       value: 'ENERGY_MWH',
-      text: MeasurementTypeEnum['ENERGY_MWH'],
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.ENERGY_MWH,
     },
     {
       value: 'ENERGY_GJ',
-      text: MeasurementTypeEnum['ENERGY_GJ'],
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.ENERGY_GJ,
     },
     {
       value: 'CARBON_KG',
-      text: MeasurementTypeEnum['CARBON_KG'],
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.CARBON_KG,
     },
     {
       value: 'CARBON_TONNE',
-      text: MeasurementTypeEnum['CARBON_TONNE'],
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.CARBON_TONNE,
     },
   ];
 

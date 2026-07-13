@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class SectorAssociationSchemeDocumentControllerTest {
 
-    private static final String BASE_PATH = "/v1.0/sector-documents";
+    private static final String BASE_PATH = "/v1.0/sector-scheme-documents";
 
     private MockMvc mockMvc;
 

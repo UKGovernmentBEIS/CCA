@@ -40,10 +40,12 @@ export class RelatedActionsComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if ('allowedRequestTaskActions' in changes) {
       const actions = changes.allowedRequestTaskActions.currentValue as RequestTaskItemDTO['allowedRequestTaskActions'];
+
       this.relatedActions = actions
         .filter((action) => action in this.actionsMap)
         .map((action) => {
           const path = this.actionsMap[action].path;
+
           return {
             text: this.actionsMap[action].text,
             link: typeof path === 'function' ? path(this.taskId(), this.taskType()) : path,

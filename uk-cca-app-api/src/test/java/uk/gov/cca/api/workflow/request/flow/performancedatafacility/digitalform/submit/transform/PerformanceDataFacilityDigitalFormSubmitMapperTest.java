@@ -13,6 +13,7 @@ import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.Perfo
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFuel;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityProductVariableEnergyData;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityReferenceData;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityTargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityThroughputDetails;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
@@ -28,7 +29,6 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domai
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityNonStandardFuel;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityReferenceData;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 
 import java.math.BigDecimal;
@@ -50,9 +50,12 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
     void toPerformanceDataFacilityCalculationParameters() {
         final List<TargetPeriodDetailsDTO> targetPeriods = List.of(
                 TargetPeriodDetailsDTO.builder()
-                        .businessId(TargetPeriodType.TP7)
+                        .businessId(TargetPeriodType.TP8)
                         .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
-                                .targetPeriodYears(List.of(TargetPeriodYear.builder().targetYear(Year.of(2026)).build()))
+                                .targetPeriodYears(List.of(
+                                        TargetPeriodYear.builder().targetYear(Year.of(2025)).build(),
+                                        TargetPeriodYear.builder().targetYear(Year.of(2026)).build()
+                                ))
                                 .build())
                         .build()
         );
@@ -68,7 +71,7 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
                                         .energyCarbonFactor(BigDecimal.valueOf(0.01))
                                         .measurementType(MeasurementType.ENERGY_KWH)
                                         .usedReportingMechanism(true)
-                                        .improvements(Map.of(TargetImprovementType.TP8, BigDecimal.ONE))
+                                        .improvements(Map.of(TargetImprovementType.TP8, BigDecimal.valueOf(100)))
                                         .totalFixedEnergy(BigDecimal.TEN)
                                         .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                                         .baselineVariableEnergy(BigDecimal.TWO)
@@ -82,7 +85,6 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
                                                         .build()
                                         ))
                                         .build())
-                                .tpMultiplier(BigDecimal.TWO)
                                 .build())
                         .build();
 
@@ -93,7 +95,7 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
                         .energyCarbonFactor(BigDecimal.valueOf(0.01))
                         .measurementType(MeasurementType.ENERGY_KWH)
                         .usedReportingMechanism(true)
-                        .improvements(Map.of(TargetImprovementType.TP8, BigDecimal.ONE))
+                        .improvements(Map.of(TargetImprovementType.TP8, BigDecimal.valueOf(100)))
                         .totalFixedEnergy(BigDecimal.TEN)
                         .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                         .baselineVariableEnergy(BigDecimal.TWO)
@@ -110,8 +112,8 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
                         .targetYear(Year.of(2026))
                         .reportType(PerformanceDataReportType.FINAL)
                         .tpMultiplier(BigDecimal.TWO)
-                        .targetImprovement(BigDecimal.valueOf(0.01))
-                        .lastYearPerTp(Map.of(TargetPeriodType.TP7, 2026))
+                        .targetImprovement(BigDecimal.ONE)
+                        .lastYearPerTp(Map.of(TargetPeriodType.TP8, 2026))
                         .build();
         // Invoke
         PerformanceDataFacilityCalculationParameters result = mapper.toPerformanceDataFacilityCalculationParameters(taskPayload, targetPeriods);
@@ -124,9 +126,12 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
     void toPerformanceDataFacilityCalculationParameters_with_INTERIM() {
         final List<TargetPeriodDetailsDTO> targetPeriods = List.of(
                 TargetPeriodDetailsDTO.builder()
-                        .businessId(TargetPeriodType.TP7)
+                        .businessId(TargetPeriodType.TP8)
                         .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
-                                .targetPeriodYears(List.of(TargetPeriodYear.builder().targetYear(Year.of(2026)).build()))
+                                .targetPeriodYears(List.of(
+                                        TargetPeriodYear.builder().targetYear(Year.of(2025)).build(),
+                                        TargetPeriodYear.builder().targetYear(Year.of(2026)).build()
+                                ))
                                 .build())
                         .build()
         );
@@ -142,7 +147,7 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
                                         .energyCarbonFactor(BigDecimal.valueOf(0.01))
                                         .measurementType(MeasurementType.ENERGY_KWH)
                                         .usedReportingMechanism(true)
-                                        .improvements(Map.of(TargetImprovementType.TP8, BigDecimal.ONE))
+                                        .improvements(Map.of(TargetImprovementType.TP8, BigDecimal.valueOf(100)))
                                         .totalFixedEnergy(BigDecimal.TEN)
                                         .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                                         .baselineVariableEnergy(BigDecimal.TWO)
@@ -156,7 +161,6 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
                                                         .build()
                                         ))
                                         .build())
-                                .tpMultiplier(BigDecimal.TWO)
                                 .build())
                         .build();
 
@@ -167,7 +171,7 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
                         .energyCarbonFactor(BigDecimal.valueOf(0.01))
                         .measurementType(MeasurementType.ENERGY_KWH)
                         .usedReportingMechanism(true)
-                        .improvements(Map.of(TargetImprovementType.TP8, BigDecimal.ONE))
+                        .improvements(Map.of(TargetImprovementType.TP8, BigDecimal.valueOf(100)))
                         .totalFixedEnergy(BigDecimal.TEN)
                         .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                         .baselineVariableEnergy(BigDecimal.TWO)
@@ -185,7 +189,7 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
                         .reportType(PerformanceDataReportType.INTERIM)
                         .tpMultiplier(BigDecimal.TWO)
                         .targetImprovement(BigDecimal.valueOf(0.5).setScale(7, RoundingMode.HALF_UP))
-                        .lastYearPerTp(Map.of(TargetPeriodType.TP7, 2026))
+                        .lastYearPerTp(Map.of(TargetPeriodType.TP8, 2026))
                         .build();
         // Invoke
         PerformanceDataFacilityCalculationParameters result = mapper.toPerformanceDataFacilityCalculationParameters(taskPayload, targetPeriods);

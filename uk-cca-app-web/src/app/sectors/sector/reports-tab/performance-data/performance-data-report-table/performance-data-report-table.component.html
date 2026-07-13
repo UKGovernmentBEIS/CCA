@@ -1,3 +1,7 @@
+<button govukSecondaryButton class="govuk-!-margin-top-5" type="button" (click)="exportToXlsx()">
+  Download search results
+</button>
+
 <govuk-table [columns]="tableColumns" [data]="state().performanceDataReportItems">
   <ng-template let-column="column" let-row="row">
     @switch (column.field) {
@@ -43,5 +47,3 @@
   (pageChange)="onPageChange($event)"
   (pageSizeChange)="onPageSizeChange($event)"
 />
-
-<button govukButton type="button" (click)="exportToXlsx()">Download to spreadsheet</button>

@@ -71,6 +71,10 @@ export const ItemActionEnum: Partial<Record<RequestActionInfoDTO['type'], string
   NON_COMPLIANCE_APPEAL_OUTCOME_SUBMITTED: 'Appeal outcome provided',
   NON_COMPLIANCE_CLOSED: 'Non-compliance closed',
   NON_COMPLIANCE_CANCELLED: 'Non-compliance details cancelled',
+  PERFORMANCE_DATA_FACILITY_SUBMITTED: 'Target period reporting submitted',
+  PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED: 'Target period reporting cancelled',
+  PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED: 'Target period reporting submitted',
+  PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED: 'Target period reporting submitted',
 };
 
 @Pipe({ name: 'itemActionType', pure: true })

@@ -30,10 +30,13 @@ export type TUDetailsSection = {
   subsectorAssociationName: string;
 };
 
+export const alphabeticalCompare = (a: string, b: string): number =>
+  a.localeCompare(b, 'en-GB', { numeric: true, sensitivity: 'base' });
+
 export function sortFacilitiesById(facilities: Facility[]): Facility[] {
   if (!facilities || facilities.length === 0) return [];
   return produce(facilities, (draft) => {
-    draft.sort((a, b) => a.facilityId.localeCompare(b.facilityId, 'en-GB', { numeric: true, sensitivity: 'base' }));
+    draft.sort((a, b) => alphabeticalCompare(a.facilityId, b.facilityId));
   });
 }
 
@@ -61,7 +64,7 @@ const deletePhoneNumberAndJobTitle = (
     delete rp.jobTitle;
   });
 
-export const boolToString = (bool: boolean): 'Yes' | 'No' | null =>
+export const boolToString = (bool: boolean | null | undefined): 'Yes' | 'No' | null =>
   typeof bool !== 'boolean' ? null : bool ? 'Yes' : 'No';
 
 export function overallDecisionStatus(payload: UnderlyingAgreementReviewRequestTaskPayload): TaskItemStatus {

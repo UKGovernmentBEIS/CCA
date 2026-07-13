@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { TabLazyDirective, TabsComponent } from '@netz/govuk-components';
+import { SectorTemplatesComponent } from '@shared/components';
 
 import { DocumentsComponent } from './documents/documents.component';
 import { EmailsComponent } from './emails/emails.component';
@@ -20,9 +21,9 @@ import { EmailsComponent } from './emails/emails.component';
         <cca-documents />
       </ng-template>
 
-      <!-- <ng-template govukTabLazy id="sector-templates" label="Sector templates">
+      <ng-template govukTabLazy id="sector-templates" label="Sector templates">
         <cca-sector-templates />
-      </ng-template> -->
+      </ng-template>
     </govuk-tabs>
   `,
   imports: [
@@ -31,7 +32,7 @@ import { EmailsComponent } from './emails/emails.component';
     TabLazyDirective,
     EmailsComponent,
     DocumentsComponent,
-    // SectorTemplatesComponent,
+    SectorTemplatesComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

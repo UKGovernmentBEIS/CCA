@@ -33,14 +33,18 @@ export default class AuthorisationAdditionalEvidenceSummaryComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryData = toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-    this.requestTaskStore.select(underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence)(),
-    this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments)(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-    this.requestTaskStore.select(
+  protected readonly summaryData = toAuthorisationAdditionalEvidenceSummaryDataWithDecision({
+    authorisationAndAdditionalEvidence: this.requestTaskStore.select(
+      underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence,
+    )(),
+    underlyingAgreementAttachments: this.requestTaskStore.select(
+      underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments,
+    )(),
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+    decision: this.requestTaskStore.select(
       underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
     )(),
-    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
-  );
+    reviewAttachments: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
+  });
 }

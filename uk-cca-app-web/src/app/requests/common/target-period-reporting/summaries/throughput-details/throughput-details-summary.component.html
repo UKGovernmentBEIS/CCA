@@ -11,6 +11,10 @@
     <govuk-table [columns]="tableColumns()" [data]="paginatedTableRows()">
       <ng-template let-column="column" let-row="row">
         @switch (column.field) {
+          @case ('productName') {
+            <strong>{{ row.productName }}</strong>
+          }
+
           @case ('energy') {
             {{ row.energy | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}/{{ row.throughputUnit }}
           }

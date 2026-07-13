@@ -91,8 +91,8 @@ describe('StartNewTaskComponent', () => {
     const headings = compiled.querySelectorAll('h2.govuk-heading-m');
 
     expect(headings.length).toBe(3);
-    expect(headings[0].textContent?.trim()).toBe('Download target period reporting (TPR) spreadsheets');
-    expect(headings[1].textContent?.trim()).toBe('Upload target period reporting (TPR) spreadsheets');
+    expect(headings[0].textContent?.trim()).toBe('TP reporting (TP6) - Download spreadsheets');
+    expect(headings[1].textContent?.trim()).toBe('TP reporting (TP6) - Upload spreadsheets');
     expect(headings[2].textContent?.trim()).toBe('Upload PAT spreadsheets');
   });
 

@@ -63,7 +63,7 @@
                   @if (row.value.isCustom) {
                     <div cca-text-input formControlName="fuelType" class="govuk-!-margin-bottom-0"></div>
                   } @else {
-                    {{ row.value[column.field] }}
+                    <strong>{{ row.value[column.field] }}</strong>
                   }
                 }
 
@@ -79,7 +79,7 @@
                   <div
                     cca-text-input
                     formControlName="deliveredEnergy"
-                    [suffix]="measurementUnit()"
+                    [suffix]="resolvedMeasurementUnit()"
                     class="govuk-!-margin-bottom-0"
                   ></div>
                 }
@@ -90,7 +90,8 @@
                       calculatePrimaryCarbon(
                         row.value.deliveredEnergy,
                         row.value.primaryEnergyConversionFactor,
-                        row.value.co2ConversionFactor
+                        row.value.co2ConversionFactor,
+                        measurementUnit()
                       ) | number: '1.0-7'
                     }}
                   } @else {
@@ -108,7 +109,14 @@
                 @case ('actions') {
                   @if (row.value.isCustom) {
                     <div class="govuk-!-text-align-center">
-                      <a class="govuk-!-padding-left-1 govuk-link" [routerLink]="[]" (click)="onRemoveFuel(index)">
+                      <a
+                        class="govuk-!-padding-left-1 govuk-link"
+                        role="button"
+                        tabindex="0"
+                        (click)="onRemoveFuel(index)"
+                        (keydown.enter)="onRemoveFuel(index)"
+                        (keydown.space)="onRemoveFuel(index)"
+                      >
                         Delete
                       </a>
                     </div>
@@ -148,7 +156,7 @@
       <div
         cca-text-input
         formControlName="specialReportingMethodology"
-        [suffix]="measurementUnit()"
+        [suffix]="resolvedMeasurementUnit()"
         class="govuk-!-width-two-thirds"
         label="Special reporting methodology (SRM)"
         labelSize="medium"

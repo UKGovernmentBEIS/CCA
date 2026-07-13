@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -22,8 +22,8 @@ import { createSaveDeterminationActionDTO } from '../../../transform';
   selector: 'cca-overall-decision-check-your-answers',
   template: `
     <div>
-      <netz-page-heading [caption]="caption">Check your answers</netz-page-heading>
-      <cca-summary [data]="summaryData" />
+      <netz-page-heading [caption]="caption()">Check your answers</netz-page-heading>
+      <cca-summary [data]="summaryData()" />
       <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
     </div>
 
@@ -45,21 +45,23 @@ export class OverallDecisionCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  private readonly determination = this.store.select(underlyingAgreementReviewQuery.selectDetermination)();
-  private readonly isEditable = this.store.select(requestTaskQuery.selectIsEditable)();
-  private readonly attachments = this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
+  private readonly determination = this.store.select(underlyingAgreementReviewQuery.selectDetermination);
+  private readonly isEditable = this.store.select(requestTaskQuery.selectIsEditable);
+  private readonly attachments = this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments);
 
-  private readonly downloadUrl = generateDownloadUrl(
-    this.store.select(requestTaskQuery.selectRequestTaskId)().toString(),
+  private readonly downloadUrl = computed(() =>
+    generateDownloadUrl(this.store.select(requestTaskQuery.selectRequestTaskId)().toString()),
   );
 
-  protected readonly caption = this.determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';
+  protected readonly caption = computed(() => (this.determination().type === 'ACCEPTED' ? 'Accept' : 'Reject'));
 
-  protected readonly summaryData = toOverallDecisionSummaryData(
-    this.determination,
-    this.attachments,
-    this.downloadUrl,
-    this.isEditable,
+  protected readonly summaryData = computed(() =>
+    toOverallDecisionSummaryData({
+      determination: this.determination(),
+      attachments: this.attachments(),
+      downloadUrl: this.downloadUrl(),
+      isEditable: this.isEditable(),
+    }),
   );
 
   onSubmit() {

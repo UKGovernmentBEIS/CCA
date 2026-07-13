@@ -24,7 +24,6 @@ import {
   filterFieldsWithFalsyValues,
   getMeasurementAndThroughputUnits,
   isTargetPeriodWizardCompleted,
-  MeasurementTypeToUnitPipe,
   OVERALL_DECISION_SUBTASK,
   TaskItemStatus,
   TasksApiService,
@@ -34,6 +33,7 @@ import {
 } from '@requests/common';
 import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { fileUtils } from '@shared/utils';
 import { produce } from 'immer';
 

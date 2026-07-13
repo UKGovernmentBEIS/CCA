@@ -1,8 +1,9 @@
 import { DecimalPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
-import { boolToString, MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '@requests/common';
+import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
+import { MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { fileUtils } from '@shared/utils';
 
 import { Cca3FacilityMigrationData } from 'cca-api';

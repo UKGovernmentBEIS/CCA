@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.security.AuthorizedRole;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemSearchCriteriaDTO;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemAssignedToMeService;
 
 @RestController
@@ -48,21 +51,28 @@ public class ItemAssignedToMeController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @AuthorizedRole(roleType = {SECTOR_USER, REGULATOR})
     public ResponseEntity<ItemDTOResponse> getAssignedItems(
-            @Parameter(hidden = true) AppUser user,
+    		@Parameter(hidden = true) AppUser user,
             @RequestParam("page") @Parameter(name = "page", description = "The page number starting from zero")
             @Min(value = 0, message = "{parameter.page.typeMismatch}")
             @NotNull(message = "{parameter.page.typeMismatch}") Integer page,
             @RequestParam("size") @Parameter(name = "size", description = "The page size")
             @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")
-            @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize) {
+            @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize,
+            @Valid
+            @ModelAttribute
+            @Parameter(description = "The task search criteria")
+            ItemSearchCriteriaDTO searchCriteria) {
 
         Optional<ItemAssignedToMeService> itemService = services.stream()
                 .filter(itemAssignedToMeService -> itemAssignedToMeService.getRoleType().equals(user.getRoleType()))
                 .findFirst();
 
-        return itemService.map(itemAssignedToMeService ->
-                        new ResponseEntity<>(itemAssignedToMeService.getItemsAssignedToMe(user, PagingRequest.builder().pageNumber(page).pageSize(pageSize).build()),
-                                HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(ItemDTOResponse.emptyItemDTOResponse(), HttpStatus.OK));
+        return itemService.map(itemAssignedToMeService -> new ResponseEntity<>(
+                itemAssignedToMeService.getItemsAssignedToMe(
+                    user,
+                    PagingRequest.builder().pageNumber(page).pageSize(pageSize).build(),
+                    searchCriteria),
+                HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(ItemDTOResponse.emptyItemDTOResponse(), HttpStatus.OK));
     }
 }

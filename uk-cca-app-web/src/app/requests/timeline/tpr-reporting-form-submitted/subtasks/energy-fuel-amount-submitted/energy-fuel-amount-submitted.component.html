@@ -1,0 +1,69 @@
+<netz-page-heading>Energy/fuel details</netz-page-heading>
+
+<h2 class="govuk-heading-m">Energy/fuel amount consumed</h2>
+
+@if (tableRows().length) {
+  <div class="x-scroll">
+    <div class="overflow-auto overflow-auto-table">
+      <govuk-table [columns]="tableColumns()" [data]="tableRows()">
+        <ng-template let-column="column" let-row="row">
+          @switch (column.field) {
+            @case ('fuelType') {
+              <strong>{{ row[column.field] }}</strong>
+            }
+
+            @case ('co2ConversionFactor') {
+              {{ row.co2ConversionFactor | number: '1.0-7' }}
+            }
+
+            @case ('deliveredEnergy') {
+              {{ row.deliveredEnergy | number: '1.0-7' }} {{ resolvedMeasurementUnit() }}
+            }
+
+            @case ('primaryEnergyConversionFactor') {
+              {{ row.primaryEnergyConversionFactor | number: '1.1-1' }}
+            }
+
+            @case ('primaryEnergy') {
+              {{ row.primaryEnergy | number: '1.0-7' }}
+            }
+          }
+        </ng-template>
+      </govuk-table>
+    </div>
+  </div>
+} @else {
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Energy/fuel amount consumed</dt>
+      <dd govukSummaryListRowValue>Not provided</dd>
+    </div>
+  </dl>
+}
+
+<h2 class="govuk-heading-m">70% rule</h2>
+<dl govuk-summary-list>
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Is at least 70% of the total energy used in carrying out eligible activities?</dt>
+    <dd govukSummaryListRowValue>{{ isAtLeast70PercentEnergyUsedText() }}</dd>
+  </div>
+</dl>
+
+@if (usedReportingMechanism()) {
+  <h2 class="govuk-heading-m">Special reporting methodology (SRM)</h2>
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>
+        Electricity supplied from combined heat and power plant and dedicated generator electricity ({{
+          resolvedMeasurementUnit()
+        }})
+      </dt>
+      <dd govukSummaryListRowValue>{{ electricitySuppliedFromCHP() | number: '1.0-7' }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Throughput adjustment factor</dt>
+      <dd govukSummaryListRowValue>{{ throughputAdjustmentFactor() | number: '1.0-7' }}</dd>
+    </div>
+  </dl>
+}

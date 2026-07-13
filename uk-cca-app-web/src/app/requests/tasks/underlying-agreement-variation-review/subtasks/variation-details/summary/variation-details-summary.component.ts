@@ -33,11 +33,11 @@ export default class VariationDetailsSummaryComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryData = toVariationDetailsSummaryDataWithDecision(
-    this.requestTaskStore.select(underlyingAgreementVariationQuery.selectVariationDetails)(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('VARIATION_DETAILS'))(),
-    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
-  );
+  protected readonly summaryData = toVariationDetailsSummaryDataWithDecision({
+    variationDetails: this.requestTaskStore.select(underlyingAgreementVariationQuery.selectVariationDetails)(),
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+    decision: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('VARIATION_DETAILS'))(),
+    reviewAttachments: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
+  });
 }

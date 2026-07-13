@@ -4,7 +4,7 @@ import { PerformanceDataUploadProcessComponent } from './process/performance-dat
 
 export const performanceDataUploadTaskContent: RequestTaskPageContentFactory = () => {
   return {
-    header: 'Target period reporting (TPR) spreadsheets upload',
+    header: 'TP reporting - Upload spreadsheets',
     contentComponent: PerformanceDataUploadProcessComponent,
   };
 };

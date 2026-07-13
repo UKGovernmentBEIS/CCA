@@ -1,0 +1,31 @@
+<div class="govuk-!-width-two-thirds">
+  <netz-page-heading>Variation submission</netz-page-heading>
+
+  <p>
+    Completion of a variation in which the baseline data for the facility was changed usually requires submission of a
+    new target period report to measure the performance against the updated baseline.
+  </p>
+
+  <p>
+    If you have reviewed the baseline changes made in the variation and determined that the changes will not affect the
+    measurement of the performance, you may change this flag to No.
+  </p>
+
+  <p>The flag will automatically be set to No once a new target period report is submitted.</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div
+      legend="Does the changes in the new variation require submission of an updated target period report?"
+      legendSize="medium"
+      radioSize="large"
+      formControlName="toggle"
+      govuk-radio
+      class="govuk-!-margin-top-6"
+    >
+      <govuk-radio-option [value]="true" [label]="'Yes'" />
+      <govuk-radio-option [value]="false" [label]="'No'" />
+    </div>
+
+    <button govukButton type="submit">Confirm</button>
+  </form>
+</div>

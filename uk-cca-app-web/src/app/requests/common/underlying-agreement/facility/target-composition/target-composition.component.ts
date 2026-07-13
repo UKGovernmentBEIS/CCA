@@ -9,12 +9,12 @@ import {
   TextInputComponent as CcaTextInputComponent,
   WizardStepComponent,
 } from '@shared/components';
+import { MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP, transformMeasurementType } from '@shared/pipes';
 import { generateDownloadUrl } from '@shared/utils';
 
 import { TargetComposition } from 'cca-api';
 
 import { underlyingAgreementQuery } from '../../+state';
-import { MeasurementTypeEnum, transformMeasurementType } from '../../pipes';
 import { FacilityTargetCompositionFormModel } from '../../target-periods';
 import { FacilityTargetCompositionSubmitEvent } from '../types';
 import { TARGET_COMPOSITION_FORM, TargetCompositionFormProvider } from './target-composition-form.provider';
@@ -59,23 +59,23 @@ export class CommonFacilityTargetCompositionComponent {
   protected readonly measurementTypeOptions: GovukSelectOption<TargetComposition['measurementType']>[] = [
     {
       value: 'ENERGY_KWH',
-      text: MeasurementTypeEnum.ENERGY_KWH,
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.ENERGY_KWH,
     },
     {
       value: 'ENERGY_MWH',
-      text: MeasurementTypeEnum.ENERGY_MWH,
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.ENERGY_MWH,
     },
     {
       value: 'ENERGY_GJ',
-      text: MeasurementTypeEnum.ENERGY_GJ,
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.ENERGY_GJ,
     },
     {
       value: 'CARBON_KG',
-      text: MeasurementTypeEnum.CARBON_KG,
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.CARBON_KG,
     },
     {
       value: 'CARBON_TONNE',
-      text: MeasurementTypeEnum.CARBON_TONNE,
+      text: MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP.CARBON_TONNE,
     },
   ];
 

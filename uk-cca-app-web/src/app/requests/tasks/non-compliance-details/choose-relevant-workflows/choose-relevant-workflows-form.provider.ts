@@ -2,7 +2,7 @@ import { InjectionToken, Provider } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { nonComplianceDetailsQuery } from '@requests/common';
+import { alphabeticalCompare, nonComplianceDetailsQuery } from '@requests/common';
 
 export type WorkflowFormControl = FormControl<string | null>;
 
@@ -18,7 +18,9 @@ export const ChooseRelevantWorkflowsFormProvider: Provider = {
   provide: CHOOSE_RELEVANT_WORKFLOWS_FORM,
   deps: [FormBuilder, RequestTaskStore],
   useFactory: (fb: FormBuilder, store: RequestTaskStore) => {
-    const relevantWorkflows = store.select(nonComplianceDetailsQuery.selectRelevantWorkflows)() ?? [];
+    const relevantWorkflows = (store.select(nonComplianceDetailsQuery.selectRelevantWorkflows)() ?? [])
+      .slice()
+      .sort(alphabeticalCompare);
     const workflowControls = relevantWorkflows.map((workflowId) => createWorkflowFormControl(fb, workflowId));
 
     return fb.group({

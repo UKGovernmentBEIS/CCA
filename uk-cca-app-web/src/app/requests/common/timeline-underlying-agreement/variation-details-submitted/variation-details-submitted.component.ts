@@ -22,9 +22,9 @@ export class VariationDetailsSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
   protected readonly summaryData = computed(() =>
-    toVariationDetailsSummaryData(
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectVariationDetails)(),
-      false,
-    ),
+    toVariationDetailsSummaryData({
+      variationDetails: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectVariationDetails)(),
+      isEditable: false,
+    }),
   );
 }

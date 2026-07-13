@@ -2,9 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { EnergyFuelAmountSummaryComponent, MeasurementTypeToUnitEnum } from '@requests/common';
-
-import { tprFormQuery } from '../../../target-period-reporting-form.selectors';
+import { EnergyFuelAmountSummaryComponent, tprFormQuery } from '@requests/common';
+import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
 
 @Component({
   selector: 'cca-energy-fuel-amount-details-summary',
@@ -15,7 +14,7 @@ import { tprFormQuery } from '../../../target-period-reporting-form.selectors';
       <cca-energy-fuel-amount-summary
         [energyFuelDetails]="energyFuelDetails()"
         [isEditable]="isEditable()"
-        [measurementType]="measurementType()"
+        [measurementUnit]="measurementUnit()"
         [usedReportingMechanism]="usedReportingMechanism()"
       />
     </div>
@@ -34,9 +33,9 @@ export class EnergyFuelAmountDetailsSummaryComponent {
   );
   protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
 
-  protected readonly measurementType = computed(
+  protected readonly measurementUnit = computed<MeasurementUnit>(
     () =>
-      MeasurementTypeToUnitEnum[
+      MEASUREMENT_TYPE_TO_UNIT_MAP[
         this.requestTaskStore.select(tprFormQuery.selectReferenceData)()?.baselineAndTargets?.measurementType
       ],
   );

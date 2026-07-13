@@ -5,11 +5,11 @@ import { RouterLink } from '@angular/router';
 import { AuthStore, selectUserId } from '@netz/common/auth';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukTableColumn, TableComponent, TagComponent } from '@netz/govuk-components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';
 
 import { ProductStatusColorPipe } from '../pipes';
-import { MeasurementTypeToUnitPipe } from '../pipes';
 
 @Component({
   selector: 'cca-split-by-product-table',

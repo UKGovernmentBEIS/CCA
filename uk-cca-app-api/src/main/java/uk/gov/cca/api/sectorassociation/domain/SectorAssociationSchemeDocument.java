@@ -1,6 +1,7 @@
 package uk.gov.cca.api.sectorassociation.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -16,5 +17,13 @@ import uk.gov.netz.api.files.common.domain.FileEntity;
 @Entity
 @SequenceGenerator(name = "default_file_id_generator", sequenceName = "sector_association_scheme_document_id_seq", allocationSize = 1)
 @Table(name = "sector_association_scheme_document")
+@NamedQuery(
+        name = SectorAssociationSchemeDocument.NAMED_QUERY_DELETE_SCHEME_FILES_BY_STATUS_AND_DATE_BEFORE,
+        query = "delete from SectorAssociationSchemeDocument schemeDoc " +
+                "where schemeDoc.status =: status " +
+                "and schemeDoc.lastUpdatedOn < :expirationDate"
+)
 public class SectorAssociationSchemeDocument extends FileEntity {
+
+    public static final String NAMED_QUERY_DELETE_SCHEME_FILES_BY_STATUS_AND_DATE_BEFORE = "SectorAssociationSchemeDocument.deleteSchemeFilesByStatusAndDateBefore";
 }

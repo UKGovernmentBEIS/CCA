@@ -112,6 +112,13 @@ export const TIMELINE_ROUTES: Routes = [
           ),
       },
       {
+        path: 'tpr-reporting-form-submitted',
+        loadChildren: () =>
+          import('./tpr-reporting-form-submitted/tpr-reporting-form-submitted.routes').then(
+            (r) => r.TPR_REPORTING_FORM_SUBMITTED_ROUTES,
+          ),
+      },
+      {
         path: 'file-download/:uuid',
         loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },

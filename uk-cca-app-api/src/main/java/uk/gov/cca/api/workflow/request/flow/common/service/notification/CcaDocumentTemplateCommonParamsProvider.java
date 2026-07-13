@@ -9,7 +9,7 @@ import uk.gov.cca.api.notification.template.domain.TargetUnitAccountTemplatePara
 import uk.gov.cca.api.notification.template.domain.TargetUnitDetailsParams;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
 import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
@@ -98,9 +98,9 @@ public class CcaDocumentTemplateCommonParamsProvider extends DocumentTemplateCom
         return Map.of("targetUnitDetails", targetUnitDetailsParams);
     }
 
-    public TemplateParams getSectorAndCaAndSignatoryTemplateParams(String signatory, Long sectorAssociationId, TemplateParams documentTemplateParams) {
+    public TemplateParams getSectorAndCaAndSignatoryTemplateParams(String signatory, Long sectorAssociationId, TemplateParams documentTemplateParams, SchemeVersion schemeVersion) {
     	// Sector params
-    	final Map<String, String> sectorParams = getSectorTemplateParams(sectorAssociationId, SchemeVersion.CCA_2);
+    	final Map<String, String> sectorParams = getSectorTemplateParams(sectorAssociationId, schemeVersion);
         final Map<String, Object> params = Stream.of(sectorParams, documentTemplateParams.getParams())
                 .flatMap(map -> map.entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -169,7 +169,7 @@ public class CcaDocumentTemplateCommonParamsProvider extends DocumentTemplateCom
         
         // Add sector scheme data if version is specified
         if (version != null) {
-        	final SectorAssociationSchemeDTO sectorScheme = sectorReferenceDetailsService
+        	final SectorAssociationSchemeInfo sectorScheme = sectorReferenceDetailsService
         			.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorAssociationId, version);
         	
         	paramMap.putAll(new HashMap<>(Map.of(

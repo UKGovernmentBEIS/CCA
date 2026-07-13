@@ -1,0 +1,17 @@
+<h3 class="govuk-heading-s">Target period report</h3>
+<form [formGroup]="form" data-testid="target-period-report-form">
+  <div label="Select the period" [options]="targetPeriodsOptions" formControlName="targetPeriodType" govuk-select></div>
+  <div
+    label="Select the target period report type"
+    [options]="reportTypeOptions"
+    formControlName="reportType"
+    govuk-select
+  ></div>
+</form>
+
+@if (summaryData().length) {
+  @for (data of summaryData(); track data) {
+    <cca-summary [data]="data.summary" />
+    <a class="govuk-link" [routerLink]="['reports', data.targetPeriodYear]">View details</a>
+  }
+}

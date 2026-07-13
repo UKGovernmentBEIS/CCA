@@ -1,0 +1,36 @@
+.loading-spinner {
+  display: block;
+  gap: 16px;
+  color: #0b0c0c;
+}
+
+.loading-spinner__spinner {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+
+  border: 10px solid #b1b4b6;
+  border-top-color: #1d70b8;
+
+  border-radius: 50%;
+
+  animation: cca-spinner 0.8s linear infinite;
+  box-sizing: border-box;
+}
+
+.loading-spinner__content {
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes cca-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner__spinner {
+    animation-duration: 2s;
+  }
+}

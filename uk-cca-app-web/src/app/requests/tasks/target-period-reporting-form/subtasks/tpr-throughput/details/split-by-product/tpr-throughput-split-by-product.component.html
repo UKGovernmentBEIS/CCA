@@ -23,7 +23,8 @@
         The target energy for each product is calculated from each product's baseline energy intensity, improvement
         target and its throughput in the reporting period.
         <br />
-        The total energy amount is the sum of the target energy for each product made during the reporting period.
+        The total target variable energy applies the facility improvement target to the sum of
+        baseline-intensity-adjusted throughput across products.
       </p>
     </govuk-details>
   </div>
@@ -41,7 +42,9 @@
                 }
 
                 @case ('energy') {
-                  {{ row[column.field] }} {{ measurementUnit() | measurementTypeToUnit }}/{{ row['throughputUnit'] }}
+                  {{ row['baselineEnergyIntensity'] }} {{ measurementUnit() | measurementTypeToUnit }}/{{
+                    row['throughputUnit']
+                  }}
                 }
 
                 @case ('improvementTarget') {

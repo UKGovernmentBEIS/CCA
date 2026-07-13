@@ -37,4 +37,23 @@ describe('GovukValidators', () => {
       pattern: 'Enter a number up to 5 decimal places',
     });
   });
+
+  it('should validate numbers within an exclusive range and decimal limit with a single error', () => {
+    const message = 'Enter a numerical value, between - 100 and 100 with up to 3 decimal places';
+    const validator = GovukValidators.numberInExclusiveRangeWithMaxDecimals(-100, 100, 3, message);
+    const error = { numberInExclusiveRangeWithMaxDecimals: message };
+
+    expect(validator(new FormControl(null))).toBeNull();
+    expect(validator(new FormControl(''))).toBeNull();
+    expect(validator(new FormControl('-99.999'))).toBeNull();
+    expect(validator(new FormControl('0'))).toBeNull();
+    expect(validator(new FormControl('99.999'))).toBeNull();
+
+    expect(validator(new FormControl('-100'))).toEqual(error);
+    expect(validator(new FormControl('100'))).toEqual(error);
+    expect(validator(new FormControl('-100.000'))).toEqual(error);
+    expect(validator(new FormControl('100.000'))).toEqual(error);
+    expect(validator(new FormControl('99.9999'))).toEqual(error);
+    expect(validator(new FormControl('text'))).toEqual(error);
+  });
 });

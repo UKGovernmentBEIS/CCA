@@ -18,7 +18,6 @@ public enum CcaErrorCode implements NetzErrorCode {
     /** Codes for Sector Association errors. */
     SECTOR_ASSOCIATION_NOT_RELATED_TO_CA("SECTORASSOC1001", HttpStatus.BAD_REQUEST, "Sector Association is not related to competent authority", true),
     SECTOR_ASSOCIATION_NO_CONTACT_FOUND("SECTORASSOC1002", HttpStatus.BAD_REQUEST, "Sector contact not found", true),
-    SUB_SECTOR_ASSOCIATION_NOT_RELATED_TO_SECTOR_ASSOCIATION("SECTORASSOC1003", HttpStatus.BAD_REQUEST, "Subsector association is not related to sector association", true),
     /** Codes for Sector User errors. */
     ROLE_INVALID_SECTOR_USER_ROLE_CODE("SECTOR1001", HttpStatus.BAD_REQUEST, "Invalid sector user role code", true),
     SECTOR_USER_NOT_ACTIVE("SECTOR1002", HttpStatus.BAD_REQUEST, "Sector User is not active", true),
@@ -93,14 +92,28 @@ public enum CcaErrorCode implements NetzErrorCode {
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXIST("TPRDF1001", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form for Target Period already in progress"),
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE("TPRDF1002", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form is not eligible for facility"),
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REPORT_NOT_ELIGIBLE("TPRDF1003", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form is not eligible for target period"),
-    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SECONDARY_REPORTING_LOCKED("TPRDF1004", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form Facility is locked for secondary reporting"),
+    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_REPORTING_LOCKED("TPRDF1004", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form Facility is locked for reporting"),
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE("TPRDF1005", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form is not eligible for facility products"),
     INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT("TPRDF1006", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility Digital Form Submit data"),
     INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CALCULATED_RESULTS("TPRDF1007", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility Digital Form calculated results data"),
     INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_ORIGINAL_BASELINE_AND_TARGETS_IS_OUTDATED("TPRDF1008", HttpStatus.BAD_REQUEST, "Original baseline and targets is outdated for Performance Data Facility Digital Form Submit"),
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE("TPRDF1009", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form facility baseline date is not eligible for target period year"),
+    /** Codes for Performance Data Facility CSV Form. */
+    INVALID_PERFORMANCE_DATA_FACILITY_UPLOAD_DATA("TPRUF1001", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility CSV Form data"),
+    INVALID_PERFORMANCE_DATA_FACILITY_UPLOAD_PROCESS_STATUS("TPRUF1002", HttpStatus.BAD_REQUEST, "Performance Data Facility CSV is under process or process completed"),
+    INVALID_PERFORMANCE_DATA_FACILITY_UPLOAD_FILE_TYPE("TPRUF1003", HttpStatus.BAD_REQUEST, "Invalid file type"),
+    /** Codes for Sector Scheme update. */
+    INVALID_SECTOR_ASSOCIATION_SCHEME_UPLOAD_FILE_TYPE("SECTOR_SCHEME1001", HttpStatus.BAD_REQUEST, "Invalid sector scheme document file type"),
+    TARGET_COMMITMENT_NOT_RELATED_TO_SECTOR_SCHEME("SECTOR_SCHEME1002", HttpStatus.BAD_REQUEST, "Target commitments are not related to sector scheme", true),
+    INVALID_SECTOR_ASSOCIATION_SCHEME_VERSION("SECTOR_SCHEME1003", HttpStatus.BAD_REQUEST, "Sector association scheme version is not updatable", true),
+    SUBMITTER_HAS_NO_ACCESS_TO_SCHEME_DOCUMENT("SECTOR_SCHEME1004", HttpStatus.BAD_REQUEST,"Submitter is not allowed to access the scheme document"),
+    TARGET_COMMITMENT_NOT_RELATED_TO_SUBSECTOR_SCHEME("SUBSECTOR_SCHEME1001", HttpStatus.BAD_REQUEST, "Target commitments are not related to subsector scheme", true),
+    INVALID_SUBSECTOR_ASSOCIATION_SCHEME_VERSION("SUBSECTOR_SCHEME1002", HttpStatus.BAD_REQUEST, "Subsector association scheme version is not updatable", true),
+    /** Codes for Performance Data Facility Reports. */
+    PERFORMANCE_DATA_FACILITY_REPORT_UPDATE_NOT_VALID("TPRFR1001", HttpStatus.BAD_REQUEST, "Performance Data Facility report cannot be updated"),
+    /** Codes for Performance Data Facility Sector Reports. */
+    PERFORMANCE_DATA_FACILITY_INVALID_SECTOR_REPORT_STATUS_CRITERIA("TPRF1001", HttpStatus.BAD_REQUEST, "Expected exactly one target year, but found multiple."),
     ;
-
 
     private final String code;
     private final HttpStatus httpStatus;

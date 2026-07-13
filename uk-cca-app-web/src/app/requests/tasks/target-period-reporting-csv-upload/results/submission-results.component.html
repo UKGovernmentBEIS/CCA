@@ -1,0 +1,74 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    @if (errorMessage()) {
+      <div #container aria-labelledby="error-summary-title" class="govuk-error-summary" role="alert" tabindex="-1">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li>
+              <p class="highlight-error">Files have been uploaded</p>
+              <p>
+                There was a problem while generating the submission summary file, contact
+                <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk"
+                  >cca-help&#64;environment-agency.gov.uk</a
+                >.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <netz-page-heading caption="TP Reporting CSV file">Submission results</netz-page-heading>
+
+      <p>
+        There was a problem while generating the submission summary file.<br />Contact
+        <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk"
+          >cca-help&#64;environment-agency.gov.uk</a
+        >
+        to resolve this issue.
+      </p>
+    } @else {
+      <netz-page-heading caption="TP Reporting CSV file">Submission results</netz-page-heading>
+
+      <p>
+        The service has finished processing the data in the CSV files you uploaded and has been updated accordingly. You
+        can view the summary below and in the workflow history event for this sector.
+      </p>
+
+      <cca-summary [data]="summaryData()" />
+
+      <div class="govuk-details__text govuk-!-margin-bottom-9">
+        <p>
+          Contact
+          <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk"
+            >cca-help&#64;environment-agency.gov.uk</a
+          >
+          if you think there is a problem.
+        </p>
+      </div>
+    }
+
+    @if (isUserAssignee()) {
+      <govuk-warning-text assistiveText="">
+        You must select 'Finish task' before you can start another reporting task for this target period.
+      </govuk-warning-text>
+
+      <button netzPendingButton govukButton type="button" (click)="onComplete()">Finish task</button>
+    }
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <aside class="app-related-items" role="complementary">
+      <h2 class="govuk-heading-m" id="subsection-title">Related actions</h2>
+      <nav role="navigation" aria-labelledby="subsection-title">
+        <ul class="govuk-list govuk-!-font-size-16">
+          @for (action of relatedActions(); track action) {
+            <li>
+              <a [routerLink]="action.link" class="govuk-link">{{ action.text }}</a>
+            </li>
+          }
+        </ul>
+      </nav>
+    </aside>
+  </div>
+</div>

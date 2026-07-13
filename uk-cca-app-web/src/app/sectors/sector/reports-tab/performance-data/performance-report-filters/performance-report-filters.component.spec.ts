@@ -65,18 +65,13 @@ describe('PerformanceReportFiltersComponent', () => {
     expect(filtersSection).toBeTruthy();
   });
 
-  it('should have a select dropdown for "Period"', () => {
-    const periodSelect = getByLabelText('Period');
-    expect(periodSelect).toBeTruthy();
-  });
-
   it('should have a select dropdown for "Status"', () => {
     const statusSelect = getByLabelText('Status');
     expect(statusSelect).toBeTruthy();
   });
 
-  it('should have a select dropdown for "Type"', () => {
-    const typeSelect = getByLabelText('Type');
+  it('should have a select dropdown for "Subtype"', () => {
+    const typeSelect = getByLabelText('Subtype');
     expect(typeSelect).toBeTruthy();
   });
 

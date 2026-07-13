@@ -1,0 +1,21 @@
+@if (isErrorSummaryDisplayed()) {
+  <div class="govuk-!-width-three-quarters">
+    <cca-error-summary [errorSummaryInfo]="errorSummaryInfo()" />
+  </div>
+}
+
+<div class="govuk-!-width-two-thirds">
+  <netz-page-heading>Refresh baseline data</netz-page-heading>
+
+  <p>
+    You are about to refresh the baseline data in your TPR form. This will refresh all prepopulated data and will set
+    the subtasks status to "In progress" until you reconfirm each one.
+  </p>
+
+  <button (click)="onRefreshBaselineData()" netzPendingButton govukButton class="govuk-!-margin-top-6">
+    Refresh baseline data
+  </button>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

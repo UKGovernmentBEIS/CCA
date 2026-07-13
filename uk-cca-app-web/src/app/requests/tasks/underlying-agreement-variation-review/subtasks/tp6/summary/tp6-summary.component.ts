@@ -76,17 +76,17 @@ export class TP6SummaryComponent {
     attachments: { submit: this.currentSubmitAttachments, review: this.reviewAttachments },
   };
 
-  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryDataWithDecision(
-    this.sectorAssociationDetailsSchemeData,
-    this.originalTargetPeriodDetails,
-    this.decision,
-    this.summaryOriginalMetadata,
-  );
+  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryDataWithDecision({
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.originalTargetPeriodDetails,
+    decision: this.decision,
+    metadata: this.summaryOriginalMetadata,
+  });
 
-  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryDataWithDecision(
-    this.sectorAssociationDetailsSchemeData,
-    this.currentTargetPeriodDetails,
-    this.decision,
-    this.summaryCurrentMetadata,
-  );
+  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryDataWithDecision({
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.currentTargetPeriodDetails,
+    decision: this.decision,
+    metadata: this.summaryCurrentMetadata,
+  });
 }

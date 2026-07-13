@@ -14,9 +14,11 @@ import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.Perfo
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityEnergyFuelDetails;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFuel;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityReferenceData;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityTargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityThroughputDetails;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityReferenceDataService;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityStatusQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
@@ -26,8 +28,6 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domai
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityNonStandardFuel;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityReferenceData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.service.PerformanceDataFacilityReferenceDataService;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
@@ -84,7 +84,9 @@ class PerformanceDataFacilityDigitalFormSubmitInitializerTest {
                 .build();
 
         final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
-                .tpMultiplier(BigDecimal.ONE)
+                .baselineAndTargets(PerformanceDataFacilityBaselineAndTargets.builder()
+                        .usedReportingMechanism(true)
+                        .build())
                 .build();
         final PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload expected =
                 PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.builder()
@@ -96,8 +98,7 @@ class PerformanceDataFacilityDigitalFormSubmitInitializerTest {
                         .referenceData(referenceData)
                         .build();
 
-        when(performanceDataFacilityDigitalFormReferenceDataService
-                .getReferenceData(accountId, facilityBusinessId, reportYear, targetPeriodType))
+        when(performanceDataFacilityDigitalFormReferenceDataService.getReferenceData(accountId, facilityBusinessId, reportYear))
                 .thenReturn(referenceData);
         when(performanceDataFacilityStatusQueryService
                 .getLastUploadedPerformanceDataContainer(facilityId, reportYear))
@@ -111,7 +112,7 @@ class PerformanceDataFacilityDigitalFormSubmitInitializerTest {
                 .isInstanceOf(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class)
                 .isEqualTo(expected);
         verify(performanceDataFacilityDigitalFormReferenceDataService, times(1))
-                .getReferenceData(accountId, facilityBusinessId, reportYear, targetPeriodType);
+                .getReferenceData(accountId, facilityBusinessId, reportYear);
         verify(performanceDataFacilityStatusQueryService, times(1))
                 .getLastUploadedPerformanceDataContainer(facilityId, reportYear);
     }
@@ -143,7 +144,9 @@ class PerformanceDataFacilityDigitalFormSubmitInitializerTest {
                 .build();
 
         final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
-                .tpMultiplier(BigDecimal.ONE)
+                .baselineAndTargets(PerformanceDataFacilityBaselineAndTargets.builder()
+                        .usedReportingMechanism(true)
+                        .build())
                 .build();
         final PerformanceDataFacilityThroughputDetails throughputDetails = PerformanceDataFacilityThroughputDetails.builder()
                 .actualThroughput(BigDecimal.TEN)
@@ -209,8 +212,7 @@ class PerformanceDataFacilityDigitalFormSubmitInitializerTest {
                                 .build())
                         .build();
 
-        when(performanceDataFacilityDigitalFormReferenceDataService
-                .getReferenceData(accountId, facilityBusinessId, reportYear, targetPeriodType))
+        when(performanceDataFacilityDigitalFormReferenceDataService.getReferenceData(accountId, facilityBusinessId, reportYear))
                 .thenReturn(referenceData);
         when(performanceDataFacilityStatusQueryService
                 .getLastUploadedPerformanceDataContainer(facilityId, reportYear))
@@ -224,7 +226,7 @@ class PerformanceDataFacilityDigitalFormSubmitInitializerTest {
                 .isInstanceOf(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class)
                 .isEqualTo(expected);
         verify(performanceDataFacilityDigitalFormReferenceDataService, times(1))
-                .getReferenceData(accountId, facilityBusinessId, reportYear, targetPeriodType);
+                .getReferenceData(accountId, facilityBusinessId, reportYear);
         verify(performanceDataFacilityStatusQueryService, times(1))
                 .getLastUploadedPerformanceDataContainer(facilityId, reportYear);
     }

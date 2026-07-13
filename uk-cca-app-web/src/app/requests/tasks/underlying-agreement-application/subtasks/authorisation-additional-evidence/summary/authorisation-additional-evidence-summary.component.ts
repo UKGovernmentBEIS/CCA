@@ -29,10 +29,14 @@ export default class AuthorisationAdditionalEvidenceSummaryComponent {
 
   private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryData = toAuthorisationAdditionalEvidenceSummaryData(
-    this.requestTaskStore.select(underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence)(),
-    this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments)(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-  );
+  protected readonly summaryData = toAuthorisationAdditionalEvidenceSummaryData({
+    authorisationAndAdditionalEvidence: this.requestTaskStore.select(
+      underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence,
+    )(),
+    underlyingAgreementAttachments: this.requestTaskStore.select(
+      underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments,
+    )(),
+    isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+  });
 }

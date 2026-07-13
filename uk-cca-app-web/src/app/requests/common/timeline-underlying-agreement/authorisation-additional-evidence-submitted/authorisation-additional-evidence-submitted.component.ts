@@ -22,11 +22,15 @@ export class AuthorisationAdditionalEvidenceSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
   protected readonly summaryData = computed(() =>
-    toAuthorisationAdditionalEvidenceSummaryData(
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAuthorisationAndAdditionalEvidence)(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
-      false,
-      '../../file-download',
-    ),
+    toAuthorisationAdditionalEvidenceSummaryData({
+      authorisationAndAdditionalEvidence: this.requestActionStore.select(
+        underlyingAgreementRequestActionQuery.selectAuthorisationAndAdditionalEvidence,
+      )(),
+      underlyingAgreementAttachments: this.requestActionStore.select(
+        underlyingAgreementRequestActionQuery.selectAttachments,
+      )(),
+      isEditable: false,
+      downloadUrl: '../../file-download',
+    }),
   );
 }

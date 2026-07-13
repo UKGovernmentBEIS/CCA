@@ -19,10 +19,11 @@ import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemesDT
 import uk.gov.cca.api.sectorassociation.service.SubsectorAssociationSchemeService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.security.Authorized;
 
 @RestController
-@RequestMapping(path = "/v1.0/sector-association/{sectorId}/subsector-association/{subsectorId}")
+@RequestMapping(path = "/v1.0/subsector-association/{subsectorId}")
 @RequiredArgsConstructor
 @Tag(name = "Subsector association info view")
 public class SubsectorAssociationViewController {
@@ -39,10 +40,10 @@ public class SubsectorAssociationViewController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @Authorized(resourceId = "#sectorId")
+    @Authorized(resourceId = "#subsectorId")
     public ResponseEntity<SubsectorAssociationSchemesDTO> getSubsectorAssociationSchemeBySubsectorAssociationId(
-            @PathVariable("sectorId") @Parameter(description = "The sector association id") Long sectorId,
-            @PathVariable("subsectorId") @Parameter(description = "The subsector association id") Long subsectorId) {
-        return new ResponseEntity<>(subsectorAssociationSchemeService.getSubsectorAssociationSchemesBySubsectorAssociationId(sectorId, subsectorId), HttpStatus.OK);
+            @Parameter(hidden = true) AppUser appUser,
+            @PathVariable @Parameter(description = "The subsector association id") Long subsectorId) {
+        return new ResponseEntity<>(subsectorAssociationSchemeService.getSubsectorAssociationSchemesBySubsectorAssociationId(subsectorId, appUser), HttpStatus.OK);
     }
 }

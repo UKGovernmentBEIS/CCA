@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
-import { toNonComplianceConclusionSummaryData } from '@requests/common';
-import { SummaryComponent } from '@shared/components';
+import {
+  extractOperatorUsersFromUsersInfo,
+  toNonComplianceConclusionSummaryData,
+  transformUserContacts,
+} from '@requests/common';
+import { SummaryComponent, SummaryData } from '@shared/components';
 
 import { NonComplianceConclusionSubmittedRequestActionPayload } from 'cca-api';
 
@@ -20,11 +24,38 @@ export class NonComplianceConclusionSubmittedComponent {
   protected readonly data = computed(() => {
     const payload = this.actionPayload() as NonComplianceConclusionSubmittedRequestActionPayload;
 
-    return toNonComplianceConclusionSummaryData(
+    const summaryData = toNonComplianceConclusionSummaryData(
       payload.nonComplianceConclusion,
       payload.nonComplianceAttachments,
       false,
       './file-download',
     );
+
+    return this.withRecipients(summaryData, payload);
   });
+
+  private withRecipients(
+    summaryData: SummaryData,
+    payload: NonComplianceConclusionSubmittedRequestActionPayload,
+  ): SummaryData {
+    if (payload.nonComplianceConclusion?.details?.penaltyOutcome !== 'WITHDRAW') {
+      return summaryData;
+    }
+
+    return [
+      ...summaryData,
+      {
+        header: 'Official notice recipients',
+        data: [
+          {
+            key: 'Users notified',
+            value: [
+              ...transformUserContacts(payload.defaultContacts ?? []),
+              ...extractOperatorUsersFromUsersInfo(payload.usersInfo ?? {}, payload.decisionNotification?.operators),
+            ],
+          },
+        ],
+      },
+    ];
+  }
 }

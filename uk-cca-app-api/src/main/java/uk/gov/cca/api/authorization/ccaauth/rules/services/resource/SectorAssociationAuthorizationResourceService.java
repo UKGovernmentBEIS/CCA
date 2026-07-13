@@ -40,4 +40,46 @@ public class SectorAssociationAuthorizationResourceService {
 
         return true;
     }
+
+    public boolean hasUserScopeToSectorAssociationSchemesBySectorId(AppUser authUser, String scope, Long sectorAssociationId) {
+        String requiredPermission =
+                resourceScopePermissionService.findByResourceTypeAndRoleTypeAndScope(CcaResourceType.SECTOR_ASSOCIATION_SCHEME, authUser.getRoleType(), scope)
+                        .map(ResourceScopePermission::getPermission)
+                        .orElse(null);
+        if (requiredPermission == null) {
+            return false;
+        }
+        try {
+            AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()
+                    .requestResources(Map.of(CcaResourceType.SECTOR_ASSOCIATION, sectorAssociationId.toString()))
+                    .permission(requiredPermission)
+                    .build();
+            appAuthorizationService.authorize(authUser, authorizationCriteria);
+        } catch (BusinessException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean hasUserScopeToSubsectorAssociationSchemesBySectorId(AppUser authUser, String scope, Long sectorAssociationId) {
+        String requiredPermission =
+                resourceScopePermissionService.findByResourceTypeAndRoleTypeAndScope(CcaResourceType.SUBSECTOR_ASSOCIATION_SCHEME, authUser.getRoleType(), scope)
+                        .map(ResourceScopePermission::getPermission)
+                        .orElse(null);
+        if (requiredPermission == null) {
+            return false;
+        }
+        try {
+            AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()
+                    .requestResources(Map.of(CcaResourceType.SECTOR_ASSOCIATION, sectorAssociationId.toString()))
+                    .permission(requiredPermission)
+                    .build();
+            appAuthorizationService.authorize(authUser, authorizationCriteria);
+        } catch (BusinessException e) {
+            return false;
+        }
+
+        return true;
+    }
 }

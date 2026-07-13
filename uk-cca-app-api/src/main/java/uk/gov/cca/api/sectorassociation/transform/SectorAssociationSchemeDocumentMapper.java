@@ -8,5 +8,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 @Mapper(componentModel = "spring", config = MapperConfig.class)
 public interface SectorAssociationSchemeDocumentMapper {
 
+    SectorAssociationSchemeDocument toSectorAssociationSchemeDocument(FileDTO fileDTO);
+
     FileDTO sectorAssociationSchemeDocumentToFileDTO(SectorAssociationSchemeDocument sectorAssociationSchemeDocument);
 }

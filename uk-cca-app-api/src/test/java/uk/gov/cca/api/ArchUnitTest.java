@@ -10,48 +10,49 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
-import static uk.gov.cca.api.ArchUnitTest.BASE_PACKAGE;
-import static uk.gov.cca.api.ArchUnitTest.COMMON_BASE_PACKAGE;
+import static uk.gov.cca.api.ArchUnitTest.CCA_BASE_PACKAGE;
+import static uk.gov.cca.api.ArchUnitTest.NETZ_BASE_PACKAGE;
 
-@AnalyzeClasses(packages = {BASE_PACKAGE, COMMON_BASE_PACKAGE}, importOptions = ImportOption.DoNotIncludeTests.class)
+@AnalyzeClasses(packages = {CCA_BASE_PACKAGE, NETZ_BASE_PACKAGE}, importOptions = ImportOption.DoNotIncludeTests.class)
 public class ArchUnitTest {
 
-    static final String BASE_PACKAGE = "uk.gov.cca.api";
+    static final String CCA_BASE_PACKAGE = "uk.gov.cca.api";
 
-    static final String COMMON_BASE_PACKAGE = "uk.gov.netz.api";
+    static final String NETZ_BASE_PACKAGE = "uk.gov.netz.api";
 
     //netz
-    static final String TERMS_PACKAGE = COMMON_BASE_PACKAGE + ".terms..";
-    static final String COMMON_PACKAGE = COMMON_BASE_PACKAGE + ".common..";
-    static final String REFERENCE_DATA_PACKAGE = COMMON_BASE_PACKAGE + ".referencedata..";
-    static final String FILES_PACKAGE = COMMON_BASE_PACKAGE + ".files..";
-    static final String DOCUMENT_TEMPLATE_PACKAGE = COMMON_BASE_PACKAGE + ".documenttemplate..";
-    static final String TOKEN_PACKAGE = COMMON_BASE_PACKAGE + ".token..";
-    static final String CA_PACKAGE = COMMON_BASE_PACKAGE + ".competentauthority..";
-    static final String VERIFICATION_BODY_PACKAGE = COMMON_BASE_PACKAGE + ".verificationbody..";
-    static final String USER_INFO_API_PACKAGE = COMMON_BASE_PACKAGE + ".userinfoapi..";
-    static final String ACCOUNT_PACKAGE = COMMON_BASE_PACKAGE + ".account..";
-    static final String WORKFLOW_PACKAGE = COMMON_BASE_PACKAGE + ".workflow..";
+    static final String TERMS_PACKAGE = NETZ_BASE_PACKAGE + ".terms..";
+    static final String COMMON_PACKAGE = NETZ_BASE_PACKAGE + ".common..";
+    static final String REFERENCE_DATA_PACKAGE = NETZ_BASE_PACKAGE + ".referencedata..";
+    static final String FILES_PACKAGE = NETZ_BASE_PACKAGE + ".files..";
+    static final String DOCUMENT_TEMPLATE_PACKAGE = NETZ_BASE_PACKAGE + ".documenttemplate..";
+    static final String TOKEN_PACKAGE = NETZ_BASE_PACKAGE + ".token..";
+    static final String CA_PACKAGE = NETZ_BASE_PACKAGE + ".competentauthority..";
+    static final String VERIFICATION_BODY_PACKAGE = NETZ_BASE_PACKAGE + ".verificationbody..";
+    static final String USER_INFO_API_PACKAGE = NETZ_BASE_PACKAGE + ".userinfoapi..";
+    static final String ACCOUNT_PACKAGE = NETZ_BASE_PACKAGE + ".account..";
+    static final String WORKFLOW_PACKAGE = NETZ_BASE_PACKAGE + ".workflow..";
     
     //CCA
-    static final String CCA_AUTHORIZATION_PACKAGE = BASE_PACKAGE + ".authorization..";
-    static final String CCA_COMMON_PACKAGE = BASE_PACKAGE + ".common..";
-    static final String CCA_NOTIFICATION_PACKAGE = BASE_PACKAGE + ".notification..";
-    static final String CCA_USER_PACKAGE = BASE_PACKAGE + ".user..";
-    static final String CCA_ACCOUNT_TARGET_UNIT_PACKAGE = BASE_PACKAGE + ".account..";
-    static final String CCA_SECTOR_ASSOCIATION_PACKAGE = BASE_PACKAGE + ".sectorassociation..";
-    static final String CCA_FACILITY_PACKAGE = BASE_PACKAGE + ".facility..";
-    static final String CCA_TARGET_PERIOD_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.targetperiod..";
-    static final String CCA_PERFORMANCE_DATA_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.performancedata..";
-    static final String CCA_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.performanceaccounttemplatedata..";
-    static final String CCA_UNA_PACKAGE = BASE_PACKAGE + ".underlyingagreement..";
-    static final String CCA_SUBSISTENCE_FEES_PACKAGE = BASE_PACKAGE + ".subsistencefees..";
-    static final String CCA_BUY_OUT_SURPLUS_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.buyoutsurplus..";
-    static final String CCA_WORKFLOW_CCA_PACKAGE = BASE_PACKAGE + ".workflow..";
-    static final String CCA_FACILITY_CERTIFICATION_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.facilitycertification..";
-    static final String CCA_FACILITY_AUDIT_PACKAGE = BASE_PACKAGE + ".facilityaudit..";
+    static final String CCA_AUTHORIZATION_PACKAGE = CCA_BASE_PACKAGE + ".authorization..";
+    static final String CCA_COMMON_PACKAGE = CCA_BASE_PACKAGE + ".common..";
+    static final String CCA_NOTIFICATION_PACKAGE = CCA_BASE_PACKAGE + ".notification..";
+    static final String CCA_USER_PACKAGE = CCA_BASE_PACKAGE + ".user..";
+    static final String CCA_ACCOUNT_TARGET_UNIT_PACKAGE = CCA_BASE_PACKAGE + ".account..";
+    static final String CCA_SECTOR_ASSOCIATION_PACKAGE = CCA_BASE_PACKAGE + ".sectorassociation..";
+    static final String CCA_FACILITY_PACKAGE = CCA_BASE_PACKAGE + ".facility..";
+    static final String CCA_TARGET_PERIOD_PACKAGE = CCA_BASE_PACKAGE + ".targetperiodreporting.targetperiod..";
+    static final String CCA_PERFORMANCE_DATA_PACKAGE = CCA_BASE_PACKAGE + ".targetperiodreporting.performancedata..";
+    static final String CCA_PERFORMANCE_DATA_FACILITY_PACKAGE = CCA_BASE_PACKAGE + ".targetperiodreporting.performancedatafacility..";
+    static final String CCA_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PACKAGE = CCA_BASE_PACKAGE + ".targetperiodreporting.performanceaccounttemplatedata..";
+    static final String CCA_UNA_PACKAGE = CCA_BASE_PACKAGE + ".underlyingagreement..";
+    static final String CCA_SUBSISTENCE_FEES_PACKAGE = CCA_BASE_PACKAGE + ".subsistencefees..";
+    static final String CCA_BUY_OUT_SURPLUS_PACKAGE = CCA_BASE_PACKAGE + ".targetperiodreporting.buyoutsurplus..";
+    static final String CCA_WORKFLOW_CCA_PACKAGE = CCA_BASE_PACKAGE + ".workflow..";
+    static final String CCA_FACILITY_CERTIFICATION_PACKAGE = CCA_BASE_PACKAGE + ".targetperiodreporting.facilitycertification..";
+    static final String CCA_FACILITY_AUDIT_PACKAGE = CCA_BASE_PACKAGE + ".facilityaudit..";
 
-    static final String CCA_WEB_PACKAGE = BASE_PACKAGE + ".web..";
+    static final String CCA_WEB_PACKAGE = CCA_BASE_PACKAGE + ".web..";
 
     static final List<String> ALL_PACKAGES = List.of(
             TERMS_PACKAGE,
@@ -75,6 +76,7 @@ public class ArchUnitTest {
 		    CCA_PERFORMANCE_DATA_PACKAGE,
 		    CCA_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PACKAGE,
 		    CCA_BUY_OUT_SURPLUS_PACKAGE,
+		    CCA_PERFORMANCE_DATA_FACILITY_PACKAGE,
 		    CCA_SUBSISTENCE_FEES_PACKAGE,
 		    CCA_WORKFLOW_CCA_PACKAGE,
 		    CCA_FACILITY_CERTIFICATION_PACKAGE,
@@ -361,6 +363,30 @@ public class ArchUnitTest {
                             TOKEN_PACKAGE
                             ));
     
+    //TODO Remove dependency uk.gov.cca.api.targetperiodreporting.performancedata.domainPerformanceDataSubmissionType
+    @ArchTest
+    public static final ArchRule performanceDataFacilityPackageChecks =
+            noClasses().that()
+            .resideInAPackage(CCA_PERFORMANCE_DATA_FACILITY_PACKAGE)
+            .should().dependOnClassesThat()
+            .resideInAnyPackage(except(
+            		CCA_PERFORMANCE_DATA_FACILITY_PACKAGE,
+                    CCA_FACILITY_PACKAGE,
+                    ACCOUNT_PACKAGE,
+                    CCA_ACCOUNT_TARGET_UNIT_PACKAGE,
+                    CCA_SECTOR_ASSOCIATION_PACKAGE,
+                    COMMON_PACKAGE,
+					CCA_COMMON_PACKAGE,
+                    CCA_AUTHORIZATION_PACKAGE,
+                    REFERENCE_DATA_PACKAGE,
+                    CA_PACKAGE,
+                    FILES_PACKAGE,
+                    TOKEN_PACKAGE,
+                    CCA_TARGET_PERIOD_PACKAGE,
+                    CCA_PERFORMANCE_DATA_PACKAGE,
+                    CCA_UNA_PACKAGE
+                    ));
+    
     @ArchTest
     public static final ArchRule performanceAccountTemplateDataPackageChecks =
             noClasses().that()
@@ -476,6 +502,7 @@ public class ArchUnitTest {
 		                    CCA_FACILITY_PACKAGE,
 		                    CCA_TARGET_PERIOD_PACKAGE,
 		                    CCA_PERFORMANCE_DATA_PACKAGE,
+		                    CCA_PERFORMANCE_DATA_FACILITY_PACKAGE,
 		                    CCA_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PACKAGE,
 		                    CCA_BUY_OUT_SURPLUS_PACKAGE,
 		                    CCA_FACILITY_CERTIFICATION_PACKAGE,

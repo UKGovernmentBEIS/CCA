@@ -62,10 +62,10 @@ export class VariationDetailsDecisionComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryData = toVariationDetailsSummaryData(
-    this.store.select(underlyingAgreementVariationQuery.selectVariationDetails)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-  );
+  protected readonly summaryData = toVariationDetailsSummaryData({
+    variationDetails: this.store.select(underlyingAgreementVariationQuery.selectVariationDetails)(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+  });
 
   submit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();

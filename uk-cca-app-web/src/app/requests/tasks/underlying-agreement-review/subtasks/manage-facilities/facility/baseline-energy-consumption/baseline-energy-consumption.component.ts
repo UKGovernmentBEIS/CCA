@@ -16,7 +16,6 @@ import {
   FacilityBaselineEnergyConsumptionFormModel,
   FacilityWizardStep,
   isFacilityWizardCompleted,
-  MeasurementTypeToUnitPipe,
   OVERALL_DECISION_SUBTASK,
   TaskItemStatus,
   TasksApiService,
@@ -25,6 +24,7 @@ import {
 } from '@requests/common';
 import { SplitByProductTableComponent } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { produce } from 'immer';
 
 import {

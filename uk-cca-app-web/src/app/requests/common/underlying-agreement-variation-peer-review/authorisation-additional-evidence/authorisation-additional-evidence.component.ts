@@ -23,19 +23,21 @@ export class AuthorisationAdditionalEvidenceComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   protected readonly summaryData = computed(() =>
-    toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-      this.requestTaskStore.select(
+    toAuthorisationAdditionalEvidenceSummaryDataWithDecision({
+      authorisationAndAdditionalEvidence: this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectAuthorisationAndAdditionalEvidence,
       )(),
-      this.requestTaskStore.select(
+      underlyingAgreementAttachments: this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectUnderlyingAgreementVariationAttachments,
       )(),
-      false,
-      '../../file-download',
-      this.requestTaskStore.select(
+      isEditable: false,
+      downloadUrl: '../../file-download',
+      decision: this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
       )(),
-      this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectReviewAttachments)(),
-    ),
+      reviewAttachments: this.requestTaskStore.select(
+        underlyingAgreementVariationPeerReviewQuery.selectReviewAttachments,
+      )(),
+    }),
   );
 }

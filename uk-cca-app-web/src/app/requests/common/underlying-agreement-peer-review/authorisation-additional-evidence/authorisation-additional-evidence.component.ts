@@ -26,15 +26,18 @@ export class AuthorisationAdditionalEvidenceComponent {
 
   protected readonly summaryData = computed(() => {
     const underlyingAgreement = this.store.select(underlyingAgreementPeerReviewQuery.selectUnderlyingAgreement)();
-    return toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-      underlyingAgreement?.authorisationAndAdditionalEvidence,
-      this.store.select(underlyingAgreementPeerReviewQuery.selectUnderlyingAgreementAttachments)(),
-      false,
-      '../../file-download',
-      this.store.select(
+
+    return toAuthorisationAdditionalEvidenceSummaryDataWithDecision({
+      authorisationAndAdditionalEvidence: underlyingAgreement?.authorisationAndAdditionalEvidence,
+      underlyingAgreementAttachments: this.store.select(
+        underlyingAgreementPeerReviewQuery.selectUnderlyingAgreementAttachments,
+      )(),
+      isEditable: false,
+      downloadUrl: '../../file-download',
+      decision: this.store.select(
         underlyingAgreementPeerReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
       )(),
-      this.store.select(underlyingAgreementPeerReviewQuery.selectReviewAttachments)(),
-    );
+      reviewAttachments: this.store.select(underlyingAgreementPeerReviewQuery.selectReviewAttachments)(),
+    });
   });
 }

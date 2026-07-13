@@ -1,5 +1,6 @@
 import { PercentPipe } from '@angular/common';
 
+import { GovukDatePipe } from '@netz/common/pipes';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 import { fileUtils } from '@shared/utils';
@@ -10,6 +11,7 @@ function addTargetCommitmentsSection(
   factory: SummaryFactory,
   targetCommitments: TargetCommitmentDTO[],
   percentPipe: PercentPipe,
+  isEditable = false,
 ): void {
   factory.addPlainTextSection('Sector commitment');
 
@@ -21,7 +23,10 @@ function addTargetCommitmentsSection(
     })
     .forEach((commitment) => {
       const value = percentPipe.transform(Number(commitment.targetImprovement || 0), '1.0-3', 'en-GB');
-      factory.addRow(commitment.targetPeriod, value);
+      factory.addRow(commitment.targetPeriod, value, {
+        change: isEditable,
+        changeLink: isEditable ? './sector-commitment' : '',
+      });
     });
 }
 
@@ -33,6 +38,7 @@ export function toSectorSchemeSummaryData(
 
   const factory = new SummaryFactory();
   const percentPipe = new PercentPipe('en-GB');
+  const govukDatePipe = new GovukDatePipe();
   const hasSubSectors = subSectorsLength > 0;
 
   const cca2Scheme = sectorScheme.sectorAssociationSchemeMap?.[SchemeVersion.CCA_2];
@@ -48,11 +54,16 @@ export function toSectorSchemeSummaryData(
         ...cca2Scheme.umbrellaAgreement,
         name: `${cca2Scheme.umbrellaAgreement.fileName} (${cca2Scheme.umbrellaAgreement.fileType}, ${cca2Scheme.umbrellaAgreement.fileSize}KB)`,
       };
+
       factory.addFileListRow(
         'Umbrella agreement CCA2',
         fileUtils.toDownloadableFileFromInfoDTO([file], 'sector-documents'),
       );
     }
+
+    factory
+      .addRow('Umbrella agreement date', govukDatePipe.transform(cca2Scheme?.umaDate))
+      .addTextAreaRow('Sector definition', cca2Scheme?.sectorDefinition);
 
     if (!hasSubSectors && cca2Scheme.targetSet) {
       factory.addRow('Target type', cca2Scheme.targetSet.targetCurrencyType);
@@ -82,11 +93,23 @@ export function toSectorSchemeSummaryData(
         ...cca3Scheme.umbrellaAgreement,
         name: `${cca3Scheme.umbrellaAgreement.fileName} (${cca3Scheme.umbrellaAgreement.fileType}, ${cca3Scheme.umbrellaAgreement.fileSize}KB)`,
       };
+
       factory.addFileListRow(
         'Umbrella agreement CCA3',
         fileUtils.toDownloadableFileFromInfoDTO([file], 'sector-documents'),
+        { change: cca3Scheme?.editable, changeLink: './umbrella-agreement' },
       );
     }
+
+    factory
+      .addRow('Umbrella agreement date', govukDatePipe.transform(cca3Scheme?.umaDate), {
+        change: cca3Scheme?.editable,
+        changeLink: './umbrella-agreement',
+      })
+      .addTextAreaRow('Sector definition', cca3Scheme?.sectorDefinition, {
+        change: cca3Scheme?.editable,
+        changeLink: './umbrella-agreement',
+      });
 
     if (!hasSubSectors && cca3Scheme.targetSet) {
       factory.addRow('Target type', cca3Scheme.targetSet.targetCurrencyType);
@@ -99,7 +122,7 @@ export function toSectorSchemeSummaryData(
     }
 
     if (!hasSubSectors && cca3Scheme.targetSet?.targetCommitments) {
-      addTargetCommitmentsSection(factory, cca3Scheme.targetSet.targetCommitments, percentPipe);
+      addTargetCommitmentsSection(factory, cca3Scheme.targetSet.targetCommitments, percentPipe, cca3Scheme?.editable);
     }
   }
 
@@ -146,7 +169,7 @@ export function toSubsectorSchemeSummaryData(subsectorScheme: SubsectorAssociati
     }
 
     if (cca3Scheme.targetSet?.targetCommitments) {
-      addTargetCommitmentsSection(factory, cca3Scheme.targetSet.targetCommitments, percentPipe);
+      addTargetCommitmentsSection(factory, cca3Scheme.targetSet.targetCommitments, percentPipe, cca3Scheme?.editable);
     }
   }
 

@@ -22,11 +22,15 @@ export class OverallDecisionComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
   protected readonly summaryData = computed(() =>
-    toOverallDecisionSummaryData(
-      this.requestActionStore.select(underlyingAgreementReviewedRequestActionQuery.selectDetermination)(),
-      this.requestActionStore.select(underlyingAgreementReviewedRequestActionQuery.selectReviewAttachments)(),
-      '../../file-download',
-      false,
-    ),
+    toOverallDecisionSummaryData({
+      determination: this.requestActionStore.select(
+        underlyingAgreementReviewedRequestActionQuery.selectDetermination,
+      )(),
+      attachments: this.requestActionStore.select(
+        underlyingAgreementReviewedRequestActionQuery.selectReviewAttachments,
+      )(),
+      downloadUrl: '../../file-download',
+      isEditable: false,
+    }),
   );
 }

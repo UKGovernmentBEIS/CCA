@@ -11,18 +11,10 @@ import {
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import {
-  FUEL_MAP,
-  FuelReference,
-  FuelRow,
-  FuelTypeKey,
-  mapStandardFuelRows,
-  MeasurementTypeToUnitEnum,
-  toNumber,
-} from '@requests/common';
+import { FUEL_MAP, FuelReference, FuelRow, FuelTypeKey, mapStandardFuelRows, tprFormQuery } from '@requests/common';
+import { MEASUREMENT_TYPE_TO_UNIT_MAP } from '@shared/pipes';
+import { toNumber } from '@shared/utils';
 import { CCAGovukValidators } from '@shared/validators';
-
-import { tprFormQuery } from '../../../target-period-reporting-form.selectors';
 
 type FuelRowForm = FormGroup<{
   fuelKey: FormControl<string | null>;
@@ -114,12 +106,15 @@ export const EnergyFuelAmountDetailsFormProvider: Provider = {
     const energyFuelDetails = requestTaskStore.select(tprFormQuery.selectPerformanceData)()?.energyFuelDetails;
     const referenceData = requestTaskStore.select(tprFormQuery.selectReferenceData)();
     const electricitySuppliedFromCHP = energyFuelDetails?.electricitySuppliedFromCHP;
-    const measurementType = MeasurementTypeToUnitEnum[referenceData?.baselineAndTargets?.measurementType];
+
+    const measurementUnit =
+      MEASUREMENT_TYPE_TO_UNIT_MAP[referenceData?.baselineAndTargets?.measurementType] ??
+      MEASUREMENT_TYPE_TO_UNIT_MAP.ENERGY_KWH;
 
     const savedRows = mapStandardFuelRows(
       Object.entries(FUEL_MAP) as [FuelTypeKey, FuelReference][],
       energyFuelDetails?.standardFuels,
-      measurementType,
+      measurementUnit,
     );
 
     const nonStandardFuels = energyFuelDetails?.nonStandardFuels ?? [];
@@ -197,9 +192,7 @@ export function createNonStandardFuelRowGroup(
       co2ConversionFactor: fb.control(String(initial?.co2ConversionFactor ?? '0')),
       deliveredEnergy: fb.control<string | null>(
         initial?.deliveredEnergy != null ? String(initial.deliveredEnergy) : null,
-        {
-          updateOn: 'change',
-        },
+        { updateOn: 'change' },
       ),
       primaryEnergyConversionFactor: fb.control('1'),
       isCustom: fb.control(true),

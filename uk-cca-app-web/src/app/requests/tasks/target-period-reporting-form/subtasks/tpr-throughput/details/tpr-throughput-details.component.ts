@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { decideVariableEnergyType } from '@requests/common';
+import { decideVariableEnergyType, tprFormQuery } from '@requests/common';
 
-import { tprFormQuery } from '../../../target-period-reporting-form.selectors';
 import { TprThroughputSplitByProductComponent } from './split-by-product/tpr-throughput-split-by-product.component';
 import { TprThroughputTotalsOnlyComponent } from './totals-only/tpr-throughput-totals-only.component';
 

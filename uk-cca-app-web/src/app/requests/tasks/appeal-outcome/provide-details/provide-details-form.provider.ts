@@ -1,8 +1,8 @@
 import { InjectionToken, Provider } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { GovukValidators, MessageValidationErrors } from '@netz/govuk-components';
+import { GovukValidators } from '@netz/govuk-components';
 import { FileUploadEvent } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 import { futureDateValidator } from '@shared/validators';
@@ -13,7 +13,7 @@ import { AppealOutcome } from '../types';
 export type AppealOutcomeFormModel = FormGroup<{
   tribunalDecision: FormControl<AppealOutcome['tribunalDecision']>;
   appealOutcomeDate: FormControl<AppealOutcome['appealOutcomeDate'] | Date | null>;
-  file: FormControl<FileUploadEvent | FileUploadEvent[]>;
+  file: FormControl<FileUploadEvent>;
   comments: FormControl<AppealOutcome['comments']>;
 }>;
 
@@ -32,16 +32,6 @@ export const AppealOutcomeFormProvider: Provider = {
     const requestTaskId = requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
     const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
 
-    const fileControl = requestTaskFileService.buildFormControl(
-      requestTaskId,
-      appealOutcome?.file ? [appealOutcome.file] : [],
-      attachments ?? {},
-      'NON_COMPLIANCE_UPLOAD_ATTACHMENT',
-      false,
-      !isEditable,
-    );
-    fileControl.addValidators(singleFileValidator);
-
     return fb.group({
       tribunalDecision: fb.control(appealOutcome?.tribunalDecision ?? null, [
         GovukValidators.required('Select the appeals outcome'),
@@ -53,16 +43,17 @@ export const AppealOutcomeFormProvider: Provider = {
           futureDateValidator('This date must be today or in the past'),
         ],
       ),
-      file: fileControl,
+      file: requestTaskFileService.buildFormControl(
+        requestTaskId,
+        appealOutcome?.file,
+        attachments ?? {},
+        'NON_COMPLIANCE_UPLOAD_ATTACHMENT',
+        false,
+        !isEditable,
+      ) as FormControl<FileUploadEvent>,
       comments: fb.control(appealOutcome?.comments ?? null, [
         GovukValidators.maxLength(10000, 'Comments must be 10000 characters or less'),
       ]),
     });
   },
 };
-
-function singleFileValidator(control: AbstractControl<FileUploadEvent | FileUploadEvent[]>): MessageValidationErrors {
-  const files = Array.isArray(control.value) ? control.value : control.value ? [control.value] : [];
-
-  return files.length > 1 ? { singleFile: 'Upload only one file' } : null;
-}

@@ -42,7 +42,7 @@ class CcaFileDocumentGeneratorServiceTest {
 
     @Mock
     private CcaDecisionNotificationUsersService ccaDecisionNotificationUsersService;
-    
+
     @Mock
     private CcaDocumentTemplateCommonParamsProvider commonParamsProvider;
 
@@ -66,7 +66,7 @@ class CcaFileDocumentGeneratorServiceTest {
         when(documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params))
                 .thenReturn(templateParams);
         when(commonParamsProvider.getSectorTemplateParams(request, null))
-        		.thenReturn(Map.of());
+                .thenReturn(Map.of());
         when(fileDocumentGenerateServiceDelegator.generateAndSaveFileDocument(documentTemplateType, templateParams, fileNameToGenerate))
                 .thenReturn(FileInfoDTO.builder().build());
 
@@ -121,7 +121,7 @@ class CcaFileDocumentGeneratorServiceTest {
         verify(fileDocumentGenerateServiceDelegator, times(1))
                 .generateAndSaveFileDocument(documentTemplateType, templateParams, fileNameToGenerate);
     }
-    
+
     @Test
     void generateAsync() {
         final Request request = Request.builder().id("request-id").build();
@@ -148,7 +148,7 @@ class CcaFileDocumentGeneratorServiceTest {
         when(documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params))
                 .thenReturn(templateParams);
         when(commonParamsProvider.getSectorTemplateParams(request, null))
-				.thenReturn(Map.of());
+                .thenReturn(Map.of());
         when(ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification))
                 .thenReturn(recipients);
         when(fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate))
@@ -221,16 +221,16 @@ class CcaFileDocumentGeneratorServiceTest {
 
         final TemplateParams templateParams = TemplateParams.builder().params(Map.of("sector", "test")).build();
 
-        when(commonParamsProvider.getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, documentTemplateParams))
+        when(commonParamsProvider.getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, documentTemplateParams, SchemeVersion.CCA_3))
                 .thenReturn(templateParams);
 
 
         // Invoke
-        ccaOfficialNoticeGeneratorService.generateAsync(signatory, sectorAssociationId, documentTemplateType, documentTemplateParams, fileNameToGenerate);
+        ccaOfficialNoticeGeneratorService.generateAsync(signatory, sectorAssociationId, documentTemplateType, documentTemplateParams, fileNameToGenerate, SchemeVersion.CCA_3);
 
         // Verify
         verify(commonParamsProvider, times(1))
-                .getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, documentTemplateParams);
+                .getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, documentTemplateParams, SchemeVersion.CCA_3);
         verify(fileDocumentGenerateServiceDelegator, times(1))
                 .generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
     }

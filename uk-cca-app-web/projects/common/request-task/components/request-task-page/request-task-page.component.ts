@@ -32,6 +32,7 @@ import { RequestTaskPageContentFactoryMap } from '../../request-task.types';
 
 type ViewModel = {
   requestTask: RequestTaskDTO;
+  requestType: string;
   payload: RequestTaskPayload;
   header: string;
   sections: TaskSection[] | null;
@@ -78,14 +79,14 @@ export class RequestTaskPageComponent {
     const timeline = this.store.select(requestTaskQuery.selectTimeline)();
     const showAssignAction = this.store.select(requestTaskQuery.selectIsAssignActionVisible)();
     const relatedActions = this.store.select(requestTaskQuery.selectRelatedActions)();
+    const requestType = this.store.select(requestTaskQuery.selectRequestType)();
 
-    const { header, sections, preContentComponent, contentComponent, postContentComponent } = runInInjectionContext(
-      this.injector,
-      () => this.contentFactoryMap[requestTask.type](),
-    );
+    const { header, sections, preContentComponent, contentComponent, postContentComponent, hideRelatedActions } =
+      runInInjectionContext(this.injector, () => this.contentFactoryMap[requestTask.type]());
 
     return {
       requestTask,
+      requestType,
       payload,
       header,
       sections,
@@ -98,7 +99,7 @@ export class RequestTaskPageComponent {
       showAssignAction,
       hasRelatedTasks: relatedTasks?.length > 0,
       hasTimeline: timeline?.length > 0,
-      hasRelatedActions: relatedActions?.length > 0 || showAssignAction,
+      hasRelatedActions: !hideRelatedActions && (relatedActions?.length > 0 || showAssignAction),
     };
   });
 

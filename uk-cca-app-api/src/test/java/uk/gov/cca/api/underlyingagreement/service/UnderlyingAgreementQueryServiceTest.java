@@ -27,11 +27,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -52,6 +56,29 @@ class UnderlyingAgreementQueryServiceTest {
 
     @Mock
     private FileDocumentService fileDocumentService;
+
+    @Test
+    void getUnderlyingAgreementContainersByAccounts() {
+        Random random = new Random();
+        Set<Long> accountIds = LongStream.range(0, 800)
+                .mapToObj(i -> random.nextLong())
+                .collect(Collectors.toSet());
+
+        when(underlyingAgreementRepository.findAllByAccountIdIn(anySet()))
+                .thenAnswer(invocation -> List.of(
+                        UnderlyingAgreementEntity.builder()
+                                .accountId(random.nextLong())
+                                .underlyingAgreementContainer(UnderlyingAgreementContainer.builder().build())
+                                .build()
+                ));
+
+        // Invoke
+        underlyingAgreementQueryService.getUnderlyingAgreementContainersByAccounts(accountIds);
+
+        // Verify
+        verify(underlyingAgreementRepository, times(2))
+                .findAllByAccountIdIn(anySet());
+    }
 
     @Test
     void getUnderlyingAgreementContainerByAccountId() {

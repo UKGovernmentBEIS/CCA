@@ -27,9 +27,11 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.workflow.request.application.item.domain.Item;
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemAssignmentType;
+import uk.gov.netz.api.workflow.request.application.item.domain.ItemOrderBy;
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemPage;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTO;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemSearchCriteriaDTO;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemRequestResourcesService;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,13 +74,14 @@ class ItemAssignedToMeSectorUserServiceTest {
         		appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder()
 	        		.pageNumber(0)
 	        		.pageSize(10)
-	        		.build());
+	        		.build(), 
+	        		getItemSearchCriteria());
         doReturn(expectedItemDTOResponse).when(itemResponseService)
         		.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
 
         // Invoke
-        ItemDTOResponse actualItemDTOResponse = itemService
-                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+        ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToMe(
+        		appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
 
         // Assert
         assertEquals(expectedItemDTOResponse, actualItemDTOResponse);
@@ -89,7 +92,8 @@ class ItemAssignedToMeSectorUserServiceTest {
         		appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder()
 	        		.pageNumber(0)
 	        		.pageSize(10)
-	        		.build());
+	        		.build(),
+	        		getItemSearchCriteria());
         verify(itemResponseService, times(1)).toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
     }
 
@@ -115,12 +119,14 @@ class ItemAssignedToMeSectorUserServiceTest {
         		appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder()
 	        		.pageNumber(0)
 	        		.pageSize(10)
-	        		.build());
+	        		.build(), 
+	        		getItemSearchCriteria());
         doReturn(expectedItemDTOResponse).when(itemResponseService)
         	.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
 
         // Invoke
-        ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+        ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToMe(
+        		appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
 
         // Assert
         assertEquals(ItemDTOResponse.emptyItemDTOResponse(), actualItemDTOResponse);
@@ -128,7 +134,8 @@ class ItemAssignedToMeSectorUserServiceTest {
         verify(sectorUserAuthorityResourceAdapter, times(1))
                 .getUserScopedRequestTaskTypes(appUser);
         verify(itemRepository, times(1))
-                .findItems(appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+                .findItems(appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, 
+                		PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
         verify(itemResponseService, times(1)).toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
     }
 
@@ -149,5 +156,13 @@ class ItemAssignedToMeSectorUserServiceTest {
                 .authorities(List.of(appAuthority))
                 .roleType(SECTOR_USER)
                 .build();
+    }
+    
+    private ItemSearchCriteriaDTO getItemSearchCriteria() {
+        return ItemSearchCriteriaDTO.builder()
+        		.orderBy(ItemOrderBy.NEWEST_FIRST)
+        		.requestType("requestType")
+        		.searchTerm("searchTerm")
+        		.build();
     }
 }

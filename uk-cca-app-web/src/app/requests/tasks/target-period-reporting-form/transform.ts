@@ -19,8 +19,19 @@ export function createRequestTaskActionProcessDTO(
     requestTaskActionType: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SAVE_APPLICATION',
     requestTaskActionPayload: {
       payloadType: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SAVE_PAYLOAD',
-      performanceData: payload,
+      energyFuelDetails: payload.energyFuelDetails,
+      throughputDetails: payload.throughputDetails,
       sectionsCompleted,
+    },
+  };
+}
+
+export function createSubmitRequestTaskActionDTO(requestTaskId: number): RequestTaskActionProcessDTO {
+  return {
+    requestTaskId,
+    requestTaskActionType: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT_APPLICATION',
+    requestTaskActionPayload: {
+      payloadType: 'EMPTY_PAYLOAD',
     },
   };
 }

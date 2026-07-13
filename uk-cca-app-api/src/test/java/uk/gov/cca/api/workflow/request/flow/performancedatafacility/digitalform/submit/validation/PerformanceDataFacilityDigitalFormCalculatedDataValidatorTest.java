@@ -287,4 +287,16 @@ class PerformanceDataFacilityDigitalFormCalculatedDataValidatorTest {
         // Verify
         assertThat(results.stream().filter(r -> !r.isValid()).count()).isEqualTo(3);
     }
+
+    @Test
+    void validateCalculatedData_empty_not_valid() {
+        final PerformanceDataFacilityCalculationParameters parameters = PerformanceDataFacilityCalculationParameters.builder().build();
+        final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder().build();
+
+        // Invoke
+        List<BusinessValidationResult> results = validator.validateCalculatedData(performanceData, parameters);
+
+        // Verify
+        assertThat(results.stream().filter(r -> !r.isValid()).count()).isEqualTo(1);
+    }
 }

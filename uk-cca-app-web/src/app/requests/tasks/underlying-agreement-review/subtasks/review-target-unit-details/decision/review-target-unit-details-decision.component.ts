@@ -92,13 +92,13 @@ export default class ReviewTargetUnitDetailsDecisionComponent implements OnInit 
   );
 
   protected readonly summaryData = computed(() =>
-    toReviewTargetUnitDetailsUNAReviewSummaryData(
-      this.targetUnitDetails(),
-      this.countries(),
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.companiesHouseState(),
-      this.toggleCompaniesHouseDetails(),
-    ),
+    toReviewTargetUnitDetailsUNAReviewSummaryData({
+      targetUnitDetails: this.targetUnitDetails(),
+      countries: this.countries(),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      companiesHouseState: this.companiesHouseState(),
+      toggleCompaniesHouseDetails: this.toggleCompaniesHouseDetails(),
+    }),
   );
 
   ngOnInit() {

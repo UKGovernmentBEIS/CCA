@@ -2,11 +2,15 @@ package uk.gov.cca.api.underlyingagreement.service;
 
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,19 @@ public class UnderlyingAgreementQueryService implements UnderlyingAgreementAutho
     private final FileDocumentService fileDocumentService;
 
     private static final UnderlyingAgreementMapper UNA_MAPPER = Mappers.getMapper(UnderlyingAgreementMapper.class);
+    private static final int BATCH_SIZE = 500;
+
+    public Map<Long, UnderlyingAgreementContainer> getUnderlyingAgreementContainersByAccounts(Set<Long> accountIds) {
+        List<UnderlyingAgreementEntity> entities = new ArrayList<>();
+
+        ListUtils.partition(accountIds.stream().toList(), BATCH_SIZE).forEach(batch ->
+                entities.addAll(underlyingAgreementRepository.findAllByAccountIdIn(new HashSet<>(batch))));
+
+        return entities.stream().collect(Collectors.toMap(
+                UnderlyingAgreementEntity::getAccountId,
+                UnderlyingAgreementEntity::getUnderlyingAgreementContainer
+        ));
+    }
 
     public UnderlyingAgreementContainer getUnderlyingAgreementContainerByAccountId(Long accountId) {
         UnderlyingAgreementEntity entity = getUnderlyingAgreementEntityByAccountId(accountId);

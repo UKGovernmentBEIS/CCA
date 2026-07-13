@@ -274,6 +274,13 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'tpr-csv-upload',
+        loadChildren: () =>
+          import('./target-period-reporting-csv-upload/target-period-reporting-csv-upload.routes').then(
+            (r) => r.TARGET_PERIOD_REPORTING_CSV_UPLOAD_ROUTES,
+          ),
+      },
+      {
         path: 'appeal-outcome',
         loadChildren: () => import('./appeal-outcome/appeal-outcome.routes').then((r) => r.APPEAL_OUTCOME_ROUTES),
       },

@@ -15,6 +15,8 @@ import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityTargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityReferenceDataService;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation.PerformanceDataFacilityValidator;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
@@ -22,11 +24,9 @@ import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriod
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityReferenceData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.service.PerformanceDataFacilityReferenceDataService;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.validation.PerformanceDataFacilityInputDataValidator;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.validation.PerformanceDataFacilityDigitalFormValidator;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityCalculatedResults;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityReferenceData;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
@@ -63,7 +63,7 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
     private FacilityDataQueryService facilityDataQueryService;
 
     @Mock
-    private PerformanceDataFacilityDigitalFormValidator performanceDataFacilityDigitalFormValidator;
+    private PerformanceDataFacilityValidator performanceDataFacilityValidator;
 
     @Mock
     private PerformanceDataFacilityReferenceDataService performanceDataFacilityDigitalFormReferenceDataService;
@@ -100,7 +100,7 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .build();
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
-        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(targetPeriod, reportType, submissionDate))
+        when(performanceDataFacilityValidator.validateReportSubmission(targetPeriod, reportType, submissionDate))
                 .thenReturn(BusinessValidationResult.valid());
 
         // Invoke
@@ -109,7 +109,7 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         // Verify
         assertThat(result).isFalse();
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateReportSubmission(targetPeriod, reportType, submissionDate);
     }
 
@@ -136,7 +136,7 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .build();
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
-        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(targetPeriod, reportType, submissionDate))
+        when(performanceDataFacilityValidator.validateReportSubmission(targetPeriod, reportType, submissionDate))
                 .thenReturn(BusinessValidationResult.invalid(List.of()));
 
         // Invoke
@@ -145,7 +145,7 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         // Verify
         assertThat(result).isTrue();
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateReportSubmission(targetPeriod, reportType, submissionDate);
     }
 
@@ -162,7 +162,6 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .build();
         final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
                 .baselineAndTargets(baselineAndTargets)
-                .tpMultiplier(BigDecimal.ONE)
                 .build();
         final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
                 .calculatedResults(PerformanceDataFacilityCalculatedResults.builder()
@@ -213,9 +212,13 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9)))
                 .thenReturn(targetPeriods);
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormDataValidator.validateData(performanceData, calculationParameters))
                 .thenReturn(List.of(BusinessValidationResult.valid()));
@@ -233,10 +236,14 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         verify(targetPeriodService, times(1))
                 .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(facility, targetPeriodYear);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsEligibility(facility, targetPeriodYear);
         verify(performanceDataFacilityDigitalFormDataValidator, times(1))
                 .validateData(performanceData, calculationParameters);
         verify(performanceDataFacilityDigitalFormInputCalculatedDataValidator, times(1))
@@ -258,7 +265,6 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .build();
         final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
                 .baselineAndTargets(baselineAndTargets)
-                .tpMultiplier(BigDecimal.ONE)
                 .build();
         final PerformanceDataFacilityCalculatedResults calculatedResults = PerformanceDataFacilityCalculatedResults.builder()
                 .targetPeriodResultType(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET)
@@ -310,9 +316,13 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9)))
                 .thenReturn(targetPeriods);
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormDataValidator.validateData(performanceData, calculationParameters))
                 .thenReturn(List.of(BusinessValidationResult.valid()));
@@ -331,10 +341,14 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         verify(targetPeriodService, times(1))
                 .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(facility, targetPeriodYear);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsEligibility(facility, targetPeriodYear);
         verify(performanceDataFacilityDigitalFormDataValidator, times(1))
                 .validateData(performanceData, calculationParameters);
         verify(performanceDataFacilityDigitalFormInputCalculatedDataValidator, times(1))
@@ -356,7 +370,6 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .build();
         final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
                 .baselineAndTargets(baselineAndTargets)
-                .tpMultiplier(BigDecimal.ONE)
                 .build();
         final PerformanceDataFacilityCalculatedResults calculatedResults = PerformanceDataFacilityCalculatedResults.builder()
                 .targetPeriodResultType(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET)
@@ -408,9 +421,13 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9)))
                 .thenReturn(targetPeriods);
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormDataValidator.validateData(performanceData, calculationParameters))
                 .thenReturn(List.of(BusinessValidationResult.valid()));
@@ -427,10 +444,14 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         verify(targetPeriodService, times(1))
                 .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(facility, targetPeriodYear);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsEligibility(facility, targetPeriodYear);
         verify(performanceDataFacilityDigitalFormDataValidator, times(1))
                 .validateData(performanceData, calculationParameters);
         verify(performanceDataFacilityDigitalFormInputCalculatedDataValidator, times(1))
@@ -451,7 +472,6 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .build();
         final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
                 .baselineAndTargets(baselineAndTargets)
-                .tpMultiplier(BigDecimal.ONE)
                 .build();
         final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
                 .calculatedResults(PerformanceDataFacilityCalculatedResults.builder()
@@ -502,9 +522,13 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9)))
                 .thenReturn(targetPeriods);
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormDataValidator.validateData(performanceData, calculationParameters))
                 .thenReturn(List.of(BusinessValidationResult.invalid(List.of())));
@@ -519,11 +543,102 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         verify(targetPeriodService, times(1))
                 .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(facility, targetPeriodYear);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityDigitalFormDataValidator, times(1))
+                .validateData(performanceData, calculationParameters);
         verifyNoInteractions(performanceDataFacilityDigitalFormInputCalculatedDataValidator, performanceDataFacilityDigitalFormCalculatedDataValidator);
+    }
+
+    @Test
+    void validate_products_not_valid() {
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final PerformanceDataReportType reportType = PerformanceDataReportType.FINAL;
+        final Long accountId = 1L;
+        final Long facilityId = 1L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final Year targetYear = Year.of(2018);
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .improvements(Map.of(TargetImprovementType.TP7, BigDecimal.ONE))
+                .build();
+        final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
+                .baselineAndTargets(baselineAndTargets)
+                .build();
+        final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
+                .calculatedResults(PerformanceDataFacilityCalculatedResults.builder()
+                        .targetPeriodResultType(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET)
+                        .build())
+                .build();
+        final RequestTask requestTask = RequestTask.builder()
+                .request(Request.builder()
+                        .requestResources(List.of(RequestResource.builder()
+                                .resourceType(ResourceType.ACCOUNT)
+                                .resourceId(accountId.toString())
+                                .build())
+                        )
+                        .build())
+                .payload(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.builder()
+                        .targetPeriodType(targetPeriodType)
+                        .reportType(reportType)
+                        .targetPeriodYear(targetYear)
+                        .referenceData(referenceData)
+                        .facility(FacilityBaseInfoDTO.builder().id(facilityId).facilityBusinessId(facilityBusinessId).build())
+                        .performanceData(performanceData)
+                        .build())
+                .build();
+
+        final TargetPeriodYear targetPeriodYear = TargetPeriodYear.builder().targetYear(targetYear).build();
+        final List<TargetPeriodDetailsDTO> targetPeriods = List.of(
+                TargetPeriodDetailsDTO.builder()
+                        .businessId(TargetPeriodType.TP7)
+                        .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                                .targetPeriodYears(List.of(targetPeriodYear))
+                                .build())
+                        .build()
+        );
+        final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
+
+        when(performanceDataFacilityDigitalFormReferenceDataService
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, targetYear))
+                .thenReturn(baselineAndTargets);
+        when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9)))
+                .thenReturn(targetPeriods);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.invalid(List.of()));
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class, () -> validator.validate(requestTask));
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE);
+        verify(performanceDataFacilityDigitalFormReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, targetYear);
+        verify(targetPeriodService, times(1))
+                .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsEligibility(facility, targetPeriodYear);
+        verifyNoInteractions(performanceDataFacilityDigitalFormDataValidator, performanceDataFacilityDigitalFormInputCalculatedDataValidator,
+                performanceDataFacilityDigitalFormCalculatedDataValidator);
     }
 
     @Test
@@ -536,7 +651,6 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         final Year targetYear = Year.of(2018);
         final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
                 .baselineAndTargets(PerformanceDataFacilityBaselineAndTargets.builder().measurementType(MeasurementType.ENERGY_KWH).build())
-                .tpMultiplier(BigDecimal.ONE)
                 .build();
         final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
                 .calculatedResults(PerformanceDataFacilityCalculatedResults.builder()
@@ -575,9 +689,11 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .thenReturn(PerformanceDataFacilityBaselineAndTargets.builder().measurementType(MeasurementType.ENERGY_KWH).build());
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.invalid(List.of()));
 
         // Invoke
@@ -591,12 +707,15 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         verify(targetPeriodService, times(1))
                 .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(facility, targetPeriodYear);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
         verifyNoInteractions(performanceDataFacilityDigitalFormDataValidator, performanceDataFacilityDigitalFormInputCalculatedDataValidator,
                 performanceDataFacilityDigitalFormCalculatedDataValidator);
+        verifyNoMoreInteractions(performanceDataFacilityValidator);
     }
 
     @Test
@@ -609,7 +728,6 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         final Year targetYear = Year.of(2018);
         final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
                 .baselineAndTargets(PerformanceDataFacilityBaselineAndTargets.builder().measurementType(MeasurementType.ENERGY_KWH).build())
-                .tpMultiplier(BigDecimal.ONE)
                 .build();
         final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
                 .calculatedResults(PerformanceDataFacilityCalculatedResults.builder()
@@ -648,7 +766,9 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .thenReturn(PerformanceDataFacilityBaselineAndTargets.builder().measurementType(MeasurementType.ENERGY_KWH).build());
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(facility, targetPeriodYear))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.invalid(List.of()));
 
         // Invoke
@@ -662,11 +782,82 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
         verify(targetPeriodService, times(1))
                 .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(facility, targetPeriodYear);
         verifyNoInteractions(performanceDataFacilityDigitalFormDataValidator, performanceDataFacilityDigitalFormInputCalculatedDataValidator,
                 performanceDataFacilityDigitalFormCalculatedDataValidator);
-        verifyNoMoreInteractions(performanceDataFacilityDigitalFormValidator);
+        verifyNoMoreInteractions(performanceDataFacilityValidator);
+    }
+
+    @Test
+    void validate_facility_locking_not_valid() {
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final PerformanceDataReportType reportType = PerformanceDataReportType.FINAL;
+        final Long accountId = 1L;
+        final Long facilityId = 1L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final Year targetYear = Year.of(2018);
+        final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
+                .baselineAndTargets(PerformanceDataFacilityBaselineAndTargets.builder().measurementType(MeasurementType.ENERGY_KWH).build())
+                .build();
+        final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
+                .calculatedResults(PerformanceDataFacilityCalculatedResults.builder()
+                        .targetPeriodResultType(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET)
+                        .build())
+                .build();
+        final RequestTask requestTask = RequestTask.builder()
+                .request(Request.builder()
+                        .requestResources(List.of(RequestResource.builder()
+                                .resourceType(ResourceType.ACCOUNT)
+                                .resourceId(accountId.toString())
+                                .build())
+                        )
+                        .build())
+                .payload(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.builder()
+                        .targetPeriodType(targetPeriodType)
+                        .reportType(reportType)
+                        .targetPeriodYear(targetYear)
+                        .referenceData(referenceData)
+                        .facility(FacilityBaseInfoDTO.builder().id(facilityId).facilityBusinessId(facilityBusinessId).build())
+                        .performanceData(performanceData)
+                        .build())
+                .build();
+
+        final TargetPeriodYear targetPeriodYear = TargetPeriodYear.builder().targetYear(targetYear).build();
+        final TargetPeriodDetailsDTO targetPeriod = TargetPeriodDetailsDTO.builder()
+                .businessId(targetPeriodType)
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(targetPeriodYear))
+                        .build())
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
+
+        when(performanceDataFacilityDigitalFormReferenceDataService
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, targetYear))
+                .thenReturn(PerformanceDataFacilityBaselineAndTargets.builder().measurementType(MeasurementType.ENERGY_KWH).build());
+        when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.invalid(List.of()));
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class, () -> validator.validate(requestTask));
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_REPORTING_LOCKED);
+        verify(performanceDataFacilityDigitalFormReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, targetYear);
+        verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(targetPeriodService, times(1))
+                .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verifyNoInteractions(performanceDataFacilityDigitalFormDataValidator, performanceDataFacilityDigitalFormInputCalculatedDataValidator,
+                performanceDataFacilityDigitalFormCalculatedDataValidator);
+        verifyNoMoreInteractions(performanceDataFacilityValidator);
     }
 
     @Test
@@ -678,7 +869,6 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .baselineAndTargets(PerformanceDataFacilityBaselineAndTargets.builder()
                         .improvements(Map.of(TargetImprovementType.TP7, BigDecimal.ONE))
                         .build())
-                .tpMultiplier(BigDecimal.ONE)
                 .build();
         final RequestTask requestTask = RequestTask.builder()
                 .request(Request.builder()
@@ -704,7 +894,7 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
 
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_ORIGINAL_BASELINE_AND_TARGETS_IS_OUTDATED);
-        verifyNoInteractions(targetPeriodService, performanceDataFacilityDigitalFormValidator, performanceDataFacilityDigitalFormDataValidator,
+        verifyNoInteractions(targetPeriodService, performanceDataFacilityValidator, performanceDataFacilityDigitalFormDataValidator,
                 performanceDataFacilityDigitalFormInputCalculatedDataValidator, performanceDataFacilityDigitalFormCalculatedDataValidator);
     }
 }

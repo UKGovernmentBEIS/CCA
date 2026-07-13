@@ -109,6 +109,18 @@ export class GovukValidators {
     return GovukValidators.pattern(regex, `Enter a number up to ${decimalDigits} decimal places`);
   };
 
+  static numberInExclusiveRangeWithMaxDecimals(
+    min: number,
+    max: number,
+    decimalDigits: number,
+    message: string,
+  ): MessageValidatorFn {
+    return GovukValidators.builder(
+      message,
+      this.numberInExclusiveRangeWithMaxDecimalsValidator(min, max, decimalDigits),
+    );
+  }
+
   static nonZero(message = 'Value cannot be zero'): MessageValidatorFn {
     return GovukValidators.builder(message, this.nonZeroValidator());
   }
@@ -231,6 +243,26 @@ export class GovukValidators {
       if (!Number.isNaN(numValue) && numValue === 0) return { nonZero: true };
 
       return null;
+    };
+  }
+
+  private static numberInExclusiveRangeWithMaxDecimalsValidator(
+    min: number,
+    max: number,
+    decimalDigits: number,
+  ): ValidatorFn {
+    const decimalPattern = decimalDigits > 0 ? `(\\.[0-9]{1,${decimalDigits}})?` : '';
+    const regex = new RegExp(`^-?[0-9]+${decimalPattern}$`, '');
+
+    return (control: AbstractControl): Record<string, boolean> | null => {
+      if (control.value === null || control.value === undefined || control.value === '') return null;
+
+      const value = String(control.value);
+      const numValue = Number(value);
+
+      return regex.test(value) && numValue > min && numValue < max
+        ? null
+        : { numberInExclusiveRangeWithMaxDecimals: true };
     };
   }
 }

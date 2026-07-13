@@ -54,29 +54,31 @@ export class Tp5CheckYourAnswersComponent {
 
   private readonly multipleFilesDownloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData(
-    true, // TP5
-    this.requestTaskStore.select(underlyingAgreementVariationRegulatorLedQuery.selectOriginalBaselineExists)(),
-    this.sectorAssociationDetailsSchemeData,
-    this.requestTaskStore.select(
+  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData({
+    isTp5Period: true, // TP5
+    baselineExists: this.requestTaskStore.select(
+      underlyingAgreementVariationRegulatorLedQuery.selectOriginalBaselineExists,
+    )(),
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.requestTaskStore.select(
       underlyingAgreementVariationRegulatorLedQuery.selectOriginalTargetPeriodDetails(true),
     )(),
-    this.requestTaskStore.select(
+    attachments: this.requestTaskStore.select(
       underlyingAgreementVariationRegulatorLedQuery.selectOriginalUnderlyingAgreementAttachments,
     )(),
-    this.isEditable,
-    this.multipleFilesDownloadUrl,
-  );
+    isEditable: this.isEditable,
+    multiFileDownloadUrl: this.multipleFilesDownloadUrl,
+  });
 
-  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData(
-    true, // TP5
-    this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodExists)(),
-    this.sectorAssociationDetailsSchemeData,
-    this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodDetails(true))(),
-    this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
-    this.isEditable,
-    this.multipleFilesDownloadUrl,
-  );
+  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData({
+    isTp5Period: true, // TP5
+    baselineExists: this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodExists)(),
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodDetails(true))(),
+    attachments: this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
+    isEditable: this.isEditable,
+    multiFileDownloadUrl: this.multipleFilesDownloadUrl,
+  });
 
   onSubmit() {
     const payload = this.requestTaskStore.select(

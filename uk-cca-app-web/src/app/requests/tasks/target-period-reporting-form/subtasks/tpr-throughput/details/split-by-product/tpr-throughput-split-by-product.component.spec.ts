@@ -1,4 +1,3 @@
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,162 +6,171 @@ import { of } from 'rxjs';
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { getByText } from '@testing';
+import { Mocked } from 'vitest';
 
-import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
+import { PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload } from 'cca-api';
 
-import { tprFormQuery } from '../../../../target-period-reporting-form.selectors';
+import { mockTprRequestTaskStateThroughputTotalsOnly } from '../../../../testing/mock-data';
 import { TprThroughputSplitByProductComponent } from './tpr-throughput-split-by-product.component';
 
-const mockBaselineData: PerformanceDataFacilityReferenceData = {
-  baselineAndTargets: {
-    baselineVariableEnergy: '5000',
-    totalThroughput: '10000',
-    variableEnergyType: 'BY_PRODUCT',
-    measurementType: 'ENERGY_KWH',
-    throughputUnit: 'tonnes',
-    baselineDate: '2022-01-01',
-    improvements: { TP5: '5', TP6: '6', TP7: '8', TP8: '12', TP9: '15' },
-    usedReportingMechanism: false,
-    variableEnergyConsumptionDataByProduct: [
-      {
-        productName: 'Blue Widgets',
-        baselineYear: 2022,
-        productStatus: 'LIVE',
-        energy: '1000',
-        throughput: '1000',
-        throughputUnit: 'tonnes',
+const mockByProductState = {
+  ...mockTprRequestTaskStateThroughputTotalsOnly,
+  requestTaskItem: {
+    ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem,
+    requestTask: {
+      ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask,
+      payload: {
+        ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask.payload,
+        referenceData: {
+          ...(
+            mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).referenceData,
+          baselineAndTargets: {
+            ...(
+              mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask
+                .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+            ).referenceData?.baselineAndTargets,
+            variableEnergyType: 'BY_PRODUCT',
+            baselineDate: '2022-01-01',
+            variableEnergyConsumptionDataByProduct: [
+              {
+                productName: 'Blue Widgets',
+                baselineYear: 2022,
+                productStatus: 'LIVE',
+                energy: '1000',
+                throughput: '1000',
+                throughputUnit: 'tonnes',
+              },
+              {
+                productName: 'Green Widgets',
+                baselineYear: 2022,
+                productStatus: 'LIVE',
+                energy: '2000',
+                throughput: '500',
+                throughputUnit: 'tonnes',
+              },
+            ],
+          },
+        },
+        performanceData: {
+          ...(
+            mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).performanceData,
+          throughputDetails: {
+            totalTargetVariableEnergy: '0',
+            variableEnergyConsumptionDataByProduct: [
+              {
+                productName: 'Blue Widgets',
+                actualThroughput: '321.1234567',
+                targetImprovement: '8',
+                adjustedThroughput: '321.1234567',
+                targetEnergy: '295.4335802',
+              },
+              {
+                productName: 'Green Widgets',
+                actualThroughput: '100',
+                targetImprovement: '8',
+                adjustedThroughput: '100',
+                targetEnergy: '184000',
+              },
+            ],
+          },
+          energyFuelDetails: {
+            standardFuels: {
+              GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+              NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+            },
+            atLeastSeventyPercentEnergyUsed: false,
+            electricitySuppliedFromCHP: '0',
+          },
+          calculatedResults: {
+            actualEnergyCarbon: '0',
+            targetEnergyCarbon: '0',
+            energyCarbonDifference: '0',
+            targetImprovement: '0',
+            weightedConversionFactor: '0',
+            targetCo2Emissions: '0',
+            actualCo2Emissions: '0',
+            co2EmissionsDifference: '0',
+            actualImprovement: '0',
+          },
+        },
       },
-      {
-        productName: 'Green Widgets',
-        baselineYear: 2022,
-        productStatus: 'LIVE',
-        energy: '2000',
-        throughput: '500',
-        throughputUnit: 'tonnes',
-      },
-    ],
+    },
   },
 };
 
-const mockPerformanceData: PerformanceDataFacilityInputData = {
-  energyFuelDetails: {
-    standardFuels: {
-      GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
-      NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+const mockInterimByProductState = {
+  ...mockByProductState,
+  requestTaskItem: {
+    ...mockByProductState.requestTaskItem,
+    requestTask: {
+      ...mockByProductState.requestTaskItem.requestTask,
+      payload: {
+        ...mockByProductState.requestTaskItem.requestTask.payload,
+        reportType: 'INTERIM',
+      },
     },
-    atLeastSeventyPercentEnergyUsed: false,
-    electricitySuppliedFromCHP: '0',
-  },
-  throughputDetails: {
-    totalTargetVariableEnergy: '0',
-    variableEnergyConsumptionDataByProduct: [
-      {
-        productName: 'Blue Widgets',
-        actualThroughput: '321.1234567',
-        targetImprovement: '8',
-        adjustedThroughput: '321.1234567',
-        targetEnergy: '295.4335802',
-      },
-      {
-        productName: 'Green Widgets',
-        actualThroughput: '100',
-        targetImprovement: '8',
-        adjustedThroughput: '100',
-        targetEnergy: '184000',
-      },
-    ],
-  },
-  calculatedResults: {
-    actualEnergyCarbon: '0',
-    targetEnergyCarbon: '0',
-    energyCarbonDifference: '0',
-    targetImprovement: '0',
-    weightedConversionFactor: '0',
-    targetCo2Emissions: '0',
-    actualCo2Emissions: '0',
-    co2EmissionsDifference: '0',
-    actualImprovement: '0',
   },
 };
 
 describe('TprThroughputSplitByProductComponent', () => {
   let component: TprThroughputSplitByProductComponent;
   let fixture: ComponentFixture<TprThroughputSplitByProductComponent>;
-  let storeMock: { select: (selector: unknown) => unknown };
+  let store: RequestTaskStore;
+  let tasksApiService: Mocked<Pick<TasksApiService, 'saveRequestTaskAction'>>;
 
-  const configureAndCreate = async (
-    options: {
-      referenceData?: PerformanceDataFacilityReferenceData;
-      performanceData?: PerformanceDataFacilityInputData;
-      targetPeriodYear?: number;
-    } = {},
-  ) => {
-    const {
-      referenceData = mockBaselineData,
-      performanceData = mockPerformanceData,
-      targetPeriodYear = 2026,
-    } = options;
-
-    storeMock = {
-      select: vi.fn().mockImplementation((selector: unknown) => {
-        if (selector === tprFormQuery.selectReferenceData) return signal(referenceData);
-        if (selector === tprFormQuery.selectPerformanceData) return signal(performanceData);
-        if (selector === tprFormQuery.selectReportType) return signal<'FINAL' | 'INTERIM'>('FINAL');
-        if (selector === tprFormQuery.selectTargetPeriodType) return signal('TP5');
-        if (selector === tprFormQuery.selectTargetPeriodYear) return signal(targetPeriodYear);
-        if (selector === tprFormQuery.selectSectionsCompleted) return signal({});
-        if (selector === tprFormQuery.selectPayload)
-          return signal({
-            referenceData,
-            performanceData,
-            reportType: 'FINAL',
-            targetPeriodType: 'TP5',
-            targetPeriodYear,
-            sectionsCompleted: {},
-          });
-        return signal(null);
-      }),
-    };
+  beforeEach(async () => {
+    tasksApiService = { saveRequestTaskAction: vi.fn().mockReturnValue(of(null)) };
 
     await TestBed.configureTestingModule({
       imports: [TprThroughputSplitByProductComponent],
       providers: [
-        { provide: RequestTaskStore, useValue: storeMock },
+        RequestTaskStore,
         { provide: Router, useValue: { navigate: vi.fn() } },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
-        { provide: TasksApiService, useValue: { saveRequestTaskAction: vi.fn(() => of(null)) } },
+        { provide: TasksApiService, useValue: tasksApiService },
       ],
     }).compileComponents();
+
+    store = TestBed.inject(RequestTaskStore);
+    store.setState(mockByProductState);
 
     fixture = TestBed.createComponent(TprThroughputSplitByProductComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();
-  };
+  });
 
   afterEach(() => {
     TestBed.resetTestingModule();
   });
 
   it('should create', async () => {
-    await configureAndCreate();
-
     expect(component).toBeTruthy();
   });
 
   it('should prepopulate actual throughput from saved throughput details', async () => {
-    await configureAndCreate();
-
     const actualThroughput = component['form'].controls.products.at(0).controls.actualThroughput.value;
 
     expect(actualThroughput).toBe(321.1234567);
   });
 
-  it('should calculate total target variable energy from summed product intensities and apply facility improvement once', async () => {
-    await configureAndCreate();
-
-    const expected = (1000 * 321.1234567 + 2000 * 100) * (1 - 0.05);
+  it('should calculate total target variable energy from baseline intensities and apply facility improvement once', async () => {
+    const expected = ((1000 / 1000) * 321.1234567 + (2000 / 500) * 100) * (1 - 0.12);
 
     expect(component['totalTargetVariableEnergy']()).toBeCloseTo(expected, 7);
+  });
+
+  it('should show interim target header for interim reports', async () => {
+    store.setState(mockInterimByProductState as any);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(getByText(/Interim target %/, fixture.nativeElement)).toBeTruthy();
+    expect(() => getByText(/Improvement target %/, fixture.nativeElement)).toThrow();
   });
 });

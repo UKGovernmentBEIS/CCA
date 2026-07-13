@@ -12,7 +12,7 @@
 
 export interface InlineObject6 {
   /**
-   * The document template source file
+   * The evidence file
    */
   file: Blob;
 }

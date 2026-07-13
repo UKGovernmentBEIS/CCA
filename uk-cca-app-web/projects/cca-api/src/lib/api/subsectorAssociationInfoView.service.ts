@@ -83,48 +83,37 @@ export class SubsectorAssociationInfoViewService {
 
   /**
    * Retrieves the subsector association schemes that correspond to the provided subsector id
-   * @param sectorId The sector association id
    * @param subsectorId The subsector association id
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public getSubsectorAssociationSchemeBySubsectorAssociationId(
-    sectorId: number,
     subsectorId: number,
   ): Observable<SubsectorAssociationSchemesDTO>;
   public getSubsectorAssociationSchemeBySubsectorAssociationId(
-    sectorId: number,
     subsectorId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<SubsectorAssociationSchemesDTO>>;
   public getSubsectorAssociationSchemeBySubsectorAssociationId(
-    sectorId: number,
     subsectorId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<SubsectorAssociationSchemesDTO>>;
   public getSubsectorAssociationSchemeBySubsectorAssociationId(
-    sectorId: number,
     subsectorId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<SubsectorAssociationSchemesDTO>;
   public getSubsectorAssociationSchemeBySubsectorAssociationId(
-    sectorId: number,
     subsectorId: number,
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
-    if (sectorId === null || sectorId === undefined) {
-      throw new Error(
-        'Required parameter sectorId was null or undefined when calling getSubsectorAssociationSchemeBySubsectorAssociationId.',
-      );
-    }
     if (subsectorId === null || subsectorId === undefined) {
       throw new Error(
         'Required parameter subsectorId was null or undefined when calling getSubsectorAssociationSchemeBySubsectorAssociationId.',
@@ -155,7 +144,7 @@ export class SubsectorAssociationInfoViewService {
     }
 
     return this.httpClient.get<SubsectorAssociationSchemesDTO>(
-      `${this.configuration.basePath}/v1.0/sector-association/${encodeURIComponent(String(sectorId))}/subsector-association/${encodeURIComponent(String(subsectorId))}/scheme`,
+      `${this.configuration.basePath}/v1.0/subsector-association/${encodeURIComponent(String(subsectorId))}/scheme`,
       {
         responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,

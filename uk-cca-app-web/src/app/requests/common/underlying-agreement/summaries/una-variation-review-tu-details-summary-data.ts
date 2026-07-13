@@ -61,28 +61,51 @@ function toVariationReviewTargetUnitDetailsSummaryFactory(
   return factory;
 }
 
-export function toVariationReviewTargetUnitDetailsSummaryData(
-  targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
-  countries: Country[],
+type ToVariationReviewTargetUnitDetailsSummaryDataArgs = {
+  targetUnitDetails: UnderlyingAgreementTargetUnitDetails;
+  countries: Country[];
+  isEditable: boolean;
+  prefix?: string;
+};
 
-  isEditable: boolean,
-  prefix = '../',
+type ToVariationReviewTargetUnitDetailsSummaryDataWithDecisionArgs = {
+  targetUnitDetails: UnderlyingAgreementTargetUnitDetails;
+  decision: UnderlyingAgreementReviewDecision;
+  countries: Country[];
+  attachments: Record<string, string>;
+  downloadUrl: string;
+  isEditable: boolean;
+  prefix?: string;
+};
+
+export function toVariationReviewTargetUnitDetailsSummaryData(
+  args: ToVariationReviewTargetUnitDetailsSummaryDataArgs,
 ): SummaryData {
-  return toVariationReviewTargetUnitDetailsSummaryFactory(targetUnitDetails, countries, isEditable, prefix).create();
+  return toVariationReviewTargetUnitDetailsSummaryFactory(
+    args.targetUnitDetails,
+    args.countries,
+    args.isEditable,
+    args.prefix ?? '../',
+  ).create();
 }
 
 export function toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
-  targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
-  decision: UnderlyingAgreementReviewDecision,
-  countries: Country[],
-  attachments: Record<string, string>,
-  downloadUrl: string,
-  isEditable: boolean,
-  prefix = '../',
+  args: ToVariationReviewTargetUnitDetailsSummaryDataWithDecisionArgs,
 ): SummaryData {
-  const factory = toVariationReviewTargetUnitDetailsSummaryFactory(targetUnitDetails, countries, isEditable, prefix);
-  if (!decision?.type) return factory.create();
-  return addDecisionSummaryData(factory, decision, attachments, isEditable, downloadUrl).create();
+  const factory = toVariationReviewTargetUnitDetailsSummaryFactory(
+    args.targetUnitDetails,
+    args.countries,
+    args.isEditable,
+    args.prefix ?? '../',
+  );
+  if (!args.decision?.type) return factory.create();
+  return addDecisionSummaryData({
+    factory,
+    decision: args.decision,
+    attachments: args.attachments,
+    isEditable: args.isEditable,
+    downloadUrl: args.downloadUrl,
+  }).create();
 }
 
 function toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
@@ -136,16 +159,20 @@ function toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
   return factory;
 }
 
+type ToVariationReviewTargetUnitDetailsOriginalSummaryDataArgs = {
+  targetUnitDetails: UnderlyingAgreementTargetUnitDetails;
+  countries: Country[];
+  isEditable: boolean;
+  prefix?: string;
+};
+
 export function toVariationReviewTargetUnitDetailsOriginalSummaryData(
-  targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
-  countries: Country[],
-  isEditable: boolean,
-  prefix = '../',
+  args: ToVariationReviewTargetUnitDetailsOriginalSummaryDataArgs,
 ): SummaryData {
   return toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
-    targetUnitDetails,
-    countries,
-    isEditable,
-    prefix,
+    args.targetUnitDetails,
+    args.countries,
+    args.isEditable,
+    args.prefix ?? '../',
   ).create();
 }

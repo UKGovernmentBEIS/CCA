@@ -1,0 +1,71 @@
+import { FacilityTargetPeriodReportsState } from '../../facility-target-period-report.store';
+
+export const mockFacilityTPRStore: FacilityTargetPeriodReportsState = {
+  statusInfo: [
+    {
+      targetPeriodType: 'TP7',
+      targetPeriodName: 'TP7 (2026)',
+      targetPeriodYear: 2026,
+      variationIndicator: false,
+      locked: false,
+      reportVersion: 4,
+      submissionDate: '2026-06-05',
+      lockEditable: false,
+      variationIndicatorEditable: true,
+    },
+  ],
+  details: {
+    targetPeriod: 'TP7',
+    atLeastSeventyPercentEnergyUsed: true,
+    calculatedResults: {
+      actualEnergyCarbon: '3.1000000',
+      targetEnergyCarbon: '109.4750995',
+      energyCarbonDifference: '-106.3750995',
+      targetImprovement: '0.2000000',
+      weightedConversionFactor: '18.9037665',
+      targetCo2Emissions: '2.0694917',
+      actualCo2Emissions: '0.0586017',
+      co2EmissionsDifference: '-2.0108900',
+      actualImprovement: '0.9765861',
+      targetPeriodResultType: 'TARGET_MET',
+      surplusGained: '2',
+      buyOutRequired: '0',
+    },
+    baselineAndTargets: {
+      baselineDate: '2022-01-01',
+      isTwelveMonths: true,
+      energyCarbonFactor: '123',
+      measurementType: 'ENERGY_GJ',
+      usedReportingMechanism: true,
+      improvements: {
+        TP7: '20',
+        TP8: '30',
+        TP9: '40',
+      },
+      totalFixedEnergy: '100',
+      variableEnergyType: 'BY_PRODUCT',
+      variableEnergyConsumptionDataByProduct: [
+        {
+          productName: 'prod1',
+          baselineYear: 2023,
+          productStatus: 'LIVE',
+          energy: '234',
+          throughput: '65',
+          throughputUnit: 'unit',
+          energyCarbonIntensity: '3.6000000',
+        },
+        {
+          productName: 'prod2',
+          baselineYear: 2025,
+          productStatus: 'LIVE',
+          energy: '234',
+          throughput: '65',
+          throughputUnit: 'unit',
+          energyCarbonIntensity: '3.6000000',
+        },
+      ],
+    },
+  },
+  reportType: 'FINAL',
+  targetPeriodType: 'TP7',
+};

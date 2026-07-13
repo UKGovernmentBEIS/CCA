@@ -74,21 +74,21 @@ export default class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
     this.targetUnitDetails() ? this.targetUnitDetails() : transformAccountReferenceData(this.accountReferenceData()),
   );
 
-  protected readonly summaryDataOriginal = toReviewTargetUnitDetailsSummaryDataOriginal(
-    this.accountReferenceData(),
-    this.countries(),
-    this.isEditable(),
-    this.companiesHouseState(),
-    this.toggleCompaniesHouseDetails(),
-  );
+  protected readonly summaryDataOriginal = toReviewTargetUnitDetailsSummaryDataOriginal({
+    accountReferenceData: this.accountReferenceData(),
+    countries: this.countries(),
+    isEditable: this.isEditable(),
+    companiesHouseState: this.companiesHouseState(),
+    toggleCompaniesHouseDetails: this.toggleCompaniesHouseDetails(),
+  });
 
-  protected readonly summaryDataCurrent = toReviewTargetUnitDetailsSummaryData(
-    this.targetUnitDetails(),
-    this.countries(),
-    this.isEditable(),
-    this.companiesHouseState(),
-    this.toggleCompaniesHouseDetails(),
-  );
+  protected readonly summaryDataCurrent = toReviewTargetUnitDetailsSummaryData({
+    targetUnitDetails: this.targetUnitDetails(),
+    countries: this.countries(),
+    isEditable: this.isEditable(),
+    companiesHouseState: this.companiesHouseState(),
+    toggleCompaniesHouseDetails: this.toggleCompaniesHouseDetails(),
+  });
 
   ngOnInit() {
     if (this.tuDetails().companyRegistrationNumber) {

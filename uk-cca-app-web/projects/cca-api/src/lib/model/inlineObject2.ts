@@ -9,12 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RegulatorUserUpdateDTO } from './regulatorUserUpdateDTO';
 
 export interface InlineObject2 {
-  regulatorUserUpdateDTO: RegulatorUserUpdateDTO;
   /**
-   * The signature file
+   * The note file
    */
-  signature?: Blob;
+  file: Blob;
 }

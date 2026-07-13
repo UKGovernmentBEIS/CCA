@@ -29,7 +29,7 @@
   </div>
 
   @if (isOpen() && filteredOptions().length > 0) {
-    <ul role="listbox" [id]="identifier + '-listbox'" class="cca-combobox-listbox">
+    <ul #listboxEl role="listbox" [id]="identifier + '-listbox'" class="cca-combobox-listbox">
       @for (option of filteredOptions(); track option.value; let j = $index) {
         <li
           role="option"

@@ -87,4 +87,66 @@ class SectorAssociationAuthorizationResourceServiceTest {
         assertThat(result).isFalse();
     }
 
+    @Test
+    void hasUserScopeToSectorAssociationSchemesBySectorId() {
+        Long sectorAssociationId = 1L;
+        String roleType = REGULATOR;
+        CompetentAuthorityEnum compAuth = CompetentAuthorityEnum.ENGLAND;
+        AppUser authUser = AppUser.builder()
+                .authorities(List.of(AppAuthority.builder().competentAuthority(compAuth).build()))
+                .roleType(roleType).build();
+
+        String scope = CcaScope.EDIT_SECTOR_ADVANCED_DETAILS;
+
+        ResourceScopePermission resourceScopePermission =
+                ResourceScopePermission.builder().permission(CcaPermission.PERM_SECTOR_ADVANCED_DETAILS_EDIT).build();
+
+        AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()
+                .requestResources(Map.of(CcaResourceType.SECTOR_ASSOCIATION, sectorAssociationId.toString()))
+                .permission(CcaPermission.PERM_SECTOR_ADVANCED_DETAILS_EDIT)
+                .build();
+
+        when(resourceScopePermissionService.findByResourceTypeAndRoleTypeAndScope(CcaResourceType.SECTOR_ASSOCIATION_SCHEME, roleType, scope))
+                .thenReturn(Optional.of(resourceScopePermission));
+
+        boolean result = service.hasUserScopeToSectorAssociationSchemesBySectorId(authUser, scope, sectorAssociationId);
+
+        assertThat(result).isTrue();
+        verify(resourceScopePermissionService, times(1))
+                .findByResourceTypeAndRoleTypeAndScope(CcaResourceType.SECTOR_ASSOCIATION_SCHEME, roleType, scope);
+        verify(appAuthorizationService, times(1))
+                .authorize(authUser, authorizationCriteria);
+    }
+
+    @Test
+    void hasUserScopeToSubsectorAssociationSchemesBySectorId() {
+        Long sectorAssociationId = 1L;
+        String roleType = REGULATOR;
+        CompetentAuthorityEnum compAuth = CompetentAuthorityEnum.ENGLAND;
+        AppUser authUser = AppUser.builder()
+                .authorities(List.of(AppAuthority.builder().competentAuthority(compAuth).build()))
+                .roleType(roleType).build();
+
+        String scope = CcaScope.EDIT_SECTOR_ADVANCED_DETAILS;
+
+        ResourceScopePermission resourceScopePermission =
+                ResourceScopePermission.builder().permission(CcaPermission.PERM_SECTOR_ADVANCED_DETAILS_EDIT).build();
+
+        AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()
+                .requestResources(Map.of(CcaResourceType.SECTOR_ASSOCIATION, sectorAssociationId.toString()))
+                .permission(CcaPermission.PERM_SECTOR_ADVANCED_DETAILS_EDIT)
+                .build();
+
+        when(resourceScopePermissionService.findByResourceTypeAndRoleTypeAndScope(CcaResourceType.SUBSECTOR_ASSOCIATION_SCHEME, roleType, scope))
+                .thenReturn(Optional.of(resourceScopePermission));
+
+        boolean result = service.hasUserScopeToSubsectorAssociationSchemesBySectorId(authUser, scope, sectorAssociationId);
+
+        assertThat(result).isTrue();
+        verify(resourceScopePermissionService, times(1))
+                .findByResourceTypeAndRoleTypeAndScope(CcaResourceType.SUBSECTOR_ASSOCIATION_SCHEME, roleType, scope);
+        verify(appAuthorizationService, times(1))
+                .authorize(authUser, authorizationCriteria);
+    }
+
 }

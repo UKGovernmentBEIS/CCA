@@ -65,18 +65,18 @@ export default class FacilitySummaryComponent {
   );
 
   protected readonly summaryData = computed(() =>
-    toFacilityWizardSummaryDataWithDecision(
-      this.facility(),
-      this.sectorSchemeData(),
-      this.participatingSchemeVersions(),
-      this.decision,
-      this.countries(),
-      {
+    toFacilityWizardSummaryDataWithDecision({
+      facility: this.facility(),
+      sectorSchemeData: this.sectorSchemeData(),
+      schemeVersions: this.participatingSchemeVersions(),
+      decision: this.decision,
+      countries: this.countries(),
+      attachments: {
         submit: this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
         review: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
       },
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-    ),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+    }),
   );
 }

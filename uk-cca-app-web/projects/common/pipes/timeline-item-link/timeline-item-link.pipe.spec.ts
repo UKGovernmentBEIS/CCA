@@ -52,6 +52,9 @@ describe('TimelineItemLinkPipe', () => {
       'FACILITY_AUDIT_CANCELLED',
 
       'NON_COMPLIANCE_CANCELLED',
+
+      'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED',
+      'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED',
     ];
 
     noLinkActionTypes.forEach((type) => {
@@ -224,6 +227,19 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
 
     requestAction.type = 'NON_COMPLIANCE_CLOSED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
+  it('should return link for TPR reporting form details', () => {
+    requestAction.type = 'PERFORMANCE_DATA_FACILITY_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
+  it('should return link for TPR CSV file upload', () => {
+    requestAction.type = 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 

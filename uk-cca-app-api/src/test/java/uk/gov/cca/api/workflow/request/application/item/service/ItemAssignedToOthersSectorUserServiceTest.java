@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -33,9 +34,11 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.workflow.request.application.item.domain.Item;
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemAssignmentType;
+import uk.gov.netz.api.workflow.request.application.item.domain.ItemOrderBy;
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemPage;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTO;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemSearchCriteriaDTO;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemRequestResourcesService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemResponseService;
 
@@ -81,13 +84,14 @@ class ItemAssignedToOthersSectorUserServiceTest {
         		appUser.getUserId(), ItemAssignmentType.OTHERS, scopedRequestTaskTypes, PagingRequest.builder()
 	        		.pageNumber(0)
 	        		.pageSize(10)
-	        		.build());
+	        		.build(), 
+	        		getItemSearchCriteria());
         doReturn(expectedItemDTOResponse).when(itemResponseService)
         	.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
 
         // Invoke
         ItemDTOResponse actualItemDTOResponse = itemService
-                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
 
         // Assert
         assertEquals(expectedItemDTOResponse, actualItemDTOResponse);
@@ -98,7 +102,8 @@ class ItemAssignedToOthersSectorUserServiceTest {
         		appUser.getUserId(), ItemAssignmentType.OTHERS, scopedRequestTaskTypes, PagingRequest.builder()
 	        		.pageNumber(0)
 	        		.pageSize(10)
-	        		.build());
+	        		.build(), 
+	        		getItemSearchCriteria());
         verify(itemResponseService, times(1)).toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
     }
 
@@ -114,14 +119,15 @@ class ItemAssignedToOthersSectorUserServiceTest {
         .thenReturn(scopedRequestTaskTypes);
 
 		// Invoke
-		ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+		ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToOthers(
+				appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
 		
 		// Assert
 		assertThat(actualItemDTOResponse).isEqualTo(ItemDTOResponse.emptyItemDTOResponse());
 		
 		verify(sectorUserAuthorityResourceAdapter, times(1))
 		    .getUserScopedRequestTaskTypes(appUser);
-		verify(itemRepository, never()).findItems(anyString(), Mockito.any(), anyMap(), any(PagingRequest.class));
+		verify(itemRepository, never()).findItems(anyString(), Mockito.any(), anyMap(), any(PagingRequest.class), eq(getItemSearchCriteria()));
 		verify(itemResponseService, never()).toItemDTOResponse(any(), any(), any());
     }
 
@@ -142,5 +148,13 @@ class ItemAssignedToOthersSectorUserServiceTest {
                 .authorities(List.of(appAuthority))
                 .roleType(SECTOR_USER)
                 .build();
+    }
+    
+    private ItemSearchCriteriaDTO getItemSearchCriteria() {
+        return ItemSearchCriteriaDTO.builder()
+        		.orderBy(ItemOrderBy.NEWEST_FIRST)
+        		.requestType("requestType")
+        		.searchTerm("searchTerm")
+        		.build();
     }
 }

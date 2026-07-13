@@ -78,19 +78,27 @@ export class AuthorisationAdditionalEvidenceDecisionComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryData(
-    this.store.select(underlyingAgreementVariationQuery.selectOriginalAuthorisationAndAdditionalEvidence)(),
-    this.store.select(underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-  );
+  protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryData({
+    authorisationAndAdditionalEvidence: this.store.select(
+      underlyingAgreementVariationQuery.selectOriginalAuthorisationAndAdditionalEvidence,
+    )(),
+    underlyingAgreementAttachments: this.store.select(
+      underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
+    )(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+  });
 
-  protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryData(
-    this.store.select(underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence)(),
-    this.store.select(underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-    this.downloadUrl,
-  );
+  protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryData({
+    authorisationAndAdditionalEvidence: this.store.select(
+      underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence,
+    )(),
+    underlyingAgreementAttachments: this.store.select(
+      underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments,
+    )(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+    downloadUrl: this.downloadUrl,
+  });
 
   submit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();

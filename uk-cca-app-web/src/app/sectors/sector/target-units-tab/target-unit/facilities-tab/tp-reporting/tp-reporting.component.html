@@ -5,6 +5,15 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <netz-page-heading>Select the target period you are reporting for</netz-page-heading>
+    <p class="govuk-!-margin-bottom-1">Starting dates of the respective reporting periods are the following:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>TP7 final report from 1 January 2027</li>
+      <li>TP8 interim report from 1 January 2028</li>
+      <li>TP8 final report from 1 January 2029</li>
+      <li>TP9 interim report from 1 January 2030</li>
+      <li>TP9 final report from 1 January 2031</li>
+    </ul>
+
     <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Select target period</h2>
     <p class="govuk-hint govuk-!-margin-top-1">
       Choose the preferred target period from the options that are currently available.
@@ -14,20 +23,21 @@
 
     <govuk-details summary="The target period I need isn't displayed">
       <p>
-        TP6 reporting should be done through the 'Download target period reporting (TPR) spreadsheets' and 'Upload
-        target period reporting (TPR) spreadsheets' tasks.
+        TP6 reporting should be done through the 'Download target period reporting (Final) spreadsheets' and 'Upload
+        target period reporting (Final) spreadsheets' tasks.
       </p>
 
       <p>
-        The available target period list only includes the current target periods for which you can submit a report or
-        correction. Additional target periods will become available once their respective reporting periods start.
+        The list only includes target periods for which you can submit a report (or a correction to a previously
+        submitted report). Additional target periods will become available once their respective reporting periods
+        start.
       </p>
     </govuk-details>
 
     <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Target period report type</h2>
     <p class="govuk-hint govuk-!-margin-top-1">
-      This shows if you are currently eligible for a final report or an interim report based on your selected target
-      period
+      The service automatically determines the type of target period report (final report or interim report) based on
+      the current period you have selected and the current date.
     </p>
 
     @if (selectedReportType()) {

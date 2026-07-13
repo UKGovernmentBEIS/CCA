@@ -67,5 +67,11 @@ public interface FacilityDataRepository extends JpaRepository<FacilityData, Long
     List<TargetUnitAccountBusinessInfoDTO> findLiveAccountsWithActiveFacilityForSchemeVersion(String schemeVersion);
 
     List<FacilityData> findAllByAccountId(Long accountId);
-    
+
+    @Query(value = "SELECT fd " +
+            "FROM FacilityData fd " +
+            "JOIN TargetUnitAccount tu on tu.id = fd.accountId " +
+            "WHERE tu.sectorAssociationId = :sectorAssociationId " +
+            "AND function('jsonb_exists', fd.participatingSchemeVersions, :schemeVersion) = true ")
+    List<FacilityData> findAllBySectorAssociationIdForSchemeVersion(Long sectorAssociationId, String schemeVersion);
 }

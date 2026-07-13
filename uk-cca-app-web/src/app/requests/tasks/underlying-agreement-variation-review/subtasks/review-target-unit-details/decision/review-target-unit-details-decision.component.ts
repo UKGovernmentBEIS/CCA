@@ -94,17 +94,17 @@ export class ReviewTargetUnitDetailsDecisionComponent implements OnInit {
     this.targetUnitDetails() ? this.targetUnitDetails() : this.originalTargetUnitDetails(),
   );
 
-  protected readonly summaryDataOriginal = toReviewTargetUnitDetailsUNAReviewSummaryData(
-    this.originalTargetUnitDetails(),
-    this.countries(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-  );
+  protected readonly summaryDataOriginal = toReviewTargetUnitDetailsUNAReviewSummaryData({
+    targetUnitDetails: this.originalTargetUnitDetails(),
+    countries: this.countries(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+  });
 
-  protected readonly summaryDataCurrent = toReviewTargetUnitDetailsUNAReviewSummaryData(
-    this.targetUnitDetails(),
-    this.countries(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
-  );
+  protected readonly summaryDataCurrent = toReviewTargetUnitDetailsUNAReviewSummaryData({
+    targetUnitDetails: this.targetUnitDetails(),
+    countries: this.countries(),
+    isEditable: this.store.select(requestTaskQuery.selectIsEditable)(),
+  });
 
   ngOnInit() {
     if (this.tuDetails().companyRegistrationNumber) {

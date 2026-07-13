@@ -61,6 +61,9 @@ export class TimelineItemLinkPipe implements PipeTransform {
       case 'NON_COMPLIANCE_APPEAL_DETAILS_SUBMITTED':
       case 'NON_COMPLIANCE_APPEAL_OUTCOME_SUBMITTED':
       case 'NON_COMPLIANCE_CLOSED':
+      case 'PERFORMANCE_DATA_FACILITY_SUBMITTED':
+      case 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED':
+      case 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED':
         return [routerLooks + 'timeline', value.id];
 
       case 'UNDERLYING_AGREEMENT_APPLICATION_CANCELLED':
@@ -77,6 +80,16 @@ export class TimelineItemLinkPipe implements PipeTransform {
       case 'FACILITY_AUDIT_CANCELLED':
       case 'NON_COMPLIANCE_CANCELLED':
       case 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_REQUESTED':
+      case 'RDE_ACCEPTED':
+      case 'RDE_CANCELLED':
+      case 'RDE_EXPIRED':
+      case 'RFI_CANCELLED':
+      case 'RFI_EXPIRED':
+      case 'REQUEST_TERMINATED':
+      case 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED':
+      case 'VERIFICATION_STATEMENT_CANCELLED':
+      case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED':
+      case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED':
         return null;
 
       case 'PAYMENT_MARKED_AS_PAID':
@@ -91,11 +104,6 @@ export class TimelineItemLinkPipe implements PipeTransform {
       case 'PAYMENT_COMPLETED':
         return [routerLooks + 'payment', 'actions', value.id, 'completed'];
 
-      case 'RDE_ACCEPTED':
-      case 'RDE_CANCELLED':
-      case 'RDE_EXPIRED':
-        return null;
-
       case 'RDE_FORCE_ACCEPTED':
       case 'RDE_FORCE_REJECTED':
         return [routerLooks + 'rde', 'action', value.id, 'rde-manual-approval-submitted'];
@@ -106,20 +114,11 @@ export class TimelineItemLinkPipe implements PipeTransform {
       case 'RDE_SUBMITTED':
         return [routerLooks + 'rde', 'action', value.id, 'rde-submitted'];
 
-      case 'RFI_CANCELLED':
-      case 'RFI_EXPIRED':
-        return null;
-
       case 'RFI_RESPONSE_SUBMITTED':
         return [routerLooks + 'rfi', 'action', value.id, 'rfi-response-submitted'];
 
       case 'RFI_SUBMITTED':
         return [routerLooks + 'rfi', 'action', value.id, 'rfi-submitted'];
-
-      case 'REQUEST_TERMINATED':
-      case 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED':
-      case 'VERIFICATION_STATEMENT_CANCELLED':
-        return null;
 
       default:
         throw new Error('Provide an action url');

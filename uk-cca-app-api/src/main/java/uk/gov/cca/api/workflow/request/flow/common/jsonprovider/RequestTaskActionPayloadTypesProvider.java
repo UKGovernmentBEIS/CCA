@@ -21,8 +21,10 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComp
 import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementNotifyOperatorForDecisionRequestTaskActionPayload;
@@ -91,6 +93,9 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
                 // Performance data upload
                 new NamedType(PerformanceDataUploadProcessingRequestTaskActionPayload.class, PERFORMANCE_DATA_UPLOAD_PROCESSING_PAYLOAD),
 
+                // Performance data facility upload
+                new NamedType(PerformanceDataFacilityDataUploadProcessingRequestTaskActionPayload.class, PERFORMANCE_DATA_FACILITY_UPLOAD_PROCESSING_PAYLOAD),
+
                 // PAT
                 new NamedType(PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class,
                         CcaRequestTaskActionPayloadType.PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PROCESSING_PAYLOAD),
@@ -118,7 +123,11 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
                 new NamedType(NonComplianceAppealOutcomeSaveRequestTaskActionPayload.class, NON_COMPLIANCE_APPEAL_OUTCOME_SAVE_PAYLOAD),
 
                 // Performance Data Facility Digital Form
-                new NamedType(PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SAVE_PAYLOAD)
+                new NamedType(PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SAVE_PAYLOAD),
+
+
+                // CCA3 PAT
+                new NamedType(FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_PROCESSING_PAYLOAD)
         );
     }
 

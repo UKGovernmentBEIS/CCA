@@ -16,5 +16,5 @@ import { PerformanceDataFacilityThroughputDetails } from './performanceDataFacil
 export interface PerformanceDataFacilityInputData {
   energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails;
   throughputDetails: PerformanceDataFacilityThroughputDetails;
-  calculatedResults: PerformanceDataFacilityCalculatedResults;
+  calculatedResults?: PerformanceDataFacilityCalculatedResults;
 }

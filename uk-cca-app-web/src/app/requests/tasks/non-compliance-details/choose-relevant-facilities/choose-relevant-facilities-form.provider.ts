@@ -2,7 +2,7 @@ import { InjectionToken, Provider } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { nonComplianceDetailsQuery } from '@requests/common';
+import { alphabeticalCompare, nonComplianceDetailsQuery } from '@requests/common';
 
 export type FacilityFormGroup = FormGroup<{
   facilityBusinessId: FormControl<string | null>;
@@ -21,7 +21,9 @@ export const ChooseRelevantFacilitiesFormProvider: Provider = {
   provide: CHOOSE_RELEVANT_FACILITIES_FORM,
   deps: [FormBuilder, RequestTaskStore],
   useFactory: (fb: FormBuilder, store: RequestTaskStore) => {
-    const relevantFacilities = store.select(nonComplianceDetailsQuery.selectRelevantFacilities)() ?? [];
+    const relevantFacilities = (store.select(nonComplianceDetailsQuery.selectRelevantFacilities)() ?? [])
+      .slice()
+      .sort((a, b) => alphabeticalCompare(a.facilityBusinessId, b.facilityBusinessId));
     const facilityControls = relevantFacilities.map((facility) =>
       createFacilityFormGroup(fb, facility.isHistorical, facility.facilityBusinessId),
     );

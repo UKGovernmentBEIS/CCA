@@ -50,6 +50,11 @@ public class FacilityDataQueryService implements FacilityAuthorityInfoProvider, 
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
 
+    public List<FacilityDTO> getAllFacilitiesInfoDataBySectorForSchemeVersion(Long sectorAssociationId, SchemeVersion schemeVersion) {
+        return facilityDataRepository.findAllBySectorAssociationIdForSchemeVersion(sectorAssociationId, schemeVersion.name()).stream()
+                .map(FACILITY_DETAILS_MAPPER::toFacilityDTO).toList();
+    }
+
     public List<FacilityBaseInfoDTO> getFacilitiesByAccountId(Long accountId) {
         return facilityDataRepository.findAllByAccountId(accountId)
                 .stream()

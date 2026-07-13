@@ -40,7 +40,9 @@ import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.workflow.request.application.item.domain.ItemOrderBy;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemSearchCriteriaDTO;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemAssignedToOthersOperatorService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemAssignedToOthersRegulatorService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemAssignedToOthersService;
@@ -104,21 +106,22 @@ class ItemAssignedToOthersControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemAssignedToOthersOperatorService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
+        when(itemAssignedToOthersOperatorService.getItemsAssignedToOthers(
+        		appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria()))
                 .thenReturn(itemDTOResponse);
         when(itemAssignedToOthersOperatorService.getRoleType()).thenReturn(OPERATOR);
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10")
+            .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10&requestType=REQUEST_TYPE&searchTerm=searchTerm")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(itemAssignedToOthersOperatorService, times(1))
-                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
         verify(itemAssignedToOthersRegulatorService, never())
-                .getItemsAssignedToOthers(any(), any(PagingRequest.class));
+                .getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
         verify(itemAssignedToOthersSectorUserService, never())
-        		.getItemsAssignedToOthers(any(), any(PagingRequest.class));
+        		.getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
     }
 
     @Test
@@ -127,22 +130,23 @@ class ItemAssignedToOthersControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemAssignedToOthersRegulatorService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
+        when(itemAssignedToOthersRegulatorService.getItemsAssignedToOthers(
+        		appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria()))
                 .thenReturn(itemDTOResponse);
         when(itemAssignedToOthersOperatorService.getRoleType()).thenReturn(OPERATOR);
         when(itemAssignedToOthersRegulatorService.getRoleType()).thenReturn(REGULATOR);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10")
+                .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10&requestType=REQUEST_TYPE&searchTerm=searchTerm")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(itemAssignedToOthersOperatorService, never())
-                .getItemsAssignedToOthers(any(), any(PagingRequest.class));
+                .getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
         verify(itemAssignedToOthersRegulatorService, times(1))
-                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
         verify(itemAssignedToOthersSectorUserService, never())
-				.getItemsAssignedToOthers(any(), any(PagingRequest.class));
+				.getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
     }
     
     @Test
@@ -151,23 +155,24 @@ class ItemAssignedToOthersControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemAssignedToOthersSectorUserService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
+        when(itemAssignedToOthersSectorUserService.getItemsAssignedToOthers(
+        		appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria()))
                 .thenReturn(itemDTOResponse);
         when(itemAssignedToOthersSectorUserService.getRoleType()).thenReturn(SECTOR_USER);
         when(itemAssignedToOthersOperatorService.getRoleType()).thenReturn(OPERATOR);
         when(itemAssignedToOthersRegulatorService.getRoleType()).thenReturn(REGULATOR);
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10")
+            .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10&requestType=REQUEST_TYPE&searchTerm=searchTerm")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(itemAssignedToOthersSectorUserService, times(1))
-                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
+                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build(), getItemSearchCriteria());
         verify(itemAssignedToOthersRegulatorService, never())
-                .getItemsAssignedToOthers(any(), any(PagingRequest.class));
+                .getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
         verify(itemAssignedToOthersOperatorService, never())
-        		.getItemsAssignedToOthers(any(), any(PagingRequest.class));
+        		.getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
     }
 
     @Test
@@ -180,15 +185,23 @@ class ItemAssignedToOthersControllerTest {
             .evaluate(appUser, new String[]{OPERATOR, REGULATOR, SECTOR_USER});
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10")
+            .get(BASE_PATH + "/" + ASSIGNED_TO_OTHERS_PATH + "?page=0&size=10&requestType=REQUEST_TYPE&searchTerm=searchTerm")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
         verify(itemAssignedToOthersOperatorService, never())
-            .getItemsAssignedToOthers(any(), any(PagingRequest.class));
+            .getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
         verify(itemAssignedToOthersRegulatorService, never())
-            .getItemsAssignedToOthers(any(), any(PagingRequest.class));
+            .getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
         verify(itemAssignedToOthersSectorUserService, never())
-        		.getItemsAssignedToOthers(any(), any(PagingRequest.class));
+        		.getItemsAssignedToOthers(any(), any(PagingRequest.class), any());
+    }
+    
+    private ItemSearchCriteriaDTO getItemSearchCriteria() {
+        return ItemSearchCriteriaDTO.builder()
+        		.orderBy(ItemOrderBy.NEWEST_FIRST)
+        		.requestType("REQUEST_TYPE")
+        		.searchTerm("searchTerm")
+        		.build();
     }
 }

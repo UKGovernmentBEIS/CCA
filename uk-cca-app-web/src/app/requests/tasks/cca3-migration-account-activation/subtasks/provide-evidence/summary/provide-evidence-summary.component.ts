@@ -31,13 +31,15 @@ export default class ProvideEvidenceSummaryComponent {
   private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   protected readonly summaryData = computed(() =>
-    toProvideEvidenceSummaryData(
-      this.requestTaskStore.select(cca3MigrationAccountActivationQuery.selectCca3MigrationAccountActivationDetails)(),
-      this.requestTaskStore.select(
+    toProvideEvidenceSummaryData({
+      details: this.requestTaskStore.select(
+        cca3MigrationAccountActivationQuery.selectCca3MigrationAccountActivationDetails,
+      )(),
+      attachments: this.requestTaskStore.select(
         cca3MigrationAccountActivationQuery.selectCca3MigrationAccountActivationAttachments,
       )(),
-      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
-      this.downloadUrl,
-    ),
+      isEditable: this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      downloadUrl: this.downloadUrl,
+    }),
   );
 }

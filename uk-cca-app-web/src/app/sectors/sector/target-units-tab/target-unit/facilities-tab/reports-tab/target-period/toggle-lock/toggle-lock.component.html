@@ -1,0 +1,27 @@
+<div class="govuk-!-width-two-thirds">
+  <netz-page-heading>Facility target period locking</netz-page-heading>
+
+  <p>Target period reports can only be submitted for unlocked facilities.</p>
+
+  <p>
+    Once the facility is unlocked, the sector user may submit multiple reports or corrections for the facility until the
+    submitted reports are processed by a new buy-out run.
+  </p>
+
+  <p>The buy-out run will lock the facility after processing the submitted reports.</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div
+      legend="Select the locking status for the facility"
+      legendSize="heading"
+      radioSize="large"
+      formControlName="toggle"
+      govuk-radio
+    >
+      <govuk-radio-option [value]="true" [label]="'Yes - I want the facility to be locked'" />
+      <govuk-radio-option [value]="false" [label]="'No - I want the facility to be unlocked'" />
+    </div>
+
+    <button govukButton type="submit">Confirm</button>
+  </form>
+</div>

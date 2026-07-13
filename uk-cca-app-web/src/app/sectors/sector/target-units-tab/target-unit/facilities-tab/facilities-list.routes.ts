@@ -9,12 +9,15 @@ import { PendingRequestGuard } from '@shared/guards';
 import { FacilityAuditStore } from './facility-audit/facility-audit.store';
 import { FacilityAvailableReportingPeriodsResolver } from './facility-available-reporting-periods.resolver';
 import { FacilityDetailsResolver } from './facility-details.resolver';
+import { FacilityTargetPeriodReportStore } from './facility-target-period-report.store';
+import { FACILITY_REPORTS_TAB_ROUTES } from './reports-tab/facility-reports-tab.routes';
 
 export const FACILITIES_LIST_ROUTES: Routes = [
   {
     path: ':facilityId',
+    providers: [FacilityTargetPeriodReportStore],
     canActivate: [setCurrentFacility],
-    canDeactivate: [resetCurrentFacility],
+    canDeactivate: [resetCurrentFacility, () => inject(FacilityTargetPeriodReportStore).reset()],
     data: {
       breadcrumb: ({ targetUnit }) => ({
         text: `${targetUnit.targetUnitAccountDetails.name}`,
@@ -56,6 +59,11 @@ export const FACILITIES_LIST_ROUTES: Routes = [
       {
         path: 'workflow-details',
         children: WORKFLOW_DETAILS_ROUTES,
+      },
+      {
+        path: 'reports',
+        data: { backlink: '../../', breadcrumb: false },
+        children: FACILITY_REPORTS_TAB_ROUTES,
       },
       {
         path: 'process-actions',

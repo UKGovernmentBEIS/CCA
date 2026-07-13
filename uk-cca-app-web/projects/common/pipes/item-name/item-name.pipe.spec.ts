@@ -74,12 +74,12 @@ describe('ItemNamePipe', () => {
       'Vary the underlying agreement',
     );
 
-    expect(pipe.transform('PERFORMANCE_DATA_DOWNLOAD_SUBMIT')).toEqual(
-      'Download target period reporting (TPR) spreadsheets',
+    expect(pipe.transform('PERFORMANCE_DATA_DOWNLOAD_SUBMIT')).toEqual('TP reporting (TP6) - Download spreadsheets');
+    expect(pipe.transform('PERFORMANCE_DATA_UPLOAD_SUBMIT')).toEqual('TP reporting (TP6) - Upload spreadsheets');
+    expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT')).toEqual(
+      'TP reporting (TP7, TP8, TP9) - Upload CSV file',
     );
-    expect(pipe.transform('PERFORMANCE_DATA_UPLOAD_SUBMIT')).toEqual(
-      'Target period reporting (TPR) spreadsheets upload',
-    );
+
     expect(pipe.transform('PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT')).toEqual(
       'Performance account template (PAT) upload',
     );
@@ -112,7 +112,7 @@ describe('ItemNamePipe', () => {
     expect(pipe.transform('NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT')).toEqual('Provide appeal outcome');
 
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT')).toEqual(
-      'Target period reporting (TPR) form',
+      'TP reporting (TP7, TP8, TP9) - Submit form',
     );
 
     expect(pipe.transform(null)).toBeNull();

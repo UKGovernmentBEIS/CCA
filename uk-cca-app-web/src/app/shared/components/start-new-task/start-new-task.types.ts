@@ -18,6 +18,7 @@ export const processActionsDetailsTypesMap: Partial<Record<RequestDetailsDTO['re
   PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: 'upload PAT spreadsheets',
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING: 'CCA3 Migration',
   PERFORMANCE_DATA_FACILITY_DIGITAL_FORM: 'TP reporting',
+  PERFORMANCE_DATA_FACILITY_DATA_UPLOAD: 'TP reporting (TP7, TP8, TP9)',
 };
 
 export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[]> = {
@@ -29,6 +30,7 @@ export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[
     'PERFORMANCE_DATA_UPLOAD',
     'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
     'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM',
+    'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD',
   ],
   VERIFIER: [],
 };
@@ -62,14 +64,14 @@ export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestTyp
     errors: [],
   },
   PERFORMANCE_DATA_DOWNLOAD: {
-    title: 'Download target period reporting (TPR) spreadsheets',
+    title: 'TP reporting (TP6) - Download spreadsheets',
     hint: 'Generate a zip file that contains the TPR spreadsheets. You will be able to edit the data in the spreadsheets.',
     button: 'Start TPR spreadsheets download',
     type: 'PERFORMANCE_DATA_DOWNLOAD',
     errors: [],
   },
   PERFORMANCE_DATA_UPLOAD: {
-    title: 'Upload target period reporting (TPR) spreadsheets',
+    title: 'TP reporting (TP6) - Upload spreadsheets',
     button: 'Start TPR spreadsheets upload',
     type: 'PERFORMANCE_DATA_UPLOAD',
     errors: [],
@@ -85,6 +87,13 @@ export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestTyp
     hint: 'Start a target period (TP) reporting task using a form for TP7, TP8, TP9.',
     button: 'Start TP reporting task',
     type: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM',
+    errors: [],
+  },
+  PERFORMANCE_DATA_FACILITY_DATA_UPLOAD: {
+    title: 'TP reporting (TP7, TP8, TP9) - Upload CSV file',
+    hint: 'Start a TP reporting task for the whole sector using a CSV file for TP7, TP8, TP9.',
+    button: 'Start TP reporting task',
+    type: 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD',
     errors: [],
   },
 };

@@ -13,12 +13,13 @@ import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation.PerformanceDataFacilityValidator;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation.PerformanceDataFacilityViolation;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.common.validation.performancedata.PerformanceDataCreateSchemeValidator;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.validation.PerformanceDataFacilityViolation;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestMetadata;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -59,7 +60,7 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
     private RequestQueryService requestQueryService;
 
     @Mock
-    private PerformanceDataFacilityDigitalFormValidator performanceDataFacilityDigitalFormValidator;
+    private PerformanceDataFacilityValidator performanceDataFacilityValidator;
 
     @Test
     void validateAction() {
@@ -146,15 +147,15 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
+        when(performanceDataFacilityValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
 
         // Invoke
@@ -166,15 +167,15 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any());
     }
 
@@ -196,15 +197,15 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
+        when(performanceDataFacilityValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE_PRODUCTS))));
 
         // Invoke
@@ -217,15 +218,15 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any());
     }
 
@@ -247,13 +248,13 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
+        when(performanceDataFacilityValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_BASELINE_DATE_NOT_ELIGIBLE))));
 
         // Invoke
@@ -266,13 +267,13 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any());
     }
 
@@ -294,11 +295,11 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
+        when(performanceDataFacilityValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE))));
 
         // Invoke
@@ -311,13 +312,13 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
-        verifyNoMoreInteractions(performanceDataFacilityDigitalFormValidator);
+        verifyNoMoreInteractions(performanceDataFacilityValidator);
     }
 
     @Test
@@ -338,9 +339,9 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
+        when(performanceDataFacilityValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_IS_LOCKED))));
 
         // Invoke
@@ -348,16 +349,16 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
                 () -> validator.validateAction(facilityId, payload));
 
         // Verify
-        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SECONDARY_REPORTING_LOCKED);
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_REPORTING_LOCKED);
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
-        verifyNoMoreInteractions(performanceDataFacilityDigitalFormValidator);
+        verifyNoMoreInteractions(performanceDataFacilityValidator);
     }
 
     @Test
@@ -378,7 +379,7 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
+        when(performanceDataFacilityValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.invalid(List.of()));
 
         // Invoke
@@ -391,9 +392,9 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(performanceDataFacilityDigitalFormValidator, times(1))
+        verify(performanceDataFacilityValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
-        verifyNoMoreInteractions(performanceDataFacilityDigitalFormValidator);
+        verifyNoMoreInteractions(performanceDataFacilityValidator);
     }
 
     @Test
@@ -433,7 +434,7 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verifyNoInteractions(performanceDataFacilityDigitalFormValidator);
+        verifyNoInteractions(performanceDataFacilityValidator);
     }
 
     @Test

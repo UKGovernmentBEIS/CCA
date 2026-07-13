@@ -61,12 +61,12 @@ export class SectorSchemeTabComponent {
     });
   });
 
-  sortBy(sorting: SortEvent) {
-    this.sorting.set(sorting);
-  }
-
-  schemeSummaryData = computed(() => {
+  protected readonly schemeSummaryData = computed(() => {
     const scheme = this.sectorScheme();
     return scheme ? toSectorSchemeSummaryData(scheme, this.subSectors().length) : [];
   });
+
+  sortBy(sorting: SortEvent) {
+    this.sorting.set(sorting);
+  }
 }

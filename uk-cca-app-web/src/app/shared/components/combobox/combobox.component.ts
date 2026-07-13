@@ -56,12 +56,14 @@ export class ComboboxComponent implements ControlValueAccessor, OnInit {
   private readonly injector = inject(Injector);
 
   private readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('inputEl');
+  private readonly listboxEl = viewChild<ElementRef<HTMLUListElement>>('listboxEl');
 
   private ngControl: NgControl | null = null;
   private readonly fallbackIdentifier = `cca-combobox-${nextComboboxId++}`;
   private onChange: (value: string | null) => void = () => undefined;
   private onTouched: () => void = () => undefined;
   private suppressInline = false;
+  private ignoreNextBlur = false;
 
   readonly options = input<GovukSelectOption<string | null>[]>([]);
   readonly widthClass = input<GovukTextWidthClass>(undefined);
@@ -189,6 +191,11 @@ export class ComboboxComponent implements ControlValueAccessor, OnInit {
 
   onBlur(): void {
     this.onTouched();
+    if (this.ignoreNextBlur) {
+      this.ignoreNextBlur = false;
+      return;
+    }
+
     this.isOpen.set(false);
     this.restoreSelectedDisplay();
   }
@@ -203,12 +210,14 @@ export class ComboboxComponent implements ControlValueAccessor, OnInit {
         } else {
           const maxIdx = this.filteredOptions().length - 1;
           this.activeIndex.update((idx) => Math.min(idx + 1, maxIdx));
+          this.scrollActiveOptionIntoView();
         }
         break;
       case 'ArrowUp':
         event.preventDefault();
         this.clearInlineSelection();
         this.activeIndex.update((idx) => Math.max(idx - 1, 0));
+        this.scrollActiveOptionIntoView();
         break;
       case 'Enter':
         if (this.isOpen() && this.activeIndex() >= 0) {
@@ -264,10 +273,21 @@ export class ComboboxComponent implements ControlValueAccessor, OnInit {
 
   @HostListener('document:pointerdown', ['$event'])
   onDocumentPointerdown(event: Event): void {
+    if (this.isEventFromListbox(event)) {
+      this.ignoreNextBlur = true;
+      return;
+    }
+
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isOpen.set(false);
       this.restoreSelectedDisplay();
     }
+  }
+
+  @HostListener('document:pointerup')
+  @HostListener('document:pointercancel')
+  onDocumentPointerEnd(): void {
+    this.ignoreNextBlur = false;
   }
 
   private clearInlineSelection(): void {
@@ -278,6 +298,31 @@ export class ComboboxComponent implements ControlValueAccessor, OnInit {
       this.inputValue.set(typed);
       this.typedQuery.set(typed);
     }
+  }
+
+  private scrollActiveOptionIntoView(): void {
+    const listbox = this.listboxEl()?.nativeElement;
+    const activeOption = listbox?.children.item(this.activeIndex()) as HTMLElement | null;
+
+    if (!listbox || !activeOption) return;
+
+    const optionTop = activeOption.offsetTop;
+    const optionBottom = optionTop + activeOption.offsetHeight;
+    const visibleTop = listbox.scrollTop;
+    const visibleBottom = visibleTop + listbox.clientHeight;
+
+    if (optionTop < visibleTop) {
+      listbox.scrollTop = optionTop;
+    } else if (optionBottom > visibleBottom) {
+      listbox.scrollTop = optionBottom - listbox.clientHeight;
+    }
+  }
+
+  private isEventFromListbox(event: Event): boolean {
+    const listbox = this.listboxEl()?.nativeElement;
+    const target = event.target as Node | null;
+
+    return !!listbox && !!target && listbox.contains(target);
   }
 
   private selectOption(option: GovukSelectOption<string | null>): void {

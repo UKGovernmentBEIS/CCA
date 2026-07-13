@@ -3,6 +3,7 @@ package uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.doma
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class PerformanceDataFacilityFuelEnergyConsumption {
     private BigDecimal deliveredEnergy;
 
     @NotNull
-    @Positive
+    @PositiveOrZero
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal primaryEnergy;
 }

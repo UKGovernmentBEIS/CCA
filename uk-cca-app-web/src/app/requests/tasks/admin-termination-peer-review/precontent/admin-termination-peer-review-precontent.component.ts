@@ -29,7 +29,7 @@ export class AdminTerminationPeerReviewPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly authStore = inject(AuthStore);
   protected readonly activatedRoute = inject(ActivatedRoute);
-  protected readonly assigneeUserId = this.requestTaskStore.select(requestTaskQuery.selectAssigneeUserId)();
-  protected readonly isUserAssignee = computed(() => this.authStore.select(selectUserId)() === this.assigneeUserId);
+  protected readonly assigneeUserId = this.requestTaskStore.select(requestTaskQuery.selectAssigneeUserId);
+  protected readonly isUserAssignee = computed(() => this.authStore.select(selectUserId)() === this.assigneeUserId());
   protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
 }

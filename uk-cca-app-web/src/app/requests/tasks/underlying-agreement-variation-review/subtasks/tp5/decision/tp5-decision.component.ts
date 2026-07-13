@@ -82,25 +82,25 @@ export class TP5DecisionComponent {
 
   private readonly multipleFilesDownloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData(
-    true,
-    this.originalBaselineExists,
-    this.sectorAssociationDetailsSchemeData,
-    this.originalTargetPeriodDetails,
-    this.originalAttachments,
-    this.isEditable,
-    this.multipleFilesDownloadUrl,
-  );
+  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData({
+    isTp5Period: true, // TP5
+    baselineExists: this.originalBaselineExists,
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.originalTargetPeriodDetails,
+    attachments: this.originalAttachments,
+    isEditable: this.isEditable,
+    multiFileDownloadUrl: this.multipleFilesDownloadUrl,
+  });
 
-  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData(
-    true,
-    this.baselineExists,
-    this.sectorAssociationDetailsSchemeData,
-    this.targetPeriodDetails,
-    this.attachments,
-    this.isEditable,
-    this.multipleFilesDownloadUrl,
-  );
+  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData({
+    isTp5Period: true, // TP5
+    baselineExists: this.baselineExists,
+    sectorSchemeData: this.sectorAssociationDetailsSchemeData,
+    targetPeriodDetails: this.targetPeriodDetails,
+    attachments: this.attachments,
+    isEditable: this.isEditable,
+    multiFileDownloadUrl: this.multipleFilesDownloadUrl,
+  });
 
   submit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();

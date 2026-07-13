@@ -36,7 +36,6 @@ export const APP_ROUTES: Routes = [
   // unauthorized routes
   {
     path: '',
-    data: { breadcrumb: 'Home' },
     children: [
       {
         path: 'about',

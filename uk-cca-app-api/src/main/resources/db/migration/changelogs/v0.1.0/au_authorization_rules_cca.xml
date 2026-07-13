@@ -12801,4 +12801,1192 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_add_rules_for_request_action_type_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED" author="P70383">
+        <sql>
+            INSERT INTO au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED', 'requestActionViewHandler', 'REGULATOR', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED', 'requestActionViewHandler', 'SECTOR_USER', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED', 'requestActionViewHandler', 'OPERATOR', NULL);
+
+            INSERT INTO au_service_rule(service_id, rule_id) SELECT aus.id, aur.id FROM au_service aus, au_rule aur WHERE aus.name = 'getRequestActionById' AND aur.role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR') AND aur.resource_type = 'REQUEST_ACTION' AND aur.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED' AND aur.handler = 'requestActionViewHandler' AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name = 'getRequestActionById'
+                AND aur.role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR')
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+
+                DELETE FROM au_rule
+                WHERE resource_type = 'REQUEST_ACTION'
+                AND resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED'
+                AND handler = 'requestActionViewHandler'
+                AND role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR')
+                AND scope IS NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_service_rule_for_request_action_type_NON_COMPLIANCE_CLOSED" author="P70311">
+        <sql>
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'generateRequestActionGetFileAttachmentToken'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'REQUEST_ACTION'
+              AND aur.resource_sub_type = 'NON_COMPLIANCE_CLOSED'
+              AND aur.handler = 'requestActionViewHandler'
+              AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name = 'generateRequestActionGetFileAttachmentToken'
+                AND aur.role_type = 'REGULATOR'
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'NON_COMPLIANCE_CLOSED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_SECTOR_MANAGE_ADVANCED_DETAILS_PERMISSIONS_au_resource_scope_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'SECTOR_ASSOCIATION', null, 'EDIT_SECTOR_ADVANCED_DETAILS', 'PERM_SECTOR_ADVANCED_DETAILS_EDIT', 'REGULATOR');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM public.au_resource_scope_permission WHERE resource_type = 'SECTOR_ASSOCIATION' AND resource_sub_type = null AND scope = 'EDIT_SECTOR_ADVANCED_DETAILS' AND permission = 'PERM_SECTOR_ADVANCED_DETAILS_EDIT' AND role_type = 'REGULATOR';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_POPULATE_getFacilityPerformanceDataStatus_service" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getFacilityPerformanceDataStatus');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getFacilityPerformanceDataStatus'
+              AND aur.role_type in ('REGULATOR','SECTOR_USER', 'OPERATOR')
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'getFacilityPerformanceDataStatus'
+                AND aur.role_type IN ('REGULATOR','SECTOR_USER', 'OPERATOR')
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'getFacilityPerformanceDataStatus';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_POPULATE_getFacilityPerformanceDataReportDetails_service" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getFacilityPerformanceDataReportDetails');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getFacilityPerformanceDataReportDetails'
+              AND aur.role_type in ('REGULATOR','SECTOR_USER', 'OPERATOR')
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'getFacilityPerformanceDataReportDetails'
+                AND aur.role_type IN ('REGULATOR','SECTOR_USER', 'OPERATOR')
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'getFacilityPerformanceDataReportDetails';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_POPULATE_updateFacilityPerformanceDataLock" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'updateFacilityPerformanceDataLock');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'updateFacilityPerformanceDataLock'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'updateFacilityPerformanceDataLock'
+                AND aur.role_type = 'REGULATOR'
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'updateFacilityPerformanceDataLock';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_CCA_EDIT_SECTOR_ASSOCIATION_SCHEME_au_service" author="P70311">
+        <sql>
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateSectorAssociationSchemeDetails');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateSectorAssociationSchemeTargetCommitments');
+        </sql>
+        <rollback>
+            DELETE FROM public.au_service WHERE name = 'updateSectorAssociationSchemeDetails';
+            DELETE FROM public.au_service WHERE name = 'updateSectorAssociationSchemeTargetCommitments';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_CCA_EDIT_SECTOR_ADVANCED_DETAILS_RULES_BY_REGULATOR" author="P70311">
+        <comment>Populate the relevant tables to authorize a REGULATOR to EDIT the sector association scheme details/commitments</comment>
+        <sql>
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'SECTOR_ASSOCIATION_SCHEME', null, 'sectorAssociationSchemeAccessHandler','REGULATOR', 'EDIT_SECTOR_ADVANCED_DETAILS');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name in ('updateSectorAssociationSchemeDetails', 'updateSectorAssociationSchemeTargetCommitments')
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'SECTOR_ASSOCIATION_SCHEME'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'sectorAssociationSchemeAccessHandler'
+              AND aur.scope = 'EDIT_SECTOR_ADVANCED_DETAILS';
+        </sql>
+        <rollback>
+            delete from au_service_rule
+            where (service_id, rule_id) in (SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            where aus.name in ('updateSectorAssociationSchemeDetails', 'updateSectorAssociationSchemeTargetCommitments')
+            and aur.role_type = 'REGULATOR'
+            and aur.resource_type = 'SECTOR_ASSOCIATION_SCHEME'
+            and aur.resource_sub_type is null
+            and aur.handler = 'sectorAssociationSchemeAccessHandler'
+            and aur.scope = 'EDIT_SECTOR_ADVANCED_DETAILS');
+
+            delete from au_rule
+            where resource_type = 'SECTOR_ASSOCIATION_SCHEME'
+            and resource_sub_type is null
+            and handler = 'sectorAssociationSchemeAccessHandler'
+            and role_type = 'REGULATOR'
+            and scope = 'EDIT_SECTOR_ADVANCED_DETAILS';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_rules_for_PERFORMANCE_DATA_FACILITY_DATA_UPLOAD" author="P70383">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST' , 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD', 'requestAccessHandler', 'REGULATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST' , 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD', 'requestAccessHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+                and handler = 'requestAccessHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rule_and_service_association_for_SECTOR_ASSOCIATION_resource_and_PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_subresource_and_REQUEST_CREATE_handler_for_SECTOR_USER" author="P70383">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'), 'SECTOR_ASSOCIATION', 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD', 'sectorAssociationRequestCreateHandler', 'SECTOR_USER', 'REQUEST_CREATE');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name = 'processRequestCreateAction'
+              and r.resource_type = 'SECTOR_ASSOCIATION'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+              and r.handler = 'sectorAssociationRequestCreateHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_CREATE';
+
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'SECTOR_ASSOCIATION',
+                        'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD',
+                        'REQUEST_CREATE',
+                        'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD',
+                        'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_resource_scope_permission
+                where resource_type = 'SECTOR_ASSOCIATION'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+                and scope = 'REQUEST_CREATE'
+                and permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD'
+                and role_type = 'SECTOR_USER';
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name = 'processRequestCreateAction'
+                and r.resource_type = 'SECTOR_ASSOCIATION'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+                and r.handler = 'sectorAssociationRequestCreateHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_CREATE';
+
+                delete
+                from au_rule
+                where resource_type = 'SECTOR_ASSOCIATION'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+                and handler = 'sectorAssociationRequestCreateHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_CREATE';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_view_scope_for_request_task_PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT_and_role_SECTOR_USER" author="P70383">
+        <sql>
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'REQUEST_TASK',
+                        'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT',
+                        'REQUEST_TASK_VIEW',
+                        'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD',
+                        'SECTOR_USER');
+
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'),
+                    'REQUEST_TASK' ,
+                    'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT',
+                    'requestTaskAccessHandler',
+                    'SECTOR_USER',
+                    'REQUEST_TASK_VIEW');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('assignTask', 'getCandidateAssigneesByTaskId', 'releaseTask', 'getTaskItemInfoById', 'generateRequestTaskGetFileAttachmentToken')
+              and r.resource_type = 'REQUEST_TASK'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT'
+              and r.handler = 'requestTaskAccessHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_TASK_VIEW';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('assignTask', 'getCandidateAssigneesByTaskId', 'releaseTask', 'getTaskItemInfoById', 'generateRequestTaskGetFileAttachmentToken')
+                and r.resource_type = 'REQUEST_TASK'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT'
+                and r.handler = 'requestTaskAccessHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_TASK_VIEW';
+
+                delete from au_rule
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT'
+                and handler = 'requestTaskAccessHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_TASK_VIEW';
+
+                delete from au_resource_scope_permission
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT'
+                and scope = 'REQUEST_TASK_VIEW'
+                and permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD'
+                and role_type = 'SECTOR_USER';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_execute_scope_for_request_task_PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT_and_role_SECTOR_USER" author="P70383">
+        <sql>
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'REQUEST_TASK',
+                        'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT',
+                        'REQUEST_TASK_EXECUTE',
+                        'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD',
+                        'SECTOR_USER');
+
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'),
+                    'REQUEST_TASK' ,
+                    'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT',
+                    'requestTaskAccessHandler',
+                    'SECTOR_USER',
+                    'REQUEST_TASK_EXECUTE');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('processRequestTaskAction', 'uploadRequestTaskAttachment')
+              and r.resource_type = 'REQUEST_TASK'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT'
+              and r.handler = 'requestTaskAccessHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_TASK_EXECUTE';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('processRequestTaskAction', 'uploadRequestTaskAttachment')
+                and r.resource_type = 'REQUEST_TASK'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT'
+                and r.handler = 'requestTaskAccessHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_TASK_EXECUTE';
+
+                delete from au_rule
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT'
+                and handler = 'requestTaskAccessHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_TASK_EXECUTE';
+
+                delete from au_resource_scope_permission
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT'
+                and scope = 'REQUEST_TASK_EXECUTE'
+                and permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD'
+                and role_type = 'SECTOR_USER';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_POPULATE_updateFacilityPerformanceDataVariationIndicator" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'updateFacilityPerformanceDataVariationIndicator');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'updateFacilityPerformanceDataVariationIndicator'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'updateFacilityPerformanceDataVariationIndicator'
+                AND aur.role_type = 'REGULATOR'
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'updateFacilityPerformanceDataVariationIndicator';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_SECTOR_MANAGE_ADVANCED_DETAILS_PERMISSIONS_au_resource_scope_permission" author="P70311">
+        <sql>
+            UPDATE public.au_resource_scope_permission
+            SET resource_type = 'SECTOR_ASSOCIATION_SCHEME'
+            WHERE resource_type = 'SECTOR_ASSOCIATION'
+              AND scope = 'EDIT_SECTOR_ADVANCED_DETAILS'
+              AND permission = 'PERM_SECTOR_ADVANCED_DETAILS_EDIT'
+              AND resource_sub_type IS NULL
+              AND role_type = 'REGULATOR'
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_SUBSECTOR_MANAGE_ADVANCED_DETAILS_PERMISSIONS_au_resource_scope_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'SUBSECTOR_ASSOCIATION_SCHEME', null, 'EDIT_SECTOR_ADVANCED_DETAILS', 'PERM_SECTOR_ADVANCED_DETAILS_EDIT', 'REGULATOR');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM public.au_resource_scope_permission WHERE resource_type = 'SUBSECTOR_ASSOCIATION_SCHEME' AND resource_sub_type = null AND scope = 'EDIT_SECTOR_ADVANCED_DETAILS' AND permission = 'PERM_SECTOR_ADVANCED_DETAILS_EDIT' AND role_type = 'REGULATOR';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_CCA_EDIT_SUBSECTOR_ASSOCIATION_SCHEME_COMMITMENTS_au_service" author="P70311">
+        <sql>
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateSubsectorAssociationSchemeTargetCommitments');
+        </sql>
+        <rollback>
+            DELETE FROM public.au_service WHERE name = 'updateSubsectorAssociationSchemeTargetCommitments';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_CCA_EDIT_SUBSECTOR_ASSOCIATION_SCHEME_COMMITMENTS_au_rule" author="P70311">
+        <comment>Populate the relevant tables to authorize a REGULATOR to EDIT the subsector association scheme commitments</comment>
+        <sql>
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'SUBSECTOR_ASSOCIATION_SCHEME', null, 'subsectorAssociationSchemeAccessHandler','REGULATOR', 'EDIT_SECTOR_ADVANCED_DETAILS');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'updateSubsectorAssociationSchemeTargetCommitments'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'SUBSECTOR_ASSOCIATION_SCHEME'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'subsectorAssociationSchemeAccessHandler'
+              AND aur.scope = 'EDIT_SECTOR_ADVANCED_DETAILS';
+        </sql>
+        <rollback>
+            delete from au_service_rule
+            where (service_id, rule_id) in (SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'updateSubsectorAssociationSchemeTargetCommitments'
+            and aur.role_type = 'REGULATOR'
+            and aur.resource_type = 'SUBSECTOR_ASSOCIATION_SCHEME'
+            and aur.resource_sub_type is null
+            and aur.handler = 'subsectorAssociationSchemeAccessHandler'
+            and aur.scope = 'EDIT_SECTOR_ADVANCED_DETAILS');
+
+            delete from au_rule
+            where resource_type = 'SUBSECTOR_ASSOCIATION_SCHEME'
+            and resource_sub_type is null
+            and handler = 'subsectorAssociationSchemeAccessHandler'
+            and role_type = 'REGULATOR'
+            and scope = 'EDIT_SECTOR_ADVANCED_DETAILS';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_CCA_VIEW_SECTOR_ASSOCIATION_DETAILS" author="P70311">
+        <sql>
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'SUBSECTOR_ASSOCIATION', null, 'subsectorAssociationAccessHandler', 'REGULATOR', null),
+                   (nextval('au_rule_seq'), 'SUBSECTOR_ASSOCIATION', null, 'subsectorAssociationAccessHandler', 'SECTOR_USER', null),
+                   (nextval('au_rule_seq'), 'SUBSECTOR_ASSOCIATION', null, 'subsectorAssociationAccessHandler', 'OPERATOR', null);
+
+            UPDATE au_service_rule
+            SET rule_id = (SELECT aur.id
+                           FROM au_rule aur
+                           WHERE aur.role_type = 'REGULATOR'
+                             AND aur.resource_type = 'SUBSECTOR_ASSOCIATION'
+                             AND aur.resource_sub_type IS NULL
+                             AND aur.handler = 'subsectorAssociationAccessHandler'
+                             AND aur.scope IS NULL)
+            WHERE service_id = (SELECT aus.id FROM au_service aus WHERE aus.name = 'getSubsectorAssociationSchemeBySubsectorAssociationId')
+              AND rule_id = (SELECT aur.id
+                             FROM au_rule aur
+                             WHERE aur.role_type = 'REGULATOR'
+                               AND aur.resource_type = 'SECTOR_ASSOCIATION'
+                               AND aur.resource_sub_type IS NULL
+                               AND aur.handler = 'sectorAssociationAccessHandler'
+                               AND aur.scope IS NULL);
+
+            UPDATE au_service_rule
+            SET rule_id = (SELECT aur.id
+                           FROM au_rule aur
+                           WHERE aur.role_type = 'SECTOR_USER'
+                             AND aur.resource_type = 'SUBSECTOR_ASSOCIATION'
+                             AND aur.resource_sub_type IS NULL
+                             AND aur.handler = 'subsectorAssociationAccessHandler'
+                             AND aur.scope IS NULL)
+            WHERE service_id = (SELECT aus.id FROM au_service aus WHERE aus.name = 'getSubsectorAssociationSchemeBySubsectorAssociationId')
+              AND rule_id = (SELECT aur.id
+                             FROM au_rule aur
+                             WHERE aur.role_type = 'SECTOR_USER'
+                               AND aur.resource_type = 'SECTOR_ASSOCIATION'
+                               AND aur.resource_sub_type IS NULL
+                               AND aur.handler = 'sectorAssociationAccessHandler'
+                               AND aur.scope IS NULL);
+
+            UPDATE au_service_rule
+            SET rule_id = (SELECT aur.id
+                           FROM au_rule aur
+                           WHERE aur.role_type = 'OPERATOR'
+                             AND aur.resource_type = 'SUBSECTOR_ASSOCIATION'
+                             AND aur.resource_sub_type IS NULL
+                             AND aur.handler = 'subsectorAssociationAccessHandler'
+                             AND aur.scope IS NULL)
+            WHERE service_id = (SELECT aus.id FROM au_service aus WHERE aus.name = 'getSubsectorAssociationSchemeBySubsectorAssociationId')
+              AND rule_id = (SELECT aur.id
+                             FROM au_rule aur
+                             WHERE aur.role_type = 'OPERATOR'
+                               AND aur.resource_type = 'SECTOR_ASSOCIATION'
+                               AND aur.resource_sub_type IS NULL
+                               AND aur.handler = 'sectorAssociationAccessHandler'
+                               AND aur.scope IS NULL);
+        </sql>
+        <rollback>
+            UPDATE au_service_rule
+            SET rule_id = (SELECT aur.id
+            FROM au_rule aur
+            WHERE aur.role_type = 'REGULATOR'
+            AND aur.resource_type = 'SECTOR_ASSOCIATION'
+            AND aur.resource_sub_type IS NULL
+            AND aur.handler = 'sectorAssociationAccessHandler'
+            AND aur.scope IS NULL)
+            WHERE service_id = (SELECT aus.id FROM au_service aus WHERE aus.name = 'getSubsectorAssociationSchemeBySubsectorAssociationId')
+            AND rule_id = (SELECT aur.id
+            FROM au_rule aur
+            WHERE aur.role_type = 'REGULATOR'
+            AND aur.resource_type = 'SUBSECTOR_ASSOCIATION'
+            AND aur.resource_sub_type IS NULL
+            AND aur.handler = 'subsectorAssociationAccessHandler'
+            AND aur.scope IS NULL);
+
+            UPDATE au_service_rule
+            SET rule_id = (SELECT aur.id
+            FROM au_rule aur
+            WHERE aur.role_type = 'SECTOR_USER'
+            AND aur.resource_type = 'SECTOR_ASSOCIATION'
+            AND aur.resource_sub_type IS NULL
+            AND aur.handler = 'sectorAssociationAccessHandler'
+            AND aur.scope IS NULL)
+            WHERE service_id = (SELECT aus.id FROM au_service aus WHERE aus.name = 'getSubsectorAssociationSchemeBySubsectorAssociationId')
+            AND rule_id = (SELECT aur.id
+            FROM au_rule aur
+            WHERE aur.role_type = 'SECTOR_USER'
+            AND aur.resource_type = 'SUBSECTOR_ASSOCIATION'
+            AND aur.resource_sub_type IS NULL
+            AND aur.handler = 'subsectorAssociationAccessHandler'
+            AND aur.scope IS NULL);
+
+            UPDATE au_service_rule
+            SET rule_id = (SELECT aur.id
+            FROM au_rule aur
+            WHERE aur.role_type = 'OPERATOR'
+            AND aur.resource_type = 'SECTOR_ASSOCIATION'
+            AND aur.resource_sub_type IS NULL
+            AND aur.handler = 'sectorAssociationAccessHandler'
+            AND aur.scope IS NULL)
+            WHERE service_id = (SELECT aus.id FROM au_service aus WHERE aus.name = 'getSubsectorAssociationSchemeBySubsectorAssociationId')
+            AND rule_id = (SELECT aur.id
+            FROM au_rule aur
+            WHERE aur.role_type = 'OPERATOR'
+            AND aur.resource_type = 'SUBSECTOR_ASSOCIATION'
+            AND aur.resource_sub_type IS NULL
+            AND aur.handler = 'subsectorAssociationAccessHandler'
+            AND aur.scope IS NULL);
+
+
+            delete from au_rule
+            where resource_type = 'SUBSECTOR_ASSOCIATION_SCHEME'
+            and resource_sub_type is null
+            and handler = 'subsectorAssociationAccessHandler'
+            and role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR')
+            and scope = 'EDIT_SECTOR_ADVANCED_DETAILS';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_rules_for_PERFORMANCE_DATA_FACILITY_DATA_UPLOAD" author="P70383">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type in ('OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type in ('OPERATOR', 'SECTOR_USER')
+                and r.scope is null;
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_rules_for_PERFORMANCE_DATA_FACILITY_PROCESSING" author="P70383">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST' , 'PERFORMANCE_DATA_FACILITY_PROCESSING', 'requestAccessHandler', 'REGULATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST' , 'PERFORMANCE_DATA_FACILITY_PROCESSING', 'requestAccessHandler', 'OPERATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST' , 'PERFORMANCE_DATA_FACILITY_PROCESSING', 'requestAccessHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_PROCESSING'
+                and handler = 'requestAccessHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_rules_for_PERFORMANCE_DATA_FACILITY_PROCESSING_workflow" author="P70383">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_PROCESSING'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_PROCESSING'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type in ('OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_PROCESSING'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type in ('OPERATOR', 'SECTOR_USER')
+                and r.scope is null;
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_PROCESSING'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rules_for_request_action_type_PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED" author="P70383">
+        <sql>
+            INSERT INTO au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED', 'requestActionViewHandler', 'REGULATOR', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED', 'requestActionViewHandler', 'SECTOR_USER', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED', 'requestActionViewHandler', 'OPERATOR', NULL);
+
+            INSERT INTO au_service_rule(service_id, rule_id) SELECT aus.id, aur.id FROM au_service aus, au_rule aur WHERE aus.name = 'getRequestActionById' AND aur.role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR') AND aur.resource_type = 'REQUEST_ACTION' AND aur.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED' AND aur.handler = 'requestActionViewHandler' AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name = 'getRequestActionById'
+                AND aur.role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR')
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+
+                DELETE FROM au_rule
+                WHERE resource_type = 'REQUEST_ACTION'
+                AND resource_sub_type = 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED'
+                AND handler = 'requestActionViewHandler'
+                AND role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR')
+                AND scope IS NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_add_rules_for_request_action_type_PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED', 'requestActionViewHandler', 'REGULATOR', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED', 'requestActionViewHandler', 'SECTOR_USER', NULL);
+                   
+            INSERT INTO au_service_rule(service_id, rule_id) 
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur 
+            WHERE aus.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken')
+            AND aur.role_type in ('REGULATOR', 'SECTOR_USER') 
+            AND aur.resource_type = 'REQUEST_ACTION' 
+            AND aur.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED' 
+            AND aur.handler = 'requestActionViewHandler' 
+            AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken')
+                AND aur.role_type in ('REGULATOR', 'SECTOR_USER')
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+
+                DELETE FROM au_rule
+                WHERE resource_type = 'REQUEST_ACTION'
+                AND resource_sub_type = 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED'
+                AND handler = 'requestActionViewHandler'
+                AND role_type in ('REGULATOR', 'SECTOR_USER')
+                AND scope IS NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_rules_for_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD" author="P70311">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST' , 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD', 'requestAccessHandler', 'REGULATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST' , 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD', 'requestAccessHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST'
+                and resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and handler = 'requestAccessHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rule_and_service_association_for_SECTOR_ASSOCIATION_resource_and_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_subresource_and_REQUEST_CREATE_handler_for_SECTOR_USER" author="P70311">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'), 'SECTOR_ASSOCIATION', 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD', 'sectorAssociationRequestCreateHandler', 'SECTOR_USER', 'REQUEST_CREATE');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name = 'processRequestCreateAction'
+              and r.resource_type = 'SECTOR_ASSOCIATION'
+              and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+              and r.handler = 'sectorAssociationRequestCreateHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_CREATE';
+
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'SECTOR_ASSOCIATION',
+                        'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
+                        'REQUEST_CREATE',
+                        'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
+                        'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_resource_scope_permission
+                where resource_type = 'SECTOR_ASSOCIATION'
+                and resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and scope = 'REQUEST_CREATE'
+                and permission = 'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and role_type = 'SECTOR_USER';
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name = 'processRequestCreateAction'
+                and r.resource_type = 'SECTOR_ASSOCIATION'
+                and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and r.handler = 'sectorAssociationRequestCreateHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_CREATE';
+
+                delete
+                from au_rule
+                where resource_type = 'SECTOR_ASSOCIATION'
+                and resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and handler = 'sectorAssociationRequestCreateHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_CREATE';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_view_scope_for_request_task_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT_and_role_SECTOR_USER" author="P70311">
+        <sql>
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'REQUEST_TASK',
+                        'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT',
+                        'REQUEST_TASK_VIEW',
+                        'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
+                        'SECTOR_USER');
+
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'),
+                    'REQUEST_TASK' ,
+                    'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT',
+                    'requestTaskAccessHandler',
+                    'SECTOR_USER',
+                    'REQUEST_TASK_VIEW');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('assignTask', 'getCandidateAssigneesByTaskId', 'releaseTask', 'getTaskItemInfoById', 'generateRequestTaskGetFileAttachmentToken')
+              and r.resource_type = 'REQUEST_TASK'
+              and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+              and r.handler = 'requestTaskAccessHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_TASK_VIEW';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('assignTask', 'getCandidateAssigneesByTaskId', 'releaseTask', 'getTaskItemInfoById', 'generateRequestTaskGetFileAttachmentToken')
+                and r.resource_type = 'REQUEST_TASK'
+                and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+                and r.handler = 'requestTaskAccessHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_TASK_VIEW';
+
+                delete from au_rule
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+                and handler = 'requestTaskAccessHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_TASK_VIEW';
+
+                delete from au_resource_scope_permission
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+                and scope = 'REQUEST_TASK_VIEW'
+                and permission = 'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and role_type = 'SECTOR_USER';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_execute_scope_for_request_task_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT_and_role_SECTOR_USER" author="P70311">
+        <sql>
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'REQUEST_TASK',
+                        'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT',
+                        'REQUEST_TASK_EXECUTE',
+                        'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
+                        'SECTOR_USER');
+
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'),
+                    'REQUEST_TASK' ,
+                    'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT',
+                    'requestTaskAccessHandler',
+                    'SECTOR_USER',
+                    'REQUEST_TASK_EXECUTE');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('processRequestTaskAction', 'uploadRequestTaskAttachment')
+              and r.resource_type = 'REQUEST_TASK'
+              and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+              and r.handler = 'requestTaskAccessHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_TASK_EXECUTE';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('processRequestTaskAction', 'uploadRequestTaskAttachment')
+                and r.resource_type = 'REQUEST_TASK'
+                and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+                and r.handler = 'requestTaskAccessHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_TASK_EXECUTE';
+
+                delete from au_rule
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+                and handler = 'requestTaskAccessHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_TASK_EXECUTE';
+
+                delete from au_resource_scope_permission
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+                and scope = 'REQUEST_TASK_EXECUTE'
+                and permission = 'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and role_type = 'SECTOR_USER';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_rules_for_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD" author="P70311">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope is null;
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_rules_for_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING" author="P70311">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST' , 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING', 'requestAccessHandler', 'REGULATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST' , 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING', 'requestAccessHandler', 'OPERATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST' , 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING', 'requestAccessHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST'
+                and resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING'
+                and handler = 'requestAccessHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_rules_for_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_workflow" author="P70311">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type in ('OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type in ('OPERATOR', 'SECTOR_USER')
+                and r.scope is null;
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_POPULATE_CCA_getSectorFacilityPerformanceDataReportList" author="loukerip">
+        <comment>Populate the target period performance data of sector facilities</comment>
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getSectorFacilityPerformanceDataReportList');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getSectorFacilityPerformanceDataReportList'
+              AND aur.role_type IN ('REGULATOR', 'SECTOR_USER')
+              AND aur.resource_type = 'SECTOR_ASSOCIATION'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'sectorAssociationAccessHandler'
+              AND aur.scope is null;
+        </sql>
+        <rollback>
+            DELETE FROM au_service_rule WHERE service_id = (SELECT id FROM au_service WHERE name = 'getSectorFacilityPerformanceDataReportList');
+            DELETE FROM au_service WHERE name = 'getSectorFacilityPerformanceDataReportList';
+        </rollback>
+    </changeSet>
+    
 </databaseChangeLog>

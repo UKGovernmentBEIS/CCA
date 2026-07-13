@@ -95,16 +95,20 @@ export default class ReviewTargetUnitDetailsCheckYourAnswersComponent implements
     this.targetUnitDetails() ? this.targetUnitDetails() : transformAccountReferenceData(this.accountReferenceData()),
   );
 
-  protected readonly summaryDataOriginal = toVariationTargetUnitDetailsOriginalSummaryData(
-    this.accountReferenceData(),
-    this.countries(),
-    this.isEditable(),
+  protected readonly summaryDataOriginal = computed(() =>
+    toVariationTargetUnitDetailsOriginalSummaryData({
+      accountReferenceData: this.accountReferenceData(),
+      countries: this.countries(),
+      isEditable: this.isEditable(),
+    }),
   );
 
-  protected readonly summaryDataCurrent = toVariationTargetUnitDetailsSummaryData(
-    this.targetUnitDetails(),
-    this.countries(),
-    this.isEditable(),
+  protected readonly summaryDataCurrent = computed(() =>
+    toVariationTargetUnitDetailsSummaryData({
+      targetUnitDetails: this.targetUnitDetails(),
+      countries: this.countries(),
+      isEditable: this.isEditable(),
+    }),
   );
 
   ngOnInit() {

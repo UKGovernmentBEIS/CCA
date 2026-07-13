@@ -6,6 +6,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { of } from 'rxjs';
 
+import { AuthStore } from '@netz/common/auth';
 import { RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { click, getByTestId, getByText } from '@testing';
@@ -20,6 +21,7 @@ describe('PerformanceDataUploadProcessComponent', () => {
   let component: PerformanceDataUploadProcessComponent;
   let fixture: ComponentFixture<PerformanceDataUploadProcessComponent>;
   let store: RequestTaskStore;
+  let authStore: AuthStore;
 
   const tasksService: Partial<Mocked<TasksService>> = {
     processRequestTaskAction: vi.fn().mockReturnValue(of(mockRequestTaskStatePerformanceDataUploadState)),
@@ -42,8 +44,14 @@ describe('PerformanceDataUploadProcessComponent', () => {
         },
       ],
     }).compileComponents();
+
     store = TestBed.inject(RequestTaskStore);
     store.setState(mockRequestTaskStatePerformanceDataUploadState);
+    store.setRequestTaskItem({ requestTask: { id: 856, assigneeUserId: '7b91199c-4770-4d4b-a0ed-d6d9667de157' } });
+
+    authStore = TestBed.inject(AuthStore);
+    authStore.setUserState({ userId: '7b91199c-4770-4d4b-a0ed-d6d9667de157', roleType: 'SECTOR_USER' });
+
     fixture = TestBed.createComponent(PerformanceDataUploadProcessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

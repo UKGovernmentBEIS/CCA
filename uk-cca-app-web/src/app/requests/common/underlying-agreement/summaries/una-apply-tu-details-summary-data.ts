@@ -8,14 +8,34 @@ import { AccountReferenceData, UnderlyingAgreementTargetUnitDetails } from 'cca-
 import { CompaniesHouseState } from '../companies-house-details';
 import { ReviewTargetUnitDetailsWizardStep } from '../types';
 
-export function toReviewTargetUnitDetailsSummaryData(
-  targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
-  countries: Country[],
-  isEditable: boolean,
-  companiesHouseState?: CompaniesHouseState,
-  toggleCompaniesHouseDetails?: boolean,
-  prefix = '../',
-): SummaryData {
+type ToReviewTargetUnitDetailsSummaryDataArgs = {
+  targetUnitDetails: UnderlyingAgreementTargetUnitDetails;
+  countries: Country[];
+  isEditable: boolean;
+  companiesHouseState?: CompaniesHouseState;
+  toggleCompaniesHouseDetails?: boolean;
+  prefix?: string;
+};
+
+type ToReviewTargetUnitDetailsSummaryDataOriginalArgs = {
+  accountReferenceData: AccountReferenceData;
+  countries: Country[];
+  isEditable: boolean;
+  companiesHouseState?: CompaniesHouseState;
+  toggleCompaniesHouseDetails?: boolean;
+  prefix?: string;
+};
+
+export function toReviewTargetUnitDetailsSummaryData(args: ToReviewTargetUnitDetailsSummaryDataArgs): SummaryData {
+  const {
+    targetUnitDetails,
+    countries,
+    isEditable,
+    companiesHouseState,
+    toggleCompaniesHouseDetails,
+    prefix = '../',
+  } = args;
+
   const operatorTypePipe = new OperatorTypePipe();
 
   const factory = new SummaryFactory()
@@ -46,9 +66,7 @@ export function toReviewTargetUnitDetailsSummaryData(
     });
 
   if (targetUnitDetails?.subsectorAssociationName) {
-    factory.addRow('Subsector', targetUnitDetails?.subsectorAssociationName, {
-      change: isEditable,
-    });
+    factory.addRow('Subsector', targetUnitDetails?.subsectorAssociationName, { change: isEditable });
   }
 
   factory
@@ -64,15 +82,9 @@ export function toReviewTargetUnitDetailsSummaryData(
     })
 
     .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON)
-    .addRow('First name', targetUnitDetails?.responsiblePersonDetails?.firstName, {
-      change: isEditable,
-    })
-    .addRow('Last name', targetUnitDetails?.responsiblePersonDetails?.lastName, {
-      change: isEditable,
-    })
-    .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
-      change: isEditable,
-    })
+    .addRow('First name', targetUnitDetails?.responsiblePersonDetails?.firstName, { change: isEditable })
+    .addRow('Last name', targetUnitDetails?.responsiblePersonDetails?.lastName, { change: isEditable })
+    .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, { change: isEditable })
     .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address, countries), {
       change: isEditable,
     });
@@ -81,13 +93,17 @@ export function toReviewTargetUnitDetailsSummaryData(
 }
 
 export function toReviewTargetUnitDetailsSummaryDataOriginal(
-  accountReferenceData: AccountReferenceData,
-  countries: Country[],
-  isEditable: boolean,
-  companiesHouseState?: CompaniesHouseState,
-  toggleCompaniesHouseDetails?: boolean,
-  prefix = '../',
+  args: ToReviewTargetUnitDetailsSummaryDataOriginalArgs,
 ): SummaryData {
+  const {
+    accountReferenceData,
+    countries,
+    isEditable,
+    companiesHouseState,
+    toggleCompaniesHouseDetails,
+    prefix = '../',
+  } = args;
+
   const operatorTypePipe = new OperatorTypePipe();
 
   const factory = new SummaryFactory()
@@ -164,9 +180,7 @@ export function toReviewTargetUnitDetailsSummaryDataOriginal(
     .addRow(
       'Address',
       transformAddress(accountReferenceData?.targetUnitAccountDetails?.responsiblePerson?.address, countries),
-      {
-        change: isEditable,
-      },
+      { change: isEditable },
     );
 
   return factory.create();

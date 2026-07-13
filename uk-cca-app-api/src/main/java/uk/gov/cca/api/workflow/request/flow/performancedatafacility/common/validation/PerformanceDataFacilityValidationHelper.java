@@ -15,6 +15,8 @@ import java.util.function.Predicate;
 @UtilityClass
 public class PerformanceDataFacilityValidationHelper {
 
+    public final String FACILITY_ERROR_MESSAGE = "%s [facility: %s] %s";
+
     public FunctionalValidator<PerformanceDataFacilityThroughputDetails> validate(Predicate<PerformanceDataFacilityThroughputDetails> predicate, String errorMessage) {
         return FunctionalValidation.from(predicate, errorMessage);
     }

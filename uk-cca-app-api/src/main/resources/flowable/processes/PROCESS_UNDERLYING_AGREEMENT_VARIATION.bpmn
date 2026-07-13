@@ -159,6 +159,7 @@
         <flowable:in source="businessKey" target="businessKey"></flowable:in>
         <flowable:out source="reviewDetermination" target="reviewDetermination"></flowable:out>
         <flowable:out source="underlyingAgreementVariationOutcome" target="underlyingAgreementVariationOutcome"></flowable:out>
+        <flowable:out source="requestInitiatorRoleType" target="requestInitiatorRoleType"></flowable:out>
         <design:stencilid><![CDATA[CallActivity]]></design:stencilid>
       </extensionElements>
     </callActivity>

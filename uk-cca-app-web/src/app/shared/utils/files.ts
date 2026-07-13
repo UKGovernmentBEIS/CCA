@@ -2,68 +2,73 @@ import { UuidFilePair } from '@shared/components';
 
 import { FileInfoDTO } from 'cca-api';
 
-export type DownloadableFile = { fileName: string; downloadUrl: string };
+export type DownloadableFile = {
+  fileName: string;
+  downloadUrl: string;
+};
 
-const toFiles = (fileUUIDs: string[], attachments: Record<string, string>): UuidFilePair[] =>
-  fileUUIDs?.filter(Boolean).map((uuid) => ({ file: { name: attachments[uuid] } as File, uuid })) || [];
+const toFiles = (fileUUIDs: string[], attachments: Record<string, string>): UuidFilePair[] => {
+  if (!Array.isArray(fileUUIDs)) return [];
 
-const toUUIDs = (files: UuidFilePair[]): string[] =>
-  Array.isArray(files) ? files?.filter(Boolean).map((file) => file.uuid) : [];
-
-const toAttachments = (files: UuidFilePair[]): Record<string, string> =>
-  !Array.isArray(files)
-    ? {}
-    : files.filter(Boolean).reduce((map, file) => {
-        map[file.uuid] = file.file.name;
-        return map;
-      }, {});
-
-const toDownloadableFiles = (attachments: Record<string, string>, downloadUrl: string): DownloadableFile[] => {
-  if (typeof attachments !== 'object' || !attachments) return [];
-  return Object.entries(attachments).map(([key, value]) => ({
-    fileName: value,
-    downloadUrl: `${downloadUrl}/${key}`,
+  return fileUUIDs.filter(Boolean).map((uuid) => ({
+    uuid,
+    file: { name: attachments[uuid] } as File,
   }));
 };
 
-const toDownloadableDocument = (files: FileInfoDTO[], downloadUrl: string): DownloadableFile[] => {
-  if (!Array.isArray(files) || files.filter(Boolean).length === 0) return [];
-  return files.filter(Boolean).map((f) => ({
-    fileName: f.name,
-    downloadUrl: `${downloadUrl}/document/${f.uuid}`,
-  }));
+const toUUIDs = (files: UuidFilePair[]): string[] => {
+  if (!Array.isArray(files)) return [];
+
+  return files.filter(Boolean).map(({ uuid }) => uuid);
 };
 
-/**
- * Extracts attachments based on the provided UUIDs.
- * @param uuids - Array of UUIDs to extract.
- * @param attachments - Record of attachments where keys are UUIDs and values are attachment names.
- * @returns A new record containing only the attachments that match the provided UUIDs.
- */
-const extractAttachments = (uuids: string[], attachments: Record<string, string>): Record<string, string> => {
-  uuids = uuids?.filter(Boolean) || [];
-  // Validate inputs
-  if (uuids.length === 0) {
-    return {};
-  }
-  // Ensure attachments is an object and has the expected structure
-  if (!attachments || typeof attachments !== 'object') {
-    return {};
-  }
-  return uuids.reduce((acc, uuid) => {
-    if (attachments[uuid]) {
-      acc[uuid] = attachments[uuid];
-    }
-    return acc;
+const toAttachments = (files: UuidFilePair[]): Record<string, string> => {
+  if (!Array.isArray(files)) return {};
+
+  return files.filter(Boolean).reduce<Record<string, string>>((map, { uuid, file }) => {
+    map[uuid] = file.name;
+    return map;
   }, {});
 };
 
-const toDownloadableFileFromInfoDTO = (files: FileInfoDTO[], downloadUrl: string): DownloadableFile[] => {
-  if (!Array.isArray(files) || files.filter(Boolean).length === 0) return [];
-  return files.filter(Boolean).map((file) => ({
-    fileName: file.name,
-    downloadUrl: `${downloadUrl}/${file.uuid}`,
+const toDownloadableFiles = (attachments: Record<string, string>, downloadUrl: string): DownloadableFile[] => {
+  if (!attachments || typeof attachments !== 'object') return [];
+
+  return Object.entries(attachments).map(([uuid, fileName]) => ({
+    fileName,
+    downloadUrl: `${downloadUrl}/${uuid}`,
   }));
+};
+
+const toDownloadableFromInfoDTO = (files: FileInfoDTO[], downloadUrl: string, prefix = ''): DownloadableFile[] => {
+  if (!Array.isArray(files)) return [];
+
+  const validFiles = files.filter(Boolean);
+
+  return validFiles.map(({ uuid, name }) => ({
+    fileName: name,
+    downloadUrl: `${downloadUrl}${prefix}/${uuid}`,
+  }));
+};
+
+const toDownloadableDocument = (files: FileInfoDTO[], downloadUrl: string): DownloadableFile[] =>
+  toDownloadableFromInfoDTO(files, downloadUrl, '/document');
+
+const toDownloadableFileFromInfoDTO = (files: FileInfoDTO[], downloadUrl: string): DownloadableFile[] =>
+  toDownloadableFromInfoDTO(files, downloadUrl);
+
+const extractAttachments = (uuids: string[], attachments: Record<string, string>): Record<string, string> => {
+  const validUuids = Array.isArray(uuids) ? uuids.filter(Boolean) : [];
+
+  if (validUuids.length === 0) return {};
+  if (!attachments || typeof attachments !== 'object') return {};
+
+  return validUuids.reduce<Record<string, string>>((acc, uuid) => {
+    const fileName = attachments[uuid];
+    if (fileName) acc[uuid] = fileName;
+
+    return acc;
+  }, {});
 };
 
 export const fileUtils = {

@@ -19,6 +19,7 @@ import { patUploadTaskContent } from './performance-account-template-upload/pat-
 import { performanceDataDownloadTaskContent } from './performance-data-download/performance-data-download-task-content';
 import { performanceDataUploadTaskContent } from './performance-data-upload/performance-data-upload-task-content';
 import { preAuditReviewTaskContent } from './pre-audit-review/pre-audit-review-task-content';
+import { tprCSVUploadTaskContent } from './target-period-reporting-csv-upload/target-period-reporting-csv-upload-task-content';
 import { targetPeriodReportingFormTaskContent } from './target-period-reporting-form/target-period-reporting-form-task-content';
 import { trackCorrectiveActionsTaskContent } from './track-corrective-actions/track-corrective-actions-task-content';
 import { underlyingAgreementActivationTaskContent } from './underlying-agreement-activation/underlying-agreement-activation-task-content';
@@ -70,6 +71,7 @@ export const tasksContent: RequestTaskPageContentFactoryMap = {
   PERFORMANCE_DATA_DOWNLOAD_SUBMIT: performanceDataDownloadTaskContent,
   PERFORMANCE_DATA_UPLOAD_SUBMIT: performanceDataUploadTaskContent,
   PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT: patUploadTaskContent,
+  PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT: tprCSVUploadTaskContent,
 
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION: cca3MigrationAccountActivationTaskContent,
 

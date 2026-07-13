@@ -22,7 +22,6 @@ import {
   calculatePerformance,
   getMeasurementAndThroughputUnits,
   isTargetPeriodWizardCompleted,
-  MeasurementTypeToUnitPipe,
   TaskItemStatus,
   TasksApiService,
   UNAVariationRegulatorLedRequestTaskPayload,
@@ -30,6 +29,7 @@ import {
   underlyingAgreementVariationRegulatorLedQuery,
 } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { fileUtils } from '@shared/utils';
 import { produce } from 'immer';
 

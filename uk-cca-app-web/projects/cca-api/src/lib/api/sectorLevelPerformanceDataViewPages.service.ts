@@ -16,6 +16,8 @@ import { Observable } from 'rxjs';
 
 import { SectorAccountPerformanceDataReportListDTO } from '../model/sectorAccountPerformanceDataReportListDTO';
 import { SectorAccountPerformanceDataReportSearchCriteria } from '../model/sectorAccountPerformanceDataReportSearchCriteria';
+import { SectorFacilityPerformanceDataReportListDTO } from '../model/sectorFacilityPerformanceDataReportListDTO';
+import { SectorFacilityPerformanceDataReportSearchCriteria } from '../model/sectorFacilityPerformanceDataReportSearchCriteria';
 
 import { BASE_PATH } from '../variables';
 import { Configuration } from '../configuration';
@@ -166,8 +168,104 @@ export class SectorLevelPerformanceDataViewPagesService {
     }
 
     return this.httpClient.post<SectorAccountPerformanceDataReportListDTO>(
-      `${this.configuration.basePath}/v1.0/sector-association/${encodeURIComponent(String(sectorAssociationId))}/performance-data-report/`,
+      `${this.configuration.basePath}/v1.0/sector-association/${encodeURIComponent(String(sectorAssociationId))}/performance-data-report/accounts`,
       sectorAccountPerformanceDataReportSearchCriteria,
+      {
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Populates the target period performance data of sector facilities
+   * @param sectorAssociationId The sector association id
+   * @param sectorFacilityPerformanceDataReportSearchCriteria
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getSectorFacilityPerformanceDataReportList(
+    sectorAssociationId: number,
+    sectorFacilityPerformanceDataReportSearchCriteria: SectorFacilityPerformanceDataReportSearchCriteria,
+  ): Observable<SectorFacilityPerformanceDataReportListDTO>;
+  public getSectorFacilityPerformanceDataReportList(
+    sectorAssociationId: number,
+    sectorFacilityPerformanceDataReportSearchCriteria: SectorFacilityPerformanceDataReportSearchCriteria,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<SectorFacilityPerformanceDataReportListDTO>>;
+  public getSectorFacilityPerformanceDataReportList(
+    sectorAssociationId: number,
+    sectorFacilityPerformanceDataReportSearchCriteria: SectorFacilityPerformanceDataReportSearchCriteria,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<SectorFacilityPerformanceDataReportListDTO>>;
+  public getSectorFacilityPerformanceDataReportList(
+    sectorAssociationId: number,
+    sectorFacilityPerformanceDataReportSearchCriteria: SectorFacilityPerformanceDataReportSearchCriteria,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<SectorFacilityPerformanceDataReportListDTO>;
+  public getSectorFacilityPerformanceDataReportList(
+    sectorAssociationId: number,
+    sectorFacilityPerformanceDataReportSearchCriteria: SectorFacilityPerformanceDataReportSearchCriteria,
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (sectorAssociationId === null || sectorAssociationId === undefined) {
+      throw new Error(
+        'Required parameter sectorAssociationId was null or undefined when calling getSectorFacilityPerformanceDataReportList.',
+      );
+    }
+    if (
+      sectorFacilityPerformanceDataReportSearchCriteria === null ||
+      sectorFacilityPerformanceDataReportSearchCriteria === undefined
+    ) {
+      throw new Error(
+        'Required parameter sectorFacilityPerformanceDataReportSearchCriteria was null or undefined when calling getSectorFacilityPerformanceDataReportList.',
+      );
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.post<SectorFacilityPerformanceDataReportListDTO>(
+      `${this.configuration.basePath}/v1.0/sector-association/${encodeURIComponent(String(sectorAssociationId))}/performance-data-report/facilities`,
+      sectorFacilityPerformanceDataReportSearchCriteria,
       {
         responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,

@@ -1,4 +1,3 @@
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,71 +6,73 @@ import { of } from 'rxjs';
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { getByText } from '@testing';
+import { Mocked } from 'vitest';
 
-import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
+import { PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload } from 'cca-api';
 
-import { tprFormQuery } from '../../../../target-period-reporting-form.selectors';
+import { mockTprRequestTaskStateThroughputTotalsOnly } from '../../../../testing/mock-data';
 import { TprThroughputTotalsOnlyComponent } from './tpr-throughput-totals-only.component';
 
-const mockBaselineData: PerformanceDataFacilityReferenceData = {
-  baselineAndTargets: {
-    baselineVariableEnergy: '5000',
-    totalThroughput: '10000',
-    totalFixedEnergy: '2000',
-    variableEnergyType: null,
-    measurementType: 'ENERGY_KWH',
-    throughputUnit: 'tonnes',
-    improvements: { TP5: '5', TP6: '6', TP7: '8', TP8: '12', TP9: '15' },
-    usedReportingMechanism: false,
+const basePayload = mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask
+  .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
+
+const mockFixedOnlyState = {
+  ...mockTprRequestTaskStateThroughputTotalsOnly,
+  requestTaskItem: {
+    ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem,
+    requestTask: {
+      ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask,
+      payload: {
+        ...basePayload,
+        referenceData: {
+          ...basePayload.referenceData,
+          baselineAndTargets: {
+            ...basePayload.referenceData?.baselineAndTargets,
+            variableEnergyType: null,
+            baselineVariableEnergy: null,
+          },
+        },
+      },
+    },
   },
 } as any;
 
-const mockPerformanceData: PerformanceDataFacilityInputData = {
-  energyFuelDetails: {
-    standardFuels: {
-      GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
-      NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+const mockInterimTotalsState = {
+  ...mockTprRequestTaskStateThroughputTotalsOnly,
+  requestTaskItem: {
+    ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem,
+    requestTask: {
+      ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask,
+      payload: {
+        ...basePayload,
+        reportType: 'INTERIM',
+      },
     },
-    atLeastSeventyPercentEnergyUsed: false,
-    electricitySuppliedFromCHP: '0',
   },
-  throughputDetails: { actualThroughput: '8000' },
 } as any;
 
 describe('TprThroughputTotalsOnlyComponent', () => {
   let component: TprThroughputTotalsOnlyComponent;
   let fixture: ComponentFixture<TprThroughputTotalsOnlyComponent>;
+  let store: RequestTaskStore;
+  let tasksApiService: Mocked<Pick<TasksApiService, 'saveRequestTaskAction'>>;
 
   beforeEach(async () => {
-    const requestTaskStore = {
-      select: vi.fn().mockImplementation((selector: unknown) => {
-        if (selector === tprFormQuery.selectReferenceData) return signal(mockBaselineData);
-        if (selector === tprFormQuery.selectPerformanceData) return signal(mockPerformanceData);
-        if (selector === tprFormQuery.selectReportType) return signal<'FINAL' | 'INTERIM'>('FINAL');
-        if (selector === tprFormQuery.selectTargetPeriodType) return signal('TP5');
-        if (selector === tprFormQuery.selectSectionsCompleted) return signal({});
-        if (selector === tprFormQuery.selectPayload)
-          return signal({
-            referenceData: mockBaselineData,
-            performanceData: mockPerformanceData,
-            reportType: 'FINAL',
-            targetPeriodType: 'TP5',
-            targetPeriodYear: 2026,
-            sectionsCompleted: {},
-          });
-        return signal(null);
-      }),
-    };
+    tasksApiService = { saveRequestTaskAction: vi.fn().mockReturnValue(of(null)) };
 
     await TestBed.configureTestingModule({
       imports: [TprThroughputTotalsOnlyComponent],
       providers: [
-        { provide: RequestTaskStore, useValue: requestTaskStore },
+        RequestTaskStore,
         { provide: Router, useValue: { navigate: vi.fn() } },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
-        { provide: TasksApiService, useValue: { saveRequestTaskAction: vi.fn(() => of(null)) } },
+        { provide: TasksApiService, useValue: tasksApiService },
       ],
     }).compileComponents();
+
+    store = TestBed.inject(RequestTaskStore);
+    store.setState(mockTprRequestTaskStateThroughputTotalsOnly);
 
     fixture = TestBed.createComponent(TprThroughputTotalsOnlyComponent);
     component = fixture.componentInstance;
@@ -81,5 +82,26 @@ describe('TprThroughputTotalsOnlyComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should hide baseline intensity and total target variable energy for fixed-only facilities', async () => {
+    store.setState(mockFixedOnlyState);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(getByText(/No variable energy \(only fixed energy\)/, fixture.nativeElement)).toBeTruthy();
+    expect(() =>
+      getByText(/Baseline energy intensity|Baseline carbon dioxide \(C02\) intensity/, fixture.nativeElement),
+    ).toThrow();
+    expect(() => getByText(/Total target variable energy/, fixture.nativeElement)).toThrow();
+  });
+
+  it('should show interim target label for interim reports', async () => {
+    store.setState(mockInterimTotalsState);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(getByText(/Interim target/, fixture.nativeElement)).toBeTruthy();
+    expect(() => getByText(/Improvement target/, fixture.nativeElement)).toThrow();
   });
 });

@@ -106,23 +106,23 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent implements OnInit 
     underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'),
   )();
 
-  protected readonly summaryDataOriginal = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
-    this.originalTargetUnitDetails,
-    this.decision,
-    this.countries(),
-    this.attachments,
-    this.downloadUrl,
-    this.isEditable,
-  );
+  protected readonly summaryDataOriginal = toVariationReviewTargetUnitDetailsSummaryDataWithDecision({
+    targetUnitDetails: this.originalTargetUnitDetails,
+    decision: this.decision,
+    countries: this.countries(),
+    attachments: this.attachments,
+    downloadUrl: this.downloadUrl,
+    isEditable: this.isEditable,
+  });
 
-  protected readonly summaryDataCurrent = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
-    this.currentTargetUnitDetails(),
-    this.decision,
-    this.countries(),
-    this.attachments,
-    this.downloadUrl,
-    this.isEditable,
-  );
+  protected readonly summaryDataCurrent = toVariationReviewTargetUnitDetailsSummaryDataWithDecision({
+    targetUnitDetails: this.currentTargetUnitDetails(),
+    decision: this.decision,
+    countries: this.countries(),
+    attachments: this.attachments,
+    downloadUrl: this.downloadUrl,
+    isEditable: this.isEditable,
+  });
 
   ngOnInit() {
     if (this.tuDetails().companyRegistrationNumber) {

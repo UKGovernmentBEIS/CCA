@@ -34,6 +34,8 @@ import { SectorMoaGeneratedComponent } from './sector-moa-generated/sector-moa-g
 import { SubsistenceFeesRunCompletedComponent } from './subsistence-fees-run-completed/subsistence-fees-run-completed.component';
 import { SurplusCalculatedComponent } from './surplus-calculated/surplus-calculated.component';
 import { TargetUnitAccountSubmittedTimelineComponent } from './target-unit-account-creation/target-unit-account-submitted-timeline.component';
+import { TprCSVUploadCompletedComponent } from './tpr-csv-upload-completed/tpr-csv-upload-completed.component';
+import { TprReportingFormSubmittedComponent } from './tpr-reporting-form-submitted/tpr-reporting-form-submitted.component';
 import { TuMoaGeneratedComponent } from './tu-moa-generated/tu-moa-generated.component';
 import { UnderlyingAgreementActivatedComponent } from './underlying-agreement-activated/underlying-agreement-activated.component';
 import { UnderlyingAgreementMigratedComponent } from './underlying-agreement-migrated/underlying-agreement-migrated.component';
@@ -593,6 +595,36 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: NonComplianceEnforcementResponseNoticePeerReviewerDecisionComponent,
+    };
+  },
+
+  PERFORMANCE_DATA_FACILITY_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: TprReportingFormSubmittedComponent,
+    };
+  },
+
+  PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: TprCSVUploadCompletedComponent,
+    };
+  },
+
+  PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: TprReportingFormSubmittedComponent,
     };
   },
 };

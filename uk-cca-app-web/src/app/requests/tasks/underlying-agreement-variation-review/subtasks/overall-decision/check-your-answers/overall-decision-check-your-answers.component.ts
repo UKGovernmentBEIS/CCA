@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -23,8 +23,8 @@ import { createSaveDeterminationActionDTO } from '../../../transform';
   selector: 'cca-overall-decision-check-your-answers',
   template: `
     <div>
-      <netz-page-heading [caption]="caption">Check your answers</netz-page-heading>
-      <cca-summary [data]="summaryData" />
+      <netz-page-heading [caption]="caption()">Check your answers</netz-page-heading>
+      <cca-summary [data]="summaryData()" />
       <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
     </div>
 
@@ -48,21 +48,24 @@ export class OverallDecisionCheckYourAnswersComponent {
 
   private readonly determination = this.requestTaskStore.select(
     underlyingAgreementVariationReviewQuery.selectDetermination,
-  )();
-  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
-  private readonly attachments = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
-
-  private readonly downloadUrl = generateDownloadUrl(
-    this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
 
-  protected readonly caption = this.determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';
+  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
+  private readonly attachments = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments);
 
-  protected readonly summaryData = toOverallDecisionSummaryData(
-    this.determination,
-    this.attachments,
-    this.downloadUrl,
-    this.isEditable,
+  private readonly downloadUrl = computed(() =>
+    generateDownloadUrl(this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString()),
+  );
+
+  protected readonly caption = computed(() => (this.determination().type === 'ACCEPTED' ? 'Accept' : 'Reject'));
+
+  protected readonly summaryData = computed(() =>
+    toOverallDecisionSummaryData({
+      determination: this.determination(),
+      attachments: this.attachments(),
+      downloadUrl: this.downloadUrl(),
+      isEditable: this.isEditable(),
+    }),
   );
 
   onSubmit() {
@@ -73,13 +76,13 @@ export class OverallDecisionCheckYourAnswersComponent {
     )();
 
     // Mark overall decision with final status based on determination type
-    const taskItemStatus = this.determination.type === 'ACCEPTED' ? TaskItemStatus.ACCEPTED : TaskItemStatus.REJECTED;
+    const taskItemStatus = this.determination().type === 'ACCEPTED' ? TaskItemStatus.ACCEPTED : TaskItemStatus.REJECTED;
 
     const reviewSectionsCompleted = produce(currentReviewSectionsCompleted, (draft) => {
       draft[OVERALL_DECISION_SUBTASK] = taskItemStatus;
     });
 
-    const dto = createSaveDeterminationActionDTO(requestTaskId, this.determination, reviewSectionsCompleted);
+    const dto = createSaveDeterminationActionDTO(requestTaskId, this.determination(), reviewSectionsCompleted);
 
     this.tasksApiService
       .saveRequestTaskAction(dto)

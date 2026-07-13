@@ -110,7 +110,7 @@ class PerformanceDataFacilityDigitalFormSubmitActionHandlerTest {
         verify(performanceDataFacilityDigitalFormSubmitValidator, times(1))
                 .isReportSubmissionExpired(eq(requestTask), any());
         verify(performanceDataFacilityDigitalFormSubmitService, times(1))
-                .markTaskAsExpired(eq(requestTask), any());
+                .markTaskAsExpired(eq(appUser), eq(requestTask), any());
         verify(workflowService, times(1)).completeTask(processTaskId, Map.of(
                 BpmnProcessConstants.REQUEST_ID, requestId,
                 CcaBpmnProcessConstants.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_OUTCOME, PerformanceDataFacilityDigitalFormOutcome.EXPIRED));

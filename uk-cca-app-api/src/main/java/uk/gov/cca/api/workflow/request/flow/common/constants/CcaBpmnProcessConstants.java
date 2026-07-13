@@ -12,6 +12,8 @@ public class CcaBpmnProcessConstants {
     public static final String ACCOUNT_IDS = "accountIds";
     public static final String SECTOR_IDS = "sectorIds";
     public static final String SECTOR_ID = "sectorId";
+    public static final String FACILITY_IDS = "facilityIds";
+    public static final String FACILITY_ID = "facilityId";
     public static final String NUMBER_OF_ACCOUNTS_COMPLETED = "accountsCompleted";
     public static final String NUMBER_OF_SECTORS_COMPLETED = "sectorsCompleted";
 
@@ -101,4 +103,16 @@ public class CcaBpmnProcessConstants {
 
     // Performance Data Facility Digital Form
     public static final String PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_OUTCOME = "performanceDataFacilityDigitalFormOutcome";
+
+    // Performance Data Facility CSV Form
+    public static final String FACILITY_REPORT = "facilityReport";
+    public static final String FACILITY_REPORTS = "facilityReports";
+    public static final String PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_REQUEST_BUSINESS_KEY = "performanceDataFacilityDataUploadRequestBusinessKey";
+    public static final String PERFORMANCE_DATA_FACILITY_DATA_PROCESSING_COMPLETED = "performanceDataFacilityDataProcessingCompleted";
+    public static final String PERFORMANCE_DATA_FACILITY_DATA_PROCESSING_MESSAGE_FAILED = "performanceDataFacilityDataProcessingMessageFailed";
+
+    // CCA3 Performance Account Template
+    public static final String FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_REQUEST_BUSINESS_KEY = "facilityPerformanceAccountTemplateDataUploadRequestBusinessKey";
+    public static final String FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_COMPLETED = "facilityPerformanceAccountTemplateDataProcessingCompleted";
+    public static final String FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_MESSAGE_FAILED = "facilityPerformanceAccountTemplateDataProcessingMessageFailed";
 }

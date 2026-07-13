@@ -78,5 +78,7 @@ public class CcaRequestActionPayloadType {
 
     // Performance Data Facility Digital Form
     public static final String PERFORMANCE_DATA_FACILITY_SUBMITTED_PAYLOAD = "PERFORMANCE_DATA_FACILITY_SUBMITTED_PAYLOAD";
+    // Performance Data Facility CSV Form
+    public static final String PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED_PAYLOAD = "PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED_PAYLOAD";
 
 }

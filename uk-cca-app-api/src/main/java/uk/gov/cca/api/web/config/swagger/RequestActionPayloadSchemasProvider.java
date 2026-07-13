@@ -27,6 +27,7 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilitySubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.targetunitmoa.domain.TargetUnitMoaGeneratedRequestActionPayload;
@@ -138,6 +139,9 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
 
 		// Performance Data Facility Digital Form
 		addResolvedShemas(PerformanceDataFacilitySubmittedRequestActionPayload.class.getSimpleName(), PerformanceDataFacilitySubmittedRequestActionPayload.class);
+		// Performance Data Facility CSV Form
+		addResolvedShemas(PerformanceDataFacilityDataUploadCompletedRequestActionPayload.class.getSimpleName(), PerformanceDataFacilityDataUploadCompletedRequestActionPayload.class);
+		
 	}
 
 }

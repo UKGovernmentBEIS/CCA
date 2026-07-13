@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukSelectOption, TextInputComponent } from '@netz/govuk-components';
-import { nonComplianceDetailsQuery, TaskItemStatus, TasksApiService } from '@requests/common';
+import { alphabeticalCompare, nonComplianceDetailsQuery, TaskItemStatus, TasksApiService } from '@requests/common';
 import { ComboboxComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
@@ -44,7 +44,7 @@ export class ChooseRelevantFacilitiesComponent {
   protected readonly form = inject<ChooseRelevantFacilitiesFormModel>(CHOOSE_RELEVANT_FACILITIES_FORM);
   protected readonly allFacilities =
     this.requestTaskStore.select(nonComplianceDetailsQuery.selectAllRelevantFacilities)() ?? {};
-  private readonly facilityIds = Object.keys(this.allFacilities);
+  private readonly facilityIds = Object.keys(this.allFacilities).sort(alphabeticalCompare);
   private readonly facilityIdsSet = new Set(this.facilityIds);
   private readonly facilityOptionsById = new Map<string, GovukSelectOption<string | null>>(
     this.facilityIds.map((facilityId) => [

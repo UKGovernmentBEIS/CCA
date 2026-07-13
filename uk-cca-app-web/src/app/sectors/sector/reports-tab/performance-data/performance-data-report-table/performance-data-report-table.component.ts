@@ -83,7 +83,7 @@ export class PerformanceDataReportTableComponent {
           };
 
           if (criteria?.targetUnitAccountBusinessId?.length > 0 && criteria?.targetUnitAccountBusinessId?.length < 3)
-            return;
+            return EMPTY;
 
           this.state.update((state) => ({
             ...state,
@@ -99,8 +99,8 @@ export class PerformanceDataReportTableComponent {
         tap((resp) =>
           this.state.update((state) => ({
             ...state,
-            performanceDataReportItems: resp.performanceDataReportItems,
-            totalItems: resp.total,
+            performanceDataReportItems: resp.performanceDataReportItems ?? [],
+            totalItems: resp.total ?? 0,
           })),
         ),
       )

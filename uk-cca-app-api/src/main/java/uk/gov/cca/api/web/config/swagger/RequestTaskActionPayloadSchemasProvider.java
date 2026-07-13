@@ -17,8 +17,10 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComp
 import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementNotifyOperatorForDecisionRequestTaskActionPayload;
@@ -101,6 +103,9 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
         // Performance data upload
         addResolvedShemas(PerformanceDataUploadProcessingRequestTaskActionPayload.class.getSimpleName(), PerformanceDataUploadProcessingRequestTaskActionPayload.class);
 
+        // Performance data facility upload
+        addResolvedShemas(PerformanceDataFacilityDataUploadProcessingRequestTaskActionPayload.class.getSimpleName(), PerformanceDataFacilityDataUploadProcessingRequestTaskActionPayload.class);
+
         // PAT
         addResolvedShemas(PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class.getSimpleName(),
                 PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class);
@@ -124,6 +129,10 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
 
         // Performance Data Facility Digital Form
         addResolvedShemas(PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload.class.getSimpleName(), PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload.class);
+
+
+        // CCA3 PAT
+        addResolvedShemas(FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class.getSimpleName(), FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class);
     }
 
 }

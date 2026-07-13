@@ -28,7 +28,7 @@
   </div>
 
   <ng-template #contentTpl let-showOriginal="showOriginal">
-    <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
+    <cca-summary [data]="showOriginal ? summaryDataOriginal() : summaryDataCurrent()" />
   </ng-template>
 
   <div class="govuk-grid-row">

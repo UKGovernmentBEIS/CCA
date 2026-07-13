@@ -18,7 +18,6 @@ import {
   FacilityWizardStep,
   filterFieldsWithFalsyValues,
   isCCA3FacilityWizardCompleted,
-  MeasurementTypeToUnitPipe,
   OVERALL_DECISION_SUBTASK,
   resetFacilityNonComparisonFields,
   TaskItemStatus,
@@ -29,6 +28,7 @@ import {
 } from '@requests/common';
 import { SplitByProductTableComponent } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
+import { MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { produce } from 'immer';
 
 import {
