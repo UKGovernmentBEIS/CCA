@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
@@ -16,13 +17,7 @@ describe('CheckYourAnswersComponent', () => {
   let store: RequestTaskStore;
   let router: Router;
 
-  const route = {
-    snapshot: {
-      params: {},
-      paramMap: { get: vi.fn() },
-      pathFromRoot: [{ url: [{ path: 'request-task' }] }],
-    },
-  };
+  const route = new ActivatedRouteStub();
 
   const mockTasksApiService = {
     saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
@@ -87,6 +82,6 @@ describe('CheckYourAnswersComponent', () => {
 
     const dto = mockTasksApiService.saveRequestTaskAction.mock.calls[0][0];
     expect(dto.requestTaskActionPayload.sectionsCompleted['provide-details']).toBe('COMPLETED');
-    expect(navigateSpy).toHaveBeenCalledWith(['../../'], { relativeTo: route as any });
+    expect(navigateSpy).toHaveBeenCalledWith(['../../'], { relativeTo: route });
   });
 });

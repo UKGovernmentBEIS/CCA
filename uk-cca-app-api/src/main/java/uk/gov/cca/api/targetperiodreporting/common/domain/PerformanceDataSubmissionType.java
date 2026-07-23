@@ -1,4 +1,4 @@
-package uk.gov.cca.api.targetperiodreporting.performancedata.domain;
+package uk.gov.cca.api.targetperiodreporting.common.domain;
 
 
 import lombok.AllArgsConstructor;

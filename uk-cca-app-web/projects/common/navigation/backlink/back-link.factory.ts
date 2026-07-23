@@ -7,7 +7,7 @@ export const BACK_LINK = new InjectionToken<BehaviorSubject<boolean>>('Back link
   factory: () => new BehaviorSubject(false),
 });
 
-export const BACK_LINK_TARGET = new InjectionToken<BehaviorSubject<{ link: string; fragment: string }>>(
+export const BACK_LINK_TARGET = new InjectionToken<BehaviorSubject<{ link: string; fragment: string } | null>>(
   'Back link target',
   {
     providedIn: 'root',

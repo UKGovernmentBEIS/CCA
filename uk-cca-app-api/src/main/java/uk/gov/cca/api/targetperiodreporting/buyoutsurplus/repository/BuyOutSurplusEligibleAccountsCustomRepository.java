@@ -20,7 +20,7 @@ public class BuyOutSurplusEligibleAccountsCustomRepository {
 				"SELECT new uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO(tu.id, tu.businessId, tu.name) " +
 				"FROM TargetUnitAccount tu " +
 				"JOIN AccountPerformanceDataStatus apds ON apds.accountId = tu.id " +
-				"WHERE NOT EXISTS ( select 1 from BuyOutSurplusProcessedData bos where bos.performanceDataId = apds.lastPerformanceData.id ) " +
+				"WHERE NOT EXISTS ( select 1 from BuyOutSurplusProcessedData bos where bos.performanceDataId = apds.lastPerformanceData.id and bos.performanceDataResourceType = uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType.ACCOUNT) " +
 				"AND apds.targetPeriod.businessId = :targetPeriodType ", TargetUnitAccountBusinessInfoDTO.class );
 		query.setParameter("targetPeriodType", targetPeriodType);
 

@@ -6,8 +6,11 @@ import { catchError, throwError } from 'rxjs';
 
 import { GovukValidators, SelectComponent } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
+import { logger } from '@shared/utils';
 
-import { AssigneeUserInfoDTO, PeerReviewRequestTaskActionPayload, TasksService } from 'cca-api';
+import { AssigneeUserInfoDTO, PeerReviewRequestTaskActionPayload } from 'cca-api';
+
+import { TasksApiService } from '../tasks-api.service';
 
 @Component({
   selector: 'cca-send-for-peer-review',
@@ -46,7 +49,7 @@ export class SendForPeerReviewComponent {
 
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly tasksService = inject(TasksService);
+  private readonly tasksApiService = inject(TasksApiService);
   private readonly formBuilder = inject(FormBuilder);
 
   private readonly taskId = +this.activatedRoute.snapshot.params.taskId;
@@ -63,12 +66,13 @@ export class SendForPeerReviewComponent {
   protected readonly form = this.formBuilder.group({
     assigneeUserInfoId: ['', GovukValidators.required('Please select an option')],
   });
+
   onSubmit() {
     if (this.form.valid) {
       const selectedAssigneeId = this.form.value.assigneeUserInfoId;
 
-      this.tasksService
-        .processRequestTaskAction({
+      this.tasksApiService
+        .saveRequestTaskAction({
           requestTaskActionType: this.requestTaskActionType(),
           requestTaskActionPayload: {
             payloadType: this.payloadType(),
@@ -78,14 +82,19 @@ export class SendForPeerReviewComponent {
         })
         .pipe(
           catchError((error) => {
-            console.error('Error processing request task action:', error);
+            logger.error('Error processing request task action:', error);
             return throwError(() => error);
           }),
         )
-        .subscribe(() => {
-          this.router.navigate([this.confirmationRoute(), selectedAssigneeId], {
-            relativeTo: this.activatedRoute,
-          });
+        .subscribe({
+          next: () => {
+            this.router.navigate([this.confirmationRoute(), selectedAssigneeId], {
+              relativeTo: this.activatedRoute,
+            });
+          },
+          error: (err) => {
+            logger.error('Failed to send for peer review:', err);
+          },
         });
     }
   }

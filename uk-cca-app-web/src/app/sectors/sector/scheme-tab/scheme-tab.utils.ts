@@ -14,8 +14,7 @@ export type Cca3Scheme = SectorAssociationSchemeDTO | SubsectorAssociationScheme
 
 export function getCca3SchemeFromRoute(route: ActivatedRoute): Cca3Scheme {
   const scheme = (route.snapshot.data.sectorScheme ?? route.snapshot.data.subSector) as
-    | SectorAssociationSchemesDTO
-    | SubsectorAssociationSchemesDTO;
+    SectorAssociationSchemesDTO | SubsectorAssociationSchemesDTO;
 
   return getCca3Scheme(scheme);
 }

@@ -1,5 +1,6 @@
 package uk.gov.cca.api.targetperiodreporting.targetperiod.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,9 +18,11 @@ import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType
 public interface TargetPeriodRepository extends JpaRepository<TargetPeriod, Long> {
 
   Optional<TargetPeriod> findByBusinessId(TargetPeriodType businessId);
-
+  
   List<TargetPeriod> findAllBySchemeVersion(SchemeVersion schemeVersion);
 
   List<TargetPeriod> findByBusinessIdIn(Set<TargetPeriodType> businessIds);
+  
+  List<TargetPeriod> findByBuyOutStartDateLessThanEqualOrderByBuyOutStartDateDesc(LocalDate date);
 }
 

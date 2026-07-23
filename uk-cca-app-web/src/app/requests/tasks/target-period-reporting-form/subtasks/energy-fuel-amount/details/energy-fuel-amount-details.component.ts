@@ -31,6 +31,7 @@ import {
 import { TextInputComponent, WizardStepComponent } from '@shared/components';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
 import { toNumber } from '@shared/utils';
+import { logger } from '@shared/utils';
 import { produce } from 'immer';
 
 import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalFormSavePayload } from '../../../transform';
@@ -67,7 +68,7 @@ export class EnergyFuelAmountDetailsComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly tasksApiService = inject(TasksApiService);
 
-  protected readonly form = inject<FuelForm>(ENERGY_FUEL_AMOUNT_DETAILS_FORM);
+  readonly form = inject<FuelForm>(ENERGY_FUEL_AMOUNT_DETAILS_FORM);
 
   private readonly selectReferenceData = this.requestTaskStore.select(tprFormQuery.selectReferenceData);
 
@@ -236,7 +237,7 @@ export class EnergyFuelAmountDetailsComponent {
       .saveRequestTaskAction(dto)
       .pipe(
         catchError((error) => {
-          console.error(error);
+          logger.error(error);
           return EMPTY;
         }),
       )

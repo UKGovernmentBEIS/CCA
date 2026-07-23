@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusProcessedData;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
 
 import java.util.Optional;
 
@@ -12,5 +13,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface BuyOutSurplusProcessedDataRepository extends JpaRepository<BuyOutSurplusProcessedData, Long> {
 
-    Optional<BuyOutSurplusProcessedData> findByPerformanceDataId(Long performanceDataId);
+    Optional<BuyOutSurplusProcessedData> findByPerformanceDataIdAndPerformanceDataResourceType(
+    		Long performanceDataId, PerformanceDataResourceType resourceType);
 }

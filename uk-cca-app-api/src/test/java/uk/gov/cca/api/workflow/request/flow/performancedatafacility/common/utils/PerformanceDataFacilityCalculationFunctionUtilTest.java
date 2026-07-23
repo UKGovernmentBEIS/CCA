@@ -2813,6 +2813,195 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 		assertThat(results.getSurplusGained()).isEqualTo(BigDecimal.ZERO);
 		assertThat(results.getBuyOutRequired()).isEqualTo(BigDecimal.valueOf(62717));
     }
+
+    @Test
+    void test_ENERGY_GJ_fixed_variable_by_product_2() {
+        final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
+                .targetPeriodType(TargetPeriodType.TP7)
+                .targetYear(Year.of(2026))
+                .tpMultiplier(BigDecimal.ONE)
+                .targetImprovement(BigDecimal.valueOf(0.87))
+                .baselineDate(LocalDate.of(2022, 1, 1))
+                .measurementType(MeasurementType.ENERGY_GJ)
+                .usedReportingMechanism(true)
+                .improvements(Map.of(
+                        TargetImprovementType.TP7, BigDecimal.valueOf(87),
+                        TargetImprovementType.TP8, BigDecimal.valueOf(67),
+                        TargetImprovementType.TP9, BigDecimal.valueOf(89)
+                ))
+                .totalFixedEnergy(BigDecimal.valueOf(1240.234))
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Low EI product")
+                                .baselineYear(Year.of(2022))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(100000))
+                                .throughput(BigDecimal.valueOf(2.4))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Hi EI product")
+                                .baselineYear(Year.of(2023))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(30000))
+                                .throughput(BigDecimal.valueOf(4.9))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("New product")
+                                .baselineYear(Year.of(2024))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(17000))
+                                .throughput(BigDecimal.valueOf(2.1))
+                                .throughputUnit("units")
+                                .build()
+                ))
+                .lastYearPerTp(Map.of(
+                        TargetPeriodType.TP7, 2026,
+                        TargetPeriodType.TP8, 2028,
+                        TargetPeriodType.TP9, 2030
+                ))
+                .build();
+        final PerformanceDataFacilityInputData data = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(
+                                PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(5000)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NON_GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(3000)).build()
+                        ))
+                        .nonStandardFuels(List.of())
+                        .electricitySuppliedFromCHP(BigDecimal.valueOf(200))
+                        .build())
+		                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+		                        .variableEnergyConsumptionDataByProduct(List.of(
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Low EI product").actualThroughput(BigDecimal.valueOf(1.2)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Hi EI product").actualThroughput(BigDecimal.valueOf(2.4)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("New product").actualThroughput(BigDecimal.valueOf(3.2)).build()
+		                        ))
+		                        .build())
+                .build();
+
+        PerformanceDataFacilityCalculatedResults results = calculateResults(calculatedInfoData, data);
+
+        // Verify
+        assertThat(results.getActualEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(13500).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(14699.3212208).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(-1199.3212208).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(21.7043210).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(319.0387861).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(293.0083333).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getCo2EmissionsDifference().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(-26.0304527).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(0.84937936019).setScale(9, RoundingMode.HALF_UP));
+		assertThat(results.getTargetPeriodResultType()).isEqualTo(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET);
+		assertThat(results.getSurplusGained()).isEqualTo(BigDecimal.valueOf(26));
+		assertThat(results.getBuyOutRequired()).isEqualTo(BigDecimal.ZERO);
+    }
+    
+    @Test
+    void test_ENERGY_GJ_fixed_variable_by_product_3() {
+        final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
+                .targetPeriodType(TargetPeriodType.TP7)
+                .targetYear(Year.of(2026))
+                .tpMultiplier(BigDecimal.ONE)
+                .targetImprovement(BigDecimal.valueOf(0.87))
+                .baselineDate(LocalDate.of(2022, 1, 1))
+                .measurementType(MeasurementType.ENERGY_GJ)
+                .usedReportingMechanism(true)
+                .improvements(Map.of(
+                        TargetImprovementType.TP7, BigDecimal.valueOf(87),
+                        TargetImprovementType.TP8, BigDecimal.valueOf(67),
+                        TargetImprovementType.TP9, BigDecimal.valueOf(89)
+                ))
+                .totalFixedEnergy(BigDecimal.valueOf(0))
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Low EI product")
+                                .baselineYear(Year.of(2022))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(100000))
+                                .throughput(BigDecimal.valueOf(2.4))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Hi EI product")
+                                .baselineYear(Year.of(2023))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(30000))
+                                .throughput(BigDecimal.valueOf(4.9))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("New product")
+                                .baselineYear(Year.of(2024))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(17000))
+                                .throughput(BigDecimal.valueOf(2.1))
+                                .throughputUnit("units")
+                                .build()
+                ))
+                .lastYearPerTp(Map.of(
+                        TargetPeriodType.TP7, 2026,
+                        TargetPeriodType.TP8, 2028,
+                        TargetPeriodType.TP9, 2030
+                ))
+                .build();
+        final PerformanceDataFacilityInputData data = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(
+                                PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(1000)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NON_GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(2000)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NATURAL_GAS, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(3000)).build()
+                        ))
+                        .nonStandardFuels(List.of(
+                                PerformanceDataFacilityNonStandardFuel.builder()
+                                        .name("Biofuel")
+                                        .deliveredEnergy(BigDecimal.valueOf(300))
+                                        .conversionFactor(BigDecimal.valueOf(34.2653700))
+                                        .build()
+                        ))
+                        .electricitySuppliedFromCHP(BigDecimal.valueOf(1000))
+                        .build())
+		                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+		                        .variableEnergyConsumptionDataByProduct(List.of(
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Low EI product").actualThroughput(BigDecimal.valueOf(100)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Hi EI product").actualThroughput(BigDecimal.valueOf(200)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("New product").actualThroughput(BigDecimal.valueOf(300)).build()
+		                        ))
+		                        .build())
+                .build();
+
+        PerformanceDataFacilityCalculatedResults results = calculateResults(calculatedInfoData, data);
+
+        // Verify
+        assertThat(results.getActualEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(7400).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(977911.9707907).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(-970511.9707907).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(29.8645871).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(29204.9372005).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(220.9979443).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getCo2EmissionsDifference().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(-28983.9392562).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(0.998738234).setScale(9, RoundingMode.HALF_UP));
+		assertThat(results.getTargetPeriodResultType()).isEqualTo(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET);
+		assertThat(results.getSurplusGained()).isEqualTo(BigDecimal.valueOf(28983));
+		assertThat(results.getBuyOutRequired()).isEqualTo(BigDecimal.ZERO);
+    }
     
     @Test
     void test_ENERGY_GJ_fixed_variable_by_product() {
@@ -2915,97 +3104,6 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_fixed_variable_by_product_2() {
-        final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
-                .targetPeriodType(TargetPeriodType.TP7)
-                .targetYear(Year.of(2026))
-                .tpMultiplier(BigDecimal.ONE)
-                .targetImprovement(BigDecimal.valueOf(0.87))
-                .baselineDate(LocalDate.of(2022, 1, 1))
-                .measurementType(MeasurementType.ENERGY_GJ)
-                .usedReportingMechanism(true)
-                .improvements(Map.of(
-                        TargetImprovementType.TP7, BigDecimal.valueOf(87),
-                        TargetImprovementType.TP8, BigDecimal.valueOf(67),
-                        TargetImprovementType.TP9, BigDecimal.valueOf(89)
-                ))
-                .totalFixedEnergy(BigDecimal.valueOf(1240.234))
-                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
-                .variableEnergyConsumptionDataByProduct(List.of(
-                        ProductVariableEnergyConsumptionData.builder()
-                                .productName("Low EI product")
-                                .baselineYear(Year.of(2022))
-                                .productStatus(ProductStatus.LIVE)
-                                .energy(BigDecimal.valueOf(100000))
-                                .throughput(BigDecimal.valueOf(2.4))
-                                .throughputUnit("units")
-                                .build(),
-                        ProductVariableEnergyConsumptionData.builder()
-                                .productName("Hi EI product")
-                                .baselineYear(Year.of(2023))
-                                .productStatus(ProductStatus.LIVE)
-                                .energy(BigDecimal.valueOf(30000))
-                                .throughput(BigDecimal.valueOf(4.9))
-                                .throughputUnit("units")
-                                .build(),
-                        ProductVariableEnergyConsumptionData.builder()
-                                .productName("New product")
-                                .baselineYear(Year.of(2024))
-                                .productStatus(ProductStatus.LIVE)
-                                .energy(BigDecimal.valueOf(17000))
-                                .throughput(BigDecimal.valueOf(2.1))
-                                .throughputUnit("units")
-                                .build()
-                ))
-                .lastYearPerTp(Map.of(
-                        TargetPeriodType.TP7, 2026,
-                        TargetPeriodType.TP8, 2028,
-                        TargetPeriodType.TP9, 2030
-                ))
-                .build();
-        final PerformanceDataFacilityInputData data = PerformanceDataFacilityInputData.builder()
-                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
-                        .standardFuels(Map.of(
-                                PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(5000)).build(),
-                                PerformanceDataFacilityFixedConversionFactor.NON_GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(3000)).build()
-                        ))
-                        .nonStandardFuels(List.of())
-                        .electricitySuppliedFromCHP(BigDecimal.valueOf(200))
-                        .build())
-		                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
-		                        .variableEnergyConsumptionDataByProduct(List.of(
-		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Low EI product").actualThroughput(BigDecimal.valueOf(1.2)).build(),
-		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Hi EI product").actualThroughput(BigDecimal.valueOf(2.4)).build(),
-		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("New product").actualThroughput(BigDecimal.valueOf(3.2)).build()
-		                        ))
-		                        .build())
-                .build();
-
-        PerformanceDataFacilityCalculatedResults results = calculateResults(calculatedInfoData, data);
-
-        // Verify
-        assertThat(results.getActualEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
-                .isEqualTo(BigDecimal.valueOf(13500).setScale(7, RoundingMode.HALF_UP));
-        assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
-                .isEqualTo(BigDecimal.valueOf(14699.3212208).setScale(7, RoundingMode.HALF_UP));
-        assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
-                .isEqualTo(BigDecimal.valueOf(-1199.3212208).setScale(7, RoundingMode.HALF_UP));
-        assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
-		        .isEqualTo(BigDecimal.valueOf(21.7043210).setScale(7, RoundingMode.HALF_UP));
-		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
-		        .isEqualTo(BigDecimal.valueOf(319.0387861).setScale(7, RoundingMode.HALF_UP));
-		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
-		        .isEqualTo(BigDecimal.valueOf(293.0083333).setScale(7, RoundingMode.HALF_UP));
-		assertThat(results.getCo2EmissionsDifference().setScale(7, RoundingMode.HALF_UP))
-		        .isEqualTo(BigDecimal.valueOf(-26.0304527).setScale(7, RoundingMode.HALF_UP));
-		assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
-		        .isEqualTo(BigDecimal.valueOf(0.84937936019).setScale(9, RoundingMode.HALF_UP));
-		assertThat(results.getTargetPeriodResultType()).isEqualTo(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET);
-		assertThat(results.getSurplusGained()).isEqualTo(BigDecimal.valueOf(26));
-		assertThat(results.getBuyOutRequired()).isEqualTo(BigDecimal.ZERO);
-    }
-    
-    @Test
     void test_ENERGY_GJ_TP8_fixed_variable_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
@@ -3094,6 +3192,248 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 		assertThat(results.getTargetPeriodResultType()).isEqualTo(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET);
 		assertThat(results.getSurplusGained()).isEqualTo(BigDecimal.valueOf(525));
 		assertThat(results.getBuyOutRequired()).isEqualTo(BigDecimal.ZERO);
+    }
+    
+    @Test
+    void test_ENERGY_GJ_TP8_fixed_variable_by_product_2() {
+        final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
+                .targetPeriodType(TargetPeriodType.TP8)
+                .targetYear(Year.of(2027))
+                .tpMultiplier(BigDecimal.ONE)
+                .targetImprovement(BigDecimal.valueOf(0.055))
+                .baselineDate(LocalDate.of(2023, 1, 1))
+                .measurementType(MeasurementType.ENERGY_GJ)
+                .usedReportingMechanism(true)
+                .improvements(Map.of(
+                        TargetImprovementType.TP7, BigDecimal.valueOf(5),
+                        TargetImprovementType.TP8, BigDecimal.valueOf(6),
+                        TargetImprovementType.TP9, BigDecimal.valueOf(10)
+                ))
+                .totalFixedEnergy(BigDecimal.valueOf(5000000))
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Low EI product")
+                                .baselineYear(Year.of(2023))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(1000000))
+                                .throughput(BigDecimal.valueOf(10000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Hi EI product")
+                                .baselineYear(Year.of(2024))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(2000000))
+                                .throughput(BigDecimal.valueOf(20000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("New product")
+                                .baselineYear(Year.of(2025))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(3000000))
+                                .throughput(BigDecimal.valueOf(30000))
+                                .throughputUnit("units")
+                                .build()
+                ))
+                .lastYearPerTp(Map.of(
+                        TargetPeriodType.TP7, 2026,
+                        TargetPeriodType.TP8, 2028,
+                        TargetPeriodType.TP9, 2030
+                ))
+                .build();
+        final PerformanceDataFacilityInputData data = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(
+                                PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(3500000.12345678)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NATURAL_GAS, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(700000.123456789)).build()
+                        ))
+                        .nonStandardFuels(List.of())
+                        .electricitySuppliedFromCHP(BigDecimal.valueOf(1000000))
+                        .build())
+		                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+		                        .variableEnergyConsumptionDataByProduct(List.of(
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Low EI product").actualThroughput(BigDecimal.valueOf(15000)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Hi EI product").actualThroughput(BigDecimal.valueOf(15000)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("New product").actualThroughput(BigDecimal.valueOf(15000)).build()
+		                        ))
+		                        .build())
+                .build();
+
+        PerformanceDataFacilityCalculatedResults results = calculateResults(calculatedInfoData, data);
+
+        // Verify
+        assertThat(results.getActualEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(8050000.3827160).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(8089203.7084277).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(-39203.3257116).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(29.8881645).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(241771.4511650).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(240599.7357169).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getCo2EmissionsDifference().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(-1171.7154481).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(0.052941135).setScale(9, RoundingMode.HALF_UP));
+    }
+    
+    @Test
+    void test_ENERGY_GJ_TP8_fixed_variable_by_product_3() {
+        final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
+                .targetPeriodType(TargetPeriodType.TP8)
+                .targetYear(Year.of(2027))
+                .tpMultiplier(BigDecimal.ONE)
+                .targetImprovement(BigDecimal.valueOf(0.0558526345))
+                .baselineDate(LocalDate.of(2022, 1, 1))
+                .measurementType(MeasurementType.ENERGY_KWH)
+                .usedReportingMechanism(false)
+                .improvements(Map.of(
+                        TargetImprovementType.TP7, BigDecimal.valueOf(4.9849844),
+                        TargetImprovementType.TP8, BigDecimal.valueOf(6.1855425),
+                        TargetImprovementType.TP9, BigDecimal.valueOf(9.8557805)
+                ))
+                .totalFixedEnergy(BigDecimal.valueOf(1920258))
+                .variableEnergyType(VariableEnergyDepictionType.TOTALS)
+                .baselineVariableEnergy(BigDecimal.valueOf(1181778))
+                .totalThroughput(BigDecimal.valueOf(5363))
+                .throughputUnit("unit")
+                .lastYearPerTp(Map.of(
+                        TargetPeriodType.TP7, 2026,
+                        TargetPeriodType.TP8, 2028,
+                        TargetPeriodType.TP9, 2030
+                ))
+                .build();
+        final PerformanceDataFacilityInputData data = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(
+                                PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(10200300)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NATURAL_GAS, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(456000.12345)).build()
+                        ))
+                        .nonStandardFuels(List.of())
+                        .build())
+		                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+		                        .actualThroughput(BigDecimal.valueOf(10000))
+		                        .build())
+                .build();
+
+        PerformanceDataFacilityCalculatedResults results = calculateResults(calculatedInfoData, data);
+
+        // Verify
+        assertThat(results.getActualEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(21876630.12345).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(3893507.3434638).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(17983122.7799862).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(0.1021709).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(397.8031074).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(2235.1547523).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getCo2EmissionsDifference().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(1837.3516450).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(-4.304924551).setScale(9, RoundingMode.HALF_UP));
+    }
+
+    @Test
+    void test_ENERGY_GJ_fixed_variable_by_product_TP8_INTERIM() {
+        final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
+                .targetPeriodType(TargetPeriodType.TP8)
+                .targetYear(Year.of(2027))
+                .tpMultiplier(BigDecimal.ONE)
+                .targetImprovement(BigDecimal.valueOf(0.043037975))
+                .baselineDate(LocalDate.of(2023, 1, 1))
+                .measurementType(MeasurementType.ENERGY_GJ)
+                .usedReportingMechanism(false)
+                .improvements(Map.of(
+                        TargetImprovementType.TP7, BigDecimal.valueOf(3.7974684),
+                        TargetImprovementType.TP8, BigDecimal.valueOf(4.8101266),
+                        TargetImprovementType.TP9, BigDecimal.valueOf(8.8607595)
+                ))
+                .totalFixedEnergy(BigDecimal.valueOf(1000000))
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Low EI product")
+                                .baselineYear(Year.of(2022))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(1000000))
+                                .throughput(BigDecimal.valueOf(10000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Hi EI product")
+                                .baselineYear(Year.of(2023))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(1000000))
+                                .throughput(BigDecimal.valueOf(10000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("New product")
+                                .baselineYear(Year.of(2024))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(4000000))
+                                .throughput(BigDecimal.valueOf(20000))
+                                .throughputUnit("units")
+                                .build()
+                ))
+                .lastYearPerTp(Map.of(
+                        TargetPeriodType.TP7, 2026,
+                        TargetPeriodType.TP8, 2028,
+                        TargetPeriodType.TP9, 2030
+                ))
+                .build();
+        final PerformanceDataFacilityInputData data = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(
+                                PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(1000000)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NON_GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(2000000)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NATURAL_GAS, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(5000000)).build()
+                        ))
+                        .nonStandardFuels(List.of(
+                                PerformanceDataFacilityNonStandardFuel.builder()
+                                        .name("Biofuel")
+                                        .deliveredEnergy(BigDecimal.valueOf(1000000))
+                                        .conversionFactor(BigDecimal.valueOf(0.1))
+                                        .build()
+                        ))
+                        .build())
+		                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+		                        .variableEnergyConsumptionDataByProduct(List.of(
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Low EI product").actualThroughput(BigDecimal.valueOf(0)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Hi EI product").actualThroughput(BigDecimal.valueOf(24000)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("New product").actualThroughput(BigDecimal.valueOf(20000)).build()
+		                        ))
+		                        .build())
+                .build();
+
+        PerformanceDataFacilityCalculatedResults results = calculateResults(calculatedInfoData, data);
+
+        // Verify
+        assertThat(results.getActualEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(10100000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(7130593.9612375).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(2969406.0387625).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(30.9138064).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(220433.8010966).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(312229.4444444).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getCo2EmissionsDifference().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(91795.6433478).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(-0.364864865).setScale(9, RoundingMode.HALF_UP));
     }
     
     @Test
@@ -4059,18 +4399,18 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     @Test
     void test_INTERIM_TARGET() {
         final Map<TargetImprovementType, BigDecimal> improvements = Map.of(
-                TargetImprovementType.TP7, BigDecimal.valueOf(8),
-                TargetImprovementType.TP8, BigDecimal.valueOf(12),
-                TargetImprovementType.TP9, BigDecimal.valueOf(16)
+                TargetImprovementType.TP7, BigDecimal.valueOf(4.9849844),
+                TargetImprovementType.TP8, BigDecimal.valueOf(6.1855425),
+                TargetImprovementType.TP9, BigDecimal.valueOf(9.8557805)
         );
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP8;
 
         // Invoke
         BigDecimal result = PerformanceDataFacilityCalculationFunctionUtil.INTERIM_TARGET
-                .apply(improvements, targetPeriodType).setScale(7, RoundingMode.HALF_UP);
+                .apply(improvements, targetPeriodType);
 
         // Verify
-        assertThat(result).isEqualTo(BigDecimal.valueOf(0.1).setScale(7, RoundingMode.HALF_UP));
+        assertThat(result).isEqualTo(BigDecimal.valueOf(0.0558526345));
     }
 
     @Test

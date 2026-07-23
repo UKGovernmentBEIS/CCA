@@ -275,7 +275,7 @@ class PerformanceDataFacilityDigitalFormInputCalculatedDataValidatorTest {
                         .throughputAdjustmentFactor(BigDecimal.valueOf(0.6875))
                         .build())
                 .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
-                        .totalTargetVariableEnergy(BigDecimal.valueOf(30201875))
+                        .totalTargetVariableEnergy(BigDecimal.valueOf(30211968.0851064))
                         .variableEnergyConsumptionDataByProduct(List.of(
                                 PerformanceDataFacilityProductVariableEnergyData.builder()
                                         .productName("Low EI product")

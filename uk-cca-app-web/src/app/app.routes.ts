@@ -12,6 +12,7 @@ import {
 import { AccessibilityComponent } from './accessibility/accessibility.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { DashboardPageComponent } from './dashboard/dashboard-page/dashboard-page.component';
+import { dashboardRequestTypeGuard } from './dashboard/dashboard-request-type.guard';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LandingPageGuard } from './landing-page/landing-page.guard';
@@ -111,7 +112,8 @@ export const APP_ROUTES: Routes = [
       {
         path: 'dashboard',
         data: { pageTitle: 'Climate Change Agreement dashboard' },
-        canActivate: [AuthorizeGuard],
+        canActivate: [AuthorizeGuard, dashboardRequestTypeGuard],
+        runGuardsAndResolvers: 'paramsOrQueryParamsChange',
         component: DashboardPageComponent,
       },
       {

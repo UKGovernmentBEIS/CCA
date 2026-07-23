@@ -10,7 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import uk.gov.cca.api.common.converters.CsvBigDecimalScale7Converter;
+import uk.gov.cca.api.common.converters.CsvBigDecimalScale7HalfDownConverter;
 import uk.gov.cca.api.common.converters.CsvLocalDateConverter;
 import uk.gov.cca.api.common.converters.CsvMeasurementTypeConverter;
 import uk.gov.cca.api.common.converters.CsvStringTrimConverter;
@@ -36,19 +36,19 @@ public class Cca3SectorAssociationSchemeDataVO {
 	@NotNull(message = "Invalid energy/carbon unit")
 	private MeasurementType measurementType;
 
-	@CsvCustomBindByPosition(position = 3, converter = CsvBigDecimalScale7Converter.class, required = true)
+	@CsvCustomBindByPosition(position = 3, converter = CsvBigDecimalScale7HalfDownConverter.class, required = true)
 	@NotNull(message = "Must be a number smaller than 100 with up to 7 decimals")
 	@DecimalMax(value = "100", message = "Must be a number smaller or equal than 100 ")
 	@Digits(integer = 3, fraction = 7, message = "Must be a number with up to 7 decimals")
 	private BigDecimal targetPeriod7Improvement;
 
-	@CsvCustomBindByPosition(position = 4, converter = CsvBigDecimalScale7Converter.class, required = true)
+	@CsvCustomBindByPosition(position = 4, converter = CsvBigDecimalScale7HalfDownConverter.class, required = true)
 	@NotNull(message = "Must be a number smaller than 100 with up to 7 decimals")
 	@DecimalMax(value = "100", message = "Must be a number smaller or equal than 100 ")
 	@Digits(integer = 3, fraction = 7, message = "Must be a number with up to 7 decimals")
 	private BigDecimal targetPeriod8Improvement;
 
-	@CsvCustomBindByPosition(position = 5, converter = CsvBigDecimalScale7Converter.class, required = true)
+	@CsvCustomBindByPosition(position = 5, converter = CsvBigDecimalScale7HalfDownConverter.class, required = true)
 	@NotNull(message = "Must be a number smaller than 100 with up to 7 decimals")
 	@DecimalMax(value = "100", message = "Must be a number smaller or equal than 100 ")
 	@Digits(integer = 3, fraction = 7, message = "Must be a number with up to 7 decimals")

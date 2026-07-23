@@ -227,14 +227,32 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
     };
 
     /**
-     * Split by product: Sum of (BY energy/carbon intensity x Adjusted throughput for each product) x (1 - improvement % or Interim target %)
+     * Split by product: Sum of [(BY energy/carbon intensity x Adjusted throughput for each product) x (1 - improvement % or Interim target %)]
      * Variable totals only: (BY energy/carbon intensity x Adjusted throughput) x (1 - improvement % or Interim target %)
      * Fixed only: BY fixed energy/carbon
      */
     public final BiFunction<PerformanceDataFacilityCalculationParameters, PerformanceDataFacilityInputData, BigDecimal> TOTAL_TARGET_VARIABLE_ENERGY =
-            (calculatedParameters, data) ->
-                    PerformanceDataFacilityCalculationCommonFunctionUtil.ENERGY_INTENSITY_MULTIPLY_ADJUSTED_THROUGHPUT
-                            .apply(calculatedParameters, data).multiply(BigDecimal.ONE.subtract(calculatedParameters.getTargetImprovement()), MathContext.DECIMAL128);
+            (calculatedParameters, data) -> {
+                if (calculatedParameters.getVariableEnergyType() == null) {
+                    return BigDecimal.ZERO;
+                }
+
+                return switch (calculatedParameters.getVariableEnergyType()) {
+                    case BY_PRODUCT ->
+                    	PerformanceDataFacilityCalculationCommonFunctionUtil.PRODUCT_SUM_ENERGY_ADJUSTED_THROUGHPUT.apply(calculatedParameters, data);
+                    case TOTALS -> {
+                    	Boolean usedReportingMechanism = calculatedParameters.getUsedReportingMechanism();
+                        BigDecimal energyCarbonIntensity = PerformanceDataFacilityCalculationCommonFunctionUtil.ENERGY_CARBON_INTENSITY
+                                .apply(calculatedParameters.getBaselineVariableEnergy(), calculatedParameters.getTotalThroughput());
+                        BigDecimal adjustedThroughput = PerformanceDataFacilityCalculationCommonFunctionUtil.ADJUSTED_THROUGHPUT
+                                .apply(usedReportingMechanism, data.getEnergyFuelDetails(), data.getThroughputDetails().getActualThroughput());
+
+                        yield energyCarbonIntensity
+                        	.multiply(adjustedThroughput, MathContext.DECIMAL128)
+                        	.multiply(BigDecimal.ONE.subtract(calculatedParameters.getTargetImprovement()), MathContext.DECIMAL128);
+                    }
+                };
+            };
 
     /**
      * Split by product: Sum of (BY energy/carbon intensity x Adjusted throughput for each product)
@@ -281,16 +299,17 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
      * Fixed only: BY fixed energy/carbon
      * multiplier -> (adjust BY fixed energy/carbon to 2 x BY Fixed energy/carbon for 2 year target period)
      */
-    public final BiFunction<PerformanceDataFacilityCalculationParameters, PerformanceDataFacilityInputData, BigDecimal> BASE_ENERGY_CARBON_THROUGHPUT =
+    public final BiFunction<PerformanceDataFacilityCalculationParameters, PerformanceDataFacilityInputData, BigDecimal> TOTAL_BY_ENERGY_CARBON_AT_TP_THROUGHPUT =
             (calculatedParameters, data) -> {
         BigDecimal tpMultiplier = calculatedParameters.getTpMultiplier();
+        BigDecimal byFixedEnergy = tpMultiplier.multiply(calculatedParameters.getTotalFixedEnergy(), MathContext.DECIMAL128);
 
         if (calculatedParameters.getVariableEnergyType() == null) {
-            return tpMultiplier.multiply(calculatedParameters.getTotalFixedEnergy(), MathContext.DECIMAL128);
+            return byFixedEnergy;
         }
 
         return PerformanceDataFacilityCalculationCommonFunctionUtil.ENERGY_INTENSITY_MULTIPLY_ADJUSTED_THROUGHPUT
                 .apply(calculatedParameters, data)
-                .add(tpMultiplier.multiply(calculatedParameters.getTotalFixedEnergy(), MathContext.DECIMAL128));
+                .add(byFixedEnergy);
     };
 }

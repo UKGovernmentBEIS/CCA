@@ -21,8 +21,8 @@
 
       @if (vm.contentComponent; as component) {
         <ng-container *ngComponentOutlet="component" />
-      } @else {
-        <netz-task-list [sections]="vm.sections" />
+      } @else if (vm.sections; as sections) {
+        <netz-task-list [sections]="sections" />
       }
 
       @if (vm.postContentComponent; as postContentComponent) {
@@ -36,7 +36,10 @@
       @if (vm.hasTimeline) {
         <netz-timeline>
           @for (timelineEntry of vm.timeline; track timelineEntry.id) {
-            <netz-timeline-item [action]="timelineEntry" [link]="timelineEntry | timelineItemLink: true" />
+            <netz-timeline-item
+              [action]="timelineEntry"
+              [link]="(timelineEntry | timelineItemLink: true) ?? undefined"
+            />
           }
         </netz-timeline>
       }
@@ -46,7 +49,7 @@
       <div class="govuk-grid-column-one-third">
         <netz-related-actions
           [allowedRequestTaskActions]="vm.relatedActions"
-          [showReassignAction]="vm.showAssignAction"
+          [showReassignAction]="vm.showAssignAction ?? false"
           [taskId]="vm.requestTask.id"
           [taskType]="vm.requestTask.type"
         />

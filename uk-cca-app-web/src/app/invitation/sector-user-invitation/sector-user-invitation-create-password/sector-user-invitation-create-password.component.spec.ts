@@ -70,9 +70,7 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
     expect(
       (
         getByLabelText('Create a password to activate your account', fixture.nativeElement) as
-          | HTMLInputElement
-          | HTMLSelectElement
-          | null
+          HTMLInputElement | HTMLSelectElement | null
       )?.value ?? '',
     ).toBe('');
 

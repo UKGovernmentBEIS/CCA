@@ -244,11 +244,13 @@ class PerformanceDataFacilityValidatorTest {
                         .targetPeriodYears(List.of(
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2024))
+                                        .endDate(LocalDate.of(2024, 12, 31))
                                         .reportingStartDate(LocalDate.of(2025, 1, 1))
                                         .reportingEndDate(LocalDate.of(2025, 12, 31))
                                         .build(),
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2025))
+                                        .endDate(LocalDate.of(2025, 12, 31))
                                         .reportingStartDate(LocalDate.of(2026, 1, 1))
                                         .build()
                         ))
@@ -274,11 +276,13 @@ class PerformanceDataFacilityValidatorTest {
                         .targetPeriodYears(List.of(
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2024))
+                                        .endDate(LocalDate.of(2024, 12, 31))
                                         .reportingStartDate(LocalDate.of(2025, 1, 1))
                                         .reportingEndDate(LocalDate.of(2025, 12, 31))
                                         .build(),
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2025))
+                                        .endDate(LocalDate.of(2025, 12, 31))
                                         .reportingStartDate(LocalDate.of(2026, 1, 1))
                                         .build()
                         ))
@@ -306,11 +310,13 @@ class PerformanceDataFacilityValidatorTest {
                         .targetPeriodYears(List.of(
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2024))
+                                        .endDate(LocalDate.of(2024, 12, 31))
                                         .reportingStartDate(LocalDate.of(2025, 1, 1))
                                         .reportingEndDate(LocalDate.of(2025, 12, 31))
                                         .build(),
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2025))
+                                        .endDate(LocalDate.of(2025, 12, 31))
                                         .reportingStartDate(LocalDate.of(2026, 1, 1))
                                         .build()
                         ))
@@ -330,18 +336,20 @@ class PerformanceDataFacilityValidatorTest {
     }
 
     @Test
-    void validateFacilityEligibility_inactive_not_valid() {
+    void validateFacilityEligibility_inactive_valid() {
         final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
         final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
                 .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
                         .targetPeriodYears(List.of(
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2024))
+                                        .endDate(LocalDate.of(2024, 12, 31))
                                         .reportingStartDate(LocalDate.of(2025, 1, 1))
                                         .reportingEndDate(LocalDate.of(2025, 12, 31))
                                         .build(),
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2025))
+                                        .endDate(LocalDate.of(2025, 12, 31))
                                         .reportingStartDate(LocalDate.of(2026, 1, 1))
                                         .build()
                         ))
@@ -357,9 +365,70 @@ class PerformanceDataFacilityValidatorTest {
         BusinessValidationResult result = validator.validateFacilityEligibility(facility, targetPeriodDetails, submissionDate);
 
         // Verify
+        assertThat(result.isValid()).isTrue();
+        assertThat((List<PerformanceDataFacilityViolation>) result.getViolations()).isEmpty();
+    }
+
+    @Test
+    void validateFacilityEligibility_inactive_not_valid() {
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .endDate(LocalDate.of(2024, 12, 31))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .endDate(LocalDate.of(2025, 12, 31))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder()
+                .createdDate(LocalDate.of(2024, 12, 31).atStartOfDay())
+                .closedDate(LocalDate.of(2024, 12, 31))
+                .build();
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityEligibility(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
         assertThat(result.isValid()).isFalse();
         assertThat((List<PerformanceDataFacilityViolation>) result.getViolations()).extracting(PerformanceDataFacilityViolation::getMessage)
-                .containsOnly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE.getMessage());
+        .containsOnly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE.getMessage());
+    }
+
+    @Test
+    void validateFacilityEligibility_activated_last_day_of_tp_valid() {
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .endDate(LocalDate.of(2024, 12, 31))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2025, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder()
+                .createdDate(LocalDate.of(2024, 12, 31).atTime(23, 0))
+                .build();
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityEligibility(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isTrue();
     }
 
     @Test
@@ -370,11 +439,13 @@ class PerformanceDataFacilityValidatorTest {
                         .targetPeriodYears(List.of(
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2024))
+                                        .endDate(LocalDate.of(2024, 12, 31))
                                         .reportingStartDate(LocalDate.of(2025, 1, 1))
                                         .reportingEndDate(LocalDate.of(2025, 12, 31))
                                         .build(),
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2025))
+                                        .endDate(LocalDate.of(2025, 12, 31))
                                         .reportingStartDate(LocalDate.of(2026, 1, 1))
                                         .build()
                         ))
@@ -403,11 +474,13 @@ class PerformanceDataFacilityValidatorTest {
                         .targetPeriodYears(List.of(
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2024))
+                                        .endDate(LocalDate.of(2024, 12, 31))
                                         .reportingStartDate(LocalDate.of(2025, 1, 1))
                                         .reportingEndDate(LocalDate.of(2025, 12, 31))
                                         .build(),
                                 TargetPeriodYear.builder()
                                         .targetYear(Year.of(2025))
+                                        .endDate(LocalDate.of(2025, 12, 31))
                                         .reportingStartDate(LocalDate.of(2026, 1, 1))
                                         .build()
                         ))
@@ -640,10 +713,11 @@ class PerformanceDataFacilityValidatorTest {
                 .build();
 
         final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+        		.baselineDate(LocalDate.of(2022, 1, 1))
                 .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                 .variableEnergyConsumptionDataByProduct(List.of(
                         ProductVariableEnergyConsumptionData.builder()
-                                .baselineYear(Year.of(2024))
+                                .baselineYear(Year.of(2022))
                                 .build()
                 ))
                 .build();
@@ -686,7 +760,9 @@ class PerformanceDataFacilityValidatorTest {
                 .accountId(accountId)
                 .build();
 
-        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder().build();
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+        		.baselineDate(LocalDate.of(2022, 1, 1))
+        		.build();
 
         when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
                 .thenReturn(baselineAndTargets);
@@ -727,6 +803,7 @@ class PerformanceDataFacilityValidatorTest {
                 .build();
 
         final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+        		.baselineDate(LocalDate.of(2024, 1, 1))
                 .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                 .variableEnergyConsumptionDataByProduct(List.of(
                         ProductVariableEnergyConsumptionData.builder()
@@ -776,6 +853,7 @@ class PerformanceDataFacilityValidatorTest {
                 .build();
 
         final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+        		.baselineDate(LocalDate.of(2022, 1, 1))
                 .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                 .build();
 
@@ -789,6 +867,56 @@ class PerformanceDataFacilityValidatorTest {
         assertThat(result.isValid()).isFalse();
         assertThat((List<PerformanceDataFacilityViolation>) result.getViolations()).extracting(PerformanceDataFacilityViolation::getMessage)
                 .containsOnly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE_PRODUCTS.getMessage());
+        verify(performanceDataFacilityReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
+    }
+
+    @Test
+    void validateFacilityProductsEligibility_no_product_matches_facility_base_year_not_valid() {
+        final Long accountId = 11L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder()
+                .facilityBusinessId(facilityBusinessId)
+                .accountId(accountId)
+                .build();
+
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+        		.baselineDate(LocalDate.of(2022, 1, 1))
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .baselineYear(Year.of(2024))
+                                .build()
+                ))
+                .build();
+
+        when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
+                .thenReturn(baselineAndTargets);
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityProductsEligibility(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isFalse();
+        assertThat((List<PerformanceDataFacilityViolation>) result.getViolations()).extracting(PerformanceDataFacilityViolation::getMessage)
+                .containsOnly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_PRODUCT_WITH_FACILITY_BASE_YEAR_DOES_NOT_EXIST.getMessage());
         verify(performanceDataFacilityReferenceDataService, times(1))
                 .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
     }

@@ -1,6 +1,7 @@
 import {
   PerformanceAccountTemplateProcessingRequestMetadata,
   PerformanceDataSpreadsheetProcessingRequestMetadata,
+  RequestMetadata,
 } from 'cca-api';
 
 import { RequestTypeToHeadingPipe } from './request-type-to-heading.pipe';
@@ -17,9 +18,11 @@ describe('RequestTypeToHeadingPipe', () => {
     expect(pipe.transform('TARGET_UNIT_MOA')).toEqual('Subsistence fees');
     expect(pipe.transform('SECTOR_MOA')).toEqual('Subsistence fees');
     expect(pipe.transform('UNDERLYING_AGREEMENT')).toEqual('Underlying agreement');
-    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION', { initiatorRoleType: 'REGULATOR' } as any)).toEqual(
-      'Underlying agreement variation by regulator',
-    );
+    expect(
+      pipe.transform('UNDERLYING_AGREEMENT_VARIATION', {
+        initiatorRoleType: 'REGULATOR',
+      } as RequestMetadata),
+    ).toEqual('Underlying agreement variation by regulator');
     expect(pipe.transform('ADMIN_TERMINATION')).toEqual('Admin termination');
     expect(pipe.transform('BUY_OUT_SURPLUS_ACCOUNT_PROCESSING')).toEqual('Buy-out and surplus');
     expect(pipe.transform('CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING')).toEqual('Migration');

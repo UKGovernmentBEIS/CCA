@@ -23,8 +23,8 @@ import { RequestActionPageContentFactoryMap } from '../../request-action.types';
 type ViewModel = {
   requestAction: RequestActionDTO;
   header: string;
-  sections: TaskSection[];
-  component: Type<unknown>;
+  sections?: TaskSection[];
+  component?: Type<unknown>;
 };
 
 @Component({
@@ -38,12 +38,12 @@ export class RequestActionPageComponent {
   private readonly store = inject(RequestActionStore);
   private readonly injector = inject(Injector);
 
-  vm: Signal<ViewModel> = computed(() => {
+  vm: Signal<ViewModel | null> = computed(() => {
     const requestAction = this.store.select(requestActionQuery.selectAction)();
     if (!requestAction) return null;
 
     const { header, sections, component } = runInInjectionContext(this.injector, () =>
-      this.contentFactoryMap[requestAction.type](),
+      this.contentFactoryMap[requestAction.type as string](),
     );
 
     return {

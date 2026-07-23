@@ -67,9 +67,7 @@ describe('SetPasswordOnlyComponent', () => {
     expect(
       (
         getByLabelText('Create a password to activate your account', fixture.nativeElement) as
-          | HTMLInputElement
-          | HTMLSelectElement
-          | null
+          HTMLInputElement | HTMLSelectElement | null
       )?.value ?? '',
     ).toBe('');
     expect(

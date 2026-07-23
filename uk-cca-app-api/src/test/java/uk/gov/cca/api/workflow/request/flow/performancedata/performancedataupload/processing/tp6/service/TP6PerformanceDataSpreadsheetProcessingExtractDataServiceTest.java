@@ -21,8 +21,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.domain.PerformanceDataTargetPeriodType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataCalculatedMetrics;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.tp6.domain.ActualTargetPeriodPerformance;
@@ -76,6 +77,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
                 PerformanceDataSpreadsheetProcessingRequestMetadata.builder()
                         .submissionType(PerformanceDataSubmissionType.PRIMARY)
                         .performanceDataTargetPeriodType(PerformanceDataTargetPeriodType.TP6)
+                        .targetPeriodDetails(TargetPeriodYearDTO.builder().buyOutCost(25).build())
                         .build();
         final FileDTO file = FileDTO.builder().fileContent(createMockXlsxTemplate()).build();
 
@@ -111,6 +113,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
     void extractCalculatedData_no_data() {
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetUnitDetails(null)
                 .actualTargetPeriodPerformance(null)
                 .performanceResult(null)
@@ -132,6 +135,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
     void extractCalculatedData_empty_values() {
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetType(AgreementCompositionType.ABSOLUTE)
                 .targetUnitDetails(PerformanceDataTargetUnitDetails.builder().build())
                 .actualTargetPeriodPerformance(ActualTargetPeriodPerformance.builder().build())
@@ -160,6 +164,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
         // BPC1-T00070_TPR_TP6_V1.xlsx
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetType(AgreementCompositionType.ABSOLUTE)
                 .targetUnitDetails(PerformanceDataTargetUnitDetails.builder()
                         .tuIdentifier("businessId")
@@ -242,6 +247,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
     void extractCalculatedData_ABSOLUTE_zero_values() {
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetType(AgreementCompositionType.ABSOLUTE)
                 .targetUnitDetails(PerformanceDataTargetUnitDetails.builder()
                         .tuIdentifier("businessId")
@@ -319,6 +325,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
         // AIC-T00060_TPR_TP6_V1.xlsx
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetType(AgreementCompositionType.RELATIVE)
                 .targetUnitDetails(PerformanceDataTargetUnitDetails.builder()
                         .tuIdentifier("businessId")
@@ -398,6 +405,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
     void extractCalculatedData_RELATIVE_zero_values() {
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetType(AgreementCompositionType.RELATIVE)
                 .targetUnitDetails(PerformanceDataTargetUnitDetails.builder()
                         .tuIdentifier("businessId")
@@ -476,6 +484,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
         // CONF-T00008_TPR_TP6_V1.xlsx
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetType(AgreementCompositionType.NOVEM)
                 .targetUnitDetails(PerformanceDataTargetUnitDetails.builder()
                         .tuIdentifier("businessId")
@@ -561,6 +570,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
     void extractCalculatedData_NOVEM_TONNE() {
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetType(AgreementCompositionType.NOVEM)
                 .targetUnitDetails(PerformanceDataTargetUnitDetails.builder()
                         .tuIdentifier("businessId")
@@ -646,6 +656,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
     void extractCalculatedData_NOVEM_zero_values() {
         final TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetType(AgreementCompositionType.NOVEM)
                 .targetUnitDetails(PerformanceDataTargetUnitDetails.builder()
                         .tuIdentifier("businessId")

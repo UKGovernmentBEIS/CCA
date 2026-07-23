@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import uk.gov.cca.api.common.domain.AgreementCompositionType;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.domain.PerformanceDataTargetPeriodType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.tp6.domain.TP6PerformanceData;
 
@@ -30,6 +30,9 @@ public class PerformanceData {
 
     @NotNull
     private PerformanceDataTargetPeriodType type;
+    
+    @NotNull
+    private Integer buyOutCost;
 
     // Target Period
     @NotNull

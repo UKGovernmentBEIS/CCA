@@ -3352,5 +3352,21 @@
             </sql>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_add_buy_out_cost_in PERFORMANCE_DATA_SPREADSHEET_PROCESSING_request_action_and_request" author="apostolouk@unisystems.gr">
+        <comment>Add buy-out cost in PERFORMANCE_DATA_SPREADSHEET_PROCESSING request action, metadata and request payloads</comment>
+        <sql>
+            UPDATE request_action
+            SET payload = jsonb_set(payload, '{performanceData,buyOutCost}', '25')
+            WHERE type = 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED';
+            
+            UPDATE request r
+            SET payload = jsonb_set(payload, '{performanceData,buyOutCost}', '25'),
+            	metadata = jsonb_set(metadata, '{targetPeriodDetails,buyOutCost}', '25')
+            WHERE exists (select 1 from request_type rt  
+            				where  rt.id = r.type_id 
+            				and rt.code  = 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING');
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>

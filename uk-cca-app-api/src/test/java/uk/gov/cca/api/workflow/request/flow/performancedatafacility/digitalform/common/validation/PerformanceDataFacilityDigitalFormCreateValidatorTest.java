@@ -229,6 +229,57 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any());
     }
+    
+    @Test
+    void validateAction_with_payload_no_facility_product_with_facility_base_year_not_valid() {
+        final Long facilityId = 1L;
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final PerformanceDataReportType reportType = PerformanceDataReportType.FINAL;
+        final PerformanceDataFacilityDigitalFormRequestCreateActionPayload payload =
+                PerformanceDataFacilityDigitalFormRequestCreateActionPayload.builder()
+                        .targetPeriodType(targetPeriodType)
+                        .reportType(reportType)
+                        .build();
+
+        final TargetPeriodDetailsDTO targetPeriod = TargetPeriodDetailsDTO.builder().businessId(targetPeriodType).build();
+        final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
+
+        when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
+        when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
+                CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
+        when(performanceDataFacilityValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_PRODUCT_WITH_FACILITY_BASE_YEAR_DOES_NOT_EXIST))));
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> validator.validateAction(facilityId, payload));
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE);
+        verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
+        verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
+                CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
+        verify(performanceDataFacilityValidator, times(1))
+                .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any());
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any());
+    }
 
     @Test
     void validateAction_with_payload_facility_baseline_date_not_valid() {

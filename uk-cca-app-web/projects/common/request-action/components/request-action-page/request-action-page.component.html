@@ -6,8 +6,8 @@
 
       @if (vm.component; as component) {
         <ng-container *ngComponentOutlet="component" />
-      } @else {
-        <netz-task-list [sections]="vm.sections" />
+      } @else if (vm.sections; as sections) {
+        <netz-task-list [sections]="sections" />
       }
     </div>
   </div>

@@ -87,7 +87,7 @@ export class TprFormSubmitActionComponent {
           if (info) {
             this.errorSummaryInfo.set(info);
             this.isErrorSummaryDisplayed.set(true);
-            this.isCancelError.set(err.error.code === 'TPRDF1002');
+            this.isCancelError.set(['TPRDF1002', 'TPRDF1005'].includes(err.error.code));
           }
 
           return EMPTY;

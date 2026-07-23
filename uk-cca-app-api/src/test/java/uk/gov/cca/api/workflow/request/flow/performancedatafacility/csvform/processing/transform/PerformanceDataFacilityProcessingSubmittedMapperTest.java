@@ -7,7 +7,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityCalculatedResults;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityContainer;

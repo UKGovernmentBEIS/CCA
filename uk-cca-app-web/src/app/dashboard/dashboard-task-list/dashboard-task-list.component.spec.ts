@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, convertToParamMap, ParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ParamMap, provideRouter } from '@angular/router';
 
 import { of, Subject } from 'rxjs';
 
@@ -12,7 +12,7 @@ import { DashboardFetchFn, DashboardTaskListComponent } from './dashboard-task-l
 class ActivatedRouteTestStub {
   private readonly queryParamSubject = new Subject<ParamMap>();
   readonly queryParamMap = this.queryParamSubject.asObservable();
-  readonly snapshot = { fragment: null, queryParamMap: convertToParamMap({}) } as any;
+  readonly snapshot = { fragment: null, queryParamMap: convertToParamMap({}) } as ActivatedRouteSnapshot;
 
   emitQueryParams(params?: Record<string, string | number>) {
     this.queryParamSubject.next(convertToParamMap(params ?? {}));

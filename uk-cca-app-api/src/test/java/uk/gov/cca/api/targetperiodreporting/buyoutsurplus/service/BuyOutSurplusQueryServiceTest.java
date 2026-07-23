@@ -7,9 +7,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
+import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransaction;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransactionHistory;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AvailableTargetPeriodsBuyOutDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionHistoryDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionListItemDTO;
@@ -22,7 +25,10 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurpl
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusTransactionCustomRepository;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusTransactionRepository;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.transform.BuyOutSurplusTransactionHistoryMapper;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodBuyOutDetailsDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataDetailsInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.PerformanceDataQueryService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -31,6 +37,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.files.documents.service.FileDocumentService;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -73,6 +80,12 @@ class BuyOutSurplusQueryServiceTest {
     
     @Mock
     private BuyOutSurplusTransactionHistoryMapper buyOutSurplusHistoryMapper;
+    
+    @Mock
+    private TargetPeriodService targetPeriodService;
+    
+    @Mock
+    private SchemeTerminationHelper schemeTerminationHelper;
 
     @Test
     void getAllTransactionInfoByAccountAndTargetPeriodPessimistic() {
@@ -353,5 +366,78 @@ class BuyOutSurplusQueryServiceTest {
         assertThat(result).isPresent().contains(expected);
         verify(buyOutSurplusTransactionRepository, times(1))
                 .findByPerformanceDataId(performanceDataId);
+    }
+    
+    @Test
+    void getAvailableBuyOutTargetPeriods() {
+        LocalDate date = LocalDate.of(2026, 1, 1);
+
+        TargetPeriod tp6 = TargetPeriod.builder()
+                .id(1L)
+                .businessId(TargetPeriodType.TP6)
+                .schemeVersion(SchemeVersion.CCA_2)
+                .buyOutStartDate(LocalDate.of(2023, 1, 1))
+                .build();
+
+        TargetPeriod cca3Current = TargetPeriod.builder()
+                .id(2L)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .buyOutStartDate(LocalDate.of(2025, 1, 1))
+                .build();
+
+        TargetPeriod cca3Previous = TargetPeriod.builder()
+                .id(3L)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .buyOutStartDate(LocalDate.of(2024, 1, 1))
+                .build();
+
+        when(targetPeriodService.getTargetPeriodBuyOutCurrentAndPrevious(date))
+                .thenReturn(List.of(tp6, cca3Current, cca3Previous));
+        when(schemeTerminationHelper.isAfterCca2TerminationDate(date)).thenReturn(false);
+
+        AvailableTargetPeriodsBuyOutDTO result = buyOutSurplusQueryService.getAvailableBuyOutTargetPeriods(date);
+
+        assertThat(result.getCurrentTargetPeriods())
+                .containsExactly(
+                        TargetPeriodBuyOutDetailsDTO.builder().id(1L).businessId(TargetPeriodType.TP6).build(),
+                        TargetPeriodBuyOutDetailsDTO.builder().id(2L).build());
+        assertThat(result.getPreviousTargetPeriods())
+                .containsExactly(
+                        TargetPeriodBuyOutDetailsDTO.builder().id(3L).build());
+        verify(targetPeriodService).getTargetPeriodBuyOutCurrentAndPrevious(date);
+        verify(schemeTerminationHelper).isAfterCca2TerminationDate(date);
+    }
+    
+    @Test
+    void getAvailableBuyOutTargetPeriods_cca2NotActive_singleCca3Period() {
+        LocalDate date = LocalDate.of(2026, 1, 1);
+
+        TargetPeriod tp6 = TargetPeriod.builder()
+                .id(1L)
+                .businessId(TargetPeriodType.TP6)
+                .schemeVersion(SchemeVersion.CCA_2)
+                .buyOutStartDate(LocalDate.of(2024, 1, 1))
+                .build();
+
+        TargetPeriod cca3 = TargetPeriod.builder()
+                .id(2L)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .buyOutStartDate(LocalDate.of(2025, 1, 1))
+                .build();
+
+        when(targetPeriodService.getTargetPeriodBuyOutCurrentAndPrevious(date))
+                .thenReturn(List.of(tp6, cca3));
+        when(schemeTerminationHelper.isAfterCca2TerminationDate(date)).thenReturn(true);
+
+        AvailableTargetPeriodsBuyOutDTO result = buyOutSurplusQueryService.getAvailableBuyOutTargetPeriods(date);
+
+        assertThat(result.getCurrentTargetPeriods())
+                .containsExactly(
+                        TargetPeriodBuyOutDetailsDTO.builder()
+                                .id(2L)
+                                .build());
+        assertThat(result.getPreviousTargetPeriods()).isEmpty();
+        verify(targetPeriodService).getTargetPeriodBuyOutCurrentAndPrevious(date);
+        verify(schemeTerminationHelper).isAfterCca2TerminationDate(date);
     }
 }

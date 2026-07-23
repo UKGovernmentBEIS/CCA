@@ -10,7 +10,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
 import { Mocked } from 'vitest';
 
-import { CaExternalContactsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
+import { CaExternalContactsService, RegulatorAuthoritiesService, RequestTaskItemDTO, TasksService } from 'cca-api';
 
 import {
   mockReasonForAdminTerminationWithdrawPayload,
@@ -57,7 +57,10 @@ describe('WithdrawAdminTerminationNotifyOperatorComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setRequestTaskItem({ requestTask: { type: 'ADMIN_TERMINATION_APPLICATION_WITHDRAW' as any } });
+    store.setRequestTaskItem({
+      requestTask: { type: 'ADMIN_TERMINATION_APPLICATION_WITHDRAW' },
+    } as RequestTaskItemDTO);
+
     store.setPayload(mockReasonForAdminTerminationWithdrawPayload);
 
     fixture = TestBed.createComponent(WithdrawAdminTerminationNotifyOperatorComponent);

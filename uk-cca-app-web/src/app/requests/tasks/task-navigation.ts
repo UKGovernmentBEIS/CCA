@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 export const backlinkResolver = (summaryRoute: string, previousStepRoute: string) => {
   return () => {
     const router = inject(Router);
-    const isChangeClicked = !!router.getCurrentNavigation().finalUrl.queryParams?.change;
+    const navigation = router.currentNavigation();
+    const isChangeClicked = navigation ? !!navigation.finalUrl?.queryParams?.change : false;
 
     return isChangeClicked ? summaryRoute : `../${previousStepRoute}`;
   };

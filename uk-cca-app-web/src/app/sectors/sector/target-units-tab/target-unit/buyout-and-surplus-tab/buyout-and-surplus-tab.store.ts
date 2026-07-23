@@ -4,7 +4,7 @@ import { SignalStore } from '@netz/common/store';
 
 import { AccountBuyOutSurplusInfoDTO } from 'cca-api';
 
-interface BuyoutAndSurplusTabState {
+export interface BuyoutAndSurplusTabState {
   surplusInfo: AccountBuyOutSurplusInfoDTO;
 }
 

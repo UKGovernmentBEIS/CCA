@@ -61,13 +61,13 @@ export const facilityApplyRuleFormProvider: Provider = {
         GovukValidators.max(42.9, 'Percentage of energy consumed in the installation must be between 0 and 42.9'),
         GovukValidators.maxIntegerAndDecimalsValidator(2, 7),
       ]),
-      startDate: fb.control(applyRule?.startDate ? (new Date(applyRule.startDate) as any) : null),
+      startDate: fb.control(applyRule?.startDate ? new Date(applyRule.startDate) : null),
       evidenceFile: buildFileFormControl,
     });
 
     group.controls.energyConsumed.valueChanges.pipe(takeUntilDestroyed()).subscribe((energyConsumed) => {
       // the `as any` cast is due to the form input becoming `empty string` when deleting the input
-      if (energyConsumed !== null && energyConsumed !== ('' as any) && Number(energyConsumed) < 70) {
+      if (energyConsumed !== null && energyConsumed !== ('' as unknown) && Number(energyConsumed) < 70) {
         group.controls.energyConsumedProvision.enable();
         group.controls.startDate.enable();
       } else {

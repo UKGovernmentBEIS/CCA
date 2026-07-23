@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { AccountAddressDTO } from 'cca-api';
 
 import { Country } from '../types/country';
+import { logger } from '../utils/logger';
 
 @Pipe({ name: 'address' })
 export class AddressPipe implements PipeTransform {
@@ -17,7 +18,7 @@ function getAddressAsArray(address: AccountAddressDTO): string[] {
 
 export function transformAddress(address: AccountAddressDTO, countries: Country[]) {
   if (!countries) {
-    console.error('The countries were not loaded from the service.');
+    logger.error('The countries were not loaded from the service.');
     return;
   }
 

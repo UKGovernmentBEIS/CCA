@@ -1,4 +1,4 @@
-import { inject, Injector, runInInjectionContext } from '@angular/core';
+import { inject, Injector, isDevMode, runInInjectionContext } from '@angular/core';
 import { CanActivateFn, CanDeactivateFn, Router } from '@angular/router';
 
 import { catchError, forkJoin, map, of, switchMap, tap } from 'rxjs';
@@ -31,11 +31,21 @@ export function getRequestTaskPageDefaultCanActivateGuard(taskIdParam = 'taskId'
       return true;
     }
 
+    // auto-generated API methods return HttpResponse<T> | T unions;
+
     return tasksService.getTaskItemInfoById(id).pipe(
-      switchMap((requestTaskItem) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      switchMap((requestTaskItem: any) =>
         forkJoin({
-          timeline: requestActionsService.getRequestActionsByRequestId(requestTaskItem.requestInfo.id),
-          related: requestItemsService.getItemsByRequest(requestTaskItem.requestInfo.id),
+          timeline: requestActionsService
+            .getRequestActionsByRequestId(requestTaskItem.requestInfo.id)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .pipe(map((t: any) => (Array.isArray(t) ? t : (t.body ?? [])))),
+
+          related: requestItemsService
+            .getItemsByRequest(requestTaskItem.requestInfo.id)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .pipe(map((r: any) => (r.items !== undefined ? r : (r.body ?? { items: [] })))),
         }).pipe(map(({ timeline, related }) => ({ requestTaskItem, timeline, related }))),
       ),
       tap(({ requestTaskItem, timeline, related }) => {
@@ -46,7 +56,7 @@ export function getRequestTaskPageDefaultCanActivateGuard(taskIdParam = 'taskId'
       }),
       map(() => true),
       catchError((e) => {
-        console.error(e);
+        if (isDevMode()) console.error(e);
         return of(router.createUrlTree(['dashboard']));
       }),
     );

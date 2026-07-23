@@ -37,6 +37,7 @@ describe('PreAuditReviewDeterminationComponent', () => {
       imports: [PreAuditReviewDeterminationComponent],
       providers: [
         provideHttpClient(),
+        { provide: Router, useValue: { navigate: vi.fn() } },
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },

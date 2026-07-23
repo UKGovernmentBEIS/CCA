@@ -60,8 +60,7 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
         }
 
         return PerformanceDataFacilityCalculationFunctionUtil.INTERIM_TARGET
-                .apply(improvements, targetPeriodType)
-                .setScale(7, RoundingMode.HALF_UP);
+                .apply(improvements, targetPeriodType);
     }
 
     public final Function<PerformanceDataFacilityCalculationParameters, BigDecimal> TARGET_IMPROVEMENT =
@@ -254,11 +253,11 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
      */
     public final TriFunction<BigDecimal, PerformanceDataFacilityCalculationParameters, PerformanceDataFacilityInputData, BigDecimal> ACTUAL_IMPROVEMENT =
             (actualEnergyCarbon, calculatedParameters, data) -> {
-        BigDecimal baseEnergyCarbonThroughput = PerformanceDataFacilityCalculationCommonFunctionUtil.BASE_ENERGY_CARBON_THROUGHPUT
+        BigDecimal totalByEnergyCarbonAtTpThroughput = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_BY_ENERGY_CARBON_AT_TP_THROUGHPUT
                 .apply(calculatedParameters, data);
-        BigDecimal division = baseEnergyCarbonThroughput.compareTo(BigDecimal.ZERO) == 0
+        BigDecimal division = totalByEnergyCarbonAtTpThroughput.compareTo(BigDecimal.ZERO) == 0
                 ? BigDecimal.ONE
-                : actualEnergyCarbon.divide(baseEnergyCarbonThroughput, MathContext.DECIMAL128);
+                : actualEnergyCarbon.divide(totalByEnergyCarbonAtTpThroughput, MathContext.DECIMAL128);
 
         return BigDecimal.ONE.subtract(division);
     };

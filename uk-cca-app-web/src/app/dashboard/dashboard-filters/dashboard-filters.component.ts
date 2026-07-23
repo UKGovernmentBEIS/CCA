@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { ButtonDirective, SelectComponent, TextInputComponent } from '@netz/govuk-components';
 import { UtilityPanelComponent } from '@shared/components';
 
-import { SORT_OPTIONS, WORKFLOW_FILTER_OPTIONS } from '../+store';
+import { getWorkflowFilterOptions, SORT_OPTIONS } from '../+store';
 import {
   DASHBOARD_FILTERS_FORM,
   DashboardFiltersFormProvider,
@@ -25,10 +26,11 @@ type DashboardCriteriaQueryParams = DashboardFiltersFormValue & { page: number }
 export class DashboardFiltersComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly roleType = inject(AuthStore).select(selectUserRoleType);
 
   readonly filtersForm = inject(DASHBOARD_FILTERS_FORM);
 
-  protected readonly workflowOptions = WORKFLOW_FILTER_OPTIONS;
+  protected readonly workflowOptions = computed(() => getWorkflowFilterOptions(this.roleType()));
   protected readonly sortOptions = SORT_OPTIONS;
 
   clear() {

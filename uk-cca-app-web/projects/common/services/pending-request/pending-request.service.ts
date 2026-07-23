@@ -4,7 +4,7 @@ import { BehaviorSubject, defer, finalize, MonoTypeOperatorFunction, Observable 
 
 @Injectable({ providedIn: 'root' })
 export class PendingRequestService {
-  private readonly trackedRequests = new Set<Observable<any>>();
+  private readonly trackedRequests = new Set<Observable<unknown>>();
   private readonly isRequestPending = new BehaviorSubject<boolean>(this.hasPendingRequests());
   readonly isRequestPending$ = this.isRequestPending.asObservable();
 

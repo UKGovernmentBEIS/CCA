@@ -13,7 +13,7 @@ import { BuyOutAndSurplusInfoService } from 'cca-api';
 
 import { mockAuthState } from '../../../../specs/fixtures/mock';
 import { BuyoutAndSurplusTabComponent } from './buyout-and-surplus-tab.component';
-import { BuyoutAndSurplusTabStore } from './buyout-and-surplus-tab.store';
+import { BuyoutAndSurplusTabState, BuyoutAndSurplusTabStore } from './buyout-and-surplus-tab.store';
 import { mockBuyoutInfo } from './testing/mock-data';
 
 describe('BuyoutAndSurplusTabComponent', () => {
@@ -51,7 +51,7 @@ describe('BuyoutAndSurplusTabComponent', () => {
     serviceSpy = vi.spyOn(TestBed.inject(BuyOutAndSurplusInfoService), 'getBuyOutSurplusInfoByAccountId');
 
     authStore.setState(mockAuthState);
-    buyoutAndSurplusTabStore.setState({ surplusInfo: mockBuyoutInfo } as any);
+    buyoutAndSurplusTabStore.setState({ surplusInfo: mockBuyoutInfo } as BuyoutAndSurplusTabState);
     fixture.detectChanges();
   });
 

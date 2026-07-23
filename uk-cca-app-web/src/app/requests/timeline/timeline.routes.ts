@@ -16,12 +16,12 @@ import {
 import { taskStatusTagMap } from '@requests/common';
 import { ActionTypeToBreadcrumbPipe } from '@shared/pipes';
 
-import { RequestActionDTO } from 'cca-api';
+import { ItemDTO, RequestActionDTO } from 'cca-api';
 
 import { timelineContent } from './timeline-content';
 
 const actionTypeToReturnText = (type: RequestActionDTO['type']): string => {
-  return new ItemActionTypePipe().transform(type as any) ?? 'Dashboard';
+  return new ItemActionTypePipe().transform(type as ItemDTO['taskType']) ?? 'Dashboard';
 };
 
 export const TIMELINE_ROUTES: Routes = [

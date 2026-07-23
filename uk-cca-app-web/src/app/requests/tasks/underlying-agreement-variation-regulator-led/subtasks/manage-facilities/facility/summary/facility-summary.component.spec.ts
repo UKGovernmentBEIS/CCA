@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 
 import { mockRequestTaskItemDTO } from '../../../../testing/mock-data';
 import FacilitySummaryComponent from './facility-summary.component';
@@ -13,17 +14,7 @@ describe('FacilitySummaryComponent', () => {
   let fixture: ComponentFixture<FacilitySummaryComponent>;
   let store: RequestTaskStore;
 
-  const route: any = {
-    snapshot: {
-      params: {
-        facilityId: 'ADS_1-F00001',
-      },
-      paramMap: {
-        get: vi.fn().mockReturnValue(mockRequestTaskItemDTO.requestTask.id),
-      },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub({ facilityId: 'ADS_2-F00003' });
 
   beforeEach(() => {
     TestBed.configureTestingModule({

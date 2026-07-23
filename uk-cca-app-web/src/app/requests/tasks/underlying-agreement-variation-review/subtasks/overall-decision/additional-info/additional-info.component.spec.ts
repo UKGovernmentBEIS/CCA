@@ -12,6 +12,8 @@ import { getByText, queryByText } from '@testing';
 import { produce } from 'immer';
 import { Mocked } from 'vitest';
 
+import { UnderlyingAgreementVariationReviewRequestTaskPayload } from 'cca-api';
+
 import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { AdditionalInfoComponent } from './additional-info.component';
 
@@ -67,7 +69,8 @@ describe('AdditionalInfoComponent', () => {
   describe('when determination type is ACCEPTED', () => {
     beforeEach(() => {
       const acceptedState = produce(mockVariationReviewRequestTaskState, (draft) => {
-        const payload = draft.requestTaskItem.requestTask.payload as any;
+        const payload = draft.requestTaskItem.requestTask
+          .payload as UnderlyingAgreementVariationReviewRequestTaskPayload;
         payload.determination.type = 'ACCEPTED';
       });
       store.setState(acceptedState);
@@ -104,7 +107,9 @@ describe('AdditionalInfoComponent', () => {
   describe('when determination type is ACCEPTED and variationImpactsAgreement is false', () => {
     beforeEach(() => {
       const acceptedNoChangesState = produce(mockVariationReviewRequestTaskState, (draft) => {
-        const payload = draft.requestTaskItem.requestTask.payload as any;
+        const payload = draft.requestTaskItem.requestTask
+          .payload as UnderlyingAgreementVariationReviewRequestTaskPayload;
+
         payload.determination.type = 'ACCEPTED';
         payload.determination.variationImpactsAgreement = false;
       });

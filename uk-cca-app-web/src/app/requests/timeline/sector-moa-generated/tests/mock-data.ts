@@ -23,7 +23,7 @@ export const sectorMoaGeneratedMock: SectorMoaGeneratedRequestActionPayload = {
       recipientType: 'SECTOR_CONTACT',
     },
   ],
-} as any; // This is to bypass `chargingYear` type of `SubsistenceFeesRunCompletedRequestActionPayloadChargingYear`;
+} as unknown as SectorMoaGeneratedRequestActionPayload; // chargingYear type in generated metadata union
 
 export const sectorMoaGeneratedActionDTO: RequestActionDTO = {
   id: 30,

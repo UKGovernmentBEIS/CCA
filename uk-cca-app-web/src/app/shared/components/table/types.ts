@@ -6,7 +6,7 @@ export interface SelectableRow {
 
 export interface CcaTableColumn {
   header: string;
-  field: any;
+  field: string;
   widthClass?: GovukTextWidthClass | string;
   isSortable?: boolean;
   isHeader?: boolean;

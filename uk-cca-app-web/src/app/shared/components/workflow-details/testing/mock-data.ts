@@ -1,4 +1,4 @@
-import { ItemDTOResponse, RequestActionInfoDTO, RequestDetailsDTO } from 'cca-api';
+import { ItemDTOResponse, RequestActionInfoDTO, RequestDetailsDTO, RequestMetadata } from 'cca-api';
 
 export const mockWorkflowDetails: RequestDetailsDTO = {
   id: 'ADS_1-S2513',
@@ -10,7 +10,7 @@ export const mockWorkflowDetails: RequestDetailsDTO = {
     parentRequestId: 'S2513',
     transactionId: 'CCACM01204',
     sectorAcronym: 'ADS_1',
-  } as any,
+  } as RequestMetadata,
 };
 
 export const mockEmptyRequestItems: ItemDTOResponse = {

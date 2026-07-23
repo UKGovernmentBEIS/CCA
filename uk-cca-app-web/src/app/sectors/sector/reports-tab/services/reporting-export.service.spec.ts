@@ -93,4 +93,38 @@ describe('ReportingExportService', () => {
       }),
     );
   });
+
+  it('formats zero values returned in scientific notation as zero', () => {
+    const [row] = toFacilityPerformanceDataExportRows(
+      [
+        {
+          ...facilityReportItem,
+          actualImprovement: '0E-7',
+          actualEnergyCarbon: '0E-7',
+          targetEnergyCarbon: '0E-7',
+          energyCarbonDifference: '0E-7',
+          actualCo2Emissions: '0E-7',
+          targetCo2Emissions: '0E-7',
+          co2EmissionsDifference: '0E-7',
+          buyOutRequired: '0E-7',
+          surplusGained: '0E-7',
+        },
+      ],
+      true,
+    );
+
+    expect(row).toEqual(
+      expect.objectContaining({
+        'Performance against target (%)': '0',
+        'Actual Primary energy or carbon used': '0',
+        'Target energy': '0',
+        'Energy difference': '0',
+        'Actual tCO2e': '0',
+        'Target tCO2e': '0',
+        'tCO2e difference': '0',
+        'Total buy-out (tCO2e)': '0',
+        'Surplus gained (tCO2e)': '0',
+      }),
+    );
+  });
 });

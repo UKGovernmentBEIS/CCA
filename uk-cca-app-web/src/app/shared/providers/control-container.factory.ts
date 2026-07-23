@@ -3,7 +3,7 @@ import { ControlContainer, FormGroupDirective, FormGroupName } from '@angular/fo
 
 export const existingControlContainer: FactoryProvider = {
   provide: ControlContainer,
-  useFactory: (name: any, directive: any) => name ?? directive,
+  useFactory: (name: ControlContainer | null, directive: ControlContainer | null) => name ?? directive,
   deps: [
     [new Optional(), FormGroupName],
     [new Optional(), FormGroupDirective],

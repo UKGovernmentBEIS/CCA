@@ -7,7 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { TasksApiService } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils';
+import { generateDownloadUrl, logger } from '@shared/utils';
 
 import { isAppealOutcomeCompleted } from '../appeal-outcome.guard';
 import { appealOutcomeQuery } from '../appeal-outcome.selectors';
@@ -66,8 +66,13 @@ export class CheckYourAnswersComponent {
 
     const dto = createCompleteActionDTO(this.requestTaskId());
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe({
+      next: () => {
+        this.router.navigate(['../confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+      },
+      error: (err: unknown) => {
+        logger.error('Failed to complete appeal outcome:', err);
+      },
     });
   }
 }

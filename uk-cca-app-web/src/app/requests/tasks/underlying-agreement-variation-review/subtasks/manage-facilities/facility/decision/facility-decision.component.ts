@@ -132,7 +132,7 @@ export class FacilityDecisionComponent {
     const decision: UnderlyingAgreementVariationFacilityReviewDecision = {
       type: formValue.type,
       changeStartDate,
-      startDate: formValue.startDate as any, // bypass incorrect api type. Should be date, it is string
+      startDate: formValue.startDate as unknown as string, // API type expects string, form produces Date
       details: {
         notes: formValue.notes,
         files: formValue.files.map((f) => f.uuid),

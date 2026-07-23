@@ -17,7 +17,7 @@ describe('FacilityCheckAnswersComponent', () => {
   let fixture: ComponentFixture<FacilityCheckAnswersComponent>;
   let store: RequestTaskStore;
 
-  const route: any = { snapshot: { params: { facilityId: 'ADS_53-F00007' }, pathFromRoot: [] } };
+  const route = { snapshot: { params: { facilityId: 'ADS_53-F00007' } } };
   const unaTaskService: Partial<Mocked<TaskService>> = {
     submitSubtask: vi.fn().mockReturnValue(of({})),
   };

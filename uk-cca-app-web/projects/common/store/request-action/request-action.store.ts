@@ -24,6 +24,9 @@ export class RequestActionStore extends SignalStore<RequestActionState> {
   setSubmitter(submitter: string) {
     this.setState(
       produce(this.state, (state) => {
+        if (!state.action) {
+          throw new Error('Cannot set submitter: action is not initialized');
+        }
         state.action.submitter = submitter;
       }),
     );
@@ -32,6 +35,9 @@ export class RequestActionStore extends SignalStore<RequestActionState> {
   setType(type: RequestActionDTO['type']) {
     this.setState(
       produce(this.state, (state) => {
+        if (!state.action) {
+          throw new Error('Cannot set type: action is not initialized');
+        }
         state.action.type = type;
       }),
     );
@@ -40,6 +46,9 @@ export class RequestActionStore extends SignalStore<RequestActionState> {
   setPayload(payload: RequestActionPayload) {
     this.setState(
       produce(this.state, (state) => {
+        if (!state.action) {
+          throw new Error('Cannot set payload: action is not initialized');
+        }
         state.action.payload = payload;
       }),
     );

@@ -5,6 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { underlyingAgreementQuery } from '@requests/common';
 
 import { FacilityEligibilityDetailsComponent } from './facility-eligibility-details.component';
@@ -14,7 +15,7 @@ describe('FacilityEligibilityDetailsComponent', () => {
   let store: RequestTaskStore;
 
   const facilityId = 'ADS_1-F00001';
-  const route: any = { snapshot: { params: { facilityId }, pathFromRoot: [] } };
+  const route = new ActivatedRouteStub(undefined, { facilityId });
 
   beforeEach(() => {
     TestBed.configureTestingModule({

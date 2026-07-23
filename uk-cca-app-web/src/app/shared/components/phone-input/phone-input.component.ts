@@ -137,7 +137,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
     this.onChange = fn;
   }
 
-  registerOnTouched(onBlur: () => any): void {
+  registerOnTouched(onBlur: () => void): void {
     this.onBlur = onBlur;
   }
 

@@ -12,7 +12,7 @@ import {
   WarningTextComponent,
 } from '@netz/govuk-components';
 
-import { BuyOutAndSurplusInfoService, RequestsService } from 'cca-api';
+import { BuyOutAndSurplusInfoService, RequestCreateActionProcessDTO, RequestsService } from 'cca-api';
 
 @Component({
   selector: 'cca-new-batch',
@@ -51,7 +51,7 @@ export class NewBatchComponent {
           requestCreateActionPayload: {
             payloadType: 'BUY_OUT_SURPLUS_RUN_CREATE_ACTION_PAYLOAD',
             targetPeriodType: 'TP6',
-          } as any,
+          } as unknown as RequestCreateActionProcessDTO['requestCreateActionPayload'],
         },
         'ENGLAND',
       )

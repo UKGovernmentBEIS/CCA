@@ -13,7 +13,7 @@ describe('FacilitySummaryComponent', () => {
   let fixture: ComponentFixture<FacilitySummaryComponent>;
   let store: RequestTaskStore;
 
-  const route: any = { snapshot: { params: { facilityId: 'ADS_53-F00007' }, pathFromRoot: [] } };
+  const route = { snapshot: { params: { facilityId: 'ADS_53-F00007' } } };
 
   beforeEach(() => {
     TestBed.configureTestingModule({

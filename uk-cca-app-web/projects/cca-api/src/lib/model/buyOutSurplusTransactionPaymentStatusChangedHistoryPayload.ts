@@ -13,12 +13,6 @@ import { BuyOutSurplusTransactionHistoryPayload } from './buyOutSurplusTransacti
 
 export interface BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload extends BuyOutSurplusTransactionHistoryPayload {
   paymentStatus:
-    | 'AWAITING_PAYMENT'
-    | 'AWAITING_REFUND'
-    | 'PAID'
-    | 'REFUNDED'
-    | 'NOT_REQUIRED'
-    | 'UNDER_APPEAL'
-    | 'TERMINATED';
+    'AWAITING_PAYMENT' | 'AWAITING_REFUND' | 'PAID' | 'REFUNDED' | 'NOT_REQUIRED' | 'UNDER_APPEAL' | 'TERMINATED';
   paymentDate?: string;
 }

@@ -34,7 +34,7 @@ describe('ReturnToTaskOrActionPageComponent', () => {
     });
 
     store = TestBed.inject(RequestTaskStore);
-    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' as any } });
+    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' } });
 
     harness = await RouterTestingHarness.create();
     component = await harness.navigateByUrl('/tasks/1/subtask', ReturnToTaskOrActionPageComponent);

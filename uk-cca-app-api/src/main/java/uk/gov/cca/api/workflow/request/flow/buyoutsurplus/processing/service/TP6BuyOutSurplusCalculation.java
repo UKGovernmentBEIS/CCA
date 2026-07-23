@@ -5,7 +5,8 @@ import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriod
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountProcessingException;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.validation.BuyOutSurplusViolation;
@@ -196,6 +197,7 @@ public class TP6BuyOutSurplusCalculation {
 
     /** Track performance data calculated through batch run **/
     private void trackProcessedData() {
-        this.buyOutSurplusManagementService.saveBuyOutSurplusProcessedData(this.performanceData.getPerformanceDataId());
+        this.buyOutSurplusManagementService.saveBuyOutSurplusProcessedData(
+        		this.performanceData.getPerformanceDataId(), PerformanceDataResourceType.ACCOUNT);
     }
 }

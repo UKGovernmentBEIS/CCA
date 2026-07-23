@@ -17,13 +17,7 @@ export interface BuyOutSurplusDetails {
   submissionType: 'PRIMARY' | 'SECONDARY';
   tpOutcome: 'TARGET_MET' | 'BUY_OUT_REQUIRED' | 'SURPLUS_USED_BUY_OUT_REQUIRED' | 'SURPLUS_USED' | 'OUTSTANDING';
   paymentStatus?:
-    | 'AWAITING_PAYMENT'
-    | 'AWAITING_REFUND'
-    | 'PAID'
-    | 'REFUNDED'
-    | 'NOT_REQUIRED'
-    | 'UNDER_APPEAL'
-    | 'TERMINATED';
+    'AWAITING_PAYMENT' | 'AWAITING_REFUND' | 'PAID' | 'REFUNDED' | 'NOT_REQUIRED' | 'UNDER_APPEAL' | 'TERMINATED';
   transactionCode?: string;
   officialNotice?: FileInfoDTO;
   dueDate?: string;

@@ -12,18 +12,20 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AvailableTargetPeriodsBuyOutDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @ExtendWith(MockitoExtension.class)
 @EnableWebMvc
@@ -32,6 +34,7 @@ class BuyOutSurplusRunControllerTest {
 	private static final String REQUEST_PATH = "/v1.0/buy-out-surplus/run";
 
 	private MockMvc mockMvc;
+	
 	@InjectMocks
 	private BuyOutSurplusRunController controller;
 
@@ -68,5 +71,23 @@ class BuyOutSurplusRunControllerTest {
 
 		verify(buyOutSurplusQueryService, times(1))
 				.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
+	}
+	
+	@Test
+	void getAvailableBuyOutTargetPeriods() throws Exception {
+		final String GET_PATH = REQUEST_PATH + "/available-target-periods";
+
+		final AvailableTargetPeriodsBuyOutDTO availableTargetPeriods = AvailableTargetPeriodsBuyOutDTO.builder().build();
+
+		when(buyOutSurplusQueryService.getAvailableBuyOutTargetPeriods(any(LocalDate.class)))
+				.thenReturn(availableTargetPeriods);
+
+		mockMvc.perform(get(GET_PATH)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(jsonPath("$").isNotEmpty());
+
+		verify(buyOutSurplusQueryService, times(1)).getAvailableBuyOutTargetPeriods(any(LocalDate.class));
 	}
 }

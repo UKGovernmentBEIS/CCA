@@ -7,6 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { peerReviewDecisionToSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { logger } from '@shared/utils';
 
 import { TasksService, UnderlyingAgreementPeerReviewRequestTaskPayload } from 'cca-api';
 
@@ -61,7 +62,7 @@ export class CheckYourAnswersComponent {
       })
       .pipe(
         catchError((error) => {
-          console.error('Error processing request task action:', error);
+          logger.error('Error processing request task action:', error);
           return throwError(() => error);
         }),
       )

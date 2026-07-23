@@ -10,7 +10,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { RequestTaskFileService } from '@shared/services';
 import { getByText } from '@testing';
 
-import { NonComplianceConclusionSubmitRequestTaskPayload } from 'cca-api';
+import { NonComplianceConclusionSubmitRequestTaskPayload, RequestInfoDTO, RequestTaskDTO } from 'cca-api';
 
 import { TasksApiService } from '../tasks-api.service';
 import { CloseTaskComponent } from './close-task.component';
@@ -71,8 +71,8 @@ describe('CloseTaskComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_CONCLUSION_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
+      } as RequestTaskDTO,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
     store.setIsEditable(true);
 

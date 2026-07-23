@@ -3,11 +3,11 @@ import { KeycloakProfile } from 'keycloak-js';
 import { UserDTO, UserStateDTO, UserTermsVersionDTO } from 'cca-api';
 
 export interface AuthState {
-  user: UserDTO;
-  userProfile: KeycloakProfile;
-  userState: UserStateDTO;
-  userTerms: UserTermsVersionDTO;
-  isLoggedIn: boolean;
+  user: UserDTO | null;
+  userProfile: KeycloakProfile | null;
+  userState: UserStateDTO | null;
+  userTerms: UserTermsVersionDTO | null;
+  isLoggedIn: boolean | null;
 }
 
 export const initialState: AuthState = {

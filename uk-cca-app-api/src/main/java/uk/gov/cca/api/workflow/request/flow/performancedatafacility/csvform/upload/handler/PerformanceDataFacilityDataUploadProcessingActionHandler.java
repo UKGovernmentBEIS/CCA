@@ -13,6 +13,7 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.CcaRequestParams;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.common.domain.FacilityUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.common.domain.PerformanceDataFacilityDataProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadProcessingRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.service.PerformanceDataFacilityDataUploadService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -46,6 +47,7 @@ public class PerformanceDataFacilityDataUploadProcessingActionHandler implements
         final LocalDateTime submissionDate = LocalDateTime.now();
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
         final Request request = requestTask.getRequest();
+        final PerformanceDataFacilityDataUploadRequestMetadata metadata = (PerformanceDataFacilityDataUploadRequestMetadata) request.getMetadata();
         final PerformanceDataFacilityDataUploadSubmitRequestTaskPayload taskPayload =
                 (PerformanceDataFacilityDataUploadSubmitRequestTaskPayload) requestTask.getPayload();
 
@@ -72,6 +74,9 @@ public class PerformanceDataFacilityDataUploadProcessingActionHandler implements
                         .targetPeriodType(taskActionPayload.getPerformanceDataUpload().getTargetPeriodType())
                         .reportType(taskActionPayload.getPerformanceDataUpload().getReportType())
                         .submissionDate(submissionDate)
+                        .submissionType(metadata.getSubmissionType())
+                        .targetPeriodYear(metadata.getTargetPeriodYear())
+                        .targetPeriods(metadata.getTargetPeriods())
                         .build())
                 .processVars(Map.of(
                         // Wrap to hashset to be serializable (HashMap.Keyset is not serializable)

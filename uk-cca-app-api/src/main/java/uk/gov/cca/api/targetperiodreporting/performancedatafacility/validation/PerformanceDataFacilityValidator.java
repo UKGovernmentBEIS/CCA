@@ -1,8 +1,13 @@
 package uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation;
 
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
@@ -16,11 +21,6 @@ import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriod
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.VariableEnergyDepictionType;
 import uk.gov.netz.api.common.exception.BusinessException;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,10 +67,10 @@ public class PerformanceDataFacilityValidator {
 
         List<PerformanceDataFacilityViolation> violations = new ArrayList<>();
 
-        // IF active + [facility_created_date < REPORTING_period_start_date]
-        // IF NOT_ACTIVE (facility_create_date < REPORTING_period_start_date AND REPORTING_period_start_date < facility_closed_date)
-        if(!facilityCreatedDate.isBefore(targetPeriodYear.getReportingStartDate()) ||
-                (facility.getClosedDate() != null && !facility.getClosedDate().isAfter(targetPeriodYear.getReportingStartDate()))) {
+        // IF active + [facility_created_date <= target_period_year_end_date]
+        // IF NOT_ACTIVE (facility_create_date <= target_period_year_end_date AND target_period_year_end_date < facility_closed_date)
+        if(facilityCreatedDate.isAfter(targetPeriodYear.getEndDate()) ||
+                (facility.getClosedDate() != null && !facility.getClosedDate().isAfter(targetPeriodYear.getEndDate()))) {
             violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE));
         }
 
@@ -143,12 +143,17 @@ public class PerformanceDataFacilityValidator {
     public BusinessValidationResult validateFacilityProductsEligibility(TargetPeriodYear targetPeriodYear, PerformanceDataFacilityBaselineAndTargets baselineAndTargets) {
         final List<ProductVariableEnergyConsumptionData> products = baselineAndTargets.getVariableEnergyConsumptionDataByProduct();
         final VariableEnergyDepictionType energyType = baselineAndTargets.getVariableEnergyType();
+        final int facilityBaselineYear = baselineAndTargets.getBaselineDate().getYear();
 
         List<PerformanceDataFacilityViolation> violations = new ArrayList<>();
 
-        if(VariableEnergyDepictionType.BY_PRODUCT == energyType && (
-                products.isEmpty() || products.stream().allMatch(p -> p.getBaselineYear().getValue() > targetPeriodYear.getTargetYear().getValue()))) {
-            violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE_PRODUCTS));
+        if(VariableEnergyDepictionType.BY_PRODUCT == energyType) {
+        	if(products.isEmpty() 
+                || products.stream().allMatch(p -> p.getBaselineYear().getValue() > targetPeriodYear.getTargetYear().getValue())) {
+        		violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE_PRODUCTS));
+        	} else if(products.stream().noneMatch(p -> p.getBaselineYear().getValue() == facilityBaselineYear)){
+        		violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_PRODUCT_WITH_FACILITY_BASE_YEAR_DOES_NOT_EXIST));
+        	}
         }
 
         return BusinessValidationResult.builder()

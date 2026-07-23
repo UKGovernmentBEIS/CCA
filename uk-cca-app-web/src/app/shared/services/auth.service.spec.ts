@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
 import { firstValueFrom, of } from 'rxjs';
 
@@ -101,6 +101,13 @@ describe('AuthService', () => {
     expect(usersService.getCurrentUser).toHaveBeenCalledTimes(1);
   });
 
+  it('should create a login URL', () => {
+    keycloakService.createLoginUrl.mockReturnValue('https://cca-sign-in.example');
+
+    expect(service.createLoginUrl({ redirectUri: location.origin })).toBe('https://cca-sign-in.example');
+    expect(keycloakService.createLoginUrl).toHaveBeenCalledWith({ redirectUri: location.origin });
+  });
+
   it('should logout', async () => {
     await service.logout();
 
@@ -115,7 +122,7 @@ describe('AuthService', () => {
 
   it('should update all user info when checkUser is called', async () => {
     expect(authStore.state).toEqual(initialState);
-    (keycloakService.isAuthenticated as any) = false;
+    (keycloakService as { isAuthenticated: boolean }).isAuthenticated = false;
 
     await expect(firstValueFrom(service.checkUser())).resolves.toBeNull();
 
@@ -126,7 +133,7 @@ describe('AuthService', () => {
     expect(authStore.select(selectUserProfile)()).toBeNull();
 
     authStore.setIsLoggedIn(null);
-    (keycloakService.isAuthenticated as any) = true;
+    (keycloakService as { isAuthenticated: boolean }).isAuthenticated = true;
 
     await expect(firstValueFrom(service.checkUser())).resolves.toBeNull();
 
@@ -146,9 +153,13 @@ describe('AuthService', () => {
   });
 
   it('should redirect to origin if leaf data is blocking sign in redirect', async () => {
-    (activatedRoute.snapshot as any) = new ActivatedRouteSnapshotStub(undefined, undefined, {
-      blockSignInRedirect: true,
-    });
+    (activatedRoute as { snapshot: ActivatedRouteSnapshot }).snapshot = new ActivatedRouteSnapshotStub(
+      undefined,
+      undefined,
+      {
+        blockSignInRedirect: true,
+      },
+    );
 
     await service.login();
 

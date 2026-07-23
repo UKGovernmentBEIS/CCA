@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.utils.PerformanceDataUtility;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;

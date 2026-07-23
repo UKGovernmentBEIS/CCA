@@ -37,9 +37,9 @@ export class RadioOptionComponent implements ControlValueAccessor {
     return this.ngControl.control as UntypedFormControl;
   }
 
-  writeValue = (_: any): void => {};
+  writeValue = (_?: unknown): void => {};
 
-  registerOnChange = (_: any): void => {};
+  registerOnChange = (_?: unknown): void => {};
 
-  registerOnTouched = (_: any): void => {};
+  registerOnTouched = (_?: unknown): void => {};
 }

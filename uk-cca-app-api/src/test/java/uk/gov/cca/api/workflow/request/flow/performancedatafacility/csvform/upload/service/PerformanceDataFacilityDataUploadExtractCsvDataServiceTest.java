@@ -9,6 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityStatusQueryService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.common.domain.FacilityUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityCsvErrorEntry;
@@ -18,6 +20,7 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.comm
 import uk.gov.netz.api.files.attachments.service.FileAttachmentService;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +44,14 @@ class PerformanceDataFacilityDataUploadExtractCsvDataServiceTest {
 
     @Mock
     private FacilityDataQueryService facilityDataQueryService;
+    
+    @Mock
+    private PerformanceDataFacilityStatusQueryService performanceDataFacilityStatusQueryService;
 
     @Test
     void exportCsvData() {
         final Long sectorAssociationId = 2L;
+        final TargetPeriodYear year = TargetPeriodYear.builder().targetYear(Year.of(2026)).build();
         final PerformanceDataFacilityDataUploadSubmitRequestTaskPayload taskPayload =
                 PerformanceDataFacilityDataUploadSubmitRequestTaskPayload.builder()
                         .sectorAssociationInfo(SectorAssociationInfo.builder().id(sectorAssociationId).build())
@@ -57,7 +64,8 @@ class PerformanceDataFacilityDataUploadExtractCsvDataServiceTest {
         final String csvFileContent1 = ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n" +
                 "facility11,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,NO,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n" +
                 "facility12,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,NO,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n" +
-                "facility13,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,NO,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n";
+                "facility13,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,NO,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n" +
+                "facility14,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,NO,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n";
         final String csvFileContent2 = ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n" +
                 "facility11,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,NO,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,\n" +
                 "facility22,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,YES,,,product1,,product1,,product3,,product4,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,";
@@ -67,18 +75,20 @@ class PerformanceDataFacilityDataUploadExtractCsvDataServiceTest {
         );
 
         List<FacilityDTO> facilities = List.of(
-                FacilityDTO.builder().id(1L).accountId(11L).facilityBusinessId("facility12").build()
+                FacilityDTO.builder().id(1L).accountId(11L).facilityBusinessId("facility12").build(),
+                FacilityDTO.builder().id(2L).accountId(12L).facilityBusinessId("facility14").build()
         );
 
         when(fileAttachmentService.getFiles(anySet())).thenReturn(files);
         when(facilityDataQueryService.getAllFacilitiesInfoDataBySectorForSchemeVersion(sectorAssociationId, SchemeVersion.CCA_3))
                 .thenReturn(facilities);
+        when(performanceDataFacilityStatusQueryService.getLockedFacilityIds(Set.of(1L, 2L), year.getTargetYear())).thenReturn(Set.of(2L));
 
         // Invoke
-        Map<Long, FacilityUploadReport> result = service.exportCsvData(taskPayload, errors);
+        Map<Long, FacilityUploadReport> result = service.exportCsvData(taskPayload, year, errors);
 
         // Verify
-        assertThat(errors).hasSize(4).containsExactlyInAnyOrder(
+        assertThat(errors).hasSize(5).containsExactlyInAnyOrder(
                 PerformanceDataFacilityCsvErrorEntry.builder()
                         .facilityBusinessId("facility11").filename("csv2").message("Facility duplicate found").build(),
                 PerformanceDataFacilityCsvErrorEntry.builder()
@@ -86,7 +96,9 @@ class PerformanceDataFacilityDataUploadExtractCsvDataServiceTest {
                 PerformanceDataFacilityCsvErrorEntry.builder()
                         .facilityBusinessId("facility22").filename("csv2").message("Facility duplicate products found").build(),
                 PerformanceDataFacilityCsvErrorEntry.builder()
-                        .facilityBusinessId("facility13").filename("csv1").message("Facility business ID does not exist or is not associated with the selected sector or scheme").build()
+                        .facilityBusinessId("facility13").filename("csv1").message("Facility business ID does not exist or is not associated with the selected sector or scheme").build(),
+                PerformanceDataFacilityCsvErrorEntry.builder()
+                        .facilityBusinessId("facility14").filename("csv1").message("Facility is locked for secondary reporting period").build()
         );
         assertThat(result).hasSize(1).containsExactlyEntriesOf(Map.of(1L,
                 FacilityUploadReport.builder()
@@ -101,6 +113,7 @@ class PerformanceDataFacilityDataUploadExtractCsvDataServiceTest {
                         .build())
         );
         verify(fileAttachmentService, times(1)).getFiles(anySet());
+        verify(performanceDataFacilityStatusQueryService, times(1)).getLockedFacilityIds(Set.of(1L, 2L), year.getTargetYear());
         verify(facilityDataQueryService, times(1))
                 .getAllFacilitiesInfoDataBySectorForSchemeVersion(sectorAssociationId, SchemeVersion.CCA_3);
     }

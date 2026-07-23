@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusProcessedDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.service.FacilityCertificationService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
@@ -47,7 +48,8 @@ public class FacilityCertificationAccountProcessingService {
             final Long performanceDataId = accountState.getLastPerformanceDataId();
 
             // Find if buy out surplus has been run for account's last performance data
-            buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId)
+            buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(
+            		performanceDataId, PerformanceDataResourceType.ACCOUNT)
                     .ifPresent(processedData ->
                         // If it has no transaction or transaction as not AWAITING_PAYMENT then certify facilities
                         buyOutSurplusQueryService.getBuyOutSurplusTransactionByPerformanceData(accountState.getLastPerformanceDataId())

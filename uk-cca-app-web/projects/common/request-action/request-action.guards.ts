@@ -13,9 +13,14 @@ export function getRequestActionPageCanActivateGuard(actionIdParam = 'actionId')
     const store = inject(RequestActionStore);
     const service = inject(RequestActionsService);
 
-    const id = +route.paramMap.get(actionIdParam);
-    if (!route.paramMap.has(actionIdParam) || Number.isNaN(id)) {
+    const idParam = route.paramMap.get(actionIdParam);
+    if (!idParam) {
       console.warn(`No :${actionIdParam} param in route`);
+      return true;
+    }
+    const id = +idParam;
+    if (Number.isNaN(id)) {
+      console.warn(`Invalid :${actionIdParam} param in route`);
       return true;
     }
 

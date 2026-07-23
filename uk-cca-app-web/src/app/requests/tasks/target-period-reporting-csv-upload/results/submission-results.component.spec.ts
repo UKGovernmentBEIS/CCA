@@ -12,7 +12,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { getSummaryListData } from '@testing';
 import { Mocked } from 'vitest';
 
-import { TasksService } from 'cca-api';
+import { RequestTaskItemDTO, RequestTaskPayload, TasksService } from 'cca-api';
 
 import { SubmissionResultsComponent } from './submission-results.component';
 
@@ -66,8 +66,7 @@ describe('SubmissionResultsComponent', () => {
           },
         },
       },
-    } as any);
-
+    } as RequestTaskItemDTO);
     authStore = TestBed.inject(AuthStore);
     authStore.setUserState({ userId: '7b91199c-4770-4d4b-a0ed-d6d9667de157', roleType: 'SECTOR_USER' });
 
@@ -103,7 +102,7 @@ describe('SubmissionResultsComponent', () => {
   it('should display an error message when errorMessage exists', async () => {
     store.setPayload({
       errorMessage: 'CSV_FAILED',
-    } as any);
+    } as RequestTaskPayload);
 
     fixture.detectChanges();
 

@@ -18,9 +18,12 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domai
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,13 +54,40 @@ public class PerformanceDataFacilityInputDataValidator {
                 .map(businessViolation ->
                         new PerformanceDataFacilityViolation(PerformanceDataFacilityInputData.class.getName(),
                                 PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.INVALID_PERFORMANCE_DATA,
-                                businessViolation.getData()))
+                                transformViolationData(businessViolation.getData())))
                 .ifPresent(violations::add);
 
         return BusinessValidationResult.builder()
                 .valid(violations.isEmpty())
                 .violations(violations)
                 .build();
+    }
+    
+	private Object[] transformViolationData(Object[] data) {
+		return Arrays.stream(data)
+				.map(value -> value instanceof String stringValue ? transformViolationPath(stringValue) : value)
+				.toArray();
+	}
+    
+    private String transformViolationPath(String path) {
+    	final String LIST_INDEX_PATTERN = "(energyFuelDetails\\.nonStandardFuels|throughputDetails\\.variableEnergyConsumptionDataByProduct)\\[(\\d+)]";
+        Pattern pattern = Pattern.compile(LIST_INDEX_PATTERN);
+
+        Matcher matcher = pattern.matcher(path);
+
+        if (matcher.find()) {
+        	int index = Integer.parseInt(matcher.group(2)) + 1;
+
+            String replacement = switch (matcher.group(1)) {
+                case "energyFuelDetails.nonStandardFuels" -> "energyFuelDetails.otherFuel" + index;
+                case "throughputDetails.variableEnergyConsumptionDataByProduct" -> "throughputDetails.product" + index;
+                default -> matcher.group(0);
+            };
+                
+            return matcher.replaceFirst(Matcher.quoteReplacement(replacement));
+        }
+
+        return path;
     }
 
     private List<BusinessValidationResult> validateFuels(final PerformanceDataFacilityInputEnergyFuelDetails energyFuelDetails,
@@ -70,7 +100,7 @@ public class PerformanceDataFacilityInputDataValidator {
 
         // Validate SRM
         String srmMessage = PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_SRM_DATA.getMessage();
+                .SRM_DATA_DOES_NOT_MATCH_USE_SRM_SELECTION.getMessage();
 
         validationResults.add(Boolean.TRUE.equals(calculationParameters.getUsedReportingMechanism())
                 ? PerformanceDataFacilityValidationHelper.validateSRM(srmMessage).process(energyFuelDetails)
@@ -78,10 +108,12 @@ public class PerformanceDataFacilityInputDataValidator {
         );
 
         // Validate CHP
-        String chpMessage = PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_CHP_DATA.getMessage();
-
-        validationResults.add(PerformanceDataFacilityValidationHelper.validateCHP(chpMessage).process(energyFuelDetails));
+        if (Boolean.TRUE.equals(calculationParameters.getUsedReportingMechanism())) {
+	        String chpMessage = PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
+	                .INVALID_CHP_DATA.getMessage();
+	
+	        validationResults.add(PerformanceDataFacilityValidationHelper.validateCHP(chpMessage).process(energyFuelDetails));
+        }
 
         return validationResults;
     }
@@ -96,7 +128,7 @@ public class PerformanceDataFacilityInputDataValidator {
 
         // Validate Variable energy type
         String errorMessage = PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_VARIABLE_ENERGY_DATA.getMessage();
+                .VARIABLE_ENERGY_DATA_DOES_NOT_MATCH_TYPE.getMessage();
 
         if(VariableEnergyDepictionType.BY_PRODUCT == calculationParameters.getVariableEnergyType()) {
             validationResults.add(PerformanceDataFacilityValidationHelper.validate(d -> ObjectUtils.isEmpty(d.getActualThroughput()), errorMessage)
@@ -114,7 +146,8 @@ public class PerformanceDataFacilityInputDataValidator {
         }
 
         // Validate Products
-        if(!throughputDetails.getVariableEnergyConsumptionDataByProduct().isEmpty()) {
+        if(VariableEnergyDepictionType.BY_PRODUCT.equals(calculationParameters.getVariableEnergyType()) 
+        		&& !throughputDetails.getVariableEnergyConsumptionDataByProduct().isEmpty()) {
             Set<String> originalProducts = calculationParameters.getVariableEnergyConsumptionDataByProduct().stream()
                     .map(ProductVariableEnergyConsumptionData::getProductName)
                     .collect(Collectors.toSet());
@@ -124,7 +157,7 @@ public class PerformanceDataFacilityInputDataValidator {
 
             // Should include only products from original
             String productMessage = PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                    .INVALID_PRODUCTS.getMessage();
+                    .PRODUCTS_DO_NOT_MATCH_UNDERLYING_AGREEMENT.getMessage();
             validationResults.add(ValidatorHelper.validateSetsEquals(productMessage)
                     .process(Collections.singleton(originalProducts), Collections.singleton(actualProducts)));
 

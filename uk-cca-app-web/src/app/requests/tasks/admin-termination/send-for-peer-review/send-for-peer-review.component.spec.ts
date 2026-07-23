@@ -9,7 +9,7 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { getByText } from '@testing';
 import { Mocked } from 'vitest';
 
-import { TasksService } from 'cca-api';
+import { RequestInfoDTO, TasksService } from 'cca-api';
 
 import AdminTerminationSendForPeerReviewComponent from './send-for-peer-review.component';
 
@@ -63,7 +63,7 @@ describe('AdminTerminationSendForPeerReviewComponent', () => {
 
     store.setRequestTaskItem({
       requestTask: { id: 456, type: 'ADMIN_TERMINATION_APPLICATION_SUBMIT' },
-      requestInfo: { accountId: 1 } as any,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
 
     fixture = TestBed.createComponent(AdminTerminationSendForPeerReviewComponent);

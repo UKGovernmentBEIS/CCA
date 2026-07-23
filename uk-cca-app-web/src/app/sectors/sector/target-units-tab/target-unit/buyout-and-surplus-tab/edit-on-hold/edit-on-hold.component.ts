@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, EMPTY } from 'rxjs';
 
 import { ButtonDirective, GovukValidators, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
+import { logger } from '@shared/utils';
 
 import { BuyOutAndSurplusInfoService } from 'cca-api';
 
@@ -37,7 +38,7 @@ export class EditOnHoldComponent {
     serviceCall
       .pipe(
         catchError((err) => {
-          console.error(err);
+          logger.error(err);
           return EMPTY;
         }),
       )

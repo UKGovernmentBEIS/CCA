@@ -18,11 +18,7 @@ export interface SectorAccountPerformanceDataReportSearchCriteria {
   targetUnitAccountBusinessId?: string;
   targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   performanceOutcome?:
-    | 'TARGET_MET'
-    | 'BUY_OUT_REQUIRED'
-    | 'SURPLUS_USED_BUY_OUT_REQUIRED'
-    | 'SURPLUS_USED'
-    | 'OUTSTANDING';
+    'TARGET_MET' | 'BUY_OUT_REQUIRED' | 'SURPLUS_USED_BUY_OUT_REQUIRED' | 'SURPLUS_USED' | 'OUTSTANDING';
   submissionType?: 'PRIMARY' | 'SECONDARY';
   pageNumber: number;
   pageSize: number;

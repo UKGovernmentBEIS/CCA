@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import { GovukTableColumn, TableComponent } from '@netz/govuk-components';
-import { resolveProductEnergyCarbonIntensity, tprFormActionQuery } from '@requests/common';
+import { isCarbonMeasurementType, resolveProductEnergyCarbonIntensity, tprFormActionQuery } from '@requests/common';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { toNumber } from '@shared/utils';
 
@@ -73,4 +73,5 @@ export class TprThroughputSubmittedComponent {
   );
 
   protected readonly measurementUnitLabel = computed(() => MEASUREMENT_TYPE_TO_UNIT_MAP[this.measurementType()]);
+  protected readonly isCarbonMeasurement = computed(() => isCarbonMeasurementType(this.measurementUnitLabel()));
 }

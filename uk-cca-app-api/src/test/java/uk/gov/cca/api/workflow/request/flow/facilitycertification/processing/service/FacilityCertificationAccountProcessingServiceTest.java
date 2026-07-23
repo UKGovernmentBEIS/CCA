@@ -10,6 +10,7 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPa
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusProcessedDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.service.FacilityCertificationService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
@@ -54,6 +55,7 @@ class FacilityCertificationAccountProcessingServiceTest {
         final String requestId = "requestId";
         final List<Long> facilityIds = List.of(1L, 2L, 3L);
         final long performanceDataId = 10L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
                 .lastPerformanceDataId(performanceDataId)
                 .facilityIds(facilityIds)
@@ -71,7 +73,7 @@ class FacilityCertificationAccountProcessingServiceTest {
                 .build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId))
+        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType))
                 .thenReturn(Optional.of(1L));
         when(buyOutSurplusQueryService.getBuyOutSurplusTransactionByPerformanceData(performanceDataId))
                 .thenReturn(Optional.empty());
@@ -83,7 +85,7 @@ class FacilityCertificationAccountProcessingServiceTest {
         assertThat(accountState.getFacilitiesCertified()).isEqualTo(3L);
         verify(requestService, times(1)).findRequestById(requestId);
         verify(buyOutSurplusProcessedDataQueryService, times(1))
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId);
+                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
         verify(buyOutSurplusQueryService, times(1))
                 .getBuyOutSurplusTransactionByPerformanceData(performanceDataId);
         verify(facilityCertificationService, times(1))
@@ -95,6 +97,7 @@ class FacilityCertificationAccountProcessingServiceTest {
         final String requestId = "requestId";
         final List<Long> facilityIds = List.of(1L, 2L, 3L);
         final long performanceDataId = 10L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
                 .lastPerformanceDataId(performanceDataId)
                 .facilityIds(facilityIds)
@@ -115,7 +118,7 @@ class FacilityCertificationAccountProcessingServiceTest {
                 .build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId))
+        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType))
                 .thenReturn(Optional.of(1L));
         when(buyOutSurplusQueryService.getBuyOutSurplusTransactionByPerformanceData(performanceDataId))
                 .thenReturn(Optional.of(info));
@@ -127,7 +130,7 @@ class FacilityCertificationAccountProcessingServiceTest {
         assertThat(accountState.getFacilitiesCertified()).isEqualTo(3L);
         verify(requestService, times(1)).findRequestById(requestId);
         verify(buyOutSurplusProcessedDataQueryService, times(1))
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId);
+                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
         verify(buyOutSurplusQueryService, times(1))
                 .getBuyOutSurplusTransactionByPerformanceData(performanceDataId);
         verify(facilityCertificationService, times(1))
@@ -139,6 +142,7 @@ class FacilityCertificationAccountProcessingServiceTest {
         final String requestId = "requestId";
         final List<Long> facilityIds = List.of(1L, 2L, 3L);
         final long performanceDataId = 10L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
                 .lastPerformanceDataId(performanceDataId)
                 .facilityIds(facilityIds)
@@ -159,7 +163,7 @@ class FacilityCertificationAccountProcessingServiceTest {
                 .build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId))
+        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType))
                 .thenReturn(Optional.of(1L));
         when(buyOutSurplusQueryService.getBuyOutSurplusTransactionByPerformanceData(performanceDataId))
                 .thenReturn(Optional.of(info));
@@ -171,7 +175,7 @@ class FacilityCertificationAccountProcessingServiceTest {
         assertThat(accountState.getFacilitiesCertified()).isZero();
         verify(requestService, times(1)).findRequestById(requestId);
         verify(buyOutSurplusProcessedDataQueryService, times(1))
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId);
+                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
         verify(buyOutSurplusQueryService, times(1))
                 .getBuyOutSurplusTransactionByPerformanceData(performanceDataId);
         verifyNoInteractions(facilityCertificationService);
@@ -182,6 +186,7 @@ class FacilityCertificationAccountProcessingServiceTest {
         final String requestId = "requestId";
         final List<Long> facilityIds = List.of(1L, 2L, 3L);
         final long performanceDataId = 10L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
                 .lastPerformanceDataId(performanceDataId)
                 .facilityIds(facilityIds)
@@ -199,7 +204,7 @@ class FacilityCertificationAccountProcessingServiceTest {
                 .build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId))
+        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType))
                 .thenReturn(Optional.empty());
 
         // Invoke
@@ -209,7 +214,7 @@ class FacilityCertificationAccountProcessingServiceTest {
         assertThat(accountState.getFacilitiesCertified()).isZero();
         verify(requestService, times(1)).findRequestById(requestId);
         verify(buyOutSurplusProcessedDataQueryService, times(1))
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId);
+                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
         verifyNoInteractions(buyOutSurplusQueryService, facilityCertificationService);
     }
 

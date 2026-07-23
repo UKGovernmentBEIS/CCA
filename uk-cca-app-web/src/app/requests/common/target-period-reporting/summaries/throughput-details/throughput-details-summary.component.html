@@ -23,6 +23,10 @@
             {{ row.improvementTarget | percent: '1.0-3' }}
           }
 
+          @case ('throughput') {
+            {{ row.throughput | number: '1.0-7' }}
+          }
+
           @case ('adjustedThroughput') {
             {{ row.adjustedThroughput | number: '1.0-3' }}
           }

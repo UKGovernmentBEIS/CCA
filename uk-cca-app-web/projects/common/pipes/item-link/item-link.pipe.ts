@@ -4,7 +4,7 @@ import { ItemDTO } from 'cca-api';
 
 @Pipe({ name: 'itemLink', pure: true })
 export class ItemLinkPipe implements PipeTransform {
-  transform(value: ItemDTO, path = '/'): any[] {
+  transform(value: ItemDTO, path = '/'): (string | number | undefined)[] {
     return this.transformWorkflowUrl(value, path);
   }
 

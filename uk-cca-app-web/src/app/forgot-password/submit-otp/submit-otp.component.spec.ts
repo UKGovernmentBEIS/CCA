@@ -50,6 +50,8 @@ describe('SubmitOtpComponent', () => {
   }
 
   beforeEach(async () => {
+    authService.createLoginUrl.mockReturnValue('https://cca-sign-in.example');
+
     await TestBed.configureTestingModule({
       imports: [SubmitOtpComponent, DummyComponent],
       providers: [
@@ -143,8 +145,7 @@ describe('SubmitOtpComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['error', '404']);
   });
 
-  it('should go to login after clicking link', () => {
-    vi.spyOn(fixture.componentInstance, 'onSignInAgain');
+  it('should link directly to the sign-in page after resetting the password', () => {
     forgotPasswordService.resetPassword.mockReturnValueOnce(of({}));
 
     page.passwordValue = '123456';
@@ -152,10 +153,7 @@ describe('SubmitOtpComponent', () => {
     fixture.detectChanges();
     expect(page.errorSummary).toBeFalsy();
 
-    page.link.click();
-    fixture.detectChanges();
-
-    expect(component.onSignInAgain).toHaveBeenCalledTimes(1);
-    expect(authService.login).toHaveBeenCalledTimes(1);
+    expect(authService.createLoginUrl).toHaveBeenCalledWith({ redirectUri: location.origin });
+    expect(page.link.href).toBe('https://cca-sign-in.example/');
   });
 });

@@ -165,7 +165,8 @@ describe('TpReportingComponent', () => {
     component.onSubmit();
 
     expect(component.form.controls.targetPeriodType.errors).toEqual({
-      responseError: expect.stringContaining('this facility must contain at least one product'),
+      responseError:
+        'The baseline data for this facility must contain at least one product with a base year equal to the facility base year, and at least one product with a base year less than or equal to the year the report data relates to. You must submit a variation to correct the base year of products in this facility before you can submit your report.',
     });
 
     expect(component.hasFormErrors()).toBe(true);

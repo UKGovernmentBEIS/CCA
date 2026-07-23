@@ -139,11 +139,11 @@ describe('SectorCommitmentComponent', () => {
     control.updateValueAndValidity();
     expect(control.errors).toEqual({ required: requiredMessage });
 
-    control.setValue(150 as any);
+    control.setValue(150 as unknown as string);
     control.updateValueAndValidity();
     expect(control.errors).toEqual(targetCommitmentError);
 
-    control.setValue(-200 as any);
+    control.setValue(-200 as unknown as string);
     control.updateValueAndValidity();
     expect(control.errors).toEqual(targetCommitmentError);
 

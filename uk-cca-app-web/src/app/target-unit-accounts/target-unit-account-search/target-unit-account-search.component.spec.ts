@@ -16,7 +16,7 @@ describe('TargetUnitAccountSearchComponent', () => {
   let component: TargetUnitAccountSearchComponent;
   let fixture: ComponentFixture<TargetUnitAccountSearchComponent>;
   let targetUnitAccountInfoViewService: Mocked<Partial<TargetUnitAccountInfoViewService>>;
-  let routerMock: any;
+  let routerMock: Router;
 
   beforeEach(async () => {
     targetUnitAccountInfoViewService = {
@@ -112,7 +112,7 @@ describe('TargetUnitAccountSearchComponent', () => {
   });
 
   it('should not perform search when form is invalid', () => {
-    routerMock.navigate.mockClear();
+    vi.mocked(routerMock.navigate).mockClear();
 
     component.searchForm.patchValue({ term: 'ab' }); // Too short
     component.onSearch();

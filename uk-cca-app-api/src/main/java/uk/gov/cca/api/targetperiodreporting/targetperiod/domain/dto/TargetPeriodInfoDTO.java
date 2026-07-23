@@ -21,5 +21,6 @@ public class TargetPeriodInfoDTO {
     private LocalDate endDate;
     private LocalDate buyOutStartDate;
     private LocalDate buyOutPrimaryPaymentDeadline;
+    private Integer buyOutCost;
     private LocalDate secondaryReportingStartDate;
 }

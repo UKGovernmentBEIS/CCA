@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { EMPTY } from 'rxjs';
 
@@ -17,14 +17,7 @@ import { ResetPasswordStore } from '../+store/reset-password.store';
 @Component({
   selector: 'cca-submit-otp',
   templateUrl: './submit-otp.component.html',
-  imports: [
-    ErrorSummaryComponent,
-    ReactiveFormsModule,
-    WizardStepComponent,
-    RouterLink,
-    BackToTopComponent,
-    TextInputComponent,
-  ],
+  imports: [ErrorSummaryComponent, ReactiveFormsModule, WizardStepComponent, BackToTopComponent, TextInputComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmitOtpComponent {
@@ -37,6 +30,7 @@ export class SubmitOtpComponent {
   protected readonly isSummaryDisplayed = signal<boolean>(false);
   protected readonly email = computed(() => this.store.stateAsSignal().email);
   protected readonly isPasswordReset = signal<boolean>(false);
+  protected readonly signInUrl = signal<string | null>(null);
 
   protected readonly form = this.fb.group({
     otp: [
@@ -72,11 +66,8 @@ export class SubmitOtpComponent {
         }),
       )
       .subscribe(() => {
+        this.signInUrl.set(this.authService.createLoginUrl({ redirectUri: location.origin }));
         this.isPasswordReset.set(true);
       });
-  }
-
-  onSignInAgain(): void {
-    this.authService.login({ redirectUri: location.origin });
   }
 }

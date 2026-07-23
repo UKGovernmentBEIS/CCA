@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { FileUploadEvent } from '@shared/components';
 import { Mocked } from 'vitest';
 
 import { RequestNotesService } from 'cca-api';
@@ -77,7 +78,7 @@ describe('WorkflowAddNoteComponent', () => {
 
     component['form'].patchValue({
       note: mockNote,
-      files: mockFiles as any,
+      files: mockFiles as FileUploadEvent[],
     });
 
     component.onSubmit();

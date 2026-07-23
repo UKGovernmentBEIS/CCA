@@ -1,23 +1,38 @@
 # Housekeeping
 
-This file is a list of chores to do for the repository. Here we write up inconsistencies and stuff that we
-want to refactor and did not have the time to.
+This file tracks inconsistencies and cleanup items that have not yet been prioritised. Issues should be raised as Jira tickets (label: `Technical Tasks`) before work begins.
 
-Issues in this document are not to be taken as is. The team can remove/add entries at will. Whenever we decide to fix one of the issues below, we should always open a corresponding Jira ticket, preferably with the label of `Technical Tasks`.
+---
 
 ## Dependencies
 
-We are always trying to reduce external dependencies to keep installs fast and the project simpler.
+We aim to minimise external dependencies to keep installs fast and the project simpler.
+
+---
 
 ## Duplicate Code
 
-1. Why do we need a `cca-radio-option` component, since netz already has one?
+1. Why do we need a `cca-radio-option` component? The `netz` (govuk-components) library already has a radio option component.
 
-## Code inconsistencies - Possible refactors
+---
 
-1. In file inputs, we can define the file type accepted like this, to make the broswer popup accept these types by default.
-   For example, for EXCEL type files: `accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"`
+## Code Inconsistencies — Possible Refactors
 
-## Code smells
+1. File inputs should declare accepted MIME types via the `accept` attribute so the browser file picker filters appropriately. Example for Excel:
+   ```html
+   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+   ```
 
-1. We have directives with HTML which is incorrect. These should be components. We also have components that use the directive syntax on template usage. These also should be components.
+---
+
+## Code Smells
+
+1. Some directives contain HTML templates — these should be components. Similarly, some components use directive-style template syntax — these should use component syntax.
+
+---
+
+## Post-Refactoring Cleanup
+
+1. **Remove unused old-pattern code** from `projects/common/forms/` — the abstract `TaskService`, `PayloadMutatorsHandler`, `SideEffectsHandler`, `WizardFlowManager`, and associated providers have zero production consumers. See `docs/refactor.md` for the full list.
+
+2. **Clean up ~22 spec files** that still import and mock the old `TaskService` even though the components no longer use it.

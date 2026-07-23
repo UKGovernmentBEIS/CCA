@@ -37,7 +37,7 @@ import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.dto.S
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.dto.SectorFacilityPerformanceDataReportSearchCriteria;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.SectorPerformanceDataFacilityDataReportService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportListDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportItemDTO;

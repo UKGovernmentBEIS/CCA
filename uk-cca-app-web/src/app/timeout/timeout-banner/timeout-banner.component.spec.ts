@@ -15,10 +15,11 @@ describe('TimeoutBannerComponent', () => {
 
   const setupDialogMethods = () => {
     dialogElement = fixture.nativeElement.querySelector('dialog');
-    (dialogElement as any).showModal = vi.fn(() => {
+    const dl = dialogElement as HTMLDialogElement;
+    dl.showModal = vi.fn(() => {
       dialogElement.setAttribute('open', '');
     });
-    (dialogElement as any).close = vi.fn(() => {
+    dl.close = vi.fn(() => {
       dialogElement.removeAttribute('open');
     });
   };

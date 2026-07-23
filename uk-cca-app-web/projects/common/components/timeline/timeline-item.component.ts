@@ -8,8 +8,10 @@ import { RequestActionInfoDTO } from 'cca-api';
 @Component({
   selector: 'netz-timeline-item',
   template: `
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ action() | itemActionHeader }}</h3>
-    <p class="govuk-!-margin-bottom-1">{{ action().creationDate | govukDate: 'datetime' }}</p>
+    @if (action(); as item) {
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ item | itemActionHeader }}</h3>
+      <p class="govuk-!-margin-bottom-1">{{ item.creationDate | govukDate: 'datetime' }}</p>
+    }
 
     @if (link()) {
       <span><a [routerLink]="link()" [relativeTo]="route" [state]="state()" class="govuk-link">View details</a></span>
@@ -22,7 +24,7 @@ import { RequestActionInfoDTO } from 'cca-api';
 export class TimelineItemComponent {
   protected readonly route = inject(ActivatedRoute);
 
-  protected readonly action = input<RequestActionInfoDTO>(undefined);
-  protected readonly link = input<any[]>(undefined);
-  protected readonly state = input<any>(undefined);
+  protected readonly action = input<RequestActionInfoDTO | undefined>(undefined);
+  protected readonly link = input<(string | number | undefined)[] | undefined>(undefined);
+  protected readonly state = input<Record<string, unknown> | undefined>(undefined);
 }

@@ -3,7 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import {
+  ITEM_TYPE_TO_RETURN_TEXT_MAPPER,
+  RequestTaskState,
+  RequestTaskStore,
+  TYPE_AWARE_STORE,
+} from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { expect, Mocked } from 'vitest';
@@ -19,7 +24,6 @@ import {
   mockTprRequestTaskStateNoFuels,
 } from '../../../testing/mock-data';
 import { EnergyFuelAmountDetailsComponent } from './energy-fuel-amount-details.component';
-import { FuelForm } from './energy-fuel-amount-details-form.provider';
 
 describe('EnergyFuelAmountDetailsComponent', () => {
   let component: EnergyFuelAmountDetailsComponent;
@@ -28,20 +32,23 @@ describe('EnergyFuelAmountDetailsComponent', () => {
   let tasksApiService: Mocked<Pick<TasksApiService, 'saveRequestTaskAction'>>;
   let router: Router;
 
-  const getForm = () => (component as unknown as { form: FuelForm }).form;
+  const getForm = () => component.form;
 
-  const withReportingMechanism = (state: any, usedReportingMechanism: boolean) => ({
+  const withReportingMechanism = (state: RequestTaskState, usedReportingMechanism: boolean) => ({
     ...state,
     requestTaskItem: {
       ...state.requestTaskItem,
       requestTask: {
         ...state.requestTaskItem.requestTask,
         payload: {
-          ...state.requestTaskItem.requestTask.payload,
+          ...(state.requestTaskItem.requestTask.payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload),
           referenceData: {
-            ...state.requestTaskItem.requestTask.payload.referenceData,
+            ...(state.requestTaskItem.requestTask.payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload)
+              .referenceData,
             baselineAndTargets: {
-              ...state.requestTaskItem.requestTask.payload.referenceData.baselineAndTargets,
+              ...(
+                state.requestTaskItem.requestTask.payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+              ).referenceData.baselineAndTargets,
               usedReportingMechanism,
             },
           },
@@ -57,6 +64,7 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       imports: [EnergyFuelAmountDetailsComponent],
       providers: [
         RequestTaskStore,
+        { provide: Router, useValue: { navigate: vi.fn() } },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Report energy/fuel consumption' },
@@ -122,7 +130,8 @@ describe('EnergyFuelAmountDetailsComponent', () => {
           requestTask: {
             ...mockTprRequestTaskStateNoFuels.requestTaskItem.requestTask,
             payload: {
-              ...mockTprRequestTaskStateNoFuels.requestTaskItem.requestTask.payload,
+              ...(mockTprRequestTaskStateNoFuels.requestTaskItem.requestTask
+                .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload),
               performanceData: {
                 throughputDetails: null,
                 calculatedResults: null,
@@ -132,7 +141,7 @@ describe('EnergyFuelAmountDetailsComponent', () => {
         },
       };
 
-      return setupComponent(stateWithoutEnergyFuelDetails as any);
+      return setupComponent(stateWithoutEnergyFuelDetails as RequestTaskState);
     });
 
     it('should initialize the SRM value as null when no energy fuel details exist', () => {
@@ -219,7 +228,7 @@ describe('EnergyFuelAmountDetailsComponent', () => {
             },
           },
         },
-      } as any),
+      } as RequestTaskState),
     );
 
     it('should display primary carbon values using CO2 factors', () => {
@@ -253,7 +262,9 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       component.onAddFuel();
 
       expect(form.controls.fuels.length).toBe(initialCount + 1);
-      expect(form.controls.fuels.controls[form.controls.fuels.length - 1].controls.isCustom.value).toBe(true);
+      const addedFuel = form.controls.fuels.controls[form.controls.fuels.length - 1];
+      expect(addedFuel.controls.isCustom.value).toBe(true);
+      expect(addedFuel.controls.co2ConversionFactor.value).toBe('');
     });
 
     it('should not add more than 10 custom fuel rows', () => {
@@ -274,6 +285,21 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       component.onRemoveFuel(indexToRemove);
 
       expect(form.controls.fuels.length).toBe(countBefore - 1);
+    });
+
+    it('should return the duplicate non-standard fuel names validation error', () => {
+      component.onAddFuel();
+      component.onAddFuel();
+
+      const fuels = getForm().controls.fuels;
+      const customFuels = fuels.controls.filter((control) => control.controls.isCustom.value);
+      customFuels[0].controls.fuelType.setValue('Custom fuel');
+      customFuels[1].controls.fuelType.setValue('Custom fuel');
+      fuels.updateValueAndValidity();
+
+      expect(fuels.errors).toEqual({
+        duplicateNames: 'Duplicate non-standard fuel names were found. Please ensure each fuel name is unique.',
+      });
     });
   });
 
@@ -408,7 +434,7 @@ describe('EnergyFuelAmountDetailsComponent', () => {
             },
           },
         },
-      } as any);
+      } as RequestTaskState);
 
       fixture.detectChanges();
       component.onSubmit();

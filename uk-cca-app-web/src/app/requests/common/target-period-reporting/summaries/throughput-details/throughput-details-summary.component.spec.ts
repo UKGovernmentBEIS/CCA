@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { PaginationComponent } from '@shared/components';
 
+import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
+
 import { ThroughputDetailsSummaryComponent } from './throughput-details-summary.component';
 
 describe('ThroughputDetailsSummaryComponent', () => {
@@ -28,18 +30,23 @@ describe('ThroughputDetailsSummaryComponent', () => {
     },
   });
 
-  const buildPerformanceData = (enteredIndexes: number[]) => ({
+  const buildPerformanceData = (enteredIndexes: number[]): PerformanceDataFacilityInputData => ({
     energyFuelDetails: {
       standardFuels: {
         GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
         NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
       },
       electricitySuppliedFromCHP: '0',
+      atLeastSeventyPercentEnergyUsed: true,
     },
     throughputDetails: {
+      totalTargetVariableEnergy: '0',
       variableEnergyConsumptionDataByProduct: enteredIndexes.map((index) => ({
         productName: `Product ${index + 1}`,
         actualThroughput: '10',
+        targetImprovement: '0',
+        adjustedThroughput: '0',
+        targetEnergy: '0',
       })),
     },
   });
@@ -52,8 +59,8 @@ describe('ThroughputDetailsSummaryComponent', () => {
 
     fixture = TestBed.createComponent(ThroughputDetailsSummaryComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('referenceData', buildBaselineData(1) as any);
-    fixture.componentRef.setInput('performanceData', buildPerformanceData([0]) as any);
+    fixture.componentRef.setInput('referenceData', buildBaselineData(1) as PerformanceDataFacilityReferenceData);
+    fixture.componentRef.setInput('performanceData', buildPerformanceData([0]));
     fixture.componentRef.setInput('reportType', 'FINAL');
     fixture.componentRef.setInput('targetPeriodType', 'TP5');
 
@@ -66,8 +73,8 @@ describe('ThroughputDetailsSummaryComponent', () => {
   });
 
   it('should render only products with entered throughput data', () => {
-    fixture.componentRef.setInput('referenceData', buildBaselineData(3) as any);
-    fixture.componentRef.setInput('performanceData', buildPerformanceData([0, 2]) as any);
+    fixture.componentRef.setInput('referenceData', buildBaselineData(3) as PerformanceDataFacilityReferenceData);
+    fixture.componentRef.setInput('performanceData', buildPerformanceData([0, 2]));
     fixture.detectChanges();
 
     const content = fixture.nativeElement.textContent;
@@ -78,8 +85,8 @@ describe('ThroughputDetailsSummaryComponent', () => {
   });
 
   it('should calculate and render total target variable energy for entered products', () => {
-    fixture.componentRef.setInput('referenceData', buildBaselineData(3) as any);
-    fixture.componentRef.setInput('performanceData', buildPerformanceData([0, 2]) as any);
+    fixture.componentRef.setInput('referenceData', buildBaselineData(3) as PerformanceDataFacilityReferenceData);
+    fixture.componentRef.setInput('performanceData', buildPerformanceData([0, 2]));
     fixture.detectChanges();
 
     // 2 entered products x (energy 1 * throughput 10 * (1 - 0%))
@@ -87,11 +94,8 @@ describe('ThroughputDetailsSummaryComponent', () => {
   });
 
   it('should display pagination only when there are more than 10 entered products', () => {
-    fixture.componentRef.setInput('referenceData', buildBaselineData(11) as any);
-    fixture.componentRef.setInput(
-      'performanceData',
-      buildPerformanceData(Array.from({ length: 11 }, (_, i) => i)) as any,
-    );
+    fixture.componentRef.setInput('referenceData', buildBaselineData(11) as PerformanceDataFacilityReferenceData);
+    fixture.componentRef.setInput('performanceData', buildPerformanceData(Array.from({ length: 11 }, (_, i) => i)));
     fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.directive(PaginationComponent))).toBeTruthy();
@@ -105,5 +109,14 @@ describe('ThroughputDetailsSummaryComponent', () => {
 
     expect(content).toContain('Interim target %');
     expect(content).not.toContain('Improvement target %');
+  });
+
+  it('should format actual throughput with thousand separators', () => {
+    const performanceData = buildPerformanceData([0]);
+    performanceData.throughputDetails!.variableEnergyConsumptionDataByProduct![0].actualThroughput = '12345.6789012';
+    fixture.componentRef.setInput('performanceData', performanceData);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('12,345.6789012');
   });
 });

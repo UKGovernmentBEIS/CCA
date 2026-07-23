@@ -5,10 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataEntity;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.SurplusBuyOutDetermination;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataDetailsInfoDTO;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 
 import java.math.BigDecimal;
 

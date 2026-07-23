@@ -18,24 +18,14 @@ export interface BuyOutSurplusTransactionDetailsDTO {
   operatorName?: string;
   targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   targetPeriodResultType?:
-    | 'TARGET_MET'
-    | 'BUY_OUT_REQUIRED'
-    | 'SURPLUS_USED_BUY_OUT_REQUIRED'
-    | 'SURPLUS_USED'
-    | 'OUTSTANDING';
+    'TARGET_MET' | 'BUY_OUT_REQUIRED' | 'SURPLUS_USED_BUY_OUT_REQUIRED' | 'SURPLUS_USED' | 'OUTSTANDING';
   reportVersion?: string;
   submissionType?: 'PRIMARY' | 'SECONDARY';
   fileInfoDTO?: FileInfoDTO;
   creationDate?: string;
   dueDate?: string;
   paymentStatus?:
-    | 'AWAITING_PAYMENT'
-    | 'AWAITING_REFUND'
-    | 'PAID'
-    | 'REFUNDED'
-    | 'NOT_REQUIRED'
-    | 'UNDER_APPEAL'
-    | 'TERMINATED';
+    'AWAITING_PAYMENT' | 'AWAITING_REFUND' | 'PAID' | 'REFUNDED' | 'NOT_REQUIRED' | 'UNDER_APPEAL' | 'TERMINATED';
   chargeType?: 'REFUND' | 'FEE';
   priBuyOutCarbon?: string;
   priBuyOutCost?: string;

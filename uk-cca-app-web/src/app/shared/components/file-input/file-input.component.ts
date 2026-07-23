@@ -43,10 +43,10 @@ export class FileInputComponent implements OnInit, ControlValueAccessor {
 
   uploadedFiles$: Observable<FileUploadEvent[]>;
   isDisabled: boolean;
-  onFileBlur: () => any;
+  onFileBlur: () => void;
 
   private value$ = new BehaviorSubject<FileUpload>(null);
-  private onChange: (value: FileUpload) => any;
+  private onChange: (value: FileUpload) => void;
 
   constructor() {
     this.ngControl.valueAccessor = this;
@@ -112,14 +112,14 @@ export class FileInputComponent implements OnInit, ControlValueAccessor {
     );
   }
 
-  registerOnChange(onChange: (value: FileUpload) => any): void {
+  registerOnChange(onChange: (value: FileUpload) => void): void {
     this.onChange = (value) => {
       this.value$.next(value);
       onChange(value);
     };
   }
 
-  registerOnTouched(onBlur: () => any): void {
+  registerOnTouched(onBlur: () => void): void {
     this.onFileBlur = onBlur;
   }
 

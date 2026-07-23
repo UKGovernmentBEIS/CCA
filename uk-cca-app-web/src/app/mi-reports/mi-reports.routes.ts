@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 
 import { PendingRequestGuard } from '@shared/guards';
 
@@ -40,7 +40,7 @@ export const MI_REPORTS_ROUTES: Routes = [
       breadcrumb: false,
     },
     resolve: {
-      query: (route: any) =>
+      query: (route: ActivatedRouteSnapshot) =>
         inject(MiReportsUserDefinedService).getMiReportUserDefinedById(+route.paramMap.get('queryId')),
     },
     loadComponent: () => import('./mi-report-form/mi-report-form.component').then((c) => c.MiReportFormComponent),
@@ -53,7 +53,7 @@ export const MI_REPORTS_ROUTES: Routes = [
       breadcrumb: false,
     },
     resolve: {
-      query: (route: any) =>
+      query: (route: ActivatedRouteSnapshot) =>
         inject(MiReportsUserDefinedService).getMiReportUserDefinedById(+route.paramMap.get('queryId')),
     },
     loadComponent: () => import('./delete-mi-report/delete-mi-report.component').then((c) => c.DeleteMiReportComponent),

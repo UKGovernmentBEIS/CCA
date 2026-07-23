@@ -16,6 +16,7 @@ import {
   CaExternalContactsService,
   NonComplianceNoticeOfIntentSubmitRequestTaskPayload,
   RegulatorAuthoritiesService,
+  RequestTaskItemDTO,
   TasksService,
 } from 'cca-api';
 
@@ -69,8 +70,8 @@ describe('NoticeOfIntentNotifyOperatorComponent', () => {
     store = TestBed.inject(RequestTaskStore);
     store.setRequestTaskItem({
       requestTask: { type: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT' },
-      requestInfo: { accountId: 1 } as any,
-    });
+      requestInfo: { accountId: 1 },
+    } as RequestTaskItemDTO);
     store.setPayload({
       payloadType: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_PAYLOAD',
       noticeOfIntent: { file: 'uuid-1', comments: 'Please review' },

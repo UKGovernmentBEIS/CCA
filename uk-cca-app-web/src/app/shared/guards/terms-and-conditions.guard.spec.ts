@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 
 import { lastValueFrom, of } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { AuthService, LatestTermsStore } from '@shared/services';
 import { KeycloakService } from '@shared/services';
 
-import { AuthoritiesService, TermsAndConditionsService, UsersService } from 'cca-api';
+import { AuthoritiesService, TermsAndConditionsService, UserDTO, UsersService, UserTermsVersionDTO } from 'cca-api';
 
 import { ConfigStore } from '../config/config.store';
 import {
@@ -47,7 +47,7 @@ describe('TermsAndConditionsGuard', () => {
     });
 
     authStore = TestBed.inject(AuthStore);
-    authStore.setUserTerms({ version: 1 } as any);
+    authStore.setUserTerms({ version: 1 } as UserTermsVersionDTO);
     router = TestBed.inject(Router);
 
     latestTermsStore = TestBed.inject(LatestTermsStore);
@@ -62,7 +62,7 @@ describe('TermsAndConditionsGuard', () => {
   });
 
   it('should allow access when terms feature is disabled', async () => {
-    const state: any = { url: '/terms' };
+    const state = { url: '/terms' } as RouterStateSnapshot;
     configStore.setState({ features: { terms: false } });
 
     const result = await lastValueFrom(getGuard(null, state));
@@ -75,7 +75,7 @@ describe('TermsAndConditionsGuard', () => {
     authStore.setUserTerms({ termsVersion: 2 });
     configStore.setState({ features: { terms: true } });
 
-    const state: any = { url: '/terms' };
+    const state = { url: '/terms' } as RouterStateSnapshot;
     const result = await lastValueFrom(getGuard(null, state));
 
     expect(result).toEqual(true);
@@ -86,7 +86,7 @@ describe('TermsAndConditionsGuard', () => {
     authStore.setUserTerms({ termsVersion: 1 });
     configStore.setState({ features: { terms: true } });
 
-    const state: any = { url: '/terms' };
+    const state = { url: '/terms' } as RouterStateSnapshot;
     const result = await lastValueFrom(getGuard(null, state));
 
     expect(result).toEqual(router.parseUrl('landing'));
@@ -97,18 +97,28 @@ describe('TermsAndConditionsGuard', () => {
     authStore.setUserTerms({ termsVersion: 1 });
     configStore.setState({ features: { terms: true } });
 
-    const result = await lastValueFrom(getGuard(null, { url: '' } as any));
+    const result = await lastValueFrom(getGuard(null, { url: '' } as RouterStateSnapshot));
 
     expect(result).toEqual(true);
     expect(mockAuthService.checkUser).toHaveBeenCalledTimes(1);
   });
 
   it('should disallow access when terms versions differ', async () => {
-    authStore.setUser({ termsVersion: 2 } as any);
+    authStore.setUser({ termsVersion: 2 } as unknown as UserDTO);
 
-    const result = await lastValueFrom(getGuard(null, { url: '' } as any));
+    const result = await lastValueFrom(getGuard(null, { url: '' } as RouterStateSnapshot));
 
     expect(result).toEqual(router.parseUrl('landing'));
+    expect(mockAuthService.checkUser).toHaveBeenCalledTimes(1);
+  });
+
+  it('should allow access when userTerms is null (not yet loaded)', async () => {
+    authStore.setUserTerms(null);
+    configStore.setState({ features: { terms: true } });
+
+    const result = await lastValueFrom(getGuard(null, { url: '' } as RouterStateSnapshot));
+
+    expect(result).toEqual(true);
     expect(mockAuthService.checkUser).toHaveBeenCalledTimes(1);
   });
 });

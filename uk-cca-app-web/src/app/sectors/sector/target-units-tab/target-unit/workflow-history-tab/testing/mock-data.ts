@@ -1,4 +1,4 @@
-import { RequestDetailsSearchResults } from 'cca-api';
+import { RequestDetailsSearchResults, RequestMetadata } from 'cca-api';
 
 export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = {
   requestDetails: [
@@ -12,7 +12,7 @@ export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = 
         parentRequestId: 'S2513',
         transactionId: 'CCATM01201',
         businessId: 'ADS_53-T00001',
-      } as any,
+      } as RequestMetadata,
     },
     {
       id: 'ADS_53-T00001-S2512',
@@ -24,7 +24,7 @@ export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = 
         parentRequestId: 'S2512',
         transactionId: 'CCATM01200',
         businessId: 'ADS_53-T00001',
-      },
+      } as RequestMetadata,
     },
     {
       id: 'ADS_53-T00001-UNA',
@@ -33,7 +33,7 @@ export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = 
       creationDate: '2025-02-27',
       requestMetadata: {
         type: 'UNDERLYING_AGREEMENT',
-      },
+      } as RequestMetadata,
     },
     {
       id: 'ADS_53-T00001-ACC',

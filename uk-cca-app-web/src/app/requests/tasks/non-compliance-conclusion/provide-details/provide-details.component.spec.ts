@@ -10,7 +10,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { getByText } from '@testing';
 
-import { NonComplianceConclusionSubmitRequestTaskPayload } from 'cca-api';
+import { NonComplianceConclusionSubmitRequestTaskPayload, RequestTaskItemDTO } from 'cca-api';
 
 import { ProvideDetailsComponent } from './provide-details.component';
 
@@ -55,9 +55,9 @@ describe('ProvideDetailsComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_CONCLUSION_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
-    });
+      },
+      requestInfo: { accountId: 1 },
+    } as RequestTaskItemDTO);
     store.setIsEditable(true);
 
     fixture = TestBed.createComponent(ProvideDetailsComponent);
@@ -201,9 +201,9 @@ describe('ProvideDetailsComponent', () => {
           },
           nonComplianceAttachments: { 'uuid-1': 'notice.pdf' },
         } as NonComplianceConclusionSubmitRequestTaskPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
-    });
+      },
+      requestInfo: { accountId: 1 },
+    } as RequestTaskItemDTO);
 
     fixture = TestBed.createComponent(ProvideDetailsComponent);
     component = fixture.componentInstance;
@@ -244,9 +244,9 @@ describe('ProvideDetailsComponent', () => {
           },
           nonComplianceAttachments: { 'uuid-1': 'notice.pdf' },
         } as NonComplianceConclusionSubmitRequestTaskPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
-    });
+      },
+      requestInfo: { accountId: 1 },
+    } as RequestTaskItemDTO);
 
     fixture = TestBed.createComponent(ProvideDetailsComponent);
     component = fixture.componentInstance;

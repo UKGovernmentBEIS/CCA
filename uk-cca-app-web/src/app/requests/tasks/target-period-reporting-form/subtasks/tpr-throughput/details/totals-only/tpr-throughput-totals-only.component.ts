@@ -12,6 +12,7 @@ import { DetailsComponent, GovukValidators } from '@netz/govuk-components';
 import {
   calculateThroughputValues,
   decideVariableEnergyType,
+  isCarbonMeasurementType,
   roundHalfUpTo7Decimals,
   TaskItemStatus,
   TasksApiService,
@@ -20,7 +21,8 @@ import {
   tprFormQuery,
 } from '@requests/common';
 import { SummaryComponent, TextInputComponent, WizardStepComponent } from '@shared/components';
-import { MeasurementTypeToUnitPipe } from '@shared/pipes';
+import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementTypeToUnitPipe } from '@shared/pipes';
+import { logger } from '@shared/utils';
 import { CCAGovukValidators } from '@shared/validators';
 import { produce } from 'immer';
 
@@ -85,8 +87,8 @@ export class TprThroughputTotalsOnlyComponent {
 
   protected readonly measurementUnit = computed(() => this.referenceData()?.baselineAndTargets?.measurementType);
 
-  readonly hasEnergyMeasurement = computed(() =>
-    ['ENERGY_KWH', 'ENERGY_MWH', 'ENERGY_GJ'].includes(this.measurementUnit()),
+  protected readonly isCarbonMeasurement = computed(() =>
+    isCarbonMeasurementType(MEASUREMENT_TYPE_TO_UNIT_MAP[this.measurementUnit()]),
   );
 
   protected readonly actualThroughput = toSignal(this.form.controls.actualThroughput.valueChanges, {
@@ -122,7 +124,6 @@ export class TprThroughputTotalsOnlyComponent {
 
     const updatedPayload = produce(actionPayload, (draft) => {
       draft.throughputDetails = {
-        ...actionPayload.throughputDetails,
         actualThroughput: this.actualThroughput(),
         targetImprovement: roundHalfUpTo7Decimals(this.improvementTarget()),
         adjustedThroughput: roundHalfUpTo7Decimals(this.adjustedThroughput() ?? 0),
@@ -142,7 +143,7 @@ export class TprThroughputTotalsOnlyComponent {
       .saveRequestTaskAction(dto)
       .pipe(
         catchError((error) => {
-          console.error(error);
+          logger.error(error);
           return EMPTY;
         }),
       )

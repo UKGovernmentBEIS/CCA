@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityCalculatedResults;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityContainer;
@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -146,4 +147,53 @@ class PerformanceDataFacilityStatusQueryServiceTest {
 		assertEquals(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET, result.getCalculatedResults().getTargetPeriodResultType());
 		assertEquals(BigDecimal.valueOf(1000), result.getBaselineAndTargets().getTotalFixedEnergy());
 	}
+    
+    @Test
+    void getFacilityPerformanceDataStatusByLockedStatus() {
+        Set<Long> facilityIds = Set.of(1L, 2L);
+        Year year = Year.of(2026);
+
+        List<PerformanceDataFacilityStatus> statuses = List.of(
+                PerformanceDataFacilityStatus.builder().facilityId(1L).locked(true).build(),
+                PerformanceDataFacilityStatus.builder().facilityId(2L).locked(true).build()
+        );
+
+        when(performanceDataFacilityStatusRepository
+                .findByFacilityIdInAndTargetPeriodYearAndLocked(facilityIds, year, true))
+                .thenReturn(statuses);
+
+        List<PerformanceDataFacilityStatus> result =
+                service.getFacilityPerformanceDataStatusByFacilityIdInAndLockedStatus(facilityIds, year, true);
+
+        verify(performanceDataFacilityStatusRepository)
+                .findByFacilityIdInAndTargetPeriodYearAndLocked(facilityIds, year, true);
+
+        assertThat(result).isEqualTo(statuses);
+    }
+    
+    @Test
+    void getLockedFacilityIds() {
+        Set<Long> facilityIds = Set.of(1L, 2L, 3L);
+        Year year = Year.of(2026);
+
+        when(performanceDataFacilityStatusRepository
+                .findByFacilityIdInAndTargetPeriodYearAndLocked(facilityIds, year, true))
+                .thenReturn(List.of(
+                        PerformanceDataFacilityStatus.builder()
+                                .facilityId(1L)
+                                .locked(true)
+                                .build(),
+                        PerformanceDataFacilityStatus.builder()
+                                .facilityId(3L)
+                                .locked(true)
+                                .build()
+                ));
+
+        Set<Long> result = service.getLockedFacilityIds(facilityIds, year);
+
+        verify(performanceDataFacilityStatusRepository)
+                .findByFacilityIdInAndTargetPeriodYearAndLocked(facilityIds, year, true);
+
+        assertThat(result).containsExactlyInAnyOrder(1L, 3L);
+    }
 }

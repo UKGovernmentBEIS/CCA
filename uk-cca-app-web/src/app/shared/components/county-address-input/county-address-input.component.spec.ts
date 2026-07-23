@@ -7,6 +7,8 @@ import { changeInputValue, getInputValue } from '@netz/common/testing';
 import { TextInputComponent } from '@netz/govuk-components';
 import { CountyService } from '@shared/services';
 
+import { AddressDTO } from 'cca-api';
+
 import { CountyAddressInputComponent } from './county-address-input.component';
 import { createCountyAddressControl } from './create-county-address-controls';
 
@@ -91,7 +93,7 @@ describe('CountyAddressInputComponent', () => {
   });
 
   it('should update values on setValue', () => {
-    hostComponent.form.get('address').setValue(address as any);
+    hostComponent.form.get('address').setValue(address as AddressDTO);
     fixture.detectChanges();
 
     expect(getInputValue(fixture, '#address\\.line1')).toEqual(address.line1);

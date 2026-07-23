@@ -7,8 +7,7 @@ import {
 } from 'cca-api';
 
 type NoticeOfIntentPeerReviewPayload =
-  | NonComplianceNoticeOfIntentSubmitRequestTaskPayload
-  | NonComplianceNoticeOfIntentPeerReviewRequestTaskPayload;
+  NonComplianceNoticeOfIntentSubmitRequestTaskPayload | NonComplianceNoticeOfIntentPeerReviewRequestTaskPayload;
 
 const selectPayload: StateSelector<RequestTaskState, NoticeOfIntentPeerReviewPayload> = createDescendingSelector(
   requestTaskQuery.selectRequestTaskPayload,

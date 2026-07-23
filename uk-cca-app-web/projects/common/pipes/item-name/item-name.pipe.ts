@@ -4,7 +4,7 @@ import { ItemDTO } from 'cca-api';
 
 @Pipe({ name: 'itemName', pure: true })
 export class ItemNamePipe implements PipeTransform {
-  transform(value: ItemDTO['taskType']): string {
+  transform(value: ItemDTO['taskType']): string | null {
     switch (value) {
       case 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT':
         return 'Apply for underlying agreement';

@@ -21,12 +21,12 @@ export function TermsAndConditionsGuard(_, state: RouterStateSnapshot): Observab
       const termsEnabled = configStore.select(selectIsFeatureEnabled('terms'));
       const latestTerms = latestTermsStore.state;
       const userTerms = authStore.state.userTerms;
-      if (!termsEnabled) return true;
+      if (!termsEnabled || !userTerms) return true;
 
       if (state.url === '/terms') {
-        return latestTerms.version !== userTerms.termsVersion || router.parseUrl('landing');
+        return latestTerms.version !== userTerms.termsVersion || router.parseUrl('/landing');
       }
-      return latestTerms.version === userTerms.termsVersion || router.parseUrl('landing');
+      return latestTerms.version === userTerms.termsVersion || router.parseUrl('/landing');
     }),
   );
 }

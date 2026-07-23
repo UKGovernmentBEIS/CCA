@@ -30,7 +30,7 @@ export class Delete2faComponent implements OnInit {
           of({ url: 'invalid-link', queryParams: { code: res.error.code } }),
         ),
       )
-      .subscribe(({ queryParams, url }: { url: string; queryParams?: any }) => {
+      .subscribe(({ queryParams, url }: { url: string; queryParams?: Record<string, string> }) => {
         if (url === 'success') {
           this.authService.logout('/');
         } else {

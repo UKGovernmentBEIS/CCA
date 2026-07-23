@@ -96,7 +96,9 @@ function uniqueCustomFuelTypeValidator(formArray: FormArray<FuelRowForm>) {
     .filter(Boolean);
 
   const hasDuplicate = names.some((name, index) => names.indexOf(name) !== index);
-  return hasDuplicate ? { duplicateNames: 'Enter a unique name for this fuel' } : null;
+  return hasDuplicate
+    ? { duplicateNames: 'Duplicate non-standard fuel names were found. Please ensure each fuel name is unique.' }
+    : null;
 }
 
 export const EnergyFuelAmountDetailsFormProvider: Provider = {
@@ -189,7 +191,7 @@ export function createNonStandardFuelRowGroup(
     {
       fuelKey: fb.control<string | null>(null),
       fuelType: fb.control(initial?.fuelType ?? ''),
-      co2ConversionFactor: fb.control(String(initial?.co2ConversionFactor ?? '0')),
+      co2ConversionFactor: fb.control(String(initial?.co2ConversionFactor ?? '')),
       deliveredEnergy: fb.control<string | null>(
         initial?.deliveredEnergy != null ? String(initial.deliveredEnergy) : null,
         { updateOn: 'change' },

@@ -1,21 +1,20 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { catchError, Observable, pipe, throwError, UnaryFunction } from 'rxjs';
+import { catchError, Observable, throwError, UnaryFunction } from 'rxjs';
 
-export function catchElseRethrow<T, R, E = HttpErrorResponse>(
+export function catchElseRethrow<R, E = HttpErrorResponse>(
   predicate: UnaryFunction<E, boolean>,
   handler: UnaryFunction<E, Observable<R>>,
 ) {
-  return pipe(
-    catchError<T, Observable<R | never>>((res: E) => (predicate(res) ? handler(res) : throwError(() => res))),
-  );
+  return <T>(source: Observable<T>): Observable<T | R> =>
+    source.pipe(catchError((res: E) => (predicate(res) ? handler(res) : throwError(() => res))));
 }
 
-export function catchNotFoundRequest(
+export function catchNotFoundRequest<R>(
   code: ErrorCode | ErrorCode[],
-  handler: (res: HttpErrorResponse) => Observable<any>,
+  handler: (res: HttpErrorResponse) => Observable<R>,
 ) {
-  return pipe(catchElseRethrow((res) => isNotFoundRequest(res, code), handler));
+  return catchElseRethrow((res) => isNotFoundRequest(res, code), handler);
 }
 
 export function isNotFoundRequest(res: unknown, codes?: ErrorCode | ErrorCode[]): res is NotFoundRequest {

@@ -6,7 +6,12 @@ import { of } from 'rxjs';
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
 import { Mocked } from 'vitest';
 
-import { SectorAssociationSchemeDocumentsService, SectorAssociationSchemeService } from 'cca-api';
+import {
+  Configuration,
+  SectorAssociationSchemeDocumentsService,
+  SectorAssociationSchemesDTO,
+  SectorAssociationSchemeService,
+} from 'cca-api';
 
 import { toSectorSchemeSummaryData } from '../scheme-summary-data';
 import { SectorDocumentsDownloadComponent } from './sector-documents-download.component';
@@ -19,7 +24,7 @@ describe('SectorDocumentsDownloadComponent', () => {
 
   beforeEach(async () => {
     sectorAssociationSchemeDocumentsService = mockClass(SectorAssociationSchemeDocumentsService);
-    sectorAssociationSchemeDocumentsService.configuration = { basePath: 'api' } as any;
+    sectorAssociationSchemeDocumentsService.configuration = { basePath: 'api' } as Configuration;
 
     sectorAssociationSchemeService = mockClass(SectorAssociationSchemeService);
     sectorAssociationSchemeService.generateGetSectorAssociationSchemeDocumentToken.mockReturnValue(
@@ -52,12 +57,14 @@ describe('SectorDocumentsDownloadComponent', () => {
 
   describe('toSectorSchemeSummaryData', () => {
     it('should sort target periods correctly when given 10 unsorted target periods', () => {
-      const mockSectorScheme: any = {
+      const mockSectorScheme: SectorAssociationSchemesDTO = {
         sectorAssociationSchemeMap: {
           CCA_2: {
             id: 1,
+            schemeVersion: 'CCA_2',
             umbrellaAgreement: null,
             targetSet: {
+              id: 1,
               targetCurrencyType: 'Relative',
               throughputUnit: 'tonne',
               energyOrCarbonUnit: 'kWh',

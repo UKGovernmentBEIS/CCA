@@ -21,7 +21,7 @@ export const underlyingAgreementWaitForPeerReviewTaskContent: RequestTaskPageCon
   };
 };
 
-export function getAllUnderlyingAgreementWaitForPeerReviewSections(_payload: any): TaskSection[] {
+export function getAllUnderlyingAgreementWaitForPeerReviewSections(_payload: unknown): TaskSection[] {
   return [
     {
       title: 'Target unit details',

@@ -97,6 +97,79 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
         // Verify
         assertThat(result).isEqualTo(expected);
     }
+    
+    @Test
+    void toPerformanceDataFacilityInputData_zero_amount_fuels() {
+        final PerformanceDataFacilityUploadCsvData csvData = PerformanceDataFacilityUploadCsvData.builder()
+                .gridElectricity(BigDecimal.valueOf(10000000))
+                .nonGridElectricity(BigDecimal.ZERO)
+                .naturalGas(BigDecimal.ZERO)
+                .otherFuelName1("Biofuel")
+                .otherFuelConversionFactor1(BigDecimal.ZERO)
+                .otherFuelAmount1(null)
+                .otherFuelName2("Biofuel")
+                .otherFuelConversionFactor2(BigDecimal.ZERO)
+                .otherFuelAmount2(BigDecimal.ZERO)
+                .otherFuelName3(null)
+                .otherFuelConversionFactor3(null)
+                .otherFuelAmount3(BigDecimal.ZERO)
+                .atLeastSeventyPercentEnergyUsed(true)
+                .electricitySuppliedFromCHP(BigDecimal.valueOf(5000000))
+                .actualThroughput(BigDecimal.valueOf(10500))
+                .build();
+        final PerformanceDataFacilityCalculationParameters calculationParameters = PerformanceDataFacilityCalculationParameters.builder()
+                .targetPeriodType(TargetPeriodType.TP7)
+                .targetYear(Year.of(2026))
+                .tpMultiplier(BigDecimal.ONE)
+                .targetImprovement(BigDecimal.valueOf(0.08))
+                .baselineDate(LocalDate.of(2022, 1, 1))
+                .measurementType(MeasurementType.ENERGY_KWH)
+                .usedReportingMechanism(true)
+                .improvements(Map.of(
+                        TargetImprovementType.TP7, BigDecimal.valueOf(8),
+                        TargetImprovementType.TP8, BigDecimal.valueOf(12),
+                        TargetImprovementType.TP9, BigDecimal.valueOf(16)
+                ))
+                .totalFixedEnergy(BigDecimal.valueOf(30000000))
+                .lastYearPerTp(Map.of(
+                        TargetPeriodType.TP7, 2026,
+                        TargetPeriodType.TP8, 2028,
+                        TargetPeriodType.TP9, 2030
+                ))
+                .build();
+
+        PerformanceDataFacilityInputData expected = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY,
+                                PerformanceDataFacilityFuelEnergyConsumption.builder()
+                                        .deliveredEnergy(BigDecimal.valueOf(10000000))
+                                        .primaryEnergy(BigDecimal.valueOf(21000000).setScale(7, RoundingMode.HALF_UP))
+                                        .build()))
+                        .nonStandardFuels(List.of(PerformanceDataFacilityNonStandardFuel.builder()
+                                .name("Biofuel")
+                                .conversionFactor(BigDecimal.ZERO)
+                                .deliveredEnergy(null)
+                                .primaryEnergy(BigDecimal.ZERO)
+                                .build()))
+                        .atLeastSeventyPercentEnergyUsed(true)
+                        .electricitySuppliedFromCHP(BigDecimal.valueOf(5000000))
+                        .throughputAdjustmentFactor(BigDecimal.valueOf(0.6666667))
+                        .build())
+                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+                        .actualThroughput(BigDecimal.valueOf(10500))
+                        .targetImprovement(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP))
+                        .adjustedThroughput(BigDecimal.valueOf(7000).setScale(7, RoundingMode.HALF_UP))
+                        .totalTargetVariableEnergy(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP))
+                        .build())
+                .build();
+
+        // Invoke
+        PerformanceDataFacilityInputData result = PerformanceDataFacilityProcessingInputDataMapper
+                .toPerformanceDataFacilityInputData(csvData, calculationParameters);
+
+        // Verify
+        assertThat(result).isEqualTo(expected);
+    }
 
     @Test
     void toPerformanceDataFacilityInputData_KWH_Fixed_no_csv_srm() {
@@ -232,6 +305,8 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
     void toPerformanceDataFacilityInputData_no_csv_otherFuelAmount() {
         final PerformanceDataFacilityUploadCsvData csvData = PerformanceDataFacilityUploadCsvData.builder()
                 .gridElectricity(BigDecimal.valueOf(10000000))
+                .nonGridElectricity(BigDecimal.ZERO)
+                .naturalGas(BigDecimal.ZERO)
                 .otherFuelName1("Biofuel")
                 .otherFuelConversionFactor1(BigDecimal.ZERO)
                 .otherFuelAmount1(null)

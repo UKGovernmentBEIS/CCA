@@ -9,6 +9,8 @@ import { RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 
+import { RequestTaskPayload } from 'cca-api';
+
 import FacilitySummaryComponent from './facility-summary.component';
 
 describe('FacilitySummaryComponent', () => {
@@ -159,7 +161,7 @@ describe('FacilitySummaryComponent', () => {
               activitiesDescriptionFile: 'activitiesDescriptionFile.xlsx',
               evidenceFile: 'evidenceFile.xlsx',
             },
-          } as any,
+          } as RequestTaskPayload,
           assignable: true,
           assigneeUserId: '088fe8e5-9eb9-49d0-a6d0-d2f78031fe79',
           assigneeFullName: 'sector user',

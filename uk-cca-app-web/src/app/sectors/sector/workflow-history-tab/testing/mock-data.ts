@@ -1,4 +1,4 @@
-import { RequestDetailsSearchResults } from 'cca-api';
+import { RequestDetailsSearchResults, RequestMetadata } from 'cca-api';
 
 export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = {
   requestDetails: [
@@ -11,7 +11,7 @@ export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = 
         type: 'SECTOR_MOA',
         parentRequestId: 'S2502',
         sectorAcronym: 'ADS_1',
-      } as any,
+      } as RequestMetadata,
     },
     {
       id: 'ADS_1-S2501',
@@ -22,7 +22,7 @@ export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = 
         type: 'SECTOR_MOA',
         parentRequestId: 'S2501',
         sectorAcronym: 'ADS_1',
-      },
+      } as RequestMetadata,
     },
   ],
   total: 2,

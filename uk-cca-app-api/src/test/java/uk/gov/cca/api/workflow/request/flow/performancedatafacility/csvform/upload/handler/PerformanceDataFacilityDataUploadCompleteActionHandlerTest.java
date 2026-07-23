@@ -185,7 +185,8 @@ class PerformanceDataFacilityDataUploadCompleteActionHandlerTest {
         assertThat(request.getSubmissionDate()).isNull();
         assertThat(request.getStatus()).isEqualTo(CcaRequestStatuses.CLOSED);
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
-        verifyNoInteractions(requestService);
+        verify(requestService, times(1)).addActionToRequest(
+        		request, null, CcaRequestActionType.PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED, appUser.getUserId());
         verify(workflowService, times(1)).completeTask(processTaskId);
     }
 

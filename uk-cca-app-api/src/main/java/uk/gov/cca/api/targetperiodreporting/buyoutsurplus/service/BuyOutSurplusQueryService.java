@@ -5,8 +5,11 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
+import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransaction;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransactionHistory;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AvailableTargetPeriodsBuyOutDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionHistoryDTO;
@@ -21,7 +24,11 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurpl
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.transform.BuyOutSurplusTransactionDetailsMapper;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.transform.BuyOutSurplusTransactionHistoryMapper;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.transform.BuyOutSurplusTransactionMapper;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodBuyOutDetailsDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.transform.TargetPeriodMapper;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataDetailsInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.PerformanceDataQueryService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -29,6 +36,8 @@ import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.files.documents.service.FileDocumentService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -46,10 +55,13 @@ public class BuyOutSurplusQueryService {
     private final BuyOutSurplusEligibleAccountsCustomRepository eligibleAccountsCustomRepository;
     private final BuyOutSurplusExclusionRepository buyOutSurplusExclusionRepository;
     private final PerformanceDataQueryService performanceDataQueryService;
+    private final TargetPeriodService targetPeriodService;
     private final FileDocumentService fileDocumentService;
+    private final SchemeTerminationHelper schemeTerminationHelper;
     private static final BuyOutSurplusTransactionMapper BUY_OUT_SURPLUS_MAPPER = Mappers.getMapper(BuyOutSurplusTransactionMapper.class);
     private static final BuyOutSurplusTransactionDetailsMapper BUY_OUT_SURPLUS_DETAILS_MAPPER = Mappers.getMapper(BuyOutSurplusTransactionDetailsMapper.class);
     private static final BuyOutSurplusTransactionHistoryMapper BUY_OUT_SURPLUS_HISTORY_MAPPER = Mappers.getMapper(BuyOutSurplusTransactionHistoryMapper.class);
+    private static final TargetPeriodMapper TARGET_PERIOD_MAPPER = Mappers.getMapper(TargetPeriodMapper.class);
     
     public List<BuyOutSurplusTransactionInfoDTO> getAllTransactionInfoByAccountAndTargetPeriodPessimistic(Long accountId, TargetPeriodType targetPeriodType) {
         return buyOutSurplusTransactionRepository
@@ -131,4 +143,53 @@ public class BuyOutSurplusQueryService {
         return buyOutSurplusTransactionRepository.findByPerformanceDataId(performanceDataId)
                 .map(BUY_OUT_SURPLUS_MAPPER::toBuyOutSurplusTransactionInfoDTO);
     }
+    
+    public AvailableTargetPeriodsBuyOutDTO getAvailableBuyOutTargetPeriods(LocalDate date) {
+    	List<TargetPeriodBuyOutDetailsDTO> currentTps = new ArrayList<>();
+    	List<TargetPeriodBuyOutDetailsDTO> previousTps = new ArrayList<>();
+    	
+    	List<TargetPeriod> periods = targetPeriodService.getTargetPeriodBuyOutCurrentAndPrevious(date);
+
+    	// TP6 might overlap with current TP
+        getAvailableBuyOutTargetPeriodsForCca2(date, periods, currentTps);
+        
+        getAvailableBuyOutTargetPeriodsForCca3(periods, currentTps, previousTps);
+
+        return AvailableTargetPeriodsBuyOutDTO.builder()
+                .currentTargetPeriods(currentTps)
+                .previousTargetPeriods(previousTps)
+                .build();
+	}
+    
+    private void getAvailableBuyOutTargetPeriodsForCca3(List<TargetPeriod> periods, List<TargetPeriodBuyOutDetailsDTO> currentTps,
+			List<TargetPeriodBuyOutDetailsDTO> previousTps) {
+		List<TargetPeriod> cca3Periods = periods.stream()
+                .filter(tp -> SchemeVersion.CCA_3.equals(tp.getSchemeVersion()))
+                .toList();
+
+        if (cca3Periods.isEmpty()) {
+            return;
+        }
+        
+        // Get current TP
+        currentTps.add(TARGET_PERIOD_MAPPER.toTargetPeriodBuyOutDetailsDTO(cca3Periods.getFirst()));
+        
+        // Get previous TPs
+        previousTps.addAll(cca3Periods.stream()
+                .skip(1)
+                .map(TARGET_PERIOD_MAPPER::toTargetPeriodBuyOutDetailsDTO)
+                .toList());	
+	}
+
+	private void getAvailableBuyOutTargetPeriodsForCca2(LocalDate date, List<TargetPeriod> periods,
+			List<TargetPeriodBuyOutDetailsDTO> currentTps) {
+		
+		if (!schemeTerminationHelper.isAfterCca2TerminationDate(date)) {
+			periods.stream()
+			.filter(tp -> tp.getBusinessId() == TargetPeriodType.TP6)
+            .findFirst()
+            .map(TARGET_PERIOD_MAPPER::toTargetPeriodBuyOutDetailsDTO)
+            .ifPresent(currentTps::add);
+		}
+	}
 }

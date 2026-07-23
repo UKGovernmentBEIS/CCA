@@ -363,7 +363,6 @@ public class ArchUnitTest {
                             TOKEN_PACKAGE
                             ));
     
-    //TODO Remove dependency uk.gov.cca.api.targetperiodreporting.performancedata.domainPerformanceDataSubmissionType
     @ArchTest
     public static final ArchRule performanceDataFacilityPackageChecks =
             noClasses().that()
@@ -383,7 +382,6 @@ public class ArchUnitTest {
                     FILES_PACKAGE,
                     TOKEN_PACKAGE,
                     CCA_TARGET_PERIOD_PACKAGE,
-                    CCA_PERFORMANCE_DATA_PACKAGE,
                     CCA_UNA_PACKAGE
                     ));
     

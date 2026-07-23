@@ -12,7 +12,7 @@ import {
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { taskStatusTagMap } from '@requests/common';
 
-import { RequestTaskDTO } from 'cca-api';
+import { ItemDTO, RequestTaskDTO } from 'cca-api';
 
 import { CANCEL_TASK_ROUTES } from '../common/cancel-task/cancel-task.routes';
 import { initializePayloadGuard } from './initialize-payload.guard';
@@ -20,7 +20,7 @@ import { createIsEditableResolver, taskRelatedActionsMap } from './tasks.provide
 import { tasksContent } from './tasks-content';
 
 const taskTypeToReturnText = (type: RequestTaskDTO['type']): string => {
-  return new ItemNamePipe().transform(type as any) ?? 'Dashboard';
+  return new ItemNamePipe().transform(type as ItemDTO['taskType']) ?? 'Dashboard';
 };
 
 export const TASKS_ROUTES: Routes = [

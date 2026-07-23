@@ -16,6 +16,7 @@ import {
   CaExternalContactsService,
   NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload,
   RegulatorAuthoritiesService,
+  RequestInfoDTO,
   TasksService,
 } from 'cca-api';
 
@@ -69,7 +70,7 @@ describe('EnforcementResponseNoticeNotifyOperatorComponent', () => {
     store = TestBed.inject(RequestTaskStore);
     store.setRequestTaskItem({
       requestTask: { type: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT' },
-      requestInfo: { accountId: 1 } as any,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
     store.setPayload({
       payloadType: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_PAYLOAD',

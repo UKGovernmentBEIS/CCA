@@ -22,7 +22,7 @@ export abstract class PayloadMutator implements FormIdentity {
    */
   abstract apply(
     payload: GenericRequestTaskPayload,
-    step: string,
-    userInput: any,
+    step: string | null,
+    userInput: unknown,
   ): Observable<GenericRequestTaskPayload>;
 }

@@ -8,13 +8,13 @@ import {
 import { ThroughputCalculationInputs } from './target-period-reporting-form.types';
 import {
   calculateActualEnergyTotal,
-  calculateAdjustedImprovementTargetForProduct,
+  calculateAdjustedImprovementTarget,
   calculateAdjustedThroughput,
   calculateFacilityImprovementTarget,
   calculateImprovementTarget,
   calculatePrimaryCarbon,
   calculatePrimaryEnergy,
-  calculateTargetEnergyForProduct,
+  calculateProductTargetEnergy,
   calculateThroughputAdjustmentFactor,
   calculateThroughputValues,
   calculateWeightedConversionFactor,
@@ -593,9 +593,9 @@ describe('calculateFacilityImprovementTarget', () => {
   });
 });
 
-describe('calculateAdjustedImprovementTargetForProduct', () => {
+describe('calculateAdjustedImprovementTarget', () => {
   it('should return facility target when product and facility base years match', () => {
-    const result = calculateAdjustedImprovementTargetForProduct(
+    const result = calculateAdjustedImprovementTarget(
       {
         baselineAndTargets: {
           improvements: { TP7: '8', TP8: '12', TP9: '16' },
@@ -610,7 +610,7 @@ describe('calculateAdjustedImprovementTargetForProduct', () => {
   });
 
   it('should calculate adjusted product target based on spec example', () => {
-    const result = calculateAdjustedImprovementTargetForProduct(
+    const result = calculateAdjustedImprovementTarget(
       {
         baselineAndTargets: {
           improvements: { TP7: '8', TP8: '10', TP9: '16' },
@@ -625,7 +625,7 @@ describe('calculateAdjustedImprovementTargetForProduct', () => {
   });
 
   it('should use the interim target when rebasing TP8 interim values', () => {
-    const result = calculateAdjustedImprovementTargetForProduct(
+    const result = calculateAdjustedImprovementTarget(
       {
         baselineAndTargets: {
           improvements: { TP7: '8', TP8: '10', TP9: '16' },
@@ -641,7 +641,7 @@ describe('calculateAdjustedImprovementTargetForProduct', () => {
 
   it('should calculate adjusted product target for TP9 final when product base year falls within TP9 period', () => {
     // facilityTarget=16%→0.16, totalProgress at productBaseYear(2029)=13%→0.13 → (0.16-0.13)/(1-0.13)
-    const result = calculateAdjustedImprovementTargetForProduct(
+    const result = calculateAdjustedImprovementTarget(
       {
         baselineAndTargets: {
           improvements: { TP7: '8', TP8: '10', TP9: '16' },
@@ -657,7 +657,7 @@ describe('calculateAdjustedImprovementTargetForProduct', () => {
 
   it('should use the interim target when rebasing TP9 interim values with product base year in TP8 period', () => {
     // interimTarget=(16+10)/2/100=0.13, totalProgress at productBaseYear(2027)=9% → (0.13-0.09)/(1-0.09)
-    const result = calculateAdjustedImprovementTargetForProduct(
+    const result = calculateAdjustedImprovementTarget(
       {
         baselineAndTargets: {
           improvements: { TP7: '8', TP8: '10', TP9: '16' },
@@ -676,7 +676,7 @@ describe('calculateAdjustedImprovementTargetForProduct', () => {
 
   it('spec example — TP7 final should be 0 because productBaseYear falls after TP7', () => {
     // MAX(0, (0.08 - 0.09) / (1 - 0.09)) = MAX(0, negative) = 0
-    const result = calculateAdjustedImprovementTargetForProduct(
+    const result = calculateAdjustedImprovementTarget(
       {
         baselineAndTargets: {
           improvements: { TP7: '8', TP8: '10', TP9: '16' },
@@ -692,7 +692,7 @@ describe('calculateAdjustedImprovementTargetForProduct', () => {
 
   it('spec example — TP8 interim should be 0 at productBaseYear itself', () => {
     // interimTarget=(10+8)/2/100=0.09, progress=0.09 → (0.09-0.09)/(1-0.09)=0
-    const result = calculateAdjustedImprovementTargetForProduct(
+    const result = calculateAdjustedImprovementTarget(
       {
         baselineAndTargets: {
           improvements: { TP7: '8', TP8: '10', TP9: '16' },
@@ -708,7 +708,7 @@ describe('calculateAdjustedImprovementTargetForProduct', () => {
 
   it('spec example — TP9 final with productBaseYear=2027 → ≈7.692%', () => {
     // (0.16 - 0.09) / (1 - 0.09) = 0.07 / 0.91 ≈ 0.076923
-    const result = calculateAdjustedImprovementTargetForProduct(
+    const result = calculateAdjustedImprovementTarget(
       {
         baselineAndTargets: {
           improvements: { TP7: '8', TP8: '10', TP9: '16' },
@@ -723,14 +723,14 @@ describe('calculateAdjustedImprovementTargetForProduct', () => {
   });
 });
 
-describe('calculateTargetEnergyForProduct', () => {
+describe('calculateProductTargetEnergy', () => {
   it('should calculate per-product target energy from intensity, adjusted throughput and target (decimal)', () => {
-    const result = calculateTargetEnergyForProduct(250, 5000, 0.041666667);
+    const result = calculateProductTargetEnergy(250, 5000, 0.041666667);
     expect(result).toBeCloseTo(1197916.66625, 5);
   });
 
   it('should return zero when adjusted throughput is zero', () => {
-    const result = calculateTargetEnergyForProduct(5000, 0, 0.12);
+    const result = calculateProductTargetEnergy(5000, 0, 0.12);
     expect(result).toBe(0);
   });
 });

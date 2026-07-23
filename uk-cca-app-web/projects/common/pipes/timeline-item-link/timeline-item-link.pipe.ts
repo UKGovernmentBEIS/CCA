@@ -4,7 +4,7 @@ import { RequestActionInfoDTO } from 'cca-api';
 
 @Pipe({ name: 'timelineItemLink', pure: true })
 export class TimelineItemLinkPipe implements PipeTransform {
-  transform(value: RequestActionInfoDTO, isWorkflow?: boolean): any[] {
+  transform(value: RequestActionInfoDTO, isWorkflow?: boolean): (string | number | undefined)[] | null {
     const routerLooks = isWorkflow ? './' : '/';
     switch (value.type) {
       case 'TARGET_UNIT_ACCOUNT_CREATION_SUBMITTED':
@@ -90,6 +90,7 @@ export class TimelineItemLinkPipe implements PipeTransform {
       case 'VERIFICATION_STATEMENT_CANCELLED':
       case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED':
       case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED':
+      case 'PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED':
         return null;
 
       case 'PAYMENT_MARKED_AS_PAID':

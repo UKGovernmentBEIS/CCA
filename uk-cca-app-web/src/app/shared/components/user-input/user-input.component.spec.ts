@@ -8,6 +8,8 @@ import { By } from '@angular/platform-browser';
 import { BasePage } from '@netz/common/testing';
 import { GovukValidators } from '@netz/govuk-components';
 
+import { PhoneNumberDTO } from 'cca-api';
+
 import { createCountyAddressControl } from '../county-address-input/create-county-address-controls';
 import { phoneInputValidators } from '../phone-input/phone-input.validators';
 import { UserInputComponent } from './user-input.component';
@@ -150,10 +152,9 @@ describe('UserInputComponent', () => {
             GovukValidators.maxLength(255, 'Your job title should not be larger than 255 characters'),
           ],
         }),
-        phoneNumber: new FormControl(
-          { value: { countryCode: '44', number: null } as any },
-          { validators: [GovukValidators.empty('Enter your phone number'), ...phoneInputValidators] },
-        ),
+        phoneNumber: new FormControl({ countryCode: '44', number: null } as unknown as PhoneNumberDTO, {
+          validators: [GovukValidators.empty('Enter your phone number'), ...phoneInputValidators],
+        }),
         mobileNumber: new FormControl(null, { validators: phoneInputValidators }),
         email: new FormControl(null),
         address: createCountyAddressControl(null),

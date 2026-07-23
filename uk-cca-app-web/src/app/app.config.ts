@@ -20,6 +20,7 @@ import {
   KeycloakService,
   LatestTermsService,
 } from '@shared/services';
+import { logger } from '@shared/utils';
 import type { KeycloakConfig } from 'keycloak-js';
 
 import { ApiModule, Configuration } from 'cca-api';
@@ -80,9 +81,9 @@ function init(
         };
         return keycloakService.init(keycloakConfig);
       })
-      .catch((error) => console.error(error))
+      .catch((error) => logger.error(error))
       .then(() => firstValueFrom(authService.checkUser()))
       .then(() => firstValueFrom(latestTermsService.initLatestTerms()))
       .then(() => Promise.all([firstValueFrom(countryService.load()), firstValueFrom(countyService.load())]))
-      .catch((error) => console.error('[APP_INITIALIZE] init Keycloak failed', error));
+      .catch((error) => logger.error('[APP_INITIALIZE] init Keycloak failed', error));
 }

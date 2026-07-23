@@ -14,6 +14,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageHeadingComponent {
-  protected readonly caption = input<string>(undefined);
+  protected readonly caption = input<string | undefined>(undefined);
   protected readonly size = input<'l' | 'xl'>('l');
 }

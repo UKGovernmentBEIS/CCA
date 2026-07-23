@@ -89,7 +89,7 @@ class PerformanceDataFacilityDataUploadCreateCsvServiceTest {
         // Verify
         assertThat(payload.getResults().getUploadSummaryFile()).isNull();
         assertThat(payload.getAttachments()).isEmpty();
-        assertThat(payload.getErrorMessage()).isEqualTo(PerformanceDataFacilityUploadErrorType.CSV_FAILED);
+        assertThat(payload.getErrorMessage()).isEqualTo(PerformanceDataFacilityUploadErrorType.SUBMISSION_RESULTS_CSV_FAILED);
         verify(ccaFileAttachmentService, times(1))
                 .createSystemFileAttachment(any(), eq(FileStatus.PENDING), eq(assignee));
     }

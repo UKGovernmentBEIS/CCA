@@ -21,7 +21,7 @@ public class SecondaryDeterminationCalculationUtil {
     public Optional<BigDecimal> getSecondaryBuyOutCostCalculatedValue(PerformanceDataCalculationParameters parameters) {
         BigDecimal secondaryBuyOutCo2 = SecondaryDeterminationCalculationUtil.getSecondaryBuyOutCo2CalculatedValue(parameters)
                 .orElse(null);
-        BigDecimal multiplier = parameters.getType().getReferenceTargetPeriod().getCostPerCarbon();
+        BigDecimal multiplier = BigDecimal.valueOf(parameters.getBuyOutCost());
 
         return SecondaryDeterminationCalculationFunctionUtil.SECONDARY_BUY_OUT_COST
                 .apply(secondaryBuyOutCo2, multiplier);

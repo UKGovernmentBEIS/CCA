@@ -92,7 +92,7 @@ describe('WorkflowDeleteNoteComponent', () => {
   });
 
   it('should not delete if noteId is missing', () => {
-    (component as any).noteId = null;
+    (component as unknown as { noteId: number | null }).noteId = null;
     component.onDelete();
 
     expect(requestNotesService.deleteRequestNote).not.toHaveBeenCalled();

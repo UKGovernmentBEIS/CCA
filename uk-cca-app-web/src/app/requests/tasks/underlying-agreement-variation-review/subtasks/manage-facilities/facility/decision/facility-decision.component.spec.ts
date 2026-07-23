@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { Mocked } from 'vitest';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../../common/underlying-agreement/testing/variation-review-mock-data';
@@ -20,14 +21,7 @@ describe('FacilityDecisionComponent', () => {
     saveSubtask: vi.fn().mockReturnValue(of({})),
   };
 
-  const route: any = {
-    snapshot: {
-      params: {
-        facilityId: 'ADS_1-F00001',
-      },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub({ facilityId: 'ADS_1-F00001' });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

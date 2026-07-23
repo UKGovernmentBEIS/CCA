@@ -5,7 +5,7 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText, queryByText } from '@testing';
 
-import { NonComplianceNoticeOfIntentSubmitRequestTaskPayload } from 'cca-api';
+import { NonComplianceNoticeOfIntentSubmitRequestTaskPayload, RequestTaskItemDTO } from 'cca-api';
 
 import NoticeOfIntentSummaryComponent from './notice-of-intent-summary.component';
 
@@ -37,9 +37,9 @@ describe('NoticeOfIntentSummaryComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
-    });
+      },
+      requestInfo: { accountId: 1 },
+    } as RequestTaskItemDTO);
 
     fixture = TestBed.createComponent(NoticeOfIntentSummaryComponent);
     component = fixture.componentInstance;

@@ -5,7 +5,10 @@ import { catchError, Observable } from 'rxjs';
 
 import { GlobalErrorHandlingService } from '@shared/services';
 
-export function HttpErrorInterceptor(request: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> {
+export function HttpErrorInterceptor(
+  request: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+): Observable<HttpEvent<unknown>> {
   const globalErrorHandlingService = inject(GlobalErrorHandlingService);
   return next(request).pipe(catchError((res: HttpErrorResponse) => globalErrorHandlingService.handleHttpError(res)));
 }

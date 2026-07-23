@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 
 import { mockAuditDetailsAndCorrectiveActionsState } from '../../../testing/mock-data';
 import { AuditDetailsCheckYourAnswersComponent } from './audit-details-check-your-answers.component';
@@ -12,13 +13,7 @@ describe('AuditDetailsCheckYourAnswersComponent', () => {
   let fixture: ComponentFixture<AuditDetailsCheckYourAnswersComponent>;
   let store: RequestTaskStore;
 
-  const route: any = {
-    snapshot: {
-      params: {},
-      paramMap: { get: vi.fn().mockReturnValue(123) },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

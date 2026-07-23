@@ -8,6 +8,8 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
 import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/common';
 
+import { ProductVariableEnergyConsumptionData } from 'cca-api';
+
 import {
   mockActivatedRouteWithProductParams,
   mockFacility,
@@ -27,12 +29,12 @@ describe('ExcludeProductComponent', () => {
   beforeEach(() => {
     draftService = {
       initializeFromStore: vi.fn(),
-      draftSignal: vi.fn().mockReturnValue({
+      draftSignal: signal({
         totalFixedEnergy: '100',
         hasVariableEnergy: true,
-        variableEnergyType: 'BY_PRODUCT',
-        products: [],
-      }) as any,
+        variableEnergyType: 'BY_PRODUCT' as const,
+        products: [] as ProductVariableEnergyConsumptionData[],
+      }),
       saveFormSnapshot: vi.fn(),
       setProducts: vi.fn(),
       removeProduct: vi.fn(),
@@ -40,7 +42,7 @@ describe('ExcludeProductComponent', () => {
       undoExcludeProduct: vi.fn(),
       updateTotalFixedEnergy: vi.fn(),
       clear: vi.fn(),
-    };
+    } as unknown as MockType<BaselineEnergyDraftService>;
 
     TestBed.configureTestingModule({
       imports: [ExcludeProductComponent, RouterModule],

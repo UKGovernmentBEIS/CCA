@@ -6,6 +6,8 @@ import { County } from '@shared/types';
 
 import { ReferenceDataService } from 'cca-api';
 
+import { logger } from '../utils/logger';
+
 @Injectable({ providedIn: 'root' })
 export class CountyService {
   private readonly referenceDataService = inject(ReferenceDataService);
@@ -16,7 +18,7 @@ export class CountyService {
   load(): Observable<County[]> {
     return this.referenceDataService.getReferenceData(['COUNTIES']).pipe(
       catchError(() => {
-        console.error('There was an error fetching the counties.');
+        logger.error('There was an error fetching the counties.');
         return of({ COUNTIES: [] as County[] });
       }),
       map(({ COUNTIES }) => COUNTIES as County[]),

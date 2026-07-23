@@ -1,10 +1,11 @@
-import { computed, DestroyRef, effect, inject, Injectable } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { computed, DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
-import { EMPTY, map, Observable, switchMap, take, timer } from 'rxjs';
+import { distinctUntilChanged, EMPTY, filter, map, Observable, switchMap, take, timer } from 'rxjs';
 
 import { SignalStore } from '@netz/common/store';
 import { HistoryCategory } from '@shared/types';
+import { logger } from '@shared/utils';
 
 import { RequestDetailsDTO, RequestSearchCriteria, RequestsService } from 'cca-api';
 
@@ -41,9 +42,14 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
   constructor() {
     super(INITIAL_STATE);
 
-    effect(() => {
-      if (this.runInProgress()) this.initProgressUpdatePolling().subscribe();
-    });
+    toObservable(this.runInProgress)
+      .pipe(
+        distinctUntilChanged(),
+        filter(Boolean),
+        switchMap(() => this.initProgressUpdatePolling()),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
   }
 
   /**
@@ -106,7 +112,7 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
           });
         },
         error: (err) => {
-          console.error('Error loading workflows', err);
+          logger.error('Error loading workflows', err);
         },
       });
   }
@@ -129,6 +135,6 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
   }
 
   override reset() {
-    this.setState(INITIAL_STATE);
+    this.setState(structuredClone(INITIAL_STATE));
   }
 }

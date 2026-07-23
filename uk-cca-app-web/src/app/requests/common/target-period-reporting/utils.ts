@@ -259,7 +259,7 @@ export function calculateAdjustedThroughput(
  * Per spec: [sum(baseline_intensity × adjusted_throughput)] × (1 - improvement%)
  * Returns 0 if no variable energy exists.
  */
-export function calculateFacilityTargetVariableEnergy(
+export function applyImprovementTarget(
   sumOfIntensityTimesAdjustedThroughput: number,
   facilityImprovementTarget: number | string,
   hasVariableEnergy: boolean,
@@ -269,7 +269,7 @@ export function calculateFacilityTargetVariableEnergy(
   return sumOfIntensityTimesAdjustedThroughput * (1 - improvementPercent);
 }
 
-export function calculateAdjustedImprovementTargetForProduct(
+export function calculateAdjustedImprovementTarget(
   referenceData: PerformanceDataFacilityReferenceData,
   reportType: 'INTERIM' | 'FINAL',
   targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
@@ -314,7 +314,7 @@ export function calculateAdjustedImprovementTargetForProduct(
   return Math.max(0, (facilityTarget - totalProgressAtProductBaseYear) / denominatorPart);
 }
 
-export function calculateTargetEnergyForProduct(
+export function calculateProductTargetEnergy(
   baselineEnergyIntensity: string | number | null,
   adjustedThroughput: number,
   improvementTarget: number,
@@ -377,7 +377,7 @@ export function calculateThroughputValues(inputs: ThroughputCalculationInputs) {
   // For totals-only, calculate only if both intensity and throughput are available
   if (baselineEnergyIntensity != null && adjustedThroughput != null) {
     const sumOfIntensityTimesAdjustedThroughput = baselineEnergyIntensity * adjustedThroughput;
-    targetVariableEnergy = calculateFacilityTargetVariableEnergy(
+    targetVariableEnergy = applyImprovementTarget(
       sumOfIntensityTimesAdjustedThroughput,
       improvementTarget,
       hasVariableEnergy,

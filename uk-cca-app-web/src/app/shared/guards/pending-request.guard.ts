@@ -9,7 +9,7 @@ export type PendingRequest = {
   pendingRequest: PendingRequestService;
 };
 
-export function PendingRequestGuard(component: PendingRequest | any) {
+export function PendingRequestGuard(component: PendingRequest) {
   const router = inject(Router);
   const pendingRequest = inject(PendingRequestService);
 
@@ -33,6 +33,6 @@ export function PendingRequestGuard(component: PendingRequest | any) {
   );
 }
 
-function isPendingRequest(component: PendingRequest | any): component is PendingRequest {
-  return component.pendingRequest;
+function isPendingRequest(component: PendingRequest): component is PendingRequest {
+  return !!component.pendingRequest;
 }

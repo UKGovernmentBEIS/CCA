@@ -13,12 +13,7 @@
 export interface FacilityAuditViewDTO {
   auditRequired?: boolean;
   reasons?: (
-    | 'ELIGIBILITY'
-    | 'SEVENTY_RULE_EVALUATION'
-    | 'BASE_YEAR_DATA'
-    | 'REPORTING_DATA'
-    | 'NON_COMPLIANCE'
-    | 'OTHER'
+    'ELIGIBILITY' | 'SEVENTY_RULE_EVALUATION' | 'BASE_YEAR_DATA' | 'REPORTING_DATA' | 'NON_COMPLIANCE' | 'OTHER'
   )[];
   comments?: string;
   editable?: boolean;

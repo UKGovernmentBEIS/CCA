@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.mapstruct.factory.Mappers;
@@ -69,6 +70,17 @@ public class PerformanceDataFacilityStatusQueryService {
 		
 		return PERFORMANCE_DATA_FACILITY_DETAILS_MAPPER.toFacilityPerformanceDataReportDetailsDTO(
 				performanceData.getData(), performanceData.getTargetPeriod().getBusinessId());
+	}
+	
+	@Transactional(readOnly = true)
+	public Set<Long> getLockedFacilityIds(Set<Long> facilityIds, Year year) {
+		return getFacilityPerformanceDataStatusByFacilityIdInAndLockedStatus(facilityIds, year, true).stream()
+				.map(PerformanceDataFacilityStatus::getFacilityId)
+				.collect(Collectors.toSet());
+	}
+	
+	public List<PerformanceDataFacilityStatus> getFacilityPerformanceDataStatusByFacilityIdInAndLockedStatus(Set<Long> facilityIds, Year targetPeriodYear, boolean locked) {
+		return performanceDataFacilityStatusRepository.findByFacilityIdInAndTargetPeriodYearAndLocked(facilityIds, targetPeriodYear, locked);
 	}
 	
 	private PerformanceDataFacilityEntity getLastPerformanceData(Long facilityId, Year targetPeriodYear) {

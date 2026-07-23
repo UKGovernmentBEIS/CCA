@@ -54,13 +54,16 @@ public class PerformanceDataFacilityDataUploadCompleteActionHandler implements R
     	if (CcaRequestTaskActionType.PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_CLOSE.equals(requestTaskActionType) 
     			&& PerformanceDataFacilityDataUploadProcessingStatus.NOT_STARTED_YET.equals(taskPayload.getProcessingStatus())) {
     	    
-    		workflowService.completeTask(requestTask.getProcessTaskId());
-    	    request.setStatus(CcaRequestStatuses.CLOSED);
-
-    	    return taskPayload;
+    		return closeRequest(appUser, requestTask, request, taskPayload);
     	}
         	
-    	// Validate if process is finished
+    	return completeRequest(appUser, requestTask, request, taskPayload);
+    }
+
+	private RequestTaskPayload completeRequest(AppUser appUser, RequestTask requestTask, Request request,
+			PerformanceDataFacilityDataUploadSubmitRequestTaskPayload taskPayload) {
+		
+		// Validate if process is finished
         validateCompleted(taskPayload);
 
         // Add submit action request
@@ -74,7 +77,26 @@ public class PerformanceDataFacilityDataUploadCompleteActionHandler implements R
         workflowService.completeTask(requestTask.getProcessTaskId());
 
         return taskPayload;
-    }
+	}
+
+	private RequestTaskPayload closeRequest(AppUser appUser, RequestTask requestTask, Request request,
+			PerformanceDataFacilityDataUploadSubmitRequestTaskPayload taskPayload) {
+		
+		// Add close action
+		requestService.addActionToRequest(
+		        request,
+		        null,
+		        CcaRequestActionType.PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED,
+		        appUser.getUserId());
+		
+		// Set request status
+		request.setStatus(CcaRequestStatuses.CLOSED);
+		
+		// Complete
+		workflowService.completeTask(requestTask.getProcessTaskId());
+
+		return taskPayload;
+	}
     
     private void validateCompleted(PerformanceDataFacilityDataUploadSubmitRequestTaskPayload taskPayload) {
 

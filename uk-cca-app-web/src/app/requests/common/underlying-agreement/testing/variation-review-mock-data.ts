@@ -1,7 +1,13 @@
 import { RequestTaskState } from '@netz/common/store';
 import { UNAVariationReviewRequestTaskPayload } from '@requests/common';
 
-import { Facility, RequestTaskItemDTO, TargetUnitAccountDetails, UnderlyingAgreementVariationPayload } from 'cca-api';
+import {
+  Facility,
+  RequestMetadata,
+  RequestTaskItemDTO,
+  TargetUnitAccountDetails,
+  UnderlyingAgreementVariationPayload,
+} from 'cca-api';
 
 const facilities: Facility[] = [
   {
@@ -402,7 +408,7 @@ export const mockRequestTaskItemDTO: RequestTaskItemDTO = {
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT_VARIATION',
     },
-  } as any,
+  } as RequestMetadata,
 };
 
 export const mockVariationReviewRequestTaskState: RequestTaskState = {

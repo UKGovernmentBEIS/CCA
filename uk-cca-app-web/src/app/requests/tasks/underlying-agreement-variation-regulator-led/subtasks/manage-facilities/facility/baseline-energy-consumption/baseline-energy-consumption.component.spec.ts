@@ -17,6 +17,8 @@ import {
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 
+import { ProductVariableEnergyConsumptionData } from 'cca-api';
+
 import { BaselineEnergyConsumptionComponent } from './baseline-energy-consumption.component';
 import { FACILITY_BASELINE_ENERGY_CONSUMPTION_FORM } from './baseline-energy-consumption-form.provider';
 import {
@@ -41,12 +43,12 @@ describe('BaselineEnergyConsumptionComponent', () => {
 
     draftService = {
       initializeFromStore: vi.fn(),
-      draftSignal: vi.fn().mockReturnValue({
+      draftSignal: signal({
         totalFixedEnergy: '100.1234567',
         hasVariableEnergy: true,
-        variableEnergyType: 'TOTALS',
-        products: [],
-      }) as any,
+        variableEnergyType: 'TOTALS' as const,
+        products: [] as ProductVariableEnergyConsumptionData[],
+      }),
       saveFormSnapshot: vi.fn(),
       setProducts: vi.fn(),
       removeProduct: vi.fn(),
@@ -54,7 +56,7 @@ describe('BaselineEnergyConsumptionComponent', () => {
       undoExcludeProduct: vi.fn(),
       updateTotalFixedEnergy: vi.fn(),
       clear: vi.fn(),
-    };
+    } as unknown as MockType<BaselineEnergyDraftService>;
 
     const formBuilder = new FormBuilder();
 

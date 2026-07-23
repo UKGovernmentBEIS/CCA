@@ -17,6 +17,5 @@ export interface BuyOutSurplusTransactionHistoryDTO {
   submitter?: string;
   submissionDate?: string;
   payload?:
-    | BuyOutSurplusTransactionAmountChangedHistoryPayload
-    | BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload;
+    BuyOutSurplusTransactionAmountChangedHistoryPayload | BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload;
 }

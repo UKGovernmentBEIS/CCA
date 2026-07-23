@@ -36,7 +36,7 @@ describe('WizardStepComponent', () => {
       date: new FormControl('', [Validators.required]),
       text: new FormControl(''),
     });
-    onSubmit: ((form: FormGroup) => any) | Mock<(form: FormGroup) => void>;
+    onSubmit: ((form: FormGroup) => void) | Mock<(form: FormGroup) => void>;
   }
 
   beforeEach(async () => {

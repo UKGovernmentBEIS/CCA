@@ -13,9 +13,11 @@ import {
   TaskItemStatus,
   TasksApiService,
   TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK,
+  TPR_FORM_THROUGHPUT_DETAILS_SUBTASK,
   tprFormQuery,
 } from '@requests/common';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
+import { logger } from '@shared/utils';
 import { produce } from 'immer';
 
 import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalFormSavePayload } from '../../../transform';
@@ -87,6 +89,10 @@ export class EnergyFuelAmountDetailsCheckYourAnswersComponent {
     const currentSectionsCompleted = this.requestTaskStore.select(tprFormQuery.selectSectionsCompleted)();
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
       draft[TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK] = TaskItemStatus.COMPLETED;
+
+      if (this.usedReportingMechanism() && draft[TPR_FORM_THROUGHPUT_DETAILS_SUBTASK] === TaskItemStatus.COMPLETED) {
+        draft[TPR_FORM_THROUGHPUT_DETAILS_SUBTASK] = TaskItemStatus.IN_PROGRESS;
+      }
     });
 
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
@@ -96,7 +102,7 @@ export class EnergyFuelAmountDetailsCheckYourAnswersComponent {
       .saveRequestTaskAction(dto)
       .pipe(
         catchError((error) => {
-          console.error(error);
+          logger.error(error);
           return of(null);
         }),
       )

@@ -8,11 +8,10 @@ import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
-  calculateAdjustedImprovementTargetForProduct,
+  calculateAdjustedImprovementTarget,
   calculateAdjustedThroughput,
   calculateFacilityImprovementTarget,
-  calculateFacilityTargetVariableEnergy,
-  calculateTargetEnergyForProduct,
+  calculateProductTargetEnergy,
   calculateThroughputAdjustmentFactor,
   calculateThroughputValues,
   decideVariableEnergyType,
@@ -26,6 +25,7 @@ import {
   tprFormQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { logger } from '@shared/utils';
 import { produce } from 'immer';
 
 import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalFormSavePayload } from '../../../transform';
@@ -129,12 +129,14 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
     const throughputFactor = this.throughputAdjustmentFactor();
     const useSRM = this.referenceData()?.baselineAndTargets?.usedReportingMechanism ?? false;
 
+    let totalTargetVariableEnergy = 0;
+
     const variableEnergyConsumptionDataByProduct = baselineProducts.map((product) => {
       const savedProduct = savedProductsByName.get(product.productName);
       let improvementTarget = facilityImprovementTarget;
 
       if (facilityBaseYear != null && product.baselineYear > facilityBaseYear) {
-        improvementTarget = calculateAdjustedImprovementTargetForProduct(
+        improvementTarget = calculateAdjustedImprovementTarget(
           this.referenceData(),
           this.reportType(),
           this.targetPeriodType(),
@@ -148,11 +150,8 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
 
       const baselineEnergyIntensity = resolveProductEnergyCarbonIntensity(product);
 
-      const targetEnergy = calculateTargetEnergyForProduct(
-        baselineEnergyIntensity,
-        adjustedThroughput,
-        improvementTarget,
-      );
+      const targetEnergy = calculateProductTargetEnergy(baselineEnergyIntensity, adjustedThroughput, improvementTarget);
+      totalTargetVariableEnergy += targetEnergy;
 
       return {
         productName: product.productName,
@@ -163,25 +162,8 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
       };
     });
 
-    const sumOfIntensityTimesAdjustedThroughput = baselineProducts.reduce((sum, product) => {
-      const savedProduct = savedProductsByName.get(product.productName);
-
-      const adjustedThroughput =
-        calculateAdjustedThroughput(savedProduct?.actualThroughput ?? null, throughputFactor, useSRM) ?? 0;
-
-      const baselineEnergyIntensity = resolveProductEnergyCarbonIntensity(product);
-
-      return sum + baselineEnergyIntensity * adjustedThroughput;
-    }, 0);
-
     return {
-      totalTargetVariableEnergy: roundHalfUpTo7Decimals(
-        calculateFacilityTargetVariableEnergy(
-          sumOfIntensityTimesAdjustedThroughput,
-          facilityImprovementTarget,
-          baselineProducts.length > 0,
-        ),
-      ),
+      totalTargetVariableEnergy: roundHalfUpTo7Decimals(totalTargetVariableEnergy),
       variableEnergyConsumptionDataByProduct,
     };
   }
@@ -212,10 +194,12 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
         const normalizedTargetImprovement = targetImprovement > 1 ? targetImprovement / 100 : targetImprovement;
 
         const calculatedTargetVariableEnergy = calculations.targetVariableEnergy;
+        const adjustedThroughput = calculations.adjustedThroughput;
 
         draft.throughputDetails = {
-          ...draft.throughputDetails,
+          actualThroughput: draft.throughputDetails?.actualThroughput,
           targetImprovement: roundHalfUpTo7Decimals(normalizedTargetImprovement),
+          adjustedThroughput: roundHalfUpTo7Decimals(adjustedThroughput ?? 0),
           totalTargetVariableEnergy:
             calculatedTargetVariableEnergy != null && calculatedTargetVariableEnergy > 0
               ? roundHalfUpTo7Decimals(calculatedTargetVariableEnergy)
@@ -230,7 +214,7 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
       .saveRequestTaskAction(dto)
       .pipe(
         catchError((error) => {
-          console.error(error);
+          logger.error(error);
           return EMPTY;
         }),
       )

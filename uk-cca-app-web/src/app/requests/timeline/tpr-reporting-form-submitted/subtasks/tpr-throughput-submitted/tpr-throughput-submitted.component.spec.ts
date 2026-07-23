@@ -142,6 +142,35 @@ describe('TprThroughputSubmittedComponent', () => {
     expect(html).toContain('Total target variable energy (kWh)');
   });
 
+  it('should use carbon dioxide terminology for carbon BY_PRODUCT facilities', () => {
+    const payload = createPayload({
+      performanceData: {
+        ...createPayload().performanceData,
+        baselineAndTargets: {
+          ...createPayload().performanceData.baselineAndTargets,
+          measurementType: 'CARBON_KG',
+        },
+      },
+    });
+
+    store.setState(createState(payload));
+    fixture.detectChanges();
+
+    const html = fixture.nativeElement.textContent;
+    expect(html).toContain('Total target variable carbon dioxide (kg)');
+    expect(html).not.toContain('Total target variable energy (kg)');
+  });
+
+  it('should format actual throughput with thousand separators', () => {
+    const payload = createPayload();
+    payload.performanceData.throughputDetails!.variableEnergyConsumptionDataByProduct![0].actualThroughput =
+      '12345.6789012';
+    store.setState(createState(payload));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('12,345.6789012');
+  });
+
   it('should render interim target heading for interim reports', () => {
     const payload = createPayload({
       details: {
@@ -182,6 +211,26 @@ describe('TprThroughputSubmittedComponent', () => {
     expect(html).toContain('Total throughput (tonnes)');
     expect(html).toContain('Total target variable energy (kWh)');
     expect(html).not.toContain('Product name');
+  });
+
+  it('should use carbon dioxide terminology for carbon totals-only facilities', () => {
+    const payload = createPayload({
+      performanceData: {
+        ...createPayload().performanceData,
+        baselineAndTargets: {
+          ...createPayload().performanceData.baselineAndTargets,
+          measurementType: 'CARBON_KG',
+          variableEnergyType: 'TOTALS',
+        },
+      },
+    });
+
+    store.setState(createState(payload));
+    fixture.detectChanges();
+
+    const html = fixture.nativeElement.textContent;
+    expect(html).toContain('Total target variable carbon dioxide (kg)');
+    expect(html).not.toContain('Total target variable energy (kg)');
   });
 
   it('should show not provided when BY_PRODUCT has no visible rows', () => {

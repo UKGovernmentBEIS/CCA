@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.domain.PerformanceDataTargetPeriodType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.FixedConversionFactor;
@@ -37,6 +37,7 @@ class TP6PerformanceDataTest {
         TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
                 .targetPeriod(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .sector("sectorId")
                 .reportVersion(1)
                 .templateVersion("1.0")
@@ -104,6 +105,7 @@ class TP6PerformanceDataTest {
         TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
                 .targetPeriod(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .sector("sectorId")
                 .reportVersion(1)
                 .templateVersion("1.0")
@@ -166,6 +168,7 @@ class TP6PerformanceDataTest {
         TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
                 .targetPeriod(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .sector("sectorId")
                 .reportVersion(1)
                 .templateVersion("1.0")
@@ -236,6 +239,7 @@ class TP6PerformanceDataTest {
         TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
                 .targetPeriod(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .sector("sectorId")
                 .reportVersion(1)
                 .templateVersion("1.0")
@@ -265,6 +269,7 @@ class TP6PerformanceDataTest {
     void validate_all_null_not_valid() {
         TP6PerformanceData performanceData = TP6PerformanceData.builder()
                 .type(PerformanceDataTargetPeriodType.TP6)
+                .buyOutCost(25)
                 .targetUnitDetails(null)
                 .actualTargetPeriodPerformance(null)
                 .performanceResult(null)

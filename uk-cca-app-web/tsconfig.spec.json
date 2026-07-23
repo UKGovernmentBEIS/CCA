@@ -4,7 +4,9 @@
     "outDir": "./out-tsc/spec",
     "module": "ES2022",
     "isolatedModules": true,
-    "types": ["vitest/globals", "node"]
+    "types": ["vitest/globals", "node"],
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false
   },
   "include": ["src/**/*.spec.ts", "src/**/*.d.ts", "src/testing/**/*.ts"]
 }

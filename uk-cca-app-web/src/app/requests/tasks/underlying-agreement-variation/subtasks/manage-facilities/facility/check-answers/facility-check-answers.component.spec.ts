@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { BasePage } from '@netz/common/testing';
+import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { Mocked } from 'vitest';
 
@@ -19,17 +19,7 @@ describe('FacilityCheckAnswersComponent', () => {
   let store: RequestTaskStore;
   let page: Page;
 
-  const route: any = {
-    snapshot: {
-      params: {
-        facilityId: 'ADS_1-F00001',
-      },
-      paramMap: {
-        get: vi.fn().mockReturnValue(mockRequestTaskItemDTO.requestTask.id),
-      },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub({ facilityId: 'ADS_1-F00001' });
 
   const mockTasksApiService: Partial<Mocked<TasksApiService>> = {
     saveRequestTaskAction: vi.fn().mockReturnValue(of({})),

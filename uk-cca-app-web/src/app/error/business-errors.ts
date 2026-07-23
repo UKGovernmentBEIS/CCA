@@ -1,32 +1,27 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
-import { catchError, Observable, pipe, throwError, UnaryFunction } from 'rxjs';
+import { catchError, ignoreElements, Observable, throwError, UnaryFunction } from 'rxjs';
 
-export function catchElseRethrow<T, R, E = HttpErrorResponse>(
+export function catchElseRethrow<R, E = HttpErrorResponse>(
   predicate: UnaryFunction<E, boolean>,
   handler: UnaryFunction<E, Observable<R>>,
 ) {
-  return pipe(
-    catchError<T, Observable<R | never>>((res: E) => (predicate(res) ? handler(res) : throwError(() => res))),
-  );
+  return <T>(source: Observable<T>): Observable<T | R> =>
+    source.pipe(catchError((res: E) => (predicate(res) ? handler(res) : throwError(() => res))));
 }
 
-export function catchBadRequest(
+export function catchBadRequest<R>(
   code: ErrorCodes | ErrorCodes[] | string,
-  handler: (res: HttpErrorResponse) => Observable<any>,
+  handler: (res: HttpErrorResponse) => Observable<R>,
 ) {
-  return pipe(
-    catchElseRethrow((res) => {
-      return isBadRequest(res, code);
-    }, handler),
-  );
+  return catchElseRethrow((res) => isBadRequest(res, code), handler);
 }
 
-export function catchTaskReassignedBadRequest(handler: (res: HttpErrorResponse) => Observable<any>) {
-  return catchBadRequest('REQUEST_TASK_ACTION1001', handler);
+export function catchTaskReassignedBadRequest(handler: (res: HttpErrorResponse) => Observable<unknown>) {
+  return catchBadRequest<never>('REQUEST_TASK_ACTION1001', (res) => handler(res).pipe(ignoreElements()));
 }
 
-export function catchErrorCode(code: string, handler: (res: HttpErrorResponse) => Observable<any>) {
+export function catchErrorCode<R>(code: string, handler: (res: HttpErrorResponse) => Observable<R>) {
   return catchElseRethrow((res) => res instanceof HttpErrorResponse && res.error?.code === code, handler);
 }
 

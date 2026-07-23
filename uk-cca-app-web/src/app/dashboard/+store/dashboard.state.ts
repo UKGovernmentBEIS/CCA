@@ -62,6 +62,33 @@ export const WORKFLOW_FILTER_OPTIONS: GovukSelectOption<WorkflowRequestType | nu
     .sort((a, b) => a.text.localeCompare(b.text)),
 ];
 
+const WORKFLOW_REQUEST_TYPES_BY_ROLE: Record<'REGULATOR' | 'SECTOR_USER', WorkflowRequestType[]> = {
+  REGULATOR: [
+    'ADMIN_TERMINATION',
+    'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING',
+    'FACILITY_AUDIT',
+    'NON_COMPLIANCE',
+    'UNDERLYING_AGREEMENT',
+    'UNDERLYING_AGREEMENT_VARIATION',
+  ],
+  SECTOR_USER: [
+    'TARGET_UNIT_ACCOUNT_CREATION',
+    'PERFORMANCE_DATA_DOWNLOAD',
+    'PERFORMANCE_DATA_UPLOAD',
+    'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM',
+    'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD',
+    'UNDERLYING_AGREEMENT',
+    'UNDERLYING_AGREEMENT_VARIATION',
+  ],
+};
+
+export function getWorkflowFilterOptions(roleType?: string): GovukSelectOption<WorkflowRequestType | null>[] {
+  if (roleType !== 'REGULATOR' && roleType !== 'SECTOR_USER') return [];
+
+  const allowedRequestTypes = new Set(WORKFLOW_REQUEST_TYPES_BY_ROLE[roleType]);
+  return WORKFLOW_FILTER_OPTIONS.filter(({ value }) => value === null || allowedRequestTypes.has(value));
+}
+
 export const DEFAULT_TABLE_COLUMNS: GovukTableColumn<CcaItemDTO>[] = [
   { field: 'taskType', header: 'Task', isSortable: false },
   { field: 'businessId', header: 'Target unit ID', isSortable: false },

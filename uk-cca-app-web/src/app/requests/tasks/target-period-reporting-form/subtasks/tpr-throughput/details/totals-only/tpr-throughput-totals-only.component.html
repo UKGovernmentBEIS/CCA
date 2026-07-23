@@ -9,14 +9,14 @@
       Facility's way of accounting for the portion of variable energy used (or carbon emitted)
     </h3>
 
-    <p class="govuk-hint govuk-!-margin-top-1">This has been selected when applied for your underlying agreement</p>
+    <p class="govuk-hint govuk-!-margin-top-1">This was selected when you applied for your underlying agreement</p>
 
     <p>{{ variableEnergyTypeLabel() }}</p>
   </div>
 
   @if (isTotalsOnlyVariableEnergy()) {
     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
-      Baseline {{ hasEnergyMeasurement() ? 'energy' : 'carbon dioxide (C02)' }} intensity
+      Baseline {{ isCarbonMeasurement() ? 'carbon dioxide (CO2)' : 'energy' }} intensity
     </h3>
     <p class="govuk-!-margin-top-1">
       {{ baselineEnergyIntensity() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}/{{
@@ -40,7 +40,9 @@
   </p>
 
   @if (isTotalsOnlyVariableEnergy()) {
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Total target variable energy</h3>
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
+      Total target variable {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }}
+    </h3>
     <p class="govuk-!-margin-top-1">
       {{ targetVariableEnergy() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}
     </p>

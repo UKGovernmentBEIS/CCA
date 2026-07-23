@@ -11,7 +11,7 @@
           [index]="i"
           [baselineYearOptions]="baselineYearOptions"
           [facilityUnit]="facilityThroughputUnit | measurementTypeToUnit"
-          [canRemove]="productsArray.length > 1"
+          [canRemove]="canRemoveProduct(i)"
           (remove)="onRemoveProduct(i)"
         />
       </div>

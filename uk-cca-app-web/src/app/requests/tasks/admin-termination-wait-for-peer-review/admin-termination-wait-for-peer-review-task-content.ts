@@ -21,7 +21,7 @@ export const adminTerminationWaitForPeerReviewTaskContent: RequestTaskPageConten
   };
 };
 
-export function getAllAdminTerminationWaitForPeerReviewSections(_payload: any): TaskSection[] {
+export function getAllAdminTerminationWaitForPeerReviewSections(_payload: unknown): TaskSection[] {
   return [
     {
       title: 'Termination Details',

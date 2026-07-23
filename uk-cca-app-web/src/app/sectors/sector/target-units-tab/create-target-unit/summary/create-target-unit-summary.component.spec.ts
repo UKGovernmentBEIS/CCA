@@ -60,8 +60,8 @@ describe('CreateTargetUnitSummaryComponent', () => {
     expect(getByTestId('administrative-contact-list')).toBeTruthy();
   });
 
-  it('should contain 18 change links', () => {
-    const changeLinks = document.querySelectorAll('a[href="/?change=true"]');
+  it('should contain 17 change links', () => {
+    const changeLinks = document.querySelectorAll('a[href$="?change=true"]');
     expect(changeLinks).toHaveLength(17);
   });
 });

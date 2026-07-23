@@ -9,6 +9,8 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
 import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/common';
 
+import { ProductVariableEnergyConsumptionData } from 'cca-api';
+
 import {
   mockActivatedRoute,
   mockProductVariableEnergyData,
@@ -28,17 +30,17 @@ describe('AddProductComponent', () => {
   beforeEach(() => {
     draftService = {
       initializeFromStore: vi.fn(),
-      draftSignal: vi.fn().mockReturnValue({
+      draftSignal: signal({
         totalFixedEnergy: '100',
         hasVariableEnergy: true,
-        variableEnergyType: 'BY_PRODUCT',
-        products: [mockProductVariableEnergyData],
-      }) as any,
+        variableEnergyType: 'BY_PRODUCT' as const,
+        products: [mockProductVariableEnergyData] as ProductVariableEnergyConsumptionData[],
+      }),
       saveFormSnapshot: vi.fn(),
       setProducts: vi.fn(),
       removeProduct: vi.fn(),
       clear: vi.fn(),
-    };
+    } as unknown as MockType<BaselineEnergyDraftService>;
 
     const destroyRef = { onDestroy: vi.fn() } as unknown as DestroyRef;
     const formBuilder = new FormBuilder();

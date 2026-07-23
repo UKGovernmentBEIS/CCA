@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 import { DaysRemainingPipe } from '@netz/common/pipes';
 
+import { RequestTaskPayload } from 'cca-api';
+
 @Component({
   selector: 'netz-task-header-info',
   template: `
@@ -40,7 +42,7 @@ export class TaskHeaderInfoComponent {
   protected readonly daysRemaining = input<number>();
   protected readonly startDate = input<string>();
   protected readonly requestType = input<string>();
-  protected readonly payload = input<any>();
+  protected readonly payload = input<RequestTaskPayload & { targetPeriodType?: string; reportType?: string }>();
 
   protected readonly isTPRTask = computed(() => this.requestType() === 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM');
 }

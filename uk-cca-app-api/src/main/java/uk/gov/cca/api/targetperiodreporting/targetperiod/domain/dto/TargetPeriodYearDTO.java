@@ -24,6 +24,7 @@ public class TargetPeriodYearDTO {
     private LocalDate performanceDataEndDate;
     private LocalDate buyOutStartDate;
     private LocalDate buyOutEndDate;
+    private Integer buyOutCost;
     private boolean isCurrent;
     private LocalDate secondaryReportingStartDate;
 }

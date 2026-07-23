@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { RequestActionInfoDTO } from 'cca-api';
 
-export const ItemActionEnum: Partial<Record<RequestActionInfoDTO['type'], string>> = {
+export const ItemActionEnum: Record<string, string> = {
   TARGET_UNIT_ACCOUNT_CREATION_SUBMITTED: 'Target unit account submitted',
   UNDERLYING_AGREEMENT_APPLICATION_SUBMITTED: 'Underlying agreement application submitted',
   UNDERLYING_AGREEMENT_APPLICATION_REJECTED: 'Underlying agreement application rejected',
@@ -75,11 +75,13 @@ export const ItemActionEnum: Partial<Record<RequestActionInfoDTO['type'], string
   PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED: 'Target period reporting cancelled',
   PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED: 'Target period reporting submitted',
   PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED: 'Target period reporting submitted',
+  PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED: 'Target period reporting closed',
 };
 
 @Pipe({ name: 'itemActionType', pure: true })
 export class ItemActionTypePipe implements PipeTransform {
   transform(type: RequestActionInfoDTO['type']): string {
+    if (!type) return 'Approved Application';
     return ItemActionEnum[type] || 'Approved Application';
   }
 }

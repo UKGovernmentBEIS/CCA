@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 
@@ -67,7 +68,10 @@ public class PerformanceDataFacilityDataCustomRepository {
         		targetUnitAccount.id,
         		facilityPerformanceDataStatus.lastPerformanceData.submissionDate,
         		facilityPerformanceDataStatus.lastPerformanceData.reportVersion,
-        		facilityPerformanceDataStatus.lastPerformanceData.performanceOutcome,
+        		new CaseBuilder()
+                .when(facilityPerformanceDataStatus.lastPerformanceData.performanceOutcome.isNull())
+                .then(Expressions.constant(PerformanceDataFacilityTargetPeriodResultType.SUBMITTED))
+                .otherwise(facilityPerformanceDataStatus.lastPerformanceData.performanceOutcome),
         		facilityPerformanceDataStatus.lastPerformanceData.submissionType,
         		facilityPerformanceDataStatus.locked,
         		facilityPerformanceDataStatus.variationIndicator,
@@ -137,9 +141,9 @@ public class PerformanceDataFacilityDataCustomRepository {
 				.and(Expressions.booleanTemplate("function('jsonb_exists', {0}, {1}) = true",
 						facilityData.participatingSchemeVersions, SchemeVersion.CCA_3.name()));
 		
-		whereClause.and(facilityData.createdDate.lt(targetPeriodYear.getReportingStartDate().atTime(LocalTime.MAX)))
+		whereClause.and(facilityData.createdDate.loe(targetPeriodYear.getEndDate().atTime(LocalTime.MAX)))
 				.and(facilityData.closedDate.isNull()
-						.or(facilityData.closedDate.isNotNull().and(facilityData.closedDate.gt(targetPeriodYear.getReportingStartDate().atTime(LocalTime.MAX)))));
+						.or(facilityData.closedDate.isNotNull().and(facilityData.closedDate.gt(targetPeriodYear.getEndDate().atTime(LocalTime.MAX)))));
 		
 		whereClause.and(facilityPerformanceDataStatus.isNull());
 		

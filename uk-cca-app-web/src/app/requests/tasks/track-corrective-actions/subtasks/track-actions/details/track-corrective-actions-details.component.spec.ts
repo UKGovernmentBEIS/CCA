@@ -1,12 +1,14 @@
 import { provideHttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { Mocked } from 'vitest';
 
@@ -14,6 +16,9 @@ import { TasksService } from 'cca-api';
 
 import { mockTrackCorrectiveActionsState } from '../../../testing/mock-data';
 import { TrackCorrectiveActionsDetailsComponent } from './track-corrective-actions-details.component';
+
+@Component({ template: '' })
+class DummyComponent {}
 
 describe('TrackCorrectiveActionsDetailsComponent', () => {
   let component: TrackCorrectiveActionsDetailsComponent;
@@ -23,13 +28,7 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
   let tasksApiService: TasksApiService;
   let tasksService: Mocked<Partial<TasksService>>;
 
-  const route: any = {
-    snapshot: {
-      params: { actionId: '1' },
-      paramMap: {},
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub({ actionId: '1' });
 
   const mockTasksApiService = {
     saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
@@ -50,6 +49,7 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
       imports: [TrackCorrectiveActionsDetailsComponent],
       providers: [
         provideHttpClient(),
+        provideRouter([{ path: '**', component: DummyComponent }]),
         RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },

@@ -1,14 +1,19 @@
 import { provideHttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
 import { IssueEnforcementComponent } from './issue-enforcement.component';
+
+@Component({ template: '' })
+class DummyComponent {}
 
 describe('IssueEnforcementComponent', () => {
   let component: IssueEnforcementComponent;
@@ -16,13 +21,7 @@ describe('IssueEnforcementComponent', () => {
   let store: RequestTaskStore;
   let router: Router;
 
-  const route = {
-    snapshot: {
-      params: {},
-      paramMap: { get: vi.fn() },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub();
 
   const mockTasksApiService = {
     saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
@@ -33,6 +32,7 @@ describe('IssueEnforcementComponent', () => {
       imports: [IssueEnforcementComponent],
       providers: [
         provideHttpClient(),
+        provideRouter([{ path: '**', component: DummyComponent }]),
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -67,11 +67,13 @@ describe('IssueEnforcementComponent', () => {
 
     component.onSubmit();
 
-    expect(navigateSpy).toHaveBeenCalledWith(['../check-your-answers'], { relativeTo: route as any });
+    expect(navigateSpy).toHaveBeenCalledWith(['../check-your-answers'], {
+      relativeTo: route,
+    });
   });
 
   it('should submit with isEnforcementResponseNoticeRequired and conditional explanation', () => {
-    const form = (component as any).form;
+    const form = component['form'];
 
     form.patchValue({
       isEnforcementResponseNoticeRequired: false,

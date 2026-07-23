@@ -13,6 +13,7 @@ import {
   toCcaDecisionNotification,
 } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
+import { logger } from '@shared/utils';
 
 import { createNotifyOperatorActionDTO } from '../transform';
 
@@ -55,8 +56,13 @@ export default class AdminTerminationNotifyOperatorComponent {
     const notification = toCcaDecisionNotification(this.form.value);
     const dto = createNotifyOperatorActionDTO(requestTaskId, notification);
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['./confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe({
+      next: () => {
+        this.router.navigate(['./confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+      },
+      error: (err: unknown) => {
+        logger.error('Failed to notify operator:', err);
+      },
     });
   }
 }

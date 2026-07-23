@@ -10,6 +10,7 @@ import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData 
 
 import { calculateOtherYearsVariableEnergy } from '../../underlying-agreement';
 import { boolToString } from '../../utils';
+import { isCarbonMeasurementType, resolveMeasurementUnit } from '../utils';
 
 type TotalsOnlySummaryDataArgs = {
   referenceData: PerformanceDataFacilityReferenceData;
@@ -96,7 +97,7 @@ export function toTPRBaselineDataDetails(
 
   if (baselineAndTargets?.totalThroughput) {
     factory.addRow(
-      `Total throughput (${MEASUREMENT_TYPE_TO_UNIT_MAP[baselineAndTargets?.measurementType]})`,
+      `Total baseline throughput (${baselineAndTargets?.throughputUnit})`,
       decimalPipe.transform(baselineAndTargets?.totalThroughput, '1.0-7'),
     );
   }
@@ -122,6 +123,8 @@ export function toTotalsOnlySummaryData(args: TotalsOnlySummaryDataArgs): Summar
   const decimalPipe = new DecimalPipe('en-GB');
 
   const baselineAndTargets = args.referenceData?.baselineAndTargets;
+  const measurementUnit = resolveMeasurementUnit(args.referenceData);
+  const isCarbonMeasurement = isCarbonMeasurementType(measurementUnit);
 
   const factory = new SummaryFactory()
     .addSection('Target period throughput details', '../details')
@@ -135,7 +138,7 @@ export function toTotalsOnlySummaryData(args: TotalsOnlySummaryDataArgs): Summar
     factory
       .addSection('Calculated energy amounts', '../details')
       .addRow(
-        `Total target variable energy (${MEASUREMENT_TYPE_TO_UNIT_MAP[baselineAndTargets?.measurementType]})`,
+        `Total target variable ${isCarbonMeasurement ? 'carbon dioxide' : 'energy'} (${measurementUnit})`,
         decimalPipe.transform(args.targetVariableEnergy, '1.0-7'),
       );
   }

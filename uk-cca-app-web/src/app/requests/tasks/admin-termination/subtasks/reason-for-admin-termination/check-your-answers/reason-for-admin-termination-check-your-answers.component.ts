@@ -6,7 +6,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { TaskItemStatus, TasksApiService } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils';
+import { generateDownloadUrl, logger } from '@shared/utils';
 import { produce } from 'immer';
 
 import { AdminTerminationSubmitRequestTaskPayload } from 'cca-api';
@@ -62,8 +62,13 @@ export default class ReasonForAdminTerminationSummaryComponent {
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
     const dto = createRequestTaskActionProcessDTO(requestTaskId, payload, sectionsCompleted);
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../../..'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe({
+      next: () => {
+        this.router.navigate(['../../..'], { relativeTo: this.activatedRoute, replaceUrl: true });
+      },
+      error: (err: unknown) => {
+        logger.error('Failed to save termination reason:', err);
+      },
     });
   }
 }

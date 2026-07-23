@@ -6,7 +6,7 @@ import { Mock } from 'vitest';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService } from 'cca-api';
 
-export const mockKeycloakService: Record<keyof KeycloakService, any> = {
+export const mockKeycloakService = {
   login: vi.fn(),
   logout: vi.fn(),
   isLoggedIn: vi.fn(),
@@ -20,9 +20,9 @@ export const mockKeycloakService: Record<keyof KeycloakService, any> = {
   getTokenParsed: vi.fn(),
   getRefreshTokenParsed: vi.fn(),
   keycloakEvents: signal(null),
-} as any;
+} as unknown as KeycloakService;
 
-export const mockAuthService: Record<keyof AuthService, Mock> = {
+export const mockAuthService = {
   checkUser: vi.fn(),
   login: vi.fn(),
   logout: vi.fn(),
@@ -31,17 +31,17 @@ export const mockAuthService: Record<keyof AuthService, Mock> = {
   loadUserProfile: vi.fn(),
   loadIsLoggedIn: vi.fn(),
   loadUserTerms: vi.fn(),
-};
+} as unknown as Record<keyof AuthService, Mock>;
 
 export const mockUsersService: Record<keyof UsersService, Mock> = {
   getCurrentUser: vi.fn(),
   registerUserLastLoginDomain: vi.fn(),
-} as any;
+} as unknown as Record<keyof UsersService, Mock>;
 
 export const mockAuthorityService: Record<keyof AuthoritiesService, Mock> = {
   getCurrentUserState: vi.fn(),
-} as any;
+} as unknown as Record<keyof AuthoritiesService, Mock>;
 
 export const mockTermsAndConditionsService: Record<keyof TermsAndConditionsService, Mock> = {
   getLatestTerms: vi.fn(),
-} as any;
+} as unknown as Record<keyof TermsAndConditionsService, Mock>;

@@ -1,4 +1,4 @@
-import { FormControl, ValidatorFn } from '@angular/forms';
+import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Validates file size to provided fileSize in MB
@@ -6,7 +6,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 export function maxFileSizeValidator(maxSizeInMB: number, message: string): ValidatorFn {
   const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
 
-  return (control: FormControl): Record<string, any> | null => {
+  return (control: FormControl): ValidationErrors | null => {
     const file = control.value;
 
     if (file && file.size > maxSizeInBytes) {

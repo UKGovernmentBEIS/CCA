@@ -30,16 +30,24 @@ export class AuthService {
   private readonly route = inject(ActivatedRoute);
 
   login(options?: KeycloakLoginOptions): Promise<void> {
+    return this.keycloakService.login(this.getLoginOptions(options));
+  }
+
+  createLoginUrl(options?: KeycloakLoginOptions): string {
+    return this.keycloakService.createLoginUrl(this.getLoginOptions(options));
+  }
+
+  private getLoginOptions(options?: KeycloakLoginOptions): KeycloakLoginOptions {
     let leaf = this.route.snapshot;
 
     while (leaf.firstChild) {
       leaf = leaf.firstChild;
     }
 
-    return this.keycloakService.login({
+    return {
       ...options,
       ...(leaf.data?.blockSignInRedirect ? { redirectUri: location.origin } : null),
-    });
+    };
   }
 
   logout(redirectPath = ''): Promise<void> {

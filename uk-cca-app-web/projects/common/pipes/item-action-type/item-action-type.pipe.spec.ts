@@ -170,6 +170,7 @@ describe('ItemActionTypePipe', () => {
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED')).toEqual(
       'Target period reporting submitted',
     );
+    expect(pipe.transform('PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED')).toEqual('Target period reporting closed');
 
     expect(pipe.transform(undefined)).toEqual('Approved Application');
   });

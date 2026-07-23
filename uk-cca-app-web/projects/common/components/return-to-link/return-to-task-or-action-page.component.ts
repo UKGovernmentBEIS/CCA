@@ -28,6 +28,7 @@ export class ReturnToTaskOrActionPageComponent {
   protected readonly returnToText = computed(() => {
     if (!!this.store && !!this.typeToText) {
       const type = this.store.select(selectType)();
+      if (!type) return 'Dashboard';
       return this.typeToText(type) ?? 'Dashboard';
     }
 
@@ -51,6 +52,8 @@ export class ReturnToTaskOrActionPageComponent {
   }
 
   private hasActionOrTaskIdRouteParam(returnRoute: ActivatedRoute): boolean {
-    return [this.requestActionIdRouteParam(), this.requestTaskIdRouteParam()].includes(returnRoute.routeConfig?.path);
+    return [this.requestActionIdRouteParam(), this.requestTaskIdRouteParam()].includes(
+      returnRoute.routeConfig?.path ?? '',
+    );
   }
 }

@@ -18,9 +18,9 @@ export class ActivatedRouteStub {
   readonly queryParamMap = this.queryParamSubject.asObservable();
   private dataSubject = new ReplaySubject<Params>(1);
   readonly data = this.dataSubject.asObservable();
-  private fragmentSubject = new ReplaySubject<string>(1);
+  private fragmentSubject = new ReplaySubject<string | undefined>(1);
   readonly fragment = this.fragmentSubject.asObservable();
-  private urlSubject = new ReplaySubject<UrlSegment[]>(1);
+  private urlSubject = new ReplaySubject<UrlSegment[] | undefined>(1);
   readonly url = this.urlSubject.asObservable();
 
   constructor(
@@ -38,25 +38,24 @@ export class ActivatedRouteStub {
     this.setUrl(url);
   }
 
-  get firstChild(): ActivatedRouteStub | null {
-    return undefined;
-  }
+  readonly firstChild: ActivatedRouteStub | null = null;
 
   /** Set the paramMap observables's next value */
   setParamMap(params?: Params): void {
-    const newParams = convertToParamMap(params);
+    const newParams = convertToParamMap(params ?? {});
     this.paramSubject.next(newParams);
     this.snapshot.paramMap = newParams;
+    this.snapshot.params = params ?? {};
   }
 
   /** Set the queryParamMap observable's next value */
   setQueryParamMap(params?: Params): void {
-    this.queryParamSubject.next(convertToParamMap(params));
+    this.queryParamSubject.next(convertToParamMap(params ?? {}));
   }
 
   /** Set the data for resolves */
   setResolveMap(params?: Params): void {
-    this.dataSubject.next(params);
+    this.dataSubject.next(params ?? {});
   }
 
   /** Set the fragment */

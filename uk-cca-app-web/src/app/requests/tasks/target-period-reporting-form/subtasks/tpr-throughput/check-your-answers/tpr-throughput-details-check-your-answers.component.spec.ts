@@ -3,7 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import {
+  ITEM_TYPE_TO_RETURN_TEXT_MAPPER,
+  RequestTaskState,
+  RequestTaskStore,
+  TYPE_AWARE_STORE,
+} from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TaskItemStatus, TasksApiService, TPR_FORM_THROUGHPUT_DETAILS_SUBTASK } from '@requests/common';
 import { click, getByRole, getByText } from '@testing';
@@ -41,7 +46,7 @@ const mockTotalsState = {
       },
     },
   },
-} as any;
+} as RequestTaskState;
 
 const mockDirtyTotalsState = {
   ...mockTotalsState,
@@ -50,11 +55,18 @@ const mockDirtyTotalsState = {
     requestTask: {
       ...mockTotalsState.requestTaskItem.requestTask,
       payload: {
-        ...mockTotalsState.requestTaskItem.requestTask.payload,
+        ...(mockTotalsState.requestTaskItem.requestTask
+          .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload),
         performanceData: {
-          ...mockTotalsState.requestTaskItem.requestTask.payload.performanceData,
+          ...(
+            mockTotalsState.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).performanceData,
           throughputDetails: {
-            ...mockTotalsState.requestTaskItem.requestTask.payload.performanceData.throughputDetails,
+            ...(
+              mockTotalsState.requestTaskItem.requestTask
+                .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+            ).performanceData.throughputDetails,
             targetImprovement: '0.25',
             totalTargetVariableEnergy: '1057.1452187',
           },
@@ -71,11 +83,18 @@ const mockByProductState = {
     requestTask: {
       ...mockTotalsState.requestTaskItem.requestTask,
       payload: {
-        ...mockTotalsState.requestTaskItem.requestTask.payload,
+        ...(mockTotalsState.requestTaskItem.requestTask
+          .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload),
         referenceData: {
-          ...mockTotalsState.requestTaskItem.requestTask.payload.referenceData,
+          ...(
+            mockTotalsState.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).referenceData,
           baselineAndTargets: {
-            ...mockTotalsState.requestTaskItem.requestTask.payload.referenceData.baselineAndTargets,
+            ...(
+              mockTotalsState.requestTaskItem.requestTask
+                .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+            ).referenceData?.baselineAndTargets,
             variableEnergyType: 'BY_PRODUCT',
             baselineDate: '2022-01-01',
             variableEnergyConsumptionDataByProduct: [
@@ -99,7 +118,10 @@ const mockByProductState = {
           },
         },
         performanceData: {
-          ...mockTotalsState.requestTaskItem.requestTask.payload.performanceData,
+          ...(
+            mockTotalsState.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).performanceData,
           throughputDetails: {
             variableEnergyConsumptionDataByProduct: [
               { productName: 'Blue Widgets', actualThroughput: '321.1234567' },
@@ -118,7 +140,7 @@ const mockByProductState = {
       },
     },
   },
-} as any;
+} as RequestTaskState;
 
 const mockDirtyByProductState = {
   ...mockByProductState,
@@ -129,9 +151,15 @@ const mockDirtyByProductState = {
       payload: {
         ...mockByProductState.requestTaskItem.requestTask.payload,
         performanceData: {
-          ...mockByProductState.requestTaskItem.requestTask.payload.performanceData,
+          ...(
+            mockByProductState.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).performanceData,
           throughputDetails: {
-            ...mockByProductState.requestTaskItem.requestTask.payload.performanceData.throughputDetails,
+            ...(
+              mockByProductState.requestTaskItem.requestTask
+                .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+            ).performanceData.throughputDetails,
             totalTargetVariableEnergy: '16.0983835',
             variableEnergyConsumptionDataByProduct: [
               {
@@ -154,7 +182,7 @@ const mockDirtyByProductState = {
       },
     },
   },
-} as any;
+} as RequestTaskState;
 
 describe('TprThroughputDetailsCheckYourAnswersComponent', () => {
   let component: TprThroughputDetailsCheckYourAnswersComponent;
@@ -257,6 +285,78 @@ describe('TprThroughputDetailsCheckYourAnswersComponent', () => {
     expect(Number(productData[1].targetImprovement)).toBeCloseTo(0.12, 7);
     expect(Number(productData[0].targetEnergy)).toBeCloseTo((1000 / 1000) * 321.1234567 * (1 - 0.12), 7);
     expect(Number(productData[1].targetEnergy)).toBeCloseTo((2000 / 500) * 100 * (1 - 0.12), 7);
+  });
+
+  it('should calculate BY_PRODUCT total using per-product improvement targets when baseline years differ', () => {
+    // Green Widgets baselineYear=2024 > facilityBaseYear=2022 → adjusted target = 1/12
+    const state = {
+      ...mockByProductState,
+      requestTaskItem: {
+        ...mockByProductState.requestTaskItem,
+        requestTask: {
+          ...mockByProductState.requestTaskItem.requestTask,
+          payload: {
+            ...mockByProductState.requestTaskItem.requestTask.payload,
+            referenceData: {
+              ...(
+                mockByProductState.requestTaskItem.requestTask
+                  .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+              ).referenceData,
+              baselineAndTargets: {
+                ...(
+                  mockByProductState.requestTaskItem.requestTask
+                    .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+                ).referenceData?.baselineAndTargets,
+                variableEnergyConsumptionDataByProduct: [
+                  {
+                    productName: 'Blue Widgets',
+                    baselineYear: 2022,
+                    productStatus: 'LIVE',
+                    energy: '1000',
+                    throughputUnit: 'tonnes',
+                    throughput: '1000',
+                  },
+                  {
+                    productName: 'Green Widgets',
+                    baselineYear: 2024,
+                    productStatus: 'LIVE',
+                    energy: '2000',
+                    throughputUnit: 'tonnes',
+                    throughput: '500',
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    } as RequestTaskState;
+
+    store.setState(state);
+    fixture.detectChanges();
+
+    click(getByRole('button', { name: /Confirm and complete/i }, fixture.nativeElement));
+
+    const submittedPayload = (
+      tasksApiService.saveRequestTaskAction.mock.calls[0][0]
+        .requestTaskActionPayload as PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload
+    ).throughputDetails;
+
+    const productData = submittedPayload.variableEnergyConsumptionDataByProduct ?? [];
+
+    // Blue Widgets: baselineYear=2022 (same as facility) → facility improvement target 0.12
+    expect(Number(productData[0].targetImprovement)).toBeCloseTo(0.12, 7);
+    expect(Number(productData[0].targetEnergy)).toBeCloseTo((1000 / 1000) * 321.1234567 * (1 - 0.12), 7);
+
+    // Green Widgets: baselineYear=2024 (after facility) → adjusted target (0.12 - 0.04) / 0.96 = 1/12
+    expect(Number(productData[1].targetImprovement)).toBeCloseTo(1 / 12, 7);
+    expect(Number(productData[1].targetEnergy)).toBeCloseTo((2000 / 500) * 100 * (1 - 1 / 12), 7);
+
+    // Total = sum of each product's targetEnergy using their respective improvement targets
+    // (not the old behaviour: applying facility target once to the raw sum of intensities × throughput)
+    const expectedTotal = (1000 / 1000) * 321.1234567 * (1 - 0.12) + (2000 / 500) * 100 * (1 - 1 / 12);
+
+    expect(Number(submittedPayload.totalTargetVariableEnergy)).toBeCloseTo(expectedTotal, 7);
   });
 
   it('should render split-by-product summary when variable energy type is BY_PRODUCT', () => {

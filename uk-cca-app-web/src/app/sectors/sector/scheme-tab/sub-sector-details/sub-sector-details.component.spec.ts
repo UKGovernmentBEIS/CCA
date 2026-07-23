@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
 
+import { SubsectorAssociationSchemesDTO } from 'cca-api';
+
 import { mockSubSectorDetails } from '../../../specs/fixtures/mock';
 import { toSubsectorSchemeSummaryData } from '../scheme-summary-data';
 import { SubSectorDetailsComponent } from './sub-sector-details.component';
@@ -58,11 +60,12 @@ describe('SubSectorDetailsComponent', () => {
 
   describe('toSubsectorSchemeSummaryData', () => {
     it('should sort target periods correctly when given 10 unsorted target periods', () => {
-      const mockSubsectorScheme: any = {
+      const mockSubsectorScheme: SubsectorAssociationSchemesDTO = {
         name: 'Test Subsector',
         subsectorAssociationSchemeMap: {
           CCA_2: {
             targetSet: {
+              id: 1,
               targetCurrencyType: 'Relative',
               throughputUnit: 'tonne',
               energyOrCarbonUnit: 'kWh',
@@ -79,6 +82,7 @@ describe('SubSectorDetailsComponent', () => {
                 { targetPeriod: 'TP07', targetImprovement: '0.07' },
               ],
             },
+            id: 0,
           },
         },
       };

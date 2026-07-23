@@ -12,7 +12,7 @@ export const subsistenceFeesRunCompletedMock: SubsistenceFeesRunCompletedRequest
     name: 'S2501 subsistence fees summary report.csv',
     uuid: '7867ac74-ca50-4d79-9b70-513d286caa46',
   },
-} as any; // This is to bypass `chargingYear` type of `SubsistenceFeesRunCompletedRequestActionPayloadChargingYear`
+} as unknown as SubsistenceFeesRunCompletedRequestActionPayload;
 
 export const subsistenceFeesRunCompletedRequestActionDTO: RequestActionDTO = {
   id: 6,

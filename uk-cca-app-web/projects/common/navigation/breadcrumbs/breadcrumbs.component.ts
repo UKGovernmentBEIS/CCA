@@ -62,7 +62,7 @@ export class BreadcrumbsComponent {
    */
   private extract(): Link[] {
     const routeData: Link[] = [];
-    let snapshot = this.router.routerState.snapshot.root;
+    let snapshot: ActivatedRouteSnapshot | null = this.router.routerState.snapshot.root;
 
     while (snapshot) {
       // disable breadcrumb for the current route
@@ -115,7 +115,7 @@ function removeSameRouteBreadcrumb(breadcrumbData: Link[], path: string): Link[]
 function createLink(snapshot: ActivatedRouteSnapshot): Link {
   let breadcrumbRouteData = snapshot.data.breadcrumb;
   let text = '';
-  let fragment: string;
+  let fragment: string | undefined;
   let link = snapshot.pathFromRoot
     .map((u) => u.url.join('/'))
     .filter((u) => !!u)

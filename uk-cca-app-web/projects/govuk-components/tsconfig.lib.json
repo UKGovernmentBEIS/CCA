@@ -5,10 +5,13 @@
     "declarationMap": true,
     "declaration": true,
     "inlineSources": true,
-    "types": []
+    "types": [],
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false
   },
   "angularCompilerOptions": {
-    "compilationMode": "partial"
+    "compilationMode": "partial",
+    "strictInjectionParameters": false
   },
   "exclude": ["**/*.spec.ts"]
 }

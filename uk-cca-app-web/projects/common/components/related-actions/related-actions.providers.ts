@@ -3,8 +3,7 @@ import { InjectionToken } from '@angular/core';
 import { RequestTaskDTO } from 'cca-api';
 
 export type RelatedActionPath =
-  | string[]
-  | ((taskId: RequestTaskDTO['id'], taskType?: RequestTaskDTO['type']) => string[]);
+  string[] | ((taskId: RequestTaskDTO['id'], taskType?: RequestTaskDTO['type']) => string[]);
 
 export type RelatedActionsMap = Record<string, { text: string; path: RelatedActionPath }>;
 

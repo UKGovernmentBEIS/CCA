@@ -8,7 +8,7 @@
   </legend>
 
   @if (hint()) {
-    <div govukFieldsetHint [innerHTML]="hint()"></div>
+    <div govukFieldsetHint>{{ hint() }}</div>
   }
 
   @if (shouldDisplayErrors) {

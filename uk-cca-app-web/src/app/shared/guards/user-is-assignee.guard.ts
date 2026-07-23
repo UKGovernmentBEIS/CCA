@@ -1,12 +1,15 @@
 import { inject } from '@angular/core';
-import { UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot } from '@angular/router';
 
 import { AuthStore, selectUserId } from '@netz/common/auth';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 
-export function userIsAssigneeGuard(): boolean | UrlTree {
+export function userIsAssigneeGuard(route: ActivatedRouteSnapshot) {
   const authStore = inject(AuthStore);
   const requestTaskStore = inject(RequestTaskStore);
 
-  return authStore.select(selectUserId)() === requestTaskStore.select(requestTaskQuery.selectAssigneeUserId)();
+  const userId = authStore.select(selectUserId)();
+  const assigneeUserId = requestTaskStore.select(requestTaskQuery.selectAssigneeUserId)();
+
+  return userId !== undefined && userId === assigneeUserId ? true : createUrlTreeFromSnapshot(route, ['../']);
 }

@@ -5,7 +5,7 @@
     <govuk-error-summary [form]="vm.form" />
   }
 
-  <form (ngSubmit)="submit(vm.requestTask.id, vm.form.get('assignee').value)" [formGroup]="vm.form">
+  <form (ngSubmit)="submit(vm.requestTask.id!, vm.form.get('assignee')?.value)" [formGroup]="vm.form">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <div

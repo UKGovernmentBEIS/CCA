@@ -37,7 +37,7 @@ export class RequestTaskStore extends SignalStore<RequestTaskState> {
     );
   }
 
-  setTaskReassignedTo(taskReassignedTo: string) {
+  setTaskReassignedTo(taskReassignedTo: string | null) {
     this.setState(
       produce(this.state, (state) => {
         state.taskReassignedTo = taskReassignedTo;
@@ -64,6 +64,9 @@ export class RequestTaskStore extends SignalStore<RequestTaskState> {
   setPayload<T extends RequestTaskPayload>(payload: T) {
     this.setState(
       produce(this.state, (state) => {
+        if (!state.requestTaskItem?.requestTask) {
+          throw new Error('Cannot set payload: requestTaskItem or requestTask is not initialized');
+        }
         state.requestTaskItem.requestTask.payload = payload;
       }),
     );

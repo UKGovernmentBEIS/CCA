@@ -35,11 +35,12 @@ export class RelatedActionsComponent implements OnChanges {
   protected readonly showReassignAction = input(false);
   protected readonly reassignAction = input({ text: 'Reassign task', link: ['change-assignee'] });
 
-  protected relatedActions: { text: string; link: string[] }[];
+  protected relatedActions!: { text: string; link: string[] }[];
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('allowedRequestTaskActions' in changes) {
       const actions = changes.allowedRequestTaskActions.currentValue as RequestTaskItemDTO['allowedRequestTaskActions'];
+      if (!actions) return;
 
       this.relatedActions = actions
         .filter((action) => action in this.actionsMap)

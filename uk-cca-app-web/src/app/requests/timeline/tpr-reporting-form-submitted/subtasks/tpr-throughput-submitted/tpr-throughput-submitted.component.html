@@ -23,6 +23,10 @@
                 {{ row.targetImprovement * 100 | number: '1.0-3' }}%
               }
 
+              @case ('actualThroughput') {
+                {{ row.actualThroughput | number: '1.0-7' }}
+              }
+
               @case ('adjustedThroughput') {
                 {{ row.adjustedThroughput | number: '1.0-3' }}
               }
@@ -52,7 +56,9 @@
   <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
-        Total target variable energy ({{ measurementType() | measurementTypeToUnit }})
+        Total target variable {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }} ({{
+          measurementType() | measurementTypeToUnit
+        }})
       </dt>
       <dd class="govuk-summary-list__value">{{ totalsTargetVariableEnergy() | number: '1.0-7' }}</dd>
     </div>
@@ -69,7 +75,9 @@
   <h2 class="govuk-heading-m govuk-!-margin-top-6">Calculated energy amounts</h2>
   <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Total target variable energy ({{ measurementUnitLabel() }})</dt>
+      <dt class="govuk-summary-list__key">
+        Total target variable {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }} ({{ measurementUnitLabel() }})
+      </dt>
       <dd class="govuk-summary-list__value">{{ totalsTargetVariableEnergy() | number: '1.0-7' }}</dd>
     </div>
   </dl>

@@ -59,6 +59,7 @@ describe('TargetUnitDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TargetUnitDetailsComponent],
       providers: [
+        { provide: Router, useValue: { navigate: vi.fn() } },
         { provide: ActivatedRoute, useValue: route },
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: SectorAssociationSchemeService, useValue: mockSectorService },

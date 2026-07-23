@@ -10,7 +10,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByTestId, getByText } from '@testing';
 import { Mock } from 'vitest';
 
-import { RequestItemsService, RequestsService, UserStateDTO } from 'cca-api';
+import { RequestCreateValidationResult, RequestItemsService, RequestsService, UserStateDTO } from 'cca-api';
 
 import { StartNewTaskComponent } from './start-new-task.component';
 
@@ -55,7 +55,7 @@ describe('StartNewTaskComponent', () => {
     authStore.setUserState(userStateDTO);
   });
 
-  function createComponentWithMock(mockResponse: any) {
+  function createComponentWithMock(mockResponse: Record<string, RequestCreateValidationResult>) {
     requestService.getAvailableWorkflows.mockReturnValue(of(mockResponse));
     fixture = TestBed.createComponent(StartNewTaskComponent);
     component = fixture.componentInstance;

@@ -15,6 +15,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import uk.gov.netz.api.common.validation.SpELExpression;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.Year;
 import java.util.Objects;
@@ -59,7 +60,7 @@ public class ProductVariableEnergyConsumptionData {
             return null;
         }
 
-        return energy.divide(throughput, 7, RoundingMode.HALF_UP);
+        return energy.divide(throughput, MathContext.DECIMAL128);
     }
 
     @Override

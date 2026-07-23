@@ -1,3 +1,5 @@
+import { RequestMetadata } from 'cca-api';
+
 import { BuyoutSurplusState } from '../buy-out-surplus.store';
 
 export const buyoutSurplusStateMockData: BuyoutSurplusState = {
@@ -16,7 +18,7 @@ export const buyoutSurplusStateMockData: BuyoutSurplusState = {
         targetPeriodType: 'TP6',
         totalAccounts: 2,
         failedAccounts: 1,
-      } as any,
+      } as RequestMetadata,
     },
     {
       id: 'BS-TP6001',
@@ -28,7 +30,7 @@ export const buyoutSurplusStateMockData: BuyoutSurplusState = {
         targetPeriodType: 'TP6',
         totalAccounts: 2,
         failedAccounts: 1,
-      },
+      } as RequestMetadata,
     },
   ],
   totalWorkflowHistoryItems: 2,

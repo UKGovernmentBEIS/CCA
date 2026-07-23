@@ -5,6 +5,7 @@ import { catchError, map, Observable, of, tap } from 'rxjs';
 import { ReferenceDataService } from 'cca-api';
 
 import { Country } from '../types/country';
+import { logger } from '../utils/logger';
 
 export const UK_COUNTRY_CODES = ['GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS'];
 
@@ -19,7 +20,7 @@ export class CountryService {
   load(): Observable<Country[]> {
     return this.referenceDataService.getReferenceData(['COUNTRIES']).pipe(
       catchError(() => {
-        console.error('There was an error fetching the countries.');
+        logger.error('There was an error fetching the countries.');
         return of({ COUNTRIES: [] as Country[] });
       }),
       map(({ COUNTRIES }) => COUNTRIES as Country[]),

@@ -29,7 +29,7 @@ export const targetUnitMoaGeneratedMock: TargetUnitMoaGeneratedRequestActionPayl
       recipientType: 'SECTOR_CONTACT',
     },
   ],
-} as any; // This is to bypass `chargingYear` type of `SubsistenceFeesRunCompletedRequestActionPayloadChargingYear`;
+} as unknown as TargetUnitMoaGeneratedRequestActionPayload; // chargingYear type in generated metadata union
 
 export const targetUnitMoaGeneratedActionDTO: RequestActionDTO = {
   id: 41,

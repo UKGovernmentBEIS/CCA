@@ -14,9 +14,10 @@ import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriod
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
@@ -88,6 +89,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
     void doProcess_PRIMARY_TARGET_MET() throws BuyOutSurplusAccountProcessingException {
         final Long accountId = 1L;
         final long performanceDataId = 11L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final String submitterId = "regulator";
@@ -179,7 +181,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         verify(buyOutSurplusManagementService, times(1))
                 .createBankSurplus(eq(accountId), any(), any());
         verify(buyOutSurplusManagementService, times(1))
-                .saveBuyOutSurplusProcessedData(performanceDataId);
+                .saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
         verifyNoInteractions(targetUnitAccountNoticeRecipients, buyOutSurplusAccountProcessingOfficialNoticeService);
         verify(requestService, times(1)).addActionToRequest(request, actionPayload, actionType, submitterId);
         verifyNoMoreInteractions(buyOutSurplusManagementService);
@@ -189,6 +191,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
     void doProcess_PRIMARY_BUY_OUT_REQUIRED() throws BuyOutSurplusAccountProcessingException {
         final Long accountId = 1L;
         final long performanceDataId = 11L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final String submitterId = "regulator";
@@ -313,7 +316,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .generateOfficialNotice(request, PerformanceDataSubmissionType.PRIMARY, BuyOutSurplusPaymentStatus.AWAITING_PAYMENT, transactionCode);
         verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(buyOutSurplus);
-        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId);
+        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
         verify(requestService, times(1)).addActionToRequest(request, actionPayload, actionType, submitterId);
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, officialNotice, null);
@@ -324,12 +327,14 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
     void doProcess_SECONDARY_TARGET_MET() throws BuyOutSurplusAccountProcessingException {
         final Long accountId = 1L;
         final long performanceDataId = 11L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final String submitterId = "regulator";
         final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
                 .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
+                .buyOutCost(25)
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
@@ -460,7 +465,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .generateOfficialNotice(request, PerformanceDataSubmissionType.SECONDARY, BuyOutSurplusPaymentStatus.AWAITING_REFUND, transactionCode);
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1)).generateRefundOfficialNotice(request);
         verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(buyOutSurplus);
-        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId);
+        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
         verify(requestService, times(1)).addActionToRequest(request, actionPayload, actionType, submitterId);
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, officialNotice, refundClaimForm);
@@ -471,12 +476,14 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
     void doProcess_SECONDARY_BUY_OUT_REQUIRED() throws BuyOutSurplusAccountProcessingException {
         final Long accountId = 1L;
         final long performanceDataId = 11L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final String submitterId = "regulator";
         final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
                 .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
+                .buyOutCost(25)
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
@@ -595,7 +602,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .generateOfficialNotice(request, PerformanceDataSubmissionType.SECONDARY, BuyOutSurplusPaymentStatus.AWAITING_PAYMENT, transactionCode);
         verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(any());
-        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId);
+        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
         verify(requestService, times(1)).addActionToRequest(eq(request), any(), eq(actionType), eq(submitterId));
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, officialNotice, null);
@@ -612,6 +619,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
                 .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
+                .buyOutCost(25)
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")

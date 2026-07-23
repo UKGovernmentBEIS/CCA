@@ -24,7 +24,7 @@ export class BackLinkComponent {
 
   readonly inverse = input(false);
 
-  protected readonly backlink$ = new BehaviorSubject<{ link: string; route: ActivatedRouteSnapshot }>(null);
+  protected readonly backlink$ = new BehaviorSubject<{ link: string; route: ActivatedRouteSnapshot } | null>(null);
 
   constructor() {
     this.router.events
@@ -61,5 +61,6 @@ export class BackLinkComponent {
     const backlink: RouteBacklink = routeData.backlink;
     if (typeof backlink === 'boolean' || typeof backlink === 'string') return !!backlink;
     if (typeof backlink === 'function') return !!backlink(routeData);
+    return false;
   }
 }

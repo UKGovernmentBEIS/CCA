@@ -11,7 +11,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { getByText, queryByText } from '@testing';
 
-import { NonComplianceNoticeOfIntentSubmitRequestTaskPayload } from 'cca-api';
+import { NonComplianceNoticeOfIntentSubmitRequestTaskPayload, RequestTaskItemDTO } from 'cca-api';
 
 import NoticeOfIntentCheckYourAnswersComponent from './notice-of-intent-check-your-answers.component';
 
@@ -40,9 +40,9 @@ describe('NoticeOfIntentCheckYourAnswersComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
-    });
+      },
+      requestInfo: { accountId: 1 },
+    } as RequestTaskItemDTO);
     store.setIsEditable(isEditable);
 
     fixture = TestBed.createComponent(NoticeOfIntentCheckYourAnswersComponent);

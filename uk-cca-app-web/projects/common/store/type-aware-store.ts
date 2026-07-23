@@ -9,11 +9,11 @@ export const ITEM_TYPE_TO_RETURN_TEXT_MAPPER = new InjectionToken<(type: string)
   'Item type to return-text mapper',
 );
 
-export const selectType: StateSelector<RequestTaskState | RequestActionState, string | null> = createSelector(
-  (state) =>
+export const selectType: StateSelector<RequestTaskState | RequestActionState, string | null | undefined> =
+  createSelector((state) =>
     'action' in state
       ? state.action?.type
       : 'requestTaskItem' in state
         ? state.requestTaskItem?.requestTask?.type
         : null,
-);
+  );

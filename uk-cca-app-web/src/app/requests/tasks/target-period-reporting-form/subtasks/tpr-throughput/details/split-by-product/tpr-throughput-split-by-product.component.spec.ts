@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { RequestTaskState, RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { getByText } from '@testing';
@@ -159,6 +159,12 @@ describe('TprThroughputSplitByProductComponent', () => {
     expect(actualThroughput).toBe(321.1234567);
   });
 
+  it('should show the underlying agreement selection hint', () => {
+    expect(
+      getByText('This was selected when you applied for your underlying agreement', fixture.nativeElement),
+    ).toBeTruthy();
+  });
+
   it('should calculate total target variable energy from baseline intensities and apply facility improvement once', async () => {
     const expected = ((1000 / 1000) * 321.1234567 + (2000 / 500) * 100) * (1 - 0.12);
 
@@ -166,7 +172,7 @@ describe('TprThroughputSplitByProductComponent', () => {
   });
 
   it('should show interim target header for interim reports', async () => {
-    store.setState(mockInterimByProductState as any);
+    store.setState(mockInterimByProductState as RequestTaskState);
     fixture.detectChanges();
     await fixture.whenStable();
 

@@ -10,11 +10,10 @@ import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, GovukTableColumn, TableComponent } from '@netz/govuk-components';
 import {
-  calculateAdjustedImprovementTargetForProduct,
+  calculateAdjustedImprovementTarget,
   calculateAdjustedThroughput,
   calculateFacilityImprovementTarget,
-  calculateFacilityTargetVariableEnergy,
-  calculateTargetEnergyForProduct,
+  calculateProductTargetEnergy,
   calculateThroughputAdjustmentFactor,
   decideVariableEnergyType,
   resolveProductEnergyCarbonIntensity,
@@ -27,7 +26,7 @@ import {
 } from '@requests/common';
 import { SummaryComponent, TextInputComponent, WizardStepComponent } from '@shared/components';
 import { MeasurementTypeToUnitPipe } from '@shared/pipes';
-import { toNumber } from '@shared/utils';
+import { logger, toNumber } from '@shared/utils';
 import { produce } from 'immer';
 
 import {
@@ -151,7 +150,7 @@ export class TprThroughputSplitByProductComponent {
       let improvementTarget = facilityImprovementTarget;
 
       if (facilityBaseYear && productBaseYear > facilityBaseYear) {
-        improvementTarget = calculateAdjustedImprovementTargetForProduct(
+        improvementTarget = calculateAdjustedImprovementTarget(
           this.referenceData(),
           this.reportType(),
           this.targetPeriodType(),
@@ -164,28 +163,15 @@ export class TprThroughputSplitByProductComponent {
       const adjustedThroughput = calculateAdjustedThroughput(throughputValue, throughputFactor, useSRM) ?? 0;
       const baselineEnergyIntensity = resolveProductEnergyCarbonIntensity(product);
 
-      const targetEnergy = calculateTargetEnergyForProduct(
-        baselineEnergyIntensity,
-        adjustedThroughput,
-        improvementTarget,
-      );
+      const targetEnergy = calculateProductTargetEnergy(baselineEnergyIntensity, adjustedThroughput, improvementTarget);
 
       return { improvementTarget, adjustedThroughput, baselineEnergyIntensity, targetEnergy };
     });
   });
 
-  protected readonly totalTargetVariableEnergy = computed(() => {
-    const sumOfIntensityTimesAdjustedThroughput = this.productCalculations().reduce(
-      (sum, product) => sum + product.baselineEnergyIntensity * product.adjustedThroughput,
-      0,
-    );
-
-    return calculateFacilityTargetVariableEnergy(
-      sumOfIntensityTimesAdjustedThroughput,
-      this.improvementTarget(),
-      this.baselineProducts().length > 0,
-    );
-  });
+  protected readonly totalTargetVariableEnergy = computed(() =>
+    this.productCalculations().reduce((sum, product) => sum + (product.targetEnergy ?? 0), 0),
+  );
 
   onSubmit() {
     if (this.form.invalid) return;
@@ -224,7 +210,7 @@ export class TprThroughputSplitByProductComponent {
       .saveRequestTaskAction(dto)
       .pipe(
         catchError((error) => {
-          console.error(error);
+          logger.error(error);
           return EMPTY;
         }),
       )

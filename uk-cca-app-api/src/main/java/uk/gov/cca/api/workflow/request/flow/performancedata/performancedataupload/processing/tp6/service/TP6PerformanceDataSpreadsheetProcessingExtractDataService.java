@@ -44,6 +44,7 @@ public class TP6PerformanceDataSpreadsheetProcessingExtractDataService implement
     public TP6PerformanceData extractData(PerformanceDataSpreadsheetProcessingRequestMetadata metadata, FileDTO file) throws Exception {
         TP6PerformanceData tp6PerformanceData = TP6PerformanceData.builder()
                 .type(metadata.getPerformanceDataTargetPeriodType())
+                .buyOutCost(metadata.getTargetPeriodDetails().getBuyOutCost())
                 .submissionType(metadata.getSubmissionType())
                 .build();
 

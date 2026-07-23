@@ -61,7 +61,7 @@ export class RegulatorInvitationComponent implements OnInit {
           (res) => of({ url: 'invalid-link', queryParams: { code: res.error.code } }),
         ),
       )
-      .subscribe(({ queryParams, url }: { url: string; queryParams?: any }) =>
+      .subscribe(({ queryParams, url }: { url: string; queryParams?: Record<string, string> }) =>
         this.router.navigate([url], { relativeTo: this.route, queryParams }),
       );
   }

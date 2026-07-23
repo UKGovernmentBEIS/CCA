@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -49,6 +49,7 @@ describe('RegulatorDetailsComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         DetailsStore,
+        { provide: Router, useValue: { navigate: vi.fn() } },
         {
           provide: ActivatedRoute,
           useValue: route,
@@ -383,7 +384,7 @@ describe('RegulatorDetailsComponent', () => {
     });
     uploader.dispatchEvent(new Event('change', { bubbles: true }));
     fixture.detectChanges();
-    const submitBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+    const submitBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
       el.textContent.includes('Submit'),
     ) as HTMLButtonElement;
     click(submitBtn);
@@ -393,7 +394,7 @@ describe('RegulatorDetailsComponent', () => {
   it('should show first name error if empty was submitted', async () => {
     await bootstrap(routeEdit);
     clear(fixture.nativeElement.querySelector('#user\\.firstName'));
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
       el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
@@ -405,7 +406,7 @@ describe('RegulatorDetailsComponent', () => {
   it('should show last name error if empty was submitted', async () => {
     await bootstrap(routeEdit);
     clear(fixture.nativeElement.querySelector('#user\\.lastName'));
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
       el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
@@ -418,7 +419,7 @@ describe('RegulatorDetailsComponent', () => {
     await bootstrap(routeEdit);
     clear(fixture.nativeElement.querySelector('#user\\.firstName'));
     clear(fixture.nativeElement.querySelector('#user\\.lastName'));
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
       el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
@@ -430,12 +431,12 @@ describe('RegulatorDetailsComponent', () => {
 
   it('should show signature file error', async () => {
     await bootstrap(routeEdit);
-    const deleteBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+    const deleteBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
       el.textContent.includes('Delete'),
     ) as HTMLButtonElement;
     click(deleteBtn);
     fixture.detectChanges();
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
       el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
@@ -448,7 +449,7 @@ describe('RegulatorDetailsComponent', () => {
     await bootstrap(routeEdit, { add: false, edit: false });
     const spy = vi.spyOn(regulatorUsersService, 'updateCurrentRegulatorUser');
     type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
       el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
@@ -459,7 +460,7 @@ describe('RegulatorDetailsComponent', () => {
     await bootstrap(routeEdit2);
     const spy = vi.spyOn(regulatorUsersService, 'updateRegulatorUserByCaAndId');
     type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
       el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);

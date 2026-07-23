@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AvailableTargetPeriodsBuyOutDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.netz.api.security.AuthorizedRole;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static uk.gov.cca.api.web.constants.SwaggerApiInfo.OK;
@@ -54,6 +57,23 @@ public class BuyOutSurplusRunController {
 
 		return new ResponseEntity<>(buyOutSurplusQueryService
 				.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType), HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/available-target-periods")
+	@Operation(summary = "Retrieves the available TPs for buy-out run")
+	@ApiResponse(responseCode = "200", description = OK,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, 
+					schema = @Schema(implementation = AvailableTargetPeriodsBuyOutDTO.class)))
+	@ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
+			content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+					schema = @Schema(implementation = ErrorResponse.class))})
+	@ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
+			content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+					schema = @Schema(implementation = ErrorResponse.class))})
+	@AuthorizedRole(roleType = REGULATOR)
+	public ResponseEntity<AvailableTargetPeriodsBuyOutDTO> getAvailableBuyOutTargetPeriods() {
+
+		return new ResponseEntity<>(buyOutSurplusQueryService.getAvailableBuyOutTargetPeriods(LocalDate.now()), HttpStatus.OK);
 	}
 
 }

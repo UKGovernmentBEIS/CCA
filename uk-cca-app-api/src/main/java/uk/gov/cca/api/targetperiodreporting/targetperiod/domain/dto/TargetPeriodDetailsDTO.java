@@ -22,6 +22,7 @@ public class TargetPeriodDetailsDTO {
     private TargetPeriodYearsContainer targetPeriodYearsContainer;
     private LocalDate buyOutStartDate;
     private LocalDate buyOutPrimaryPaymentDeadline;
+    private Integer buyOutCost;
     private LocalDate secondaryReportingStartDate;
     private SchemeVersion schemeVersion;
 }

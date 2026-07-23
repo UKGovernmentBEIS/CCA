@@ -14,7 +14,7 @@ export class PayloadMutatorsHandler {
     subtask: string,
     step: string | null,
     payload: GenericRequestTaskPayload,
-    userInput: any,
+    userInput: unknown,
   ): Observable<GenericRequestTaskPayload> {
     const payloadMutatorsToRun = this.payloadMutators.filter((pm) => pm.subtask === subtask);
 

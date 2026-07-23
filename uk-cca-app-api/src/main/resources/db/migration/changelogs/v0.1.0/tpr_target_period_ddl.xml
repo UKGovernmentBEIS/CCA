@@ -145,4 +145,18 @@
             </dropColumn>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_UPDATE_TPR_TARGET_PERIOD_add_buy_out_cost_column" author="apostolouk@unisystems.gr">
+        <addColumn tableName="tpr_target_period">
+            <column name="buy_out_cost" type="int" remarks="The buy-out cost per tonne of carbon dioxide equivalent (tCO₂e) for this target period">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="tpr_target_period">
+                <column name="buy_out_cost"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+    
 </databaseChangeLog>

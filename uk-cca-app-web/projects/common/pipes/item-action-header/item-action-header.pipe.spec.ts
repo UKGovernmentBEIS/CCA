@@ -412,6 +412,12 @@ describe('ItemActionHeaderPipe', () => {
         type: 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED',
       }),
     ).toEqual('Target period reporting submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED',
+      }),
+    ).toEqual('Target period reporting closed by John Bolt');
   });
 
   it('should display the approved application title', () => {

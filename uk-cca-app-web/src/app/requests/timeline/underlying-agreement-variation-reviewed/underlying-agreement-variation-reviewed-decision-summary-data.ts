@@ -31,8 +31,7 @@ export function toRejectedDecisionDetailsSummaryData(
 function addSummaryDataToFactory(
   factory: SummaryFactory,
   payload:
-    | UnderlyingAgreementVariationAcceptedRequestActionPayload
-    | UnderlyingAgreementVariationRejectedRequestActionPayload,
+    UnderlyingAgreementVariationAcceptedRequestActionPayload | UnderlyingAgreementVariationRejectedRequestActionPayload,
 ): SummaryFactory {
   const determination = payload.determination;
   const decisionValue = determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';

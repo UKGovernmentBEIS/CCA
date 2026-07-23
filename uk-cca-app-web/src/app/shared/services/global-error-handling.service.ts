@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { first, from, Observable, switchMap, throwError } from 'rxjs';
 
+import { logger } from '../utils/logger';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +19,7 @@ export class GlobalErrorHandlingService implements ErrorHandler {
       ? this.router.navigate(['/error', '404'], { state: { forceNavigation: true } })
       : this.router.navigate(['/error', '500'], { state: { forceNavigation: true }, skipLocationChange: true });
 
-    console.error('ERROR', error);
+    logger.error('ERROR', error);
   }
 
   handleHttpError(res: HttpErrorResponse): Observable<never> {

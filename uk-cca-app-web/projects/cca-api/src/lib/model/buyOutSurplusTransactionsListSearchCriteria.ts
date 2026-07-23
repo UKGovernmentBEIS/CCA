@@ -17,13 +17,7 @@ export interface BuyOutSurplusTransactionsListSearchCriteria {
   term?: string;
   targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   buyOutSurplusPaymentStatus?:
-    | 'AWAITING_PAYMENT'
-    | 'AWAITING_REFUND'
-    | 'PAID'
-    | 'REFUNDED'
-    | 'NOT_REQUIRED'
-    | 'UNDER_APPEAL'
-    | 'TERMINATED';
+    'AWAITING_PAYMENT' | 'AWAITING_REFUND' | 'PAID' | 'REFUNDED' | 'NOT_REQUIRED' | 'UNDER_APPEAL' | 'TERMINATED';
   pageNumber: number;
   pageSize: number;
 }

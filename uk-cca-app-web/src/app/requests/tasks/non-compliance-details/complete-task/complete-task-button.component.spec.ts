@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { nonComplianceDetailsQuery, TaskItemStatus } from '@requests/common';
 
 import { NonComplianceCompleteTaskButtonComponent } from './complete-task-button.component';
@@ -12,13 +13,7 @@ describe('NonComplianceCompleteTaskButtonComponent', () => {
   let fixture: ComponentFixture<NonComplianceCompleteTaskButtonComponent>;
   let router: Router;
 
-  const route = {
-    snapshot: {
-      params: {},
-      paramMap: { get: vi.fn() },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub();
 
   const isEditableSignal = signal(true);
   const sectionsCompletedSignal = signal<Record<string, string>>({
@@ -86,6 +81,8 @@ describe('NonComplianceCompleteTaskButtonComponent', () => {
 
     component.onCompleteTask();
 
-    expect(navigateSpy).toHaveBeenCalledWith(['non-compliance', 'complete-task'], { relativeTo: route as any });
+    expect(navigateSpy).toHaveBeenCalledWith(['non-compliance', 'complete-task'], {
+      relativeTo: route,
+    });
   });
 });

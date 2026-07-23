@@ -8,11 +8,11 @@ import { SIDE_EFFECTS } from './side-effects.providers';
 
 @Injectable()
 export class SideEffectsHandler {
-  private sideEffects: SideEffect[] = inject(SIDE_EFFECTS, { optional: true });
+  private sideEffects: SideEffect[] | null = inject(SIDE_EFFECTS, { optional: true });
 
   apply(
     subtask: string,
-    step: string,
+    step: string | null,
     payload: GenericRequestTaskPayload,
     operation: SubtaskOperation,
   ): Observable<GenericRequestTaskPayload> {

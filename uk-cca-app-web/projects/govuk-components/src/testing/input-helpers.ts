@@ -6,12 +6,14 @@ export function changeInputValue(fixture: ComponentFixture<any>, selector: strin
 
   if (element.name === 'select') {
     const nativeElement: HTMLElement = element.nativeElement;
-    value = Array.from(nativeElement.querySelectorAll('option')).find(
+    const option = Array.from(nativeElement.querySelectorAll('option')).find(
       (option, index) => option.value === `${index}: ${value}` || option.value === value,
-    ).value;
+    );
+    if (option) value = option.value;
   }
 
-  const hasInputEvent = element.name === 'select' || ['radio', 'checkbox', 'file'].includes(element.attributes.type);
+  const hasInputEvent =
+    element.name === 'select' || ['radio', 'checkbox', 'file'].includes(element.attributes.type ?? '');
 
   if (element.name === 'select') {
     element.nativeElement.value = value;
@@ -31,7 +33,7 @@ export function changeInputValue(fixture: ComponentFixture<any>, selector: strin
 }
 
 export function buttonClick(fixture: ComponentFixture<any>): void {
-  (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button').click();
+  (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button')?.click();
 }
 
 type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -52,10 +54,10 @@ export function getInputValue(
   } else {
     return targetProps.type === 'checkbox'
       ? targetProps.checked
-      : targetProps.value || getElement<InputElement>(fixture, selector).value;
+      : targetProps.value || getElement<InputElement>(fixture, selector)?.value;
   }
 }
 
-export function getElement<T extends HTMLElement>(fixture: ComponentFixture<any>, selector: string): T {
+export function getElement<T extends HTMLElement>(fixture: ComponentFixture<any>, selector: string): T | null {
   return (fixture.nativeElement as HTMLElement).querySelector<T>(selector);
 }

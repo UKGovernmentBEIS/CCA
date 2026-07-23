@@ -13,7 +13,7 @@ import { TasksApiService } from '@requests/common';
 import { RequestTaskFileService } from '@shared/services';
 import { getByText } from '@testing';
 
-import { NonComplianceNoticeOfIntentSubmitRequestTaskPayload } from 'cca-api';
+import { NonComplianceNoticeOfIntentSubmitRequestTaskPayload, RequestTaskItemDTO } from 'cca-api';
 
 import UploadNoticeComponent from './upload-notice.component';
 
@@ -72,9 +72,9 @@ describe('UploadNoticeComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
-    });
+      },
+      requestInfo: { accountId: 1 },
+    } as RequestTaskItemDTO);
     store.setIsEditable(true);
 
     fixture = TestBed.createComponent(UploadNoticeComponent);

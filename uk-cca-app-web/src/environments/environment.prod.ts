@@ -12,7 +12,7 @@ const keycloakConfig: KeycloakConfig = {
 
 const keycloakInitOptions: KeycloakInitOptions = {
   onLoad: 'check-sso',
-  enableLogging: true,
+  enableLogging: false,
   pkceMethod: 'S256',
 };
 

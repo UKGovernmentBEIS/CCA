@@ -22,7 +22,7 @@ describe('Initialize Payload Guard', () => {
     });
 
     store = TestBed.inject(RequestTaskStore);
-    store.setRequestTaskItem({ requestTask: { type: 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT' as any } });
+    store.setRequestTaskItem({ requestTask: { type: 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT' } });
     store.setPayload({
       payloadType: 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT_PAYLOAD',
       sectionsCompleted: {},

@@ -1,16 +1,21 @@
 import { provideHttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 
 import { mockPreAuditReviewState } from '../../../testing/mock-data';
 import { PreAuditReviewRequestedDocumentsUploadComponent } from './pre-audit-review-requested-documents-upload.component';
+
+@Component({ template: '' })
+class DummyComponent {}
 
 const mockForm = new FormGroup({
   auditMaterialReceivedDate: new FormControl(new Date()),
@@ -24,13 +29,7 @@ describe('PreAuditReviewRequestedDocumentsUploadComponent', () => {
   let router: Router;
   let tasksApiService: TasksApiService;
 
-  const route: any = {
-    snapshot: {
-      params: {},
-      paramMap: { get: vi.fn().mockReturnValue(123) },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub();
 
   const mockTasksApiService = {
     saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
@@ -41,6 +40,7 @@ describe('PreAuditReviewRequestedDocumentsUploadComponent', () => {
       imports: [PreAuditReviewRequestedDocumentsUploadComponent],
       providers: [
         provideHttpClient(),
+        provideRouter([{ path: '**', component: DummyComponent }]),
         RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },

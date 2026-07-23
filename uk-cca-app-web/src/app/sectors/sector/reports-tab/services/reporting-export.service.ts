@@ -114,15 +114,15 @@ export function toFacilityPerformanceDataExportRows(
       : {}),
     'New variation': item.variationIndicator ? 'Yes' : '',
     '70% confirmation (Yes or No)': boolToString(item.atLeastSeventyPercentEnergyUsed),
-    'Performance against target (%)': item.actualImprovement,
-    'Actual Primary energy or carbon used': item.actualEnergyCarbon,
-    'Target energy': item.targetEnergyCarbon,
-    'Energy difference': item.energyCarbonDifference,
-    'Actual tCO2e': item.actualCo2Emissions,
-    'Target tCO2e': item.targetCo2Emissions,
-    'tCO2e difference': item.co2EmissionsDifference,
-    'Total buy-out (tCO2e)': item.buyOutRequired,
-    'Surplus gained (tCO2e)': item.surplusGained,
+    'Performance against target (%)': formatExportNumber(item.actualImprovement),
+    'Actual Primary energy or carbon used': formatExportNumber(item.actualEnergyCarbon),
+    'Target energy': formatExportNumber(item.targetEnergyCarbon),
+    'Energy difference': formatExportNumber(item.energyCarbonDifference),
+    'Actual tCO2e': formatExportNumber(item.actualCo2Emissions),
+    'Target tCO2e': formatExportNumber(item.targetCo2Emissions),
+    'tCO2e difference': formatExportNumber(item.co2EmissionsDifference),
+    'Total buy-out (tCO2e)': formatExportNumber(item.buyOutRequired),
+    'Surplus gained (tCO2e)': formatExportNumber(item.surplusGained),
   }));
 }
 
@@ -142,4 +142,8 @@ function formatEnumLabel(value: string | null | undefined): string | null {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ')
     : null;
+}
+
+function formatExportNumber(value: string | null | undefined): string | null | undefined {
+  return value?.match(/^[-+]?0(?:\.0+)?e[-+]?\d+$/i) ? '0' : value;
 }

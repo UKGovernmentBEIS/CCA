@@ -13,16 +13,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-class CsvBigDecimalScale7ConverterTest {
+class CsvBigDecimalScale7HalfDownConverterTest {
 
     @InjectMocks
-    private CsvBigDecimalScale7Converter converter;
+    private CsvBigDecimalScale7HalfDownConverter converter;
 
     @Test
     void convert() throws CsvDataTypeMismatchException {
         BigDecimal result = converter.convert("105.560");
         assertThat(result).isEqualTo(BigDecimal.valueOf(105.56).setScale(7, RoundingMode.HALF_DOWN));
     }
+    
+    @Test
+    void convert_up_when_discarded_part_is_exactly_half() throws CsvDataTypeMismatchException {
+        BigDecimal result = converter.convert("105.12345675");
+        assertThat(result).isEqualTo(BigDecimal.valueOf(105.1234567));
+    }
+    
+    @Test
+    void convert_up() throws CsvDataTypeMismatchException {
+        BigDecimal result = converter.convert("105.12345678");
+        assertThat(result).isEqualTo(BigDecimal.valueOf(105.1234568));
+    }
+    
+    @Test
+    void convert_down() throws CsvDataTypeMismatchException {
+        BigDecimal result = converter.convert("105.12345671");
+        assertThat(result).isEqualTo(BigDecimal.valueOf(105.1234567));
+    }
+    
     @Test
     void convert_with_percentage() throws CsvDataTypeMismatchException {
         BigDecimal result = converter.convert("105.560%");

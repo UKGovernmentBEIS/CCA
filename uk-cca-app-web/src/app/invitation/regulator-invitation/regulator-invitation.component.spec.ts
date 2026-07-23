@@ -55,6 +55,7 @@ describe('RegulatorInvitationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RegulatorInvitationComponent, PasswordComponent, ReactiveFormsModule, PageHeadingComponent],
       providers: [
+        { provide: Router, useValue: { navigate: vi.fn() } },
         { provide: RegulatorUsersRegistrationService, useValue: regulatorUsersRegistrationService },
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: ValidatePasswordService, useValue: mockValidatePasswordService },

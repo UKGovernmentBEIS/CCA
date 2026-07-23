@@ -11,7 +11,11 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { getByText } from '@testing';
 
-import { NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload } from 'cca-api';
+import {
+  NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload,
+  RequestInfoDTO,
+  RequestTaskDTO,
+} from 'cca-api';
 
 import SummaryPageComponent from './summary.component';
 
@@ -67,8 +71,8 @@ describe('SummaryPageComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
+      } as RequestTaskDTO,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
     store.setIsEditable(true);
 

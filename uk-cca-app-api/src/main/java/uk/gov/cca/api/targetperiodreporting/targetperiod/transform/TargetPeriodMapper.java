@@ -9,6 +9,7 @@ import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodBuyOutDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.netz.api.common.config.MapperConfig;
@@ -35,5 +36,7 @@ public interface TargetPeriodMapper {
     }
 
     TargetPeriodInfoDTO toTargetPeriodInfoDTO(TargetPeriod entity);
+
+	TargetPeriodBuyOutDetailsDTO toTargetPeriodBuyOutDetailsDTO(TargetPeriod tp);
 }
 

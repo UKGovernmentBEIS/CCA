@@ -22,7 +22,7 @@ export const mockWorkflowDetails: RequestDetailsDTO = {
     failedInvoices: 0,
     sentInvoices: 1,
   },
-} as any; // This is to bypass `chargingYear` type of `SubsistenceFeesRunCompletedRequestActionPayloadChargingYear`
+} as unknown as RequestDetailsDTO; // Bypass `chargingYear` type in generated metadata union
 
 export const mockEmptyRequestItems: ItemDTOResponse = {
   items: [],

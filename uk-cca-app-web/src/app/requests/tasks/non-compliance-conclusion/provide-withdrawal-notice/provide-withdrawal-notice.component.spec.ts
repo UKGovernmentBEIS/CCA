@@ -12,7 +12,7 @@ import { TasksApiService } from '@requests/common';
 import { RequestTaskFileService } from '@shared/services';
 import { getByText } from '@testing';
 
-import { NonComplianceConclusionSubmitRequestTaskPayload } from 'cca-api';
+import { NonComplianceConclusionSubmitRequestTaskPayload, RequestTaskItemDTO } from 'cca-api';
 
 import { ProvideWithdrawalNoticeComponent } from './provide-withdrawal-notice.component';
 
@@ -72,9 +72,9 @@ describe('ProvideWithdrawalNoticeComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_CONCLUSION_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
-    });
+      },
+      requestInfo: { accountId: 1 },
+    } as RequestTaskItemDTO);
     store.setIsEditable(true);
 
     fixture = TestBed.createComponent(ProvideWithdrawalNoticeComponent);

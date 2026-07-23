@@ -1,4 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 
@@ -8,10 +9,11 @@ import { SignalStore } from '@netz/common/store';
 import { asyncData, mockClass } from '@netz/common/testing';
 import { Mocked } from 'vitest';
 
-import { RequestTaskAttachmentsHandlingService, TasksService } from 'cca-api';
+import { FileUuidDTO, RequestTaskAttachmentsHandlingService, TasksService } from 'cca-api';
 
 import { RequestTaskFileService } from './request-task-file.service';
 
+@Injectable()
 class MockedStore extends SignalStore<MockedState> {
   constructor() {
     super(initialMockedState);
@@ -34,7 +36,7 @@ describe('RequestTaskFileService', () => {
   beforeEach(() => {
     attachmentsService = mockClass(RequestTaskAttachmentsHandlingService);
     attachmentsService.uploadRequestTaskAttachment.mockReturnValue(
-      asyncData<any>(new HttpResponse({ body: { data: { uuid: 'xyz' } } })),
+      asyncData(new HttpResponse<FileUuidDTO>({ body: { uuid: 'xyz' } })) as Observable<FileUuidDTO>,
     );
 
     TestBed.configureTestingModule({

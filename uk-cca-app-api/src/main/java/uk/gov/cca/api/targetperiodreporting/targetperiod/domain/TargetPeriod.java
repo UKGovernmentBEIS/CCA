@@ -89,5 +89,8 @@ public class TargetPeriod {
   @Column(name = "scheme_version", length = 8)
   @NotNull
   private SchemeVersion schemeVersion;
+  
+  @Column(name = "buy_out_cost")
+  private Integer buyOutCost;
 }
 

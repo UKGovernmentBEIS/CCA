@@ -9,7 +9,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { RequestTaskFileService } from '@shared/services';
 import { getByText, queryByText } from '@testing';
 
-import { NonComplianceConclusionSubmitRequestTaskPayload } from 'cca-api';
+import { NonComplianceConclusionSubmitRequestTaskPayload, RequestInfoDTO, RequestTaskDTO } from 'cca-api';
 
 import { ProvideAppealDetailsStore } from '../+state';
 import { ProvideAppealDetailsComponent } from './provide-details.component';
@@ -71,8 +71,8 @@ describe('ProvideAppealDetailsComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_CONCLUSION_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
+      } as RequestTaskDTO,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
     store.setIsEditable(true);
 

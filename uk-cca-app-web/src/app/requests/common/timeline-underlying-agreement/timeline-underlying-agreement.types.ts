@@ -12,12 +12,10 @@ import {
 } from 'cca-api';
 
 export type UnderlyingAgreementDecisionRequestActionPayload =
-  | UnderlyingAgreementAcceptedRequestActionPayload
-  | UnderlyingAgreementRejectedRequestActionPayload;
+  UnderlyingAgreementAcceptedRequestActionPayload | UnderlyingAgreementRejectedRequestActionPayload;
 
 export type UnderlyingAgreementVariationDecisionRequestActionPayload =
-  | UnderlyingAgreementVariationAcceptedRequestActionPayload
-  | UnderlyingAgreementVariationRejectedRequestActionPayload;
+  UnderlyingAgreementVariationAcceptedRequestActionPayload | UnderlyingAgreementVariationRejectedRequestActionPayload;
 
 export type UnderlyingAgreementRequestActionPayload =
   | UnderlyingAgreementSubmittedRequestActionPayload
@@ -30,5 +28,4 @@ export type UnderlyingAgreementRequestActionPayload =
 export type UnaPayload = UnderlyingAgreementPayload | UnderlyingAgreementVariationPayload;
 
 export type UnATimelineDecisionActionPayload =
-  | UnderlyingAgreementDecisionRequestActionPayload
-  | UnderlyingAgreementVariationDecisionRequestActionPayload;
+  UnderlyingAgreementDecisionRequestActionPayload | UnderlyingAgreementVariationDecisionRequestActionPayload;

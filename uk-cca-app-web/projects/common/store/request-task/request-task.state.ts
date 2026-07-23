@@ -1,10 +1,10 @@
 import { ItemDTO, RequestActionInfoDTO, RequestTaskItemDTO } from 'cca-api';
 
 export interface RequestTaskState {
-  requestTaskItem: RequestTaskItemDTO;
+  requestTaskItem: RequestTaskItemDTO | null;
   relatedTasks: ItemDTO[];
   timeline: RequestActionInfoDTO[];
-  taskReassignedTo: string;
+  taskReassignedTo: string | null;
   isEditable: boolean;
   metadata?: Record<string, unknown>;
 }

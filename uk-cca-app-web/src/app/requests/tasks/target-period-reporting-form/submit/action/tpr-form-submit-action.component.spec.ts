@@ -88,6 +88,7 @@ describe('TprFormSubmitActionComponent', () => {
 
     const nativeElement = fixture.nativeElement as HTMLElement;
     expect(nativeElement.textContent).toContain('Go to cancel task');
+    expect(document.activeElement).toBe(nativeElement.querySelector('.govuk-error-summary'));
   });
 
   it('should show refresh baseline error summary and keep submit button for TPRDF1008', () => {
@@ -102,6 +103,20 @@ describe('TprFormSubmitActionComponent', () => {
 
     const nativeElement = fixture.nativeElement as HTMLElement;
     expect(nativeElement.textContent).toContain('Confirm and submit TPR');
+  });
+
+  it('should show cancel error summary for TPRDF1005', () => {
+    tasksApiService.saveRequestTaskAction.mockReturnValueOnce(throwError(() => ({ error: { code: 'TPRDF1005' } })));
+
+    component.onSubmit();
+    fixture.detectChanges();
+
+    expect(component.isErrorSummaryDisplayed()).toBe(true);
+    expect(component.isCancelError()).toBe(true);
+    expect(component.errorSummaryInfo().message).toBe(
+      'The baseline data for this facility must contain at least one product with a base year equal to the facility base year, and at least one product with a base year less than or equal to the year the report data relates to. You must submit a variation to correct the base year of products in this facility before you can submit your report.',
+    );
+    expect(component.errorSummaryInfo().link).toBe('../../cancel');
   });
 
   it('should show locked error summary and keep submit button for TPRDF1004', () => {

@@ -6,6 +6,7 @@ import { catchError } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { ButtonDirective, GovukValidators, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
+import { logger } from '@shared/utils';
 
 import { TargetPeriodPerformanceDataReportOfTheFacilityService } from 'cca-api';
 
@@ -50,7 +51,7 @@ export class ToggleLockComponent {
       })
       .pipe(
         catchError((err) => {
-          console.error(err);
+          logger.error(err);
           throw new Error();
         }),
       )

@@ -1,5 +1,6 @@
 import {
   FacilityInfoDTO,
+  ItemDTO,
   ItemDTOResponse,
   PerformanceDataReportTypeDTO,
   RequestActionInfoDTO,
@@ -95,7 +96,7 @@ export const mockEmptyRequestItems: ItemDTOResponse = {
       facilityBusinessId: 'ADS_1-F00002',
       siteName: 'fac1-1-2',
       isNew: false,
-    } as any,
+    } as ItemDTO,
   ],
   totalItems: 1,
 };

@@ -3,19 +3,17 @@ import { RequestActionDTO, RequestActionPayload } from 'cca-api';
 import { createDescendingSelector, createSelector, StateSelector } from '../index';
 import { RequestActionState } from './request-action.state';
 
-const selectAction: StateSelector<RequestActionState, RequestActionDTO> = createSelector((state) => state.action);
-
-const selectActionType: StateSelector<RequestActionState, RequestActionDTO['type']> = createDescendingSelector(
-  selectAction,
-  (action) => action?.type,
+const selectAction: StateSelector<RequestActionState, RequestActionDTO | null> = createSelector(
+  (state) => state.action,
 );
 
-const selectActionPayload: StateSelector<RequestActionState, RequestActionPayload> = createDescendingSelector(
-  selectAction,
-  (action) => action?.payload,
-);
+const selectActionType: StateSelector<RequestActionState, RequestActionDTO['type'] | undefined> =
+  createDescendingSelector(selectAction, (action) => action?.type);
 
-const selectSubmitter: StateSelector<RequestActionState, string> = createDescendingSelector(
+const selectActionPayload: StateSelector<RequestActionState, RequestActionPayload | undefined> =
+  createDescendingSelector(selectAction, (action) => action?.payload);
+
+const selectSubmitter: StateSelector<RequestActionState, string | undefined> = createDescendingSelector(
   selectAction,
   (action) => action?.submitter,
 );

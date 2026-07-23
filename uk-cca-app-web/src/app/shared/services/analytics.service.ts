@@ -2,6 +2,10 @@ import { inject, Injectable } from '@angular/core';
 
 import { ConfigStore } from '../config/config.store';
 
+interface GtmWindow extends Window {
+  dataLayer: Record<string, unknown>[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
   private readonly configStore = inject(ConfigStore);
@@ -22,8 +26,8 @@ export class AnalyticsService {
 
     console.log('Logging to Google Analytics - [GTM Container ID]:', gtmContainerId);
 
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push({
+    (window as unknown as GtmWindow).dataLayer = (window as unknown as GtmWindow).dataLayer || [];
+    (window as unknown as GtmWindow).dataLayer.push({
       'gtm.start': new Date().getTime(),
       event: 'gtm.js',
     });
@@ -41,7 +45,7 @@ export class AnalyticsService {
 
   removeGoogleTagManager() {
     document.head.removeChild(this.currentScript);
-    delete (window as any).dataLayer;
+    delete (window as unknown as GtmWindow).dataLayer;
     this.currentScript = null;
   }
 }

@@ -13,6 +13,7 @@ import { requireProductsValidator, uniqueFieldValidator } from '@shared/validato
 import { ProductVariableEnergyConsumptionData } from 'cca-api';
 
 export type ProductFormGroup = FormGroup<{
+  productStatus: FormControl<ProductVariableEnergyConsumptionData['productStatus']>;
   productName: FormControl<ProductVariableEnergyConsumptionData['productName']>;
   baselineYear: FormControl<number>;
   baselineVariableEnergy: FormControl<ProductVariableEnergyConsumptionData['energy']>;
@@ -74,6 +75,7 @@ export function createProductFormGroup(
   const baselineYearValue = value?.baselineYear != null ? Number(value.baselineYear) : null;
 
   const productGroup = fb.group({
+    productStatus: fb.control(value?.productStatus ?? 'NEW'),
     productName: fb.control(value?.productName ?? null, [
       GovukValidators.required('Enter a product name'),
       GovukValidators.maxLength(255, 'Enter up to 255 characters'),

@@ -51,8 +51,8 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
   protected isDraggedOver = false;
   protected isDisabled: boolean;
 
-  private onChange: (value: FileUpload[]) => any;
-  private onBlur: () => any;
+  private onChange: (value: FileUpload[]) => void;
+  private onBlur: () => void;
   private value$ = new BehaviorSubject<FileUpload[]>([]);
 
   constructor() {
@@ -117,14 +117,14 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
     );
   }
 
-  registerOnChange(onChange: (value: FileUpload[]) => any): void {
+  registerOnChange(onChange: (value: FileUpload[]) => void): void {
     this.onChange = (value) => {
       this.value$.next(value);
       onChange(value);
     };
   }
 
-  registerOnTouched(onBlur: () => any): void {
+  registerOnTouched(onBlur: () => void): void {
     this.onBlur = onBlur;
   }
 
@@ -187,6 +187,6 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
 
     return rowErrors.length === 0
       ? null
-      : rowErrors.reduce((acc, [key, value]) => ({ ...(acc ? acc : {}), [key]: value }) as any, null);
+      : rowErrors.reduce<Record<string, string>>((acc, [key, value]) => ({ ...acc, [key]: value }), {});
   }
 }

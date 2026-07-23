@@ -21,8 +21,9 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyO
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusService;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
@@ -337,12 +338,13 @@ class BuyOutSurplusManagementServiceTest {
     @Test
     void saveBuyOutSurplusProcessedData() {
         final Long performanceDataId = 1L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
 
         // Invoke
-        buyOutSurplusManagementService.saveBuyOutSurplusProcessedData(performanceDataId);
+        buyOutSurplusManagementService.saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
 
         // Verify
         verify(buyOutSurplusProcessedDataService, times(1))
-                .submitBuyOutSurplusProcessedData(performanceDataId);
+        		.submitBuyOutSurplusProcessedData(performanceDataId, resourceType);
     }
 }

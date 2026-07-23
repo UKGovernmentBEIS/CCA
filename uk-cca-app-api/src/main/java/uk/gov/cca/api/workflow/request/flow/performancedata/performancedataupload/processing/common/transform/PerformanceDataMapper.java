@@ -15,9 +15,9 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.FuelUsed;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataContainer;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.FixedConversionFactor;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceData;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.tp6.domain.ActualTargetPeriodPerformance;

@@ -370,4 +370,7 @@ public final class SwaggerApiInfo {
             "SECTOR_SCHEME1004 | Submitter is not allowed to access the scheme document";
     public static final String GET_SECTOR_FACILITY_PERFORMANCE_DATA_REPORT_LIST_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
             "TPRF1001 | Expected exactly one target year, but found multiple.";
+    public static final String UPDATE_TARGET_PERIOD_BUY_OUT_COST_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "FORM1001 | Form validation failed \t\n " +
+            "TPR1002 | Target period scheme version is not updatable";
 }

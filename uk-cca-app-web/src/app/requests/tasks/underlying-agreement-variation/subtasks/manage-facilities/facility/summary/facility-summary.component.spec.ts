@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { BasePage } from '@netz/common/testing';
+import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
 
 import { mockRequestTaskItemDTO } from '../../../../testing/mock-data';
 import FacilitySummaryComponent from './facility-summary.component';
@@ -15,17 +15,7 @@ describe('FacilitySummaryComponent', () => {
   let store: RequestTaskStore;
   let page: Page;
 
-  const route: any = {
-    snapshot: {
-      params: {
-        facilityId: 'ADS_1-F00001',
-      },
-      paramMap: {
-        get: vi.fn().mockReturnValue(mockRequestTaskItemDTO.requestTask.id),
-      },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub({ facilityId: 'ADS_1-F00001' });
 
   class Page extends BasePage<FacilitySummaryComponent> {
     get header() {

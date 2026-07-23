@@ -10,7 +10,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText, queryByText } from '@testing';
 import { Mocked } from 'vitest';
 
-import { NonComplianceConclusionSubmitRequestTaskPayload, TasksService } from 'cca-api';
+import { NonComplianceConclusionSubmitRequestTaskPayload, RequestInfoDTO, RequestTaskDTO, TasksService } from 'cca-api';
 
 import { ProvideAppealDetailsStore } from '../+state';
 import { CheckYourAnswersComponent } from './check-your-answers.component';
@@ -48,8 +48,8 @@ describe('CheckYourAnswersComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_CONCLUSION_SUBMIT',
         payload: initialPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
+      } as RequestTaskDTO,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
     store.setIsEditable(isEditable);
     appealDetailsStore.setState({

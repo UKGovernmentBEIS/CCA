@@ -1,4 +1,4 @@
-import { inject } from '@angular/core';
+import { inject, isDevMode } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { concatMap, map, Observable, tap } from 'rxjs';
@@ -21,12 +21,18 @@ export abstract class TaskService {
   abstract get payload(): GenericRequestTaskPayload;
   abstract set payload(payload: GenericRequestTaskPayload);
 
-  saveSubtask(subtask: string, step: string, route: ActivatedRoute, userInput: any): Observable<string> {
+  saveSubtask(subtask: string, step: string, route: ActivatedRoute, userInput: unknown): Observable<string> {
     return this.payloadMutators.mutate(subtask, step, this.payload, userInput).pipe(
       concatMap((payload) => this.sideEffects.apply(subtask, step, payload, 'SAVE_SUBTASK')),
       concatMap((payload) => this.apiService.save(payload)),
       tap((payload) => (this.payload = payload)),
-      concatMap(() => this.flowManagerForSubtask(subtask).nextStep(step, route)),
+      concatMap(() => {
+        const flowManager = this.flowManagerForSubtask(subtask);
+        if (!flowManager) {
+          throw new Error(`No WizardFlowManager found for subtask: ${subtask}`);
+        }
+        return flowManager.nextStep(step, route);
+      }),
     );
   }
 
@@ -42,10 +48,10 @@ export abstract class TaskService {
     return this.apiService.submit();
   }
 
-  private flowManagerForSubtask(subtask: string): WizardFlowManager {
+  private flowManagerForSubtask(subtask: string): WizardFlowManager | null {
     const flowManager = this.wizardFlowManagers.find((sfm) => sfm.subtask === subtask) ?? null;
     if (!flowManager) {
-      console.error(`###TaskService### :: Could not find WizardFlowManager for subtask: ${subtask}`);
+      if (isDevMode()) console.error(`###TaskService### :: Could not find WizardFlowManager for subtask: ${subtask}`);
     }
     return flowManager;
   }

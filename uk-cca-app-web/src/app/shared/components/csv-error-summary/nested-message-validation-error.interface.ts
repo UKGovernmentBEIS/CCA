@@ -3,6 +3,6 @@ export interface NestedMessageValidationError {
   type: string;
   message?: string;
   columns?: string[];
-  rows?: any[];
+  rows?: Array<{ rowIndex: number; [key: string]: unknown }>;
   controls?: NestedMessageValidationError[];
 }

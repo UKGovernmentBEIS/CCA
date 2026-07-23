@@ -31,7 +31,7 @@ export class ConfirmationSharedComponent implements OnInit {
   protected readonly title = input<string>(undefined);
   protected readonly titleReferenceText = input<string>(undefined);
   protected readonly titleReferenceId = input<string>(undefined);
-  protected readonly whatHappensNextTemplate = input<TemplateRef<any>>(undefined);
+  protected readonly whatHappensNextTemplate = input<TemplateRef<unknown>>(undefined);
   protected readonly returnToLink = input('/dashboard');
 
   protected readonly breadcrumbs = inject(BreadcrumbService);

@@ -7,8 +7,7 @@ import {
 } from 'cca-api';
 
 type AdminTerminationPayloadWithReasonDetails =
-  | AdminTerminationSubmitRequestTaskPayload
-  | AdminTerminationPeerReviewRequestTaskPayload;
+  AdminTerminationSubmitRequestTaskPayload | AdminTerminationPeerReviewRequestTaskPayload;
 
 const selectAdminTerminationPayloadWithReasonDetails: StateSelector<
   RequestTaskState,

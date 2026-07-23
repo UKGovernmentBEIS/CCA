@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { FileUploadEvent } from '@shared/components';
 import { Mocked } from 'vitest';
 
 import { RequestNoteDto, RequestNotesService } from 'cca-api';
@@ -43,7 +44,7 @@ describe('WorkflowEditNoteComponent', () => {
     );
 
     const mockActivatedRoute = new ActivatedRouteStub({ workflowId: '456', noteId: '1' });
-    (mockActivatedRoute.snapshot as any).data = { note: mockNote };
+    (mockActivatedRoute.snapshot as { data: Record<string, unknown> }).data = { note: mockNote };
 
     await TestBed.configureTestingModule({
       imports: [WorkflowEditNoteComponent],
@@ -100,7 +101,7 @@ describe('WorkflowEditNoteComponent', () => {
 
     component['form'].patchValue({
       note: updatedNote,
-      files: mockFiles as any,
+      files: mockFiles as FileUploadEvent[],
     });
 
     component.onSubmit();
@@ -142,7 +143,7 @@ describe('WorkflowEditNoteComponent', () => {
 
     component['form'].patchValue({
       note: 'Note with multiple files',
-      files: multipleFiles as any,
+      files: multipleFiles as FileUploadEvent[],
     });
 
     component.onSubmit();

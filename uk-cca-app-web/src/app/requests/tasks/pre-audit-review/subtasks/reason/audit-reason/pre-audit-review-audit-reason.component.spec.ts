@@ -37,6 +37,7 @@ describe('PreAuditReviewAuditReasonComponent', () => {
       providers: [
         provideHttpClient(),
         RequestTaskStore,
+        { provide: Router, useValue: { navigate: vi.fn() } },
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
       ],

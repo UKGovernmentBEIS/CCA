@@ -12,6 +12,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.common.domain.FacilityUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadProcessingRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityUpload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.service.PerformanceDataFacilityDataUploadService;
@@ -64,6 +65,7 @@ class PerformanceDataFacilityDataUploadProcessingActionHandlerTest {
                                 .reportType(PerformanceDataReportType.FINAL)
                                 .build())
                         .build();
+        final PerformanceDataFacilityDataUploadRequestMetadata metadata = PerformanceDataFacilityDataUploadRequestMetadata.builder().build();
 
         final String requestId = "requestId";
         final String processInstanceId = "processInstanceId";
@@ -82,6 +84,7 @@ class PerformanceDataFacilityDataUploadProcessingActionHandlerTest {
                 .request(Request.builder()
                         .id(requestId)
                         .processInstanceId(processInstanceId)
+                        .metadata(metadata)
                         .build())
                 .build();
         final String uploadRequestBusinessKey = "uploadRequestBusinessKey";

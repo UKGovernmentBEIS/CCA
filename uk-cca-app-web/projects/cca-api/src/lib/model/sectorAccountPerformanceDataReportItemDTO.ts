@@ -17,11 +17,7 @@ export interface SectorAccountPerformanceDataReportItemDTO {
   submissionDate?: string;
   reportVersion?: number;
   performanceOutcome?:
-    | 'TARGET_MET'
-    | 'BUY_OUT_REQUIRED'
-    | 'SURPLUS_USED_BUY_OUT_REQUIRED'
-    | 'SURPLUS_USED'
-    | 'OUTSTANDING';
+    'TARGET_MET' | 'BUY_OUT_REQUIRED' | 'SURPLUS_USED_BUY_OUT_REQUIRED' | 'SURPLUS_USED' | 'OUTSTANDING';
   submissionType?: 'PRIMARY' | 'SECONDARY';
   locked?: boolean;
 }

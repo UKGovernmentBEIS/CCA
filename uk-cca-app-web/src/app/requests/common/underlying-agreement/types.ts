@@ -79,8 +79,7 @@ export enum BaselineAndTargetPeriodsSubtasks {
 }
 
 export type TargetPeriod =
-  | BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS
-  | BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS;
+  BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS | BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS;
 
 export const BASELINE_AND_TARGETS_SUBTASK = new InjectionToken<TargetPeriod>('target period');
 

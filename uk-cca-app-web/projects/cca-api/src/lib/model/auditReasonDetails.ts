@@ -12,12 +12,7 @@
 
 export interface AuditReasonDetails {
   reasonsForAudit: (
-    | 'ELIGIBILITY'
-    | 'SEVENTY_RULE_EVALUATION'
-    | 'BASE_YEAR_DATA'
-    | 'REPORTING_DATA'
-    | 'NON_COMPLIANCE'
-    | 'OTHER'
+    'ELIGIBILITY' | 'SEVENTY_RULE_EVALUATION' | 'BASE_YEAR_DATA' | 'REPORTING_DATA' | 'NON_COMPLIANCE' | 'OTHER'
   )[];
   comment: string;
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;

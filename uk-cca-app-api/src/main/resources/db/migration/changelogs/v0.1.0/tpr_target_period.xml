@@ -170,5 +170,25 @@
             WHERE business_id in ('TP7', 'TP8', 'TP9');
         </sql>
     </changeSet>
+    
+    <changeSet id="0_1_0_populate_TARGET_PERIOD_with_buy_out_cost" author="apostolouk@unisystems.gr">
+        <sql>
+        	UPDATE tpr_target_period
+            SET buy_out_cost = 18
+            WHERE business_id = 'TP5';
+            
+            UPDATE tpr_target_period
+            SET buy_out_cost = 25
+            WHERE business_id = 'TP6';
+            
+            UPDATE tpr_target_period
+            SET buy_out_cost = 37
+            WHERE business_id = 'TP7';
+            
+            UPDATE tpr_target_period
+            SET buy_out_cost = 38
+            WHERE business_id = 'TP8';
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>

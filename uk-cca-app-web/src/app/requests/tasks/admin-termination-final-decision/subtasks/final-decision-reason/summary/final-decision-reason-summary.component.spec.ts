@@ -23,7 +23,7 @@ describe('FinalDecisionReasonSummaryComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setRequestTaskItem({ requestTask: { type: 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION' as any } });
+    store.setRequestTaskItem({ requestTask: { type: 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION' } });
     store.setPayload(mockAdminTerminationFinalDecisionPayload);
 
     fixture = TestBed.createComponent(FinalDecisionReasonSummaryComponent);

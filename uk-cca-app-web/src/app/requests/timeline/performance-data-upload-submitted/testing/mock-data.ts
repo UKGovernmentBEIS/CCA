@@ -6,7 +6,7 @@ import { PerformanceDataTp6, PerformanceDataUploadedActionPayload } from '../per
 
 const performanceDataTp6: PerformanceDataTp6 = {
   type: 'TP6',
-  sector: null as any,
+  sector: null,
   submissionType: 'PRIMARY',
   targetType: 'NOVEM',
   performanceResult: {

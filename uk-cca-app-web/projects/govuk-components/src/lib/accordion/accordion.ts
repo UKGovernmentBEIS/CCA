@@ -1,4 +1,4 @@
-import { FactoryProvider, InjectionToken } from '@angular/core';
+import { FactoryProvider, InjectionToken, isDevMode } from '@angular/core';
 
 export interface Accordion {
   id: string;
@@ -26,7 +26,7 @@ export const isSessionStorageAvailable: () => boolean = () => {
     isStorageAvailable = sessionStorage.getItem('test') === 'test string';
     sessionStorage.removeItem('test');
   } catch (exception) {
-    console.error(exception);
+    if (isDevMode()) console.error(exception);
   }
   return isStorageAvailable;
 };

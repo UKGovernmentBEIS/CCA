@@ -13,7 +13,11 @@ import { TasksApiService } from '@requests/common';
 import { RequestTaskFileService } from '@shared/services';
 import { getByText, queryByText } from '@testing';
 
-import { NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload } from 'cca-api';
+import {
+  NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload,
+  RequestInfoDTO,
+  RequestTaskDTO,
+} from 'cca-api';
 
 import UploadNoticeComponent from './upload-notice.component';
 
@@ -52,8 +56,8 @@ describe('UploadNoticeComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT',
         payload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
+      } as RequestTaskDTO,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
     store.setIsEditable(true);
 

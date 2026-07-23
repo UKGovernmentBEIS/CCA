@@ -8,10 +8,10 @@ const selectPayload: StateSelector<RequestActionState, CcaPeerReviewDecisionSubm
     (actionPayload) => actionPayload as CcaPeerReviewDecisionSubmittedRequestActionPayload,
   );
 
-const selectDecision: StateSelector<RequestActionState, any> = createDescendingSelector(
-  selectPayload,
-  (payload) => payload.decision,
-);
+const selectDecision: StateSelector<
+  RequestActionState,
+  CcaPeerReviewDecisionSubmittedRequestActionPayload['decision']
+> = createDescendingSelector(selectPayload, (payload) => payload.decision);
 
 const selectPeerReviewAttachments: StateSelector<RequestActionState, Record<string, string>> = createDescendingSelector(
   selectPayload,

@@ -7,11 +7,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodBuyOutCostUpdateDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodBuyOutDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.repository.TargetPeriodRepository;
@@ -50,6 +53,21 @@ class TargetPeriodServiceTest {
 
         // Verify
         assertThat(result).containsExactly(TargetPeriodDetailsDTO.builder().id(1L).build());
+        verify(repository).findAllBySchemeVersion(schemeVersion);
+    }
+    
+    @Test
+    void getTargetPeriodBuyOutDetailsBySchemeVersion() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final TargetPeriod targetPeriod = TargetPeriod.builder().id(1L).build();
+
+        when(repository.findAllBySchemeVersion(schemeVersion)).thenReturn(List.of(targetPeriod));
+
+        // Invoke
+        List<TargetPeriodBuyOutDetailsDTO> result = service.getTargetPeriodBuyOutDetailsBySchemeVersion(schemeVersion);
+
+        // Verify
+        assertThat(result).containsExactly(TargetPeriodBuyOutDetailsDTO.builder().id(1L).build());
         verify(repository).findAllBySchemeVersion(schemeVersion);
     }
 
@@ -256,6 +274,69 @@ class TargetPeriodServiceTest {
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
         verify(repository).findByBusinessId(businessId);
+    }
+    
+    @Test
+    void updateTpBuyOutCost() {
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final Integer buyOutCost = 100;
+
+        final TargetPeriodBuyOutCostUpdateDTO dto = TargetPeriodBuyOutCostUpdateDTO.builder()
+                .buyOutCost(buyOutCost)
+                .build();
+
+        final TargetPeriod targetPeriod = TargetPeriod.builder()
+                .businessId(targetPeriodType)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .buyOutCost(25)
+                .build();
+
+        when(repository.findByBusinessId(targetPeriodType)).thenReturn(Optional.of(targetPeriod));
+
+        service.updateBuyOutCost(targetPeriodType, dto);
+
+        assertThat(targetPeriod.getBuyOutCost()).isEqualByComparingTo(buyOutCost);
+        verify(repository).findByBusinessId(targetPeriodType);
+    }
+    
+    @Test
+    void updateTpBuyOutCost_invalid_scheme() {
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final Integer buyOutCost = 100;
+
+        final TargetPeriodBuyOutCostUpdateDTO dto = TargetPeriodBuyOutCostUpdateDTO.builder()
+                .buyOutCost(buyOutCost)
+                .build();
+
+        final TargetPeriod targetPeriod = TargetPeriod.builder()
+                .businessId(targetPeriodType)
+                .schemeVersion(SchemeVersion.CCA_2)
+                .buyOutCost(25)
+                .build();
+
+        when(repository.findByBusinessId(targetPeriodType)).thenReturn(Optional.of(targetPeriod));
+
+        BusinessException ex = assertThrowsExactly(BusinessException.class,
+                () -> service.updateBuyOutCost(targetPeriodType, dto));
+
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.INVALID_TARGET_PERIOD_SCHEME_VERSION);
+        verify(repository).findByBusinessId(targetPeriodType);
+    }
+    
+    @Test
+    void getTargetPeriodBuyOutCurrentAndPrevious() {
+        final LocalDate date = LocalDate.of(2026, 1, 1);
+        final TargetPeriod currentTargetPeriod = TargetPeriod.builder().id(1L).build();
+        final TargetPeriod previousTargetPeriod = TargetPeriod.builder().id(2L).build();
+
+        when(repository.findByBuyOutStartDateLessThanEqualOrderByBuyOutStartDateDesc(date))
+                .thenReturn(List.of(currentTargetPeriod, previousTargetPeriod));
+
+        List<TargetPeriod> result = service.getTargetPeriodBuyOutCurrentAndPrevious(date);
+
+        // Verify
+        assertThat(result).containsExactly(currentTargetPeriod, previousTargetPeriod);
+        verify(repository).findByBuyOutStartDateLessThanEqualOrderByBuyOutStartDateDesc(date);
     }
 }
 

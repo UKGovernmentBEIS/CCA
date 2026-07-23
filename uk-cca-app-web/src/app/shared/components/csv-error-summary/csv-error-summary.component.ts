@@ -91,7 +91,7 @@ export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
     return childControlErrors;
   }
 
-  getRowIndexes(rows: any[]): number[] {
+  getRowIndexes(rows: Array<{ rowIndex: number }>): number[] {
     return rows.map((row) => row.rowIndex);
   }
 }

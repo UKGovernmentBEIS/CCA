@@ -10,7 +10,7 @@ export type StateSelector<S, SL> = (state: S) => SL;
  *
  * @param projector Mapping function to extract state slice
  */
-export function createSelector<S = any, SL = any>(projector: (state: S) => SL): StateSelector<S, SL> {
+export function createSelector<S, SL>(projector: (state: S) => SL): StateSelector<S, SL> {
   return (state) => projector(state);
 }
 
@@ -21,7 +21,7 @@ export function createSelector<S = any, SL = any>(projector: (state: S) => SL): 
  * @param selector The base selector
  * @param projector Mapping function to extract state slice
  */
-export function createDescendingSelector<S = any, IM = any, SL = any>(
+export function createDescendingSelector<S, IM, SL>(
   selector: StateSelector<S, IM>,
   projector: (state: IM) => SL,
 ): StateSelector<S, SL> {
@@ -36,18 +36,19 @@ export function createDescendingSelector<S = any, IM = any, SL = any>(
  * @param s2 The second root-state selector
  * @param projector Mapping function to extract aggregate state
  */
-export function createAggregateSelector<S = any, IM1 = any, IM2 = any, SL = any>(
+export function createAggregateSelector<S, IM1, IM2, SL>(
   s1: StateSelector<S, IM1>,
   s2: StateSelector<S, IM2>,
   projector: (im1: IM1, im2: IM2) => SL,
 ): StateSelector<S, SL>;
-export function createAggregateSelector<S, IM1 = any, IM2 = any, IM3 = any, SL = any>(
+export function createAggregateSelector<S, IM1, IM2, IM3, SL>(
   s1: StateSelector<S, IM1>,
   s2: StateSelector<S, IM2>,
   s3: StateSelector<S, IM3>,
   projector: (im1: IM1, im2: IM2, im3: IM3) => SL,
 ): StateSelector<S, SL>;
-export function createAggregateSelector<S, SL = any>(...args): StateSelector<S, SL> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createAggregateSelector<S, SL>(...args: any[]): StateSelector<S, SL> {
   const projector = args[args.length - 1];
   const selectors = args.slice(0, args.length - 1);
 
@@ -79,7 +80,7 @@ export abstract class SignalStore<T> {
   }
 
   updateState(state: Partial<T>): void {
-    this.setState({ ...this._state(), ...state });
+    this.setState({ ...structuredClone(this._state()), ...state });
   }
 
   setState(state: T) {

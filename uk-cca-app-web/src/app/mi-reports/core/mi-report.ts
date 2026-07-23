@@ -8,13 +8,13 @@ export const miReportTypeLinkMap: Partial<Record<MiReportResult['reportType'], s
   CUSTOM: ['./', 'custom'],
 };
 
-export const createTablePage = (currentPage: number, pageSize: number, data: any[]): any[] => {
+export const createTablePage = <T>(currentPage: number, pageSize: number, data: T[]): T[] => {
   const firstIndex = (currentPage - 1) * pageSize;
   const lastIndex = Math.min(firstIndex + pageSize, data?.length);
 
   return data?.length > firstIndex ? data.slice(firstIndex, lastIndex) : [];
 };
 
-export const createTableColumns = (columns: string[]): GovukTableColumn<any>[] => {
+export const createTableColumns = (columns: string[]): GovukTableColumn<Record<string, unknown>>[] => {
   return columns.map((column) => ({ field: column, header: column }));
 };

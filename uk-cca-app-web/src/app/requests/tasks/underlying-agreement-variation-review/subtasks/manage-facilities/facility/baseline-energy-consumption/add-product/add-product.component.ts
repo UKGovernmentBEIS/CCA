@@ -6,6 +6,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import { ErrorSummaryComponent, GovukSelectOption, GovukValidators } from '@netz/govuk-components';
 import {
   BaselineEnergyDraftService,
+  canRemoveVariableEnergyProduct,
   mapToProductVariableEnergyConsumptionData,
   underlyingAgreementQuery,
 } from '@requests/common';
@@ -72,11 +73,18 @@ export class AddProductComponent implements OnInit {
   }
 
   onRemoveProduct(index: number) {
-    if (this.productsArray.length <= 1) return;
+    if (!this.canRemoveProduct(index)) return;
     this.productsArray.removeAt(index);
     this.form.markAsDirty();
     this.form.markAsTouched();
     this.updateProductValidationMessages();
+  }
+
+  protected canRemoveProduct(index: number): boolean {
+    return canRemoveVariableEnergyProduct(
+      this.productsArray.at(index).controls.productStatus.value,
+      this.productsArray.length,
+    );
   }
 
   onSubmit() {

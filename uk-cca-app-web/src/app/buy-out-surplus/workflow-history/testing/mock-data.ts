@@ -1,4 +1,4 @@
-import { ItemDTOResponse, RequestActionInfoDTO, RequestDetailsDTO } from 'cca-api';
+import { ItemDTOResponse, RequestActionInfoDTO, RequestDetailsDTO, RequestMetadata } from 'cca-api';
 
 export const mockWorkflowDetails: RequestDetailsDTO = {
   id: 'BOS-TP6003',
@@ -10,7 +10,7 @@ export const mockWorkflowDetails: RequestDetailsDTO = {
     targetPeriodType: 'TP6',
     totalAccounts: 1,
     failedAccounts: 0,
-  } as any,
+  } as RequestMetadata,
 };
 
 export const mockEmptyRequestItems: ItemDTOResponse = {

@@ -66,7 +66,8 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
     case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED':
     case 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED':
     case 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED':
-      return `${ItemActionEnum[item.type]} by ${item.submitter}`;
+    case 'PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED':
+      return `${ItemActionEnum[item.type as string]} by ${item.submitter}`;
 
     case 'UNDERLYING_AGREEMENT_APPLICATION_MIGRATED':
       return 'Underlying agreement application migrated';
@@ -100,13 +101,13 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
       return 'Target period reporting expired';
 
     default:
-      return ItemActionEnum[item.type] || 'Approved Application';
+      return ItemActionEnum[item.type as string] || 'Approved Application';
   }
 }
 
 @Pipe({ name: 'itemActionHeader', pure: true })
 export class ItemActionHeaderPipe implements PipeTransform {
-  transform(item: RequestActionDTO | RequestActionInfoDTO): string {
+  transform(item: RequestActionDTO | RequestActionInfoDTO): string | null {
     return getItemActionHeader(item);
   }
 }

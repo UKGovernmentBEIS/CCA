@@ -172,6 +172,7 @@ public class PerformanceDataFacilityProcessingInputDataMapper {
     private void addToStandardFuels(BigDecimal value, PerformanceDataFacilityFixedConversionFactor fuelType, MeasurementType measurementType,
                                Map<PerformanceDataFacilityFixedConversionFactor, PerformanceDataFacilityFuelEnergyConsumption> standardFuels) {
         Optional.ofNullable(value)
+        		.filter(v -> v.compareTo(BigDecimal.ZERO) != 0)
                 .ifPresent(v -> standardFuels.put(fuelType, convertToStandardFuel(fuelType, v, measurementType)));
     }
 
@@ -194,7 +195,8 @@ public class PerformanceDataFacilityProcessingInputDataMapper {
                                           MeasurementType measurementType, List<PerformanceDataFacilityNonStandardFuel> nonStandardFuels) {
         boolean hasNonStandardFuelData = !ObjectUtils.isEmpty(otherFuelName) || !ObjectUtils.isEmpty(otherFuelConversionFactor)
                 || !ObjectUtils.isEmpty(otherFuelAmount);
-        if(!hasNonStandardFuelData) {
+        boolean isOtherFuelAmountZero = otherFuelAmount != null && otherFuelAmount.compareTo(BigDecimal.ZERO) == 0;
+        if(!hasNonStandardFuelData || isOtherFuelAmountZero) {
         	return;
         }
         

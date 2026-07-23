@@ -120,7 +120,7 @@ public class PrimaryDeterminationCalculationUtil {
     public Optional<BigDecimal> getPriBuyOutCostCalculatedValue(PerformanceDataCalculationParameters parameters) {
         BigDecimal priBuyOutCarbon = PrimaryDeterminationCalculationUtil.getPriBuyOutCarbonCalculatedValue(parameters)
                 .orElse(null);
-        BigDecimal multiplier = parameters.getType().getReferenceTargetPeriod().getCostPerCarbon();
+        BigDecimal multiplier = BigDecimal.valueOf(parameters.getBuyOutCost());
 
         return PrimaryDeterminationCalculationFunctionUtil.BUY_OUT_COST
                 .apply(priBuyOutCarbon, multiplier);

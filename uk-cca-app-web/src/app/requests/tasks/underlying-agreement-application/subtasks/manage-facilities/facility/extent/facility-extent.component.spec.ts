@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { MockType } from '@netz/common/testing';
+import { ActivatedRouteStub, MockType } from '@netz/common/testing';
 import { FACILITY_EXTENT_FORM, TasksApiService, underlyingAgreementQuery } from '@requests/common';
 
 import { FacilityExtentComponent } from './facility-extent.component';
@@ -18,7 +18,7 @@ describe('FacilityExtentComponent', () => {
   let fixture: ComponentFixture<FacilityExtentComponent>;
   let tasksApiService: MockType<TasksApiService>;
 
-  const route: any = { snapshot: { params: { facilityId: 'ADS_1-F00001' }, pathFromRoot: [] } };
+  const route = new ActivatedRouteStub(undefined, { facilityId: 'ADS_1-F00001' });
 
   beforeEach(() => {
     tasksApiService = {

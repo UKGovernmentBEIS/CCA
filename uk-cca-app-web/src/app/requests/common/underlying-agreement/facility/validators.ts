@@ -86,7 +86,8 @@ export function facilityBaselineEnergyProductsValidator(): ValidatorFn {
     const products = Array.isArray(group.controls.products.value) ? group.controls.products.value : [];
     const isEmpty = products.length === 0;
     const allExcluded =
-      products.length > 0 && products.every((p: any) => (p?.productStatus ?? '').toUpperCase() === 'EXCLUDED');
+      products.length > 0 &&
+      products.every((p: { productStatus?: string }) => (p?.productStatus ?? '').toUpperCase() === 'EXCLUDED');
 
     updateControlError(
       group.controls.products,

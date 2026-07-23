@@ -69,8 +69,8 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   });
 
   disabled: boolean;
-  onChange: (_: any) => any;
-  onBlur: (_: any) => any;
+  onChange: (_: unknown) => void;
+  onBlur: (_: unknown) => void;
 
   constructor() {
     super();
@@ -100,27 +100,26 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
       .subscribe();
   }
 
-  writeValue(value: any): void {
+  writeValue(value: unknown): void {
     const inputValue = this.input();
     if (inputValue) {
       const numberFormat = this.numberFormat();
-      this.renderer.setProperty(
-        inputValue.nativeElement,
-        'value',
+      const displayValue =
         inputValue.nativeElement === document.activeElement
           ? value
-          : numberFormat && !Number.isNaN(Number(value))
-            ? this.decimalPipe.transform(value, numberFormat)
-            : value,
-      );
+          : numberFormat && typeof value !== 'object'
+            ? this.decimalPipe.transform(value as string | number, numberFormat)
+            : value;
+
+      this.renderer.setProperty(inputValue.nativeElement, 'value', displayValue);
     }
   }
 
-  registerOnChange(onChange: any): void {
+  registerOnChange(onChange: (value: unknown) => void): void {
     this.onChange = onChange;
   }
 
-  registerOnTouched(onBlur: any): void {
+  registerOnTouched(onBlur: () => void): void {
     this.onBlur = onBlur;
   }
 

@@ -11,7 +11,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { click, getByTestId, getByText } from '@testing';
 import { Mocked } from 'vitest';
 
-import { TasksService } from 'cca-api';
+import { RequestTaskPayload, TasksService } from 'cca-api';
 
 import { PATUploadProcessComponent } from './pat-upload-process.component';
 import { mockRequestTaskPATState } from './testing/mock-data';
@@ -82,7 +82,7 @@ describe('PatAccountTemplateUploadComponent', () => {
             sendEmailNotification: true,
             targetPeriodType: 'TP6',
             processingStatus: 'IN_PROGRESS',
-          } as any,
+          } as RequestTaskPayload,
         },
       },
     });

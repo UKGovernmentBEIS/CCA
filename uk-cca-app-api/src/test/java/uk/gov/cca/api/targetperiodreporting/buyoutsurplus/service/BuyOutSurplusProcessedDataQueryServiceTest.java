@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusProcessedData;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusProcessedDataRepository;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,6 +30,7 @@ class BuyOutSurplusProcessedDataQueryServiceTest {
     @Test
     void getBuyOutSurplusProcessedDataByPerformanceData() {
         final Long performanceDataId = 1L;
+        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final BuyOutSurplusProcessedData entity = BuyOutSurplusProcessedData.builder()
                 .id(22L)
                 .performanceDataId(performanceDataId)
@@ -37,16 +39,16 @@ class BuyOutSurplusProcessedDataQueryServiceTest {
 
         final Long expected = 22L;
 
-        when(buyOutSurplusProcessedDataRepository.findByPerformanceDataId(performanceDataId))
+        when(buyOutSurplusProcessedDataRepository.findByPerformanceDataIdAndPerformanceDataResourceType(performanceDataId, resourceType))
                 .thenReturn(Optional.of(entity));
 
         // Invoke
         Optional<Long> result = buyOutSurplusProcessedDataQueryService
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId);
+                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
 
         // Verify
         assertThat(result).isPresent().contains(expected);
         verify(buyOutSurplusProcessedDataRepository, times(1))
-                .findByPerformanceDataId(performanceDataId);
+                .findByPerformanceDataIdAndPerformanceDataResourceType(performanceDataId, resourceType);
     }
 }

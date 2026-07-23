@@ -22,7 +22,7 @@
     </label>
 
     @if (hint()) {
-      <div [id]="identifier + '-item-hint'" class="govuk-radios__hint govuk-hint" [innerHTML]="hint()"></div>
+      <div [id]="identifier + '-item-hint'" class="govuk-radios__hint govuk-hint">{{ hint() }}</div>
     }
   </div>
 </ng-template>

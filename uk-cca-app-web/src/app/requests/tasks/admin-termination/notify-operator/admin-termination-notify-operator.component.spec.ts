@@ -10,7 +10,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
 import { Mocked } from 'vitest';
 
-import { CaExternalContactsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
+import { CaExternalContactsService, RegulatorAuthoritiesService, RequestInfoDTO, TasksService } from 'cca-api';
 
 import {
   mockAdminTerminationNotifyOperatorAdditionalUsers,
@@ -57,7 +57,7 @@ describe('AdminTerminationNotifyOperatorComponent', () => {
     store = TestBed.inject(RequestTaskStore);
     store.setRequestTaskItem({
       requestTask: { type: 'ADMIN_TERMINATION_APPLICATION_SUBMIT' },
-      requestInfo: { accountId: 1 } as any,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
     store.setPayload(mockReasonForAdminTerminationPayload);
 

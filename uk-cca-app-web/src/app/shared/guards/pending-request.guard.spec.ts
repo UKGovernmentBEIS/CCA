@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Navigation, Router } from '@angular/router';
 
 import { lastValueFrom, timer } from 'rxjs';
 
@@ -22,7 +22,9 @@ describe('PendingRequestGuard', () => {
   }
 
   @Component({ selector: 'cca-test-2', template: '' })
-  class EmptyTestComponent {}
+  class EmptyTestComponent implements PendingRequest {
+    readonly pendingRequest = inject(PendingRequestService);
+  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -53,7 +55,9 @@ describe('PendingRequestGuard', () => {
   });
 
   it('should allow deactivation if forced navigation', () => {
-    vi.spyOn(router, 'currentNavigation').mockReturnValue({ extras: { state: { forceNavigation: true } } } as any);
+    vi.spyOn(router, 'currentNavigation').mockReturnValue({
+      extras: { state: { forceNavigation: true } },
+    } as unknown as Navigation);
     const guard = TestBed.runInInjectionContext(() => PendingRequestGuard(testComponent));
 
     expect(guard).toEqual(true);

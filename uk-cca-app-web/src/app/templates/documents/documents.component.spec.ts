@@ -18,7 +18,7 @@ describe('DocumentsComponent', () => {
   let component: DocumentsComponent;
   let fixture: ComponentFixture<DocumentsComponent>;
   let documentTemplatesService: Mocked<Partial<DocumentTemplatesService>>;
-  let routerMock: any;
+  let routerMock: Router;
 
   beforeEach(async () => {
     documentTemplatesService = {

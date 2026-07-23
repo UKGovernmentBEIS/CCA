@@ -9,8 +9,8 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusCo
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.common.domain.TriFunction;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
 
 import java.math.BigDecimal;
@@ -57,7 +57,7 @@ public class BuyOutSurplusCalculationUtil {
                 .apply(previousPayments);
 
         BigDecimal secondaryBuyOutFee = SECONDARY_BUY_OUT_FEE.apply(
-                details.getTotalPriBuyOutCarbon(), details.getBankedSurplus(), targetPeriodDetails.getBusinessId().getCostPerCarbon());
+                details.getTotalPriBuyOutCarbon(), details.getBankedSurplus(), BigDecimal.valueOf(targetPeriodDetails.getBuyOutCost()));
 
         BigDecimal buyOutFee = secondaryBuyOutFee.subtract(previousPaid).setScale(2, RoundingMode.HALF_UP);
         BuyOutSurplusPaymentStatus paymentStatus = getPaymentStatusByFee(buyOutFee);

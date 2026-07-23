@@ -1,8 +1,7 @@
 package uk.gov.cca.api.targetperiodreporting.performancedatafacility.util;
 
 import lombok.experimental.UtilityClass;
-
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;

@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { RequestActionStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 
 import { mockUnderlyingAgreementSubmittedRequestAction } from '../testing/mock-data';
 import { FacilitySubmittedComponent } from './facility-submitted.component';
@@ -12,10 +13,10 @@ describe('FacilityComponent', () => {
   let fixture: ComponentFixture<FacilitySubmittedComponent>;
   let store: RequestActionStore;
 
-  const route: any = { snapshot: { params: { facilityId: 'ADS_1-F00001' }, pathFromRoot: [] } };
+  const route = new ActivatedRouteStub({ facilityId: 'ADS_1-F00001' });
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [FacilitySubmittedComponent],
       providers: [
         provideHttpClient(),

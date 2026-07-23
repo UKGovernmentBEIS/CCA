@@ -21,6 +21,9 @@ public interface PerformanceDataFacilityStatusRepository extends JpaRepository<P
 
     Optional<PerformanceDataFacilityStatus> findByFacilityIdAndTargetPeriodYear(Long facilityId, Year targetPeriodYear);
     
+    List<PerformanceDataFacilityStatus> findByFacilityIdInAndTargetPeriodYearAndLocked(
+    		Set<Long> facilityIds, Year targetPeriodYear, boolean locked);
+    
     @EntityGraph(attributePaths = { "targetPeriod", "lastPerformanceData" })
 	List<PerformanceDataFacilityStatus> findWithDetailsByFacilityIdAndTargetPeriodBusinessId(Long facilityId,
 			TargetPeriodType targetPeriodType);

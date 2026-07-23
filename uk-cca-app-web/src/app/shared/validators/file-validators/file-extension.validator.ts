@@ -1,4 +1,4 @@
-import { FormControl, ValidatorFn } from '@angular/forms';
+import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Validates provided extensions and mimetypes, to file extensions and file mimetypes accordingly
@@ -10,7 +10,7 @@ export function fileExtensionValidator(
   allowedMimeTypes: string[],
   message: string,
 ): ValidatorFn {
-  return (control: FormControl): Record<string, any> | null => {
+  return (control: FormControl): ValidationErrors | null => {
     const file = control.value;
 
     if (file) {

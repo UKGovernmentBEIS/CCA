@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { TextareaComponent } from '@netz/govuk-components';
-import { MultipleFileInputComponent } from '@shared/components';
+import { MultipleFileInputComponent, UuidFilePair } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
 import { AccountNotesService, NoteRequest, RequestNotesService } from 'cca-api';
@@ -38,7 +38,7 @@ export class WorkflowEditNoteComponent {
 
     const payload: NoteRequest = {
       note: this.form.value.note,
-      files: fileUtils.toUUIDs(files as any),
+      files: fileUtils.toUUIDs(files.filter((f): f is UuidFilePair => !!f.uuid)),
     };
 
     const request$: Observable<unknown> = this.workflowId

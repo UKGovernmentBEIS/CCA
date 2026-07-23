@@ -1,7 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import {
+  ITEM_TYPE_TO_RETURN_TEXT_MAPPER,
+  RequestTaskState,
+  RequestTaskStore,
+  TYPE_AWARE_STORE,
+} from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
 
@@ -34,8 +39,7 @@ const mockTotalsState = {
       },
     },
   },
-} as any;
-
+} as RequestTaskState;
 const mockByProductState = {
   ...mockTotalsState,
   requestTaskItem: {
@@ -45,9 +49,15 @@ const mockByProductState = {
       payload: {
         ...mockTotalsState.requestTaskItem.requestTask.payload,
         referenceData: {
-          ...mockTotalsState.requestTaskItem.requestTask.payload.referenceData,
+          ...(
+            mockTotalsState.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).referenceData,
           baselineAndTargets: {
-            ...mockTotalsState.requestTaskItem.requestTask.payload.referenceData.baselineAndTargets,
+            ...(
+              mockTotalsState.requestTaskItem.requestTask
+                .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+            ).referenceData.baselineAndTargets,
             variableEnergyType: 'BY_PRODUCT',
             baselineDate: '2022-01-01',
             variableEnergyConsumptionDataByProduct: [
@@ -63,7 +73,10 @@ const mockByProductState = {
           },
         },
         performanceData: {
-          ...mockTotalsState.requestTaskItem.requestTask.payload.performanceData,
+          ...(
+            mockTotalsState.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).performanceData,
           throughputDetails: {
             variableEnergyConsumptionDataByProduct: [{ productName: 'Product A', actualThroughput: '10' }],
           },
@@ -79,7 +92,32 @@ const mockByProductState = {
       },
     },
   },
-} as any;
+} as RequestTaskState;
+const mockCarbonTotalsState = {
+  ...mockTotalsState,
+  requestTaskItem: {
+    ...mockTotalsState.requestTaskItem,
+    requestTask: {
+      ...mockTotalsState.requestTaskItem.requestTask,
+      payload: {
+        ...mockTotalsState.requestTaskItem.requestTask.payload,
+        referenceData: {
+          ...(
+            mockTotalsState.requestTaskItem.requestTask
+              .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+          ).referenceData,
+          baselineAndTargets: {
+            ...(
+              mockTotalsState.requestTaskItem.requestTask
+                .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+            ).referenceData.baselineAndTargets,
+            measurementType: 'CARBON_KG',
+          },
+        },
+      },
+    },
+  },
+} as RequestTaskState;
 
 describe('TprThroughputDetailsSummaryComponent', () => {
   let component: TprThroughputDetailsSummaryComponent;
@@ -116,6 +154,13 @@ describe('TprThroughputDetailsSummaryComponent', () => {
   it('should build totals-only summary data', () => {
     expect(getByText(/Target period throughput details/, fixture.nativeElement)).toBeTruthy();
     expect(getByText(/Total throughput/, fixture.nativeElement)).toBeTruthy();
+  });
+
+  it('should use carbon dioxide terminology in the carbon totals-only summary', () => {
+    store.setState(mockCarbonTotalsState);
+    fixture.detectChanges();
+
+    expect(getByText(/Total target variable carbon dioxide \(kg\)/, fixture.nativeElement)).toBeTruthy();
   });
 
   it('should render split-by-product summary when variable energy type is BY_PRODUCT', () => {

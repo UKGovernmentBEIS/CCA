@@ -33,7 +33,7 @@ export class TableComponent {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   protected readonly columns = input.required<CcaTableColumn[]>();
-  protected readonly data = input.required<any[]>();
+  protected readonly data = input.required<Record<string, unknown>[]>();
   protected readonly caption = input<string>();
   protected readonly selectedRows = input(new Map());
   protected readonly showSelectAllCheckbox = input<boolean>();
@@ -78,7 +78,7 @@ export class TableComponent {
     return selectableRows.every((r) => this.selectedRows().has(r[this.primaryColumn()]));
   }
 
-  onRowSelectionToggle(row: any, event: Event): void {
+  onRowSelectionToggle(row: Record<string, unknown>, event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
     this.rowSelectionChange.emit({ row, checked });
   }

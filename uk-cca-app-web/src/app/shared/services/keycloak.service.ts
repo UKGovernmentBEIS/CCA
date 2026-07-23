@@ -8,6 +8,8 @@ import Keycloak, {
   type KeycloakTokenParsed,
 } from 'keycloak-js';
 
+import { logger } from '../utils/logger';
+
 export enum KeycloakEventType {
   OnAuthSuccess = 'onAuthSuccess',
   OnAuthRefreshSuccess = 'onAuthRefreshSuccess',
@@ -71,7 +73,7 @@ export class KeycloakService {
           resolve(authenticated);
         })
         .catch((error) => {
-          console.error('Keycloak initialization failed', error);
+          logger.error('Keycloak initialization failed', error);
           reject(error);
         });
     });
@@ -121,6 +123,13 @@ export class KeycloakService {
       return Promise.reject('Keycloak not initialized');
     }
     return this.keycloak.login(options);
+  }
+
+  createLoginUrl(options?: KeycloakLoginOptions): string {
+    if (!this.keycloak) {
+      throw new Error('Keycloak not initialized');
+    }
+    return this.keycloak.createLoginUrl(options);
   }
 
   logout(redirectUri?: string): Promise<void> {

@@ -42,7 +42,7 @@ public class PerformanceDataFacilityDataUploadCreateCsvService {
             }
         } catch (Exception e) {
             log.error("Cannot generate csv for task {}", requestTask.getId(), e);
-            taskPayload.setErrorMessage(PerformanceDataFacilityUploadErrorType.CSV_FAILED);
+            taskPayload.setErrorMessage(PerformanceDataFacilityUploadErrorType.SUBMISSION_RESULTS_CSV_FAILED);
         }
     }
 }

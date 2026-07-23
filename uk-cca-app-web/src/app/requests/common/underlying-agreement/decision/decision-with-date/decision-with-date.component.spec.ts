@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { click, getByLabelText } from '@testing';
 
 import { mockRequestTaskItemUNAReviewDTO } from '../../testing';
@@ -31,14 +32,7 @@ class TestComponent {
 describe('decision with date test', () => {
   let fixture: ComponentFixture<TestComponent>;
 
-  const route: any = {
-    snapshot: {
-      params: {
-        facilityId: 'ADS_53-F00007',
-      },
-      pathFromRoot: [],
-    },
-  };
+  const route = new ActivatedRouteStub({ facilityId: 'ADS_53-F00007' });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

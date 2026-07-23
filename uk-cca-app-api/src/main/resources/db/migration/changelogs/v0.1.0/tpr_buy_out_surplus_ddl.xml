@@ -330,5 +330,36 @@
         </rollback>
     </changeSet>
     
+    <changeSet id="0_1_0_UPDATE_tpr_buy_out_surplus_processed_data_add_resource_type_column" author="apostolouk@unisystems.gr">
+        <addColumn tableName="tpr_buy_out_surplus_processed_data">
+            <column name="performance_data_resource_type" type="varchar(64)" value="ACCOUNT" remarks="Defines the resource of the performance data (ACCOUNT or FACILITY)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="tpr_buy_out_surplus_processed_data">
+                <column name="performance_data_resource_type"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_UPDATE_tpr_buy_out_surplus_processed_data_change_unique_constraint" author="apostolouk@unisystems.gr">
+	    <dropUniqueConstraint
+	            tableName="tpr_buy_out_surplus_processed_data"
+	            constraintName="tpr_buy_out_surplus_processed_data_performance_data_id_key"/>
+	    <addUniqueConstraint
+	            tableName="tpr_buy_out_surplus_processed_data"
+	            columnNames="performance_data_id, performance_data_resource_type"
+	            constraintName="tpr_buy_out_surplus_processed_data_perf_data_id_resource_type_uk"/>
+	    <rollback>
+	        <dropUniqueConstraint
+	                tableName="tpr_buy_out_surplus_processed_data"
+	                constraintName="tpr_buy_out_surplus_processed_data_perf_data_id_resource_type_uk"/>
+	        <addUniqueConstraint
+	                tableName="tpr_buy_out_surplus_processed_data"
+	                columnNames="performance_data_id"
+	                constraintName="tpr_buy_out_surplus_processed_data_performance_data_id_key"/>
+	    </rollback>
+	</changeSet>
 
 </databaseChangeLog>

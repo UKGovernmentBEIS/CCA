@@ -29,6 +29,8 @@ function createPayload(
         usedReportingMechanism: true,
         totalFixedEnergy: '1000',
         baselineVariableEnergy: '200',
+        totalThroughput: '10000',
+        throughputUnit: 'tonnes',
         variableEnergyType: 'TOTALS',
         improvements: {
           TP7: '8',
@@ -139,6 +141,8 @@ describe('SubmitResultsComponent', () => {
 
     expect(html).toContain('View baseline details');
     expect(html).toContain('Details of baseline data');
+    expect(html).toContain('Total baseline throughput (tonnes)');
+    expect(html).not.toContain('Total throughput (kWh)');
     expect(html).toContain('Targets');
   });
 });

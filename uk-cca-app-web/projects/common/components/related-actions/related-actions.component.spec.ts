@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, Route } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Route } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { RequestTaskActionProcessDTO } from 'cca-api';
@@ -86,7 +86,7 @@ function constructRoute(withChangeAssignee = false): Partial<ActivatedRoute> {
       get routeConfig() {
         return { path: '' };
       },
-      get parent(): any {
+      get parent(): ActivatedRouteSnapshot {
         return {
           get routeConfig(): Route | null {
             return {
@@ -94,8 +94,8 @@ function constructRoute(withChangeAssignee = false): Partial<ActivatedRoute> {
               children: [{ path: withChangeAssignee ? 'change-assignee' : '' }],
             };
           },
-        };
+        } as unknown as ActivatedRouteSnapshot;
       },
-    } as any,
+    } as unknown as ActivatedRouteSnapshot,
   };
 }

@@ -1,6 +1,6 @@
 import { RequestActionState } from '@netz/common/store';
 
-import { RequestActionDTO } from 'cca-api';
+import { RequestActionDTO, RequestActionPayload } from 'cca-api';
 
 const mockCompletedRequestActionDTO: RequestActionDTO = {
   id: 100,
@@ -25,7 +25,7 @@ const mockCompletedRequestActionDTO: RequestActionDTO = {
       files: [],
     },
     reviewAttachments: {},
-  } as any,
+  } as RequestActionPayload,
   requestId: 'AIC.TD00041-UNA',
   requestType: 'UNDERLYING_AGREEMENT_VARIATION',
   requestAccountId: 1,

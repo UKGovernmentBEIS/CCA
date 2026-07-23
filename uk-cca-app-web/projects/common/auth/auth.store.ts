@@ -55,6 +55,6 @@ export class AuthStore extends SignalStore<AuthState> {
   }
 
   reset(): void {
-    this.setState(initialState);
+    super.reset();
   }
 }

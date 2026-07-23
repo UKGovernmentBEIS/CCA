@@ -36,6 +36,12 @@ describe('ErrorSummaryComponent', () => {
     expect(message?.textContent).toContain('Test error message');
   });
 
+  it('should focus the error summary when displayed', () => {
+    const errorSummary = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.govuk-error-summary');
+
+    expect(document.activeElement).toBe(errorSummary);
+  });
+
   it('should render link when link and/or linkText is provided', () => {
     const link = (fixture.nativeElement as HTMLElement).querySelector('a');
     expect(link).toBeTruthy();

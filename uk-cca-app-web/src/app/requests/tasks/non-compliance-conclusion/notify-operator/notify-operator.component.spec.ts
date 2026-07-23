@@ -14,6 +14,8 @@ import {
   CaExternalContactsService,
   NonComplianceConclusionSubmitRequestTaskPayload,
   RegulatorAuthoritiesService,
+  RequestInfoDTO,
+  RequestTaskDTO,
   TasksService,
 } from 'cca-api';
 
@@ -92,8 +94,8 @@ describe('ConclusionNotifyOperatorComponent', () => {
         id: 123,
         type: 'NON_COMPLIANCE_CONCLUSION_SUBMIT',
         payload: withdrawPayload,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
+      } as RequestTaskDTO,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
     store.setIsEditable(true);
 

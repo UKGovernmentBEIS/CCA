@@ -18,7 +18,7 @@ describe('EmailsComponent', () => {
   let component: EmailsComponent;
   let fixture: ComponentFixture<EmailsComponent>;
   let notificationTemplatesService: Mocked<Partial<NotificationTemplatesService>>;
-  let routerMock: any;
+  let routerMock: Router;
 
   beforeEach(async () => {
     notificationTemplatesService = {

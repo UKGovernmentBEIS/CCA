@@ -1,8 +1,8 @@
 package uk.gov.cca.api.workflow.request.flow.performancedata.common.utils;
 
 import lombok.experimental.UtilityClass;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 
 import java.time.LocalDate;
 

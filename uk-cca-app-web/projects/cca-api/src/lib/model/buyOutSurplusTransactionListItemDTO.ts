@@ -17,12 +17,6 @@ export interface BuyOutSurplusTransactionListItemDTO {
   transactionCode?: string;
   creationDate?: string;
   paymentStatus?:
-    | 'AWAITING_PAYMENT'
-    | 'AWAITING_REFUND'
-    | 'PAID'
-    | 'REFUNDED'
-    | 'NOT_REQUIRED'
-    | 'UNDER_APPEAL'
-    | 'TERMINATED';
+    'AWAITING_PAYMENT' | 'AWAITING_REFUND' | 'PAID' | 'REFUNDED' | 'NOT_REQUIRED' | 'UNDER_APPEAL' | 'TERMINATED';
   buyOutFee?: string;
 }

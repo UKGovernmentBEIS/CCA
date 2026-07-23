@@ -24,6 +24,6 @@ export class TimelineItemComponent {
   protected readonly route = inject(ActivatedRoute);
 
   protected readonly action = input<RequestActionInfoDTO>(undefined);
-  protected readonly link = input<any[]>(undefined);
-  protected readonly state = input<any>(undefined);
+  protected readonly link = input<(string | number)[] | undefined>(undefined);
+  protected readonly state = input<Record<string, unknown> | undefined>(undefined);
 }

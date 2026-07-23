@@ -55,6 +55,7 @@ describe('TimelineItemLinkPipe', () => {
 
       'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED',
       'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED',
+      'PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED',
     ];
 
     noLinkActionTypes.forEach((type) => {

@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.flow.common.actionhandler.RequestSectorCreateActionHandler;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaRequestParams;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.config.PerformanceAccountTemplateConfig;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -20,6 +21,7 @@ import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEm
 
 import java.time.Year;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -27,11 +29,13 @@ public class FacilityPerformanceAccountTemplateDataUploadCreateActionHandler imp
 
     private final StartProcessRequestService startProcessRequestService;
     private final SectorReferenceDetailsService sectorReferenceDetailsService;
+    private final PerformanceAccountTemplateConfig performanceAccountTemplateConfig;
 
     @Override
     public String process(Long sectorId, RequestCreateActionEmptyPayload payload, AppUser appUser) {
         SectorAssociationInfo sectorAssociationInfo = sectorReferenceDetailsService.getSectorAssociationInfo(sectorId);
-        Year targetYear = Year.now().minusYears(1);
+        Year targetYear = Optional.ofNullable(performanceAccountTemplateConfig.getTargetYear())
+                .orElse(Year.now().minusYears(1));
 
         // Create process for performance data upload
         CcaRequestParams requestParams = CcaRequestParams.builder()

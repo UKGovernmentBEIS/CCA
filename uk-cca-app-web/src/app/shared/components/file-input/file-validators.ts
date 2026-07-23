@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 
 import { GovukValidators, MessageValidationErrors, MessageValidatorFn } from '@netz/govuk-components';
 
+import { FileType } from '../file-input/file-type.enum';
 import { FileUploadEvent } from '../file-input/file-upload-event';
 
 export class FileValidators {
@@ -39,6 +40,8 @@ export class FileValidators {
   }
 
   static validContentTypes(types: string[], message = 'has an invalid type'): MessageValidatorFn {
+    const typeSet = new Set(types);
+
     return ({ value }: { value: FileUploadEvent | FileUploadEvent[] }) => {
       const valueIsArray = value && value instanceof Array && value.length > 0;
       const values: FileUploadEvent[] = (valueIsArray ? value : [value]) as FileUploadEvent[];
@@ -46,7 +49,7 @@ export class FileValidators {
       const messages = values.reduce((acc, event, idx) => {
         const fileType = event?.file?.type;
 
-        const errorMessage = fileType && !types.includes(fileType) ? `${event.file.name} ` + message : null;
+        const errorMessage = fileType && !typeSet.has(fileType) ? `${event.file.name} ` + message : null;
         return errorMessage ? { ...acc, [`validContentTypes-${idx}`]: errorMessage } : acc;
       }, {});
 
@@ -100,7 +103,27 @@ export class FileValidators {
   }
 }
 
-export const commonFileValidators: MessageValidatorFn[] = [FileValidators.maxFileSize(20), FileValidators.notEmpty()];
+const commonAcceptedFileTypes = [
+  FileType.PDF,
+  FileType.DOCX,
+  FileType.DOC,
+  FileType.XLSX,
+  FileType.XLS,
+  FileType.PPTX,
+  FileType.PPT,
+  FileType.JPEG,
+  FileType.JPG,
+  FileType.PNG,
+  FileType.CSV,
+  FileType.TXT,
+];
+
+export const commonFileValidators: MessageValidatorFn[] = [
+  FileValidators.maxFileSize(20),
+  FileValidators.notEmpty(),
+  FileValidators.validContentTypes(commonAcceptedFileTypes),
+];
+
 export const requiredFileValidator = GovukValidators.required('Select a file');
 
 /**

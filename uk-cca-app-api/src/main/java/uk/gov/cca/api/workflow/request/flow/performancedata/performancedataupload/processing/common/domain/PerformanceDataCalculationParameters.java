@@ -20,6 +20,9 @@ import java.util.Map;
 public class PerformanceDataCalculationParameters {
 
     private PerformanceDataTargetPeriodType type;
+    
+    // Buy out cost for this target period
+    private Integer buyOutCost;
 
     // Energy/carbon unit
     private AgreementCompositionType targetType;

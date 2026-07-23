@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { RequestActionStore } from '@netz/common/store';
+import { RequestActionState, RequestActionStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getSummaryListData } from '@testing';
 
@@ -34,8 +34,7 @@ describe('NonComplianceNoticeOfIntentPeerReviewerDecisionComponent', () => {
           },
         },
       },
-    } as any);
-
+    } as RequestActionState);
     fixture = TestBed.createComponent(NonComplianceNoticeOfIntentPeerReviewerDecisionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

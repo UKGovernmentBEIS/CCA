@@ -8,6 +8,8 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { getByText } from '@testing';
 
+import { RequestInfoDTO, RequestTaskDTO, RequestTaskPayload } from 'cca-api';
+
 import { RefreshBaselineDataComponent } from './refresh-baseline-data.component';
 
 describe('RefreshBaselineDataComponent', () => {
@@ -41,9 +43,9 @@ describe('RefreshBaselineDataComponent', () => {
       requestTask: {
         id: 42,
         type: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_APPLICATION',
-        payload: { payloadType: 'EMPTY_PAYLOAD' } as any,
-      } as any,
-      requestInfo: { accountId: 1 } as any,
+        payload: { payloadType: 'EMPTY_PAYLOAD' } as RequestTaskPayload,
+      } as RequestTaskDTO,
+      requestInfo: { accountId: 1 } as RequestInfoDTO,
     });
 
     fixture = TestBed.createComponent(RefreshBaselineDataComponent);
@@ -108,6 +110,33 @@ describe('RefreshBaselineDataComponent', () => {
     component.onRefreshBaselineData();
 
     expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should show the product eligibility error when refresh returns TPRDF1005', () => {
+    tasksApiService.saveRequestTaskAction.mockReturnValue(throwError(() => ({ error: { code: 'TPRDF1005' } })));
+
+    component.onRefreshBaselineData();
+
+    expect(component.isErrorSummaryDisplayed()).toBe(true);
+    expect(component.errorSummaryInfo().message).toBe(
+      'The baseline data for this facility must contain at least one product with a base year equal to the facility base year, and at least one product with a base year less than or equal to the year the report data relates to. You must submit a variation to correct the base year of products in this facility before you can submit your report.',
+    );
+    expect(component.errorSummaryInfo().link).toBe('../../cancel');
+  });
+
+  it('should show the locked reporting error when refresh returns TPRDF1004', () => {
+    tasksApiService.saveRequestTaskAction.mockReturnValue(throwError(() => ({ error: { code: 'TPRDF1004' } })));
+
+    component.onRefreshBaselineData();
+    fixture.detectChanges();
+
+    expect(component.isErrorSummaryDisplayed()).toBe(true);
+    expect(component.errorSummaryInfo().linkText).toBe(
+      'The reporting for this target period must be unlocked before submitting reports or corrections. Contact your regulator to make an unlocking request.',
+    );
+    expect(fixture.nativeElement.textContent).toContain(
+      'The reporting for this target period must be unlocked before submitting reports or corrections. Contact your regulator to make an unlocking request.',
+    );
   });
 
   it('should not display error summary for unknown error codes', () => {

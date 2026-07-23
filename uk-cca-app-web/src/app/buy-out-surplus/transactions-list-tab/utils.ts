@@ -47,7 +47,7 @@ export function extractBuyOutSurplusPaymentStatus(
 export function isPaymentStatus(
   paymentStatus: string | null,
 ): paymentStatus is TransactionsCriteria['buyOutSurplusPaymentStatus'] {
-  return TransactionStatuses.includes(paymentStatus as any);
+  return paymentStatus !== null && (TransactionStatuses as readonly string[]).includes(paymentStatus);
 }
 
 export function extractCriteria(queryParamMap: ParamMap): TransactionsCriteria {

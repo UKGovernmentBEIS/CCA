@@ -1,5 +1,5 @@
 export class BusinessError {
-  link: any[];
+  link: string[];
   linkText: string;
   fragment?: string;
 

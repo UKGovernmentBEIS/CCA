@@ -51,8 +51,8 @@ export class SectorUserInvitationPasswordOnlyComponent {
           of({ url: '../invalid-link', queryParams: { code: res.error.code } }),
         ),
       )
-      .subscribe((result: any) => {
-        if (result?.url) {
+      .subscribe((result) => {
+        if (result && 'url' in result) {
           this.router.navigate([result.url], {
             relativeTo: this.activatedRoute,
             queryParams: result.queryParams,

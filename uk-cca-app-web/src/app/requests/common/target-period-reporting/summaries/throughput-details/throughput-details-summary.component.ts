@@ -11,11 +11,10 @@ import {
   TableComponent,
 } from '@netz/govuk-components';
 import {
-  calculateAdjustedImprovementTargetForProduct,
+  calculateAdjustedImprovementTarget,
   calculateAdjustedThroughput,
   calculateFacilityImprovementTarget,
-  calculateFacilityTargetVariableEnergy,
-  calculateTargetEnergyForProduct,
+  calculateProductTargetEnergy,
   calculateThroughputAdjustmentFactor,
   resolveProductEnergyCarbonIntensity,
 } from '@requests/common';
@@ -102,7 +101,7 @@ export class ThroughputDetailsSummaryComponent {
         let improvementTarget = facilityImprovementTarget;
 
         if (facilityBaseYear && productBaseYear > facilityBaseYear) {
-          improvementTarget = calculateAdjustedImprovementTargetForProduct(
+          improvementTarget = calculateAdjustedImprovementTarget(
             referenceData,
             this.reportType(),
             this.targetPeriodType(),
@@ -116,7 +115,7 @@ export class ThroughputDetailsSummaryComponent {
 
         const baselineEnergyIntensity = resolveProductEnergyCarbonIntensity(product);
 
-        const targetEnergy = calculateTargetEnergyForProduct(
+        const targetEnergy = calculateProductTargetEnergy(
           baselineEnergyIntensity,
           adjustedThroughput,
           improvementTarget,
@@ -131,23 +130,13 @@ export class ThroughputDetailsSummaryComponent {
           throughput: actualThroughput,
           adjustedThroughput,
           targetEnergy,
-          intensityTimesAdjustedThroughput: baselineEnergyIntensity * adjustedThroughput,
         };
       });
   });
 
-  protected readonly totalTargetVariableEnergy = computed(() => {
-    const sumOfIntensityTimesAdjustedThroughput = this.tableRows().reduce(
-      (sum, row) => sum + (row.intensityTimesAdjustedThroughput ?? 0),
-      0,
-    );
-
-    return calculateFacilityTargetVariableEnergy(
-      sumOfIntensityTimesAdjustedThroughput,
-      calculateFacilityImprovementTarget(this.referenceData(), this.reportType(), this.targetPeriodType()),
-      this.tableRows().length > 0,
-    );
-  });
+  protected readonly totalTargetVariableEnergy = computed(() =>
+    this.tableRows().reduce((sum, row) => sum + (row.targetEnergy ?? 0), 0),
+  );
 
   protected readonly shouldShowPagination = computed(() => this.tableRows().length > 10);
 

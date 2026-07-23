@@ -7,44 +7,45 @@ import { ActivatedRouteSnapshot, convertToParamMap, Data, ParamMap, Params, Rout
 export class ActivatedRouteSnapshotStub implements ActivatedRouteSnapshot {
   // Use a ReplaySubject to share previous values with subscribers
   // and pump new values into the `paramMap` observable
-  paramMap: ParamMap;
-  readonly queryParamMap: ParamMap;
-  readonly data: Data;
-  component: any | string | null;
-  fragment: string;
-  outlet: string;
-  params: Params;
-  queryParams: Params;
-  readonly routeConfig: Route | null;
+  paramMap!: ParamMap;
+  readonly queryParamMap!: ParamMap;
+  readonly data!: Data;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- implements Angular's ActivatedRouteSnapshot.component: Type<any> | string | null
+  component: any | string | null = null;
+  fragment!: string;
+  outlet!: string;
+  params!: Params;
+  queryParams!: Params;
+  readonly routeConfig: Route | null = null;
   title = '';
 
   constructor(initialParams?: Params, initialQueryParams?: Params, resolves?: Data) {
-    this.paramMap = convertToParamMap(initialParams);
-    this.queryParamMap = convertToParamMap(initialQueryParams);
-    this.data = resolves;
+    this.paramMap = convertToParamMap(initialParams ?? {});
+    this.queryParamMap = convertToParamMap(initialQueryParams ?? {});
+    this.data = resolves ?? {};
+    this.fragment = '';
+    this.outlet = '';
+    this.params = initialParams ?? {};
+    this.queryParams = initialQueryParams ?? {};
   }
 
   get children(): ActivatedRouteSnapshot[] {
     return [];
   }
 
-  get firstChild(): ActivatedRouteSnapshot | null {
-    return undefined;
-  }
+  readonly firstChild: ActivatedRouteSnapshot | null = null;
 
-  get parent(): ActivatedRouteSnapshot | null {
-    return undefined;
-  }
+  readonly parent: ActivatedRouteSnapshot | null = null;
 
   get pathFromRoot(): ActivatedRouteSnapshot[] {
     return [];
   }
 
   get root(): ActivatedRouteSnapshot {
-    return undefined;
+    return this as unknown as ActivatedRouteSnapshot;
   }
 
   get url(): UrlSegment[] {
-    return undefined;
+    return [];
   }
 }

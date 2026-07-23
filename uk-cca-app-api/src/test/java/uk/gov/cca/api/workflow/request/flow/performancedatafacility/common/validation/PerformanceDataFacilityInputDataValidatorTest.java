@@ -205,7 +205,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_SRM_DATA.getMessage());
+                .SRM_DATA_DOES_NOT_MATCH_USE_SRM_SELECTION.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 
@@ -236,7 +236,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_SRM_DATA.getMessage());
+                .SRM_DATA_DOES_NOT_MATCH_USE_SRM_SELECTION.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 
@@ -307,7 +307,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_VARIABLE_ENERGY_DATA.getMessage());
+                .VARIABLE_ENERGY_DATA_DOES_NOT_MATCH_TYPE.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 
@@ -335,8 +335,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactlyInAnyOrder(
-                PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.INVALID_VARIABLE_ENERGY_DATA.getMessage(),
-                PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.INVALID_PRODUCTS.getMessage());
+                PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.VARIABLE_ENERGY_DATA_DOES_NOT_MATCH_TYPE.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 
@@ -360,7 +359,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_VARIABLE_ENERGY_DATA.getMessage());
+                .VARIABLE_ENERGY_DATA_DOES_NOT_MATCH_TYPE.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 
@@ -391,7 +390,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_VARIABLE_ENERGY_DATA.getMessage());
+                .VARIABLE_ENERGY_DATA_DOES_NOT_MATCH_TYPE.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 
@@ -418,7 +417,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_VARIABLE_ENERGY_DATA.getMessage());
+                .VARIABLE_ENERGY_DATA_DOES_NOT_MATCH_TYPE.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 
@@ -449,7 +448,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_PRODUCTS.getMessage());
+                .PRODUCTS_DO_NOT_MATCH_UNDERLYING_AGREEMENT.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 
@@ -480,7 +479,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
         // Verify
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
-                .INVALID_PRODUCTS.getMessage());
+                .PRODUCTS_DO_NOT_MATCH_UNDERLYING_AGREEMENT.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 

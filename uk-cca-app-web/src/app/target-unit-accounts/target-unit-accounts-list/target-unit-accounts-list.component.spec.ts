@@ -53,7 +53,7 @@ describe('TargetUnitAccountsListComponent', () => {
 
     Array.from(rows)
       .slice(1)
-      .forEach((row: any, index: number) => {
+      .forEach((row: HTMLTableRowElement, index: number) => {
         const cells = row.querySelectorAll('td');
         const account = mockAccountSearchResults.accounts[index];
 

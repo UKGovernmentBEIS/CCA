@@ -20,7 +20,7 @@ import {
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 import { underlyingAgreementVariationReviewQuery } from '@requests/common';
-import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
+import { HighlightDiffComponent, SummaryComponent, UuidFilePair, WizardStepComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -120,7 +120,7 @@ export class AuthorisationAdditionalEvidenceDecisionComponent {
       type: this.form.value.type,
       details: {
         notes: this.form.value.notes,
-        files: this.form.value.files?.map((f: any) => f.uuid) || [],
+        files: this.form.value.files?.map((f: UuidFilePair) => f.uuid) || [],
       },
     };
 

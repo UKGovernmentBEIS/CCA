@@ -54,7 +54,7 @@ export class TemplateSearchComponent {
   protected readonly templateType = input.required<'document' | 'email'>();
   protected readonly fragment = input.required<string>();
 
-  protected readonly state = signal<{ templates: any[]; total: number }>({
+  protected readonly state = signal<{ templates: NotificationTemplateDTO[] | DocumentTemplateDTO[]; total: number }>({
     templates: [],
     total: 0,
   });

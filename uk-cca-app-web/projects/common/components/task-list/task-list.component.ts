@@ -26,7 +26,7 @@ import { StatusTagColorPipe, StatusTagTextPipe } from '@netz/common/pipes';
 
               @if (task.hint) {
                 <div class="govuk-task-list__hint">
-                  <span [innerHTML]="truncateText(task.hint)"></span>
+                  <span>{{ truncateText(task.hint) }}</span>
                 </div>
               }
             </div>

@@ -9,8 +9,8 @@ import { NonComplianceDetails } from 'cca-api';
 
 export type ProvideDetailsFormModel = FormGroup<{
   nonComplianceType: FormControl<NonComplianceDetails['nonComplianceType']>;
-  nonCompliantDate: FormControl<NonComplianceDetails['nonCompliantDate']>;
-  compliantDate: FormControl<NonComplianceDetails['compliantDate']>;
+  nonCompliantDate: FormControl<Date | string | null>;
+  compliantDate: FormControl<Date | string | null>;
   comment: FormControl<string>;
 }>;
 

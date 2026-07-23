@@ -12,7 +12,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { click, getByTestId, getByText } from '@testing';
 import { Mocked } from 'vitest';
 
-import { PerformanceDataReportingViewInfoService, TasksService } from 'cca-api';
+import { PerformanceDataReportingViewInfoService, RequestTaskItemDTO, RequestTaskPayload, TasksService } from 'cca-api';
 
 import { TprCsvUploadProcessComponent } from './tpr-csv-upload-process.component';
 
@@ -64,8 +64,7 @@ describe('TprCsvUploadProcessComponent', () => {
           processingStatus: 'NOT_STARTED_YET',
         },
       },
-    } as any);
-
+    } as RequestTaskItemDTO);
     authStore = TestBed.inject(AuthStore);
     authStore.setUserState({ userId: '7b91199c-4770-4d4b-a0ed-d6d9667de157', roleType: 'SECTOR_USER' });
 
@@ -103,7 +102,7 @@ describe('TprCsvUploadProcessComponent', () => {
     store.setPayload({
       performanceDataUpload: { targetPeriodType: 'TP7', reportType: 'FINAL', files: [] },
       processingStatus: 'IN_PROGRESS',
-    } as any);
+    } as RequestTaskPayload);
 
     fixture.detectChanges();
 
@@ -116,7 +115,7 @@ describe('TprCsvUploadProcessComponent', () => {
     store.setPayload({
       performanceDataUpload: { targetPeriodType: 'TP7', reportType: 'FINAL', files: [] },
       processingStatus: 'IN_PROGRESS',
-    } as any);
+    } as RequestTaskPayload);
 
     fixture.detectChanges();
 

@@ -10,6 +10,7 @@ public enum CcaErrorCode implements NetzErrorCode {
 
     /** Codes for Target period errors. */
     TARGET_PERIOD_YEAR_NOT_FOUND("TPR1001", HttpStatus.BAD_REQUEST, "Target period year not found", true),
+    INVALID_TARGET_PERIOD_SCHEME_VERSION("TPR1002", HttpStatus.BAD_REQUEST, "Target period scheme version is not updatable", true),
     /** Codes for Authority errors. */
     AUTHORITY_USER_NOT_RELATED_TO_SECTOR_ASSOCIATION("CCAAUTHORITY1001", HttpStatus.BAD_REQUEST, "User is not related to sector association", true),
     AUTHORITY_USER_IS_NOT_SECTOR_USER("CCAAUTHORITY1004", HttpStatus.BAD_REQUEST, "User is not sector user", true),
