@@ -1,6 +1,7 @@
 package uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -143,7 +144,7 @@ public class PerformanceDataFacilityValidator {
     public BusinessValidationResult validateFacilityProductsEligibility(TargetPeriodYear targetPeriodYear, PerformanceDataFacilityBaselineAndTargets baselineAndTargets) {
         final List<ProductVariableEnergyConsumptionData> products = baselineAndTargets.getVariableEnergyConsumptionDataByProduct();
         final VariableEnergyDepictionType energyType = baselineAndTargets.getVariableEnergyType();
-        final int facilityBaselineYear = baselineAndTargets.getBaselineDate().getYear();
+        final Year facilityBaselineYear = baselineAndTargets.getBaselineYear();
 
         List<PerformanceDataFacilityViolation> violations = new ArrayList<>();
 
@@ -151,7 +152,7 @@ public class PerformanceDataFacilityValidator {
         	if(products.isEmpty() 
                 || products.stream().allMatch(p -> p.getBaselineYear().getValue() > targetPeriodYear.getTargetYear().getValue())) {
         		violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE_PRODUCTS));
-        	} else if(products.stream().noneMatch(p -> p.getBaselineYear().getValue() == facilityBaselineYear)){
+        	} else if(products.stream().noneMatch(p -> p.getBaselineYear().equals(facilityBaselineYear))) {
         		violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_PRODUCT_WITH_FACILITY_BASE_YEAR_DOES_NOT_EXIST));
         	}
         }

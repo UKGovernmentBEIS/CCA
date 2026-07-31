@@ -2,6 +2,7 @@ import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, UrlTree } from '@ang
 
 export function paymentStatusRedirectGuard(route: ActivatedRouteSnapshot): boolean | UrlTree {
   const paymentStatus = route.queryParamMap.get('buyOutSurplusPaymentStatus');
-  if (!paymentStatus) return createUrlTreeFromSnapshot(route, [], { buyOutSurplusPaymentStatus: 'AWAITING_PAYMENT' });
+  if (!paymentStatus)
+    return createUrlTreeFromSnapshot(route, [], { buyOutSurplusPaymentStatus: 'AWAITING_PAYMENT' }, route.fragment);
   return true;
 }

@@ -7,6 +7,7 @@ import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.c
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.validation.FacilityPerformanceAccountTemplateDataUploadValidator;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class FacilityPerformanceAccountTemplateDataUploadService {
+
+    private final FacilityPerformanceAccountTemplateDataUploadValidator facilityPerformanceAccountTemplateDataUploadValidator;
 
     @Transactional
     public void process(RequestTask requestTask, FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload taskActionPayload,
@@ -25,7 +28,8 @@ public class FacilityPerformanceAccountTemplateDataUploadService {
 
         taskPayload.setPerformanceAccountTemplateDataUpload(taskActionPayload.getPerformanceAccountTemplateDataUpload());
 
-        // TODO: Validate
+        // Validate
+        facilityPerformanceAccountTemplateDataUploadValidator.validate(taskPayload, submissionDate.toLocalDate());
 
         // TODO: Extract CSV data
 

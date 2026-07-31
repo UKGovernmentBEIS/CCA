@@ -34,7 +34,7 @@ public class PerformanceDataFacilityNonStandardFuel {
     private BigDecimal deliveredEnergy;
 
     @NotNull
-    @Positive
+    @PositiveOrZero
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal primaryEnergy;
 }

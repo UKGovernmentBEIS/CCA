@@ -19,20 +19,19 @@
       Baseline {{ isCarbonMeasurement() ? 'carbon dioxide (CO2)' : 'energy' }} intensity
     </h3>
     <p class="govuk-!-margin-top-1">
-      {{ baselineEnergyIntensity() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}/{{
-        referenceData()?.baselineAndTargets?.throughputUnit
-      }}
+      {{ displayRounded(baselineEnergyIntensity()) | number: '1.0-7' }}
+      {{ measurementUnit() | measurementTypeToUnit }}/{{ referenceData()?.baselineAndTargets?.throughputUnit }}
     </p>
   }
 
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">{{ targetLabel() }}</h3>
-  <p class="govuk-!-margin-top-1">{{ improvementTarget() | percent: '1.0-3' }}</p>
+  <p class="govuk-!-margin-top-1">{{ improvementTarget().toNumber() | percent: '1.0-3' }}</p>
 
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Actual throughput</h3>
   <div cca-text-input formControlName="actualThroughput" class="govuk-!-width-one-third"></div>
 
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Adjusted throughput</h3>
-  <p class="govuk-!-margin-top-1">{{ adjustedThroughput() | number }}</p>
+  <p class="govuk-!-margin-top-1">{{ adjustedThroughput()?.toNumber() | number }}</p>
 
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Throughput unit</h3>
   <p class="govuk-!-margin-top-1">
@@ -44,7 +43,7 @@
       Total target variable {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }}
     </h3>
     <p class="govuk-!-margin-top-1">
-      {{ targetVariableEnergy() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}
+      {{ displayRounded(targetVariableEnergy()) | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}
     </p>
   }
 

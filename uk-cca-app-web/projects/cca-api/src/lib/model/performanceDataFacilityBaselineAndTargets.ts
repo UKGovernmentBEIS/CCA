@@ -13,6 +13,7 @@ import { ProductVariableEnergyConsumptionData } from './productVariableEnergyCon
 
 export interface PerformanceDataFacilityBaselineAndTargets {
   baselineDate?: string;
+  baselineYear?: number;
   isTwelveMonths?: boolean;
   energyCarbonFactor?: string;
   measurementType?: 'ENERGY_KWH' | 'ENERGY_MWH' | 'ENERGY_GJ' | 'CARBON_KG' | 'CARBON_TONNE';

@@ -2,8 +2,10 @@ package uk.gov.cca.api.web.config.swagger;
 
 import org.springframework.stereotype.Component;
 
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.common.domain.BuyOutSurplusFacilityRunRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.processing.domain.BuyOutSurplusFacilityAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
@@ -36,6 +38,9 @@ public class RequestMetadataSchemasProvider extends SwaggerSchemasAbstractProvid
         // CCA3 Performance Account Template Upload
         addResolvedShemas(FacilityPerformanceAccountTemplateDataUploadRequestMetadata.class.getSimpleName(), FacilityPerformanceAccountTemplateDataUploadRequestMetadata.class);
         addResolvedShemas(FacilityPerformanceAccountTemplateProcessingRequestMetadata.class.getSimpleName(), FacilityPerformanceAccountTemplateProcessingRequestMetadata.class);
+        // Buy Out Surplus Facility
+        addResolvedShemas(BuyOutSurplusFacilityRunRequestMetadata.class.getSimpleName(), BuyOutSurplusFacilityRunRequestMetadata.class);
+        addResolvedShemas(BuyOutSurplusFacilityAccountProcessingRequestMetadata.class.getSimpleName(), BuyOutSurplusFacilityAccountProcessingRequestMetadata.class);
     }
     
 }

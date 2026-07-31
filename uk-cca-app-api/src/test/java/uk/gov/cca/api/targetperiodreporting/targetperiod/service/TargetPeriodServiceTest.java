@@ -42,33 +42,33 @@ class TargetPeriodServiceTest {
     private TargetPeriodRepository repository;
 
     @Test
-    void getTargetPeriodDetailsBySchemeVersion() {
+    void getTargetPeriodDetailsBySchemeVersionAndStartDateDesc() {
         final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final TargetPeriod targetPeriod = TargetPeriod.builder().id(1L).build();
 
-        when(repository.findAllBySchemeVersion(schemeVersion)).thenReturn(List.of(targetPeriod));
+        when(repository.findAllBySchemeVersionOrderByStartDateDesc(schemeVersion)).thenReturn(List.of(targetPeriod));
 
         // Invoke
-        List<TargetPeriodDetailsDTO> result = service.getTargetPeriodDetailsBySchemeVersion(schemeVersion);
+        List<TargetPeriodDetailsDTO> result = service.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(schemeVersion);
 
         // Verify
         assertThat(result).containsExactly(TargetPeriodDetailsDTO.builder().id(1L).build());
-        verify(repository).findAllBySchemeVersion(schemeVersion);
+        verify(repository).findAllBySchemeVersionOrderByStartDateDesc(schemeVersion);
     }
     
     @Test
-    void getTargetPeriodBuyOutDetailsBySchemeVersion() {
+    void getTargetPeriodBuyOutDetailsBySchemeVersionAndStartDateDesc() {
         final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final TargetPeriod targetPeriod = TargetPeriod.builder().id(1L).build();
 
-        when(repository.findAllBySchemeVersion(schemeVersion)).thenReturn(List.of(targetPeriod));
+        when(repository.findAllBySchemeVersionOrderByStartDateDesc(schemeVersion)).thenReturn(List.of(targetPeriod));
 
         // Invoke
-        List<TargetPeriodBuyOutDetailsDTO> result = service.getTargetPeriodBuyOutDetailsBySchemeVersion(schemeVersion);
+        List<TargetPeriodBuyOutDetailsDTO> result = service.getTargetPeriodBuyOutDetailsBySchemeVersionAndStartDateDesc(schemeVersion);
 
         // Verify
         assertThat(result).containsExactly(TargetPeriodBuyOutDetailsDTO.builder().id(1L).build());
-        verify(repository).findAllBySchemeVersion(schemeVersion);
+        verify(repository).findAllBySchemeVersionOrderByStartDateDesc(schemeVersion);
     }
 
     @Test
@@ -337,6 +337,36 @@ class TargetPeriodServiceTest {
         // Verify
         assertThat(result).containsExactly(currentTargetPeriod, previousTargetPeriod);
         verify(repository).findByBuyOutStartDateLessThanEqualOrderByBuyOutStartDateDesc(date);
+    }
+    
+    @Test
+    void getPreviousTargetPeriodsInScheme() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final LocalDate date = LocalDate.of(2026, 1, 1);
+
+        final TargetPeriod previousTargetPeriod1 = TargetPeriod.builder()
+                .id(1L)
+                .businessId(TargetPeriodType.TP7)
+                .build();
+
+        final TargetPeriod previousTargetPeriod2 = TargetPeriod.builder()
+                .id(2L)
+                .businessId(TargetPeriodType.TP8)
+                .build();
+
+        when(repository.findBySchemeVersionAndStartDateLessThanEqual(schemeVersion, date))
+        		.thenReturn(List.of(previousTargetPeriod1, previousTargetPeriod2));
+
+        Set<TargetPeriodType> result = service.getTargetPeriodsForSchemeUpTo(schemeVersion, date);
+
+        // Verify
+        assertThat(result)
+                .containsExactlyInAnyOrder(
+                        TargetPeriodType.TP7,
+                        TargetPeriodType.TP8);
+
+        verify(repository).findBySchemeVersionAndStartDateLessThanEqual(
+        		schemeVersion, date);
     }
 }
 

@@ -33,12 +33,11 @@ export class EnergyFuelAmountDetailsSummaryComponent {
   );
   protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
 
-  protected readonly measurementUnit = computed<MeasurementUnit>(
-    () =>
-      MEASUREMENT_TYPE_TO_UNIT_MAP[
-        this.requestTaskStore.select(tprFormQuery.selectReferenceData)()?.baselineAndTargets?.measurementType
-      ],
-  );
+  protected readonly measurementUnit = computed<MeasurementUnit>(() => {
+    const measurementType = this.requestTaskStore.select(tprFormQuery.selectReferenceData)()?.baselineAndTargets
+      ?.measurementType;
+    return measurementType ? MEASUREMENT_TYPE_TO_UNIT_MAP[measurementType] : MEASUREMENT_TYPE_TO_UNIT_MAP.ENERGY_KWH;
+  });
 
   protected readonly usedReportingMechanism = computed(
     () => this.requestTaskStore.select(tprFormQuery.selectReferenceData)()?.baselineAndTargets?.usedReportingMechanism,

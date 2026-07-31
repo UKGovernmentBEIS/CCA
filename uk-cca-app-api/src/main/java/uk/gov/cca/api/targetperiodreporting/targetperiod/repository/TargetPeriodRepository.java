@@ -19,10 +19,13 @@ public interface TargetPeriodRepository extends JpaRepository<TargetPeriod, Long
 
   Optional<TargetPeriod> findByBusinessId(TargetPeriodType businessId);
   
-  List<TargetPeriod> findAllBySchemeVersion(SchemeVersion schemeVersion);
+  List<TargetPeriod> findAllBySchemeVersionOrderByStartDateDesc(SchemeVersion schemeVersion);
 
   List<TargetPeriod> findByBusinessIdIn(Set<TargetPeriodType> businessIds);
   
   List<TargetPeriod> findByBuyOutStartDateLessThanEqualOrderByBuyOutStartDateDesc(LocalDate date);
+
+  List<TargetPeriod> findBySchemeVersionAndStartDateLessThanEqual(
+		SchemeVersion schemeVersion, LocalDate date);
 }
 

@@ -166,33 +166,149 @@ class BuyOutSurplusQueryServiceTest {
                 .findAllAccountIds();
         assertThat(results.getFirst()).isEqualTo(eligibleAccounts.getFirst());
     }
-
+    
     @Test
-    void getAllExcludedEligibleAccountsByTargetPeriod() {
-
+    void getAllEligibleAccountsByTargetPeriod_facilityPerformanceData() {
         final long accountId = 999L;
         final String accountName = "name";
-        final String accountBusinessId= "businessId";
-        final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
+        final String accountBusinessId = "businessId";
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final TargetUnitAccountBusinessInfoDTO eligibleAccount =
+                TargetUnitAccountBusinessInfoDTO.builder()
+                        .accountId(accountId)
+                        .businessId(accountBusinessId)
+                        .name(accountName)
+                        .build();
+        final TargetPeriod targetPeriod = TargetPeriod.builder()
+                .businessId(targetPeriodType)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .startDate(LocalDate.of(2026, 1, 1))
+                .secondaryReportingStartDate(LocalDate.now().plusDays(10))
+                .build();
 
-        final List<TargetUnitAccountBusinessInfoDTO> eligibleAccounts = List.of(TargetUnitAccountBusinessInfoDTO.builder()
-                .accountId(accountId).businessId(accountBusinessId).name(accountName).build());
+        when(targetPeriodService.findByTargetPeriodType(targetPeriodType))
+                .thenReturn(targetPeriod);
+        when(eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(
+                Set.of(targetPeriodType)))
+                .thenReturn(List.of(eligibleAccount));
+        when(buyOutSurplusExclusionRepository.findAllAccountIds())
+                .thenReturn(List.of());
+
+        final List<TargetUnitAccountBusinessInfoDTO> results =
+                buyOutSurplusQueryService.getAllEligibleAccountsByTargetPeriod(targetPeriodType);
+
+        verify(targetPeriodService, times(1)).findByTargetPeriodType(targetPeriodType);
+        verify(eligibleAccountsCustomRepository, times(1))
+                .findAccountsWithFacilityPerformanceDataPendingBuyOut(Set.of(targetPeriodType));
+        verify(buyOutSurplusExclusionRepository, times(1)).findAllAccountIds();
+        assertThat(results).containsExactly(eligibleAccount);
+    }
+
+    @Test
+    void getAllExcludedEligibleAccountsByTargetPeriod_accountPerformanceData() {
+        final long accountId = 999L;
+        final String accountName = "name";
+        final String accountBusinessId = "businessId";
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
+        final TargetUnitAccountBusinessInfoDTO eligibleAccount =
+                TargetUnitAccountBusinessInfoDTO.builder()
+                        .accountId(accountId)
+                        .businessId(accountBusinessId)
+                        .name(accountName)
+                        .build();
 
         when(eligibleAccountsCustomRepository.findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType))
-                .thenReturn(eligibleAccounts);
-
+                .thenReturn(List.of(eligibleAccount));
         when(buyOutSurplusExclusionRepository.findAllAccountIds())
-                .thenReturn(List.of(eligibleAccounts.getFirst().getAccountId()));
+                .thenReturn(List.of(accountId));
 
-        final List<TargetUnitAccountBusinessInfoDTO> results = buyOutSurplusQueryService.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
+        List<TargetUnitAccountBusinessInfoDTO> results =
+                buyOutSurplusQueryService.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
 
+        verify(eligibleAccountsCustomRepository).findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType);
+        verify(buyOutSurplusExclusionRepository).findAllAccountIds();
+        assertThat(results).containsExactly(eligibleAccount);
+    }
+    
+    @Test
+    void getAllExcludedEligibleAccountsByTargetPeriod_facilityPerformanceData() {
+        final long accountId = 999L;
+        final String accountBusinessId = "businessId";
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final TargetPeriod targetPeriod = TargetPeriod.builder()
+                .businessId(targetPeriodType)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .startDate(LocalDate.of(2026, 1, 1))
+                .secondaryReportingStartDate(LocalDate.of(2100, 1, 1))
+                .build();
 
-        verify(eligibleAccountsCustomRepository, times(1))
-                .findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType);
-        verify(buyOutSurplusExclusionRepository, times(1))
-                .findAllAccountIds();
-        assertThat(results.getFirst()).isEqualTo(eligibleAccounts.getFirst());
+        final TargetUnitAccountBusinessInfoDTO eligibleAccount =
+                TargetUnitAccountBusinessInfoDTO.builder()
+                        .accountId(accountId)
+                        .businessId(accountBusinessId)
+                        .name("name")
+                        .build();
 
+        when(targetPeriodService.findByTargetPeriodType(targetPeriodType))
+                .thenReturn(targetPeriod);
+        when(eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(
+                Set.of(targetPeriodType)))
+                .thenReturn(List.of(eligibleAccount));
+        when(buyOutSurplusExclusionRepository.findAllAccountIds())
+                .thenReturn(List.of(accountId));
+
+        List<TargetUnitAccountBusinessInfoDTO> results =
+                buyOutSurplusQueryService.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
+
+        verify(targetPeriodService).findByTargetPeriodType(targetPeriodType);
+        verify(eligibleAccountsCustomRepository).findAccountsWithFacilityPerformanceDataPendingBuyOut(Set.of(targetPeriodType));
+        verify(buyOutSurplusExclusionRepository).findAllAccountIds();
+        assertThat(results).containsExactly(eligibleAccount);
+    }
+    
+    @Test
+    void getAllExcludedEligibleAccountsByTargetPeriod_facilityPerformanceData_afterSecondaryReportingStartDate() {
+        final long accountId = 999L;
+        final String accountBusinessId = "businessId";
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP8;
+
+        final TargetPeriod targetPeriod = TargetPeriod.builder()
+                .businessId(targetPeriodType)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .startDate(LocalDate.of(2026, 1, 1))
+                .secondaryReportingStartDate(LocalDate.of(2025, 1, 1))
+                .build();
+
+        final Set<TargetPeriodType> applicableTargetPeriods =
+                Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8);
+
+        final TargetUnitAccountBusinessInfoDTO eligibleAccount =
+                TargetUnitAccountBusinessInfoDTO.builder()
+                        .accountId(accountId)
+                        .businessId(accountBusinessId)
+                        .name("name")
+                        .build();
+
+        when(targetPeriodService.findByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(targetPeriodService.getTargetPeriodsForSchemeUpTo(
+                SchemeVersion.CCA_3,
+                LocalDate.of(2026, 1, 1)))
+                .thenReturn(applicableTargetPeriods);
+        when(eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(
+                applicableTargetPeriods))
+                .thenReturn(List.of(eligibleAccount));
+        when(buyOutSurplusExclusionRepository.findAllAccountIds()).thenReturn(List.of(accountId));
+
+        List<TargetUnitAccountBusinessInfoDTO> results =
+                buyOutSurplusQueryService.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
+
+        verify(targetPeriodService).findByTargetPeriodType(targetPeriodType);
+        verify(targetPeriodService).getTargetPeriodsForSchemeUpTo(
+        		SchemeVersion.CCA_3, LocalDate.of(2026, 1, 1));
+        verify(eligibleAccountsCustomRepository)
+                .findAccountsWithFacilityPerformanceDataPendingBuyOut(applicableTargetPeriods);
+        verify(buyOutSurplusExclusionRepository).findAllAccountIds();
+        assertThat(results).containsExactly(eligibleAccount);
     }
     
     @Test

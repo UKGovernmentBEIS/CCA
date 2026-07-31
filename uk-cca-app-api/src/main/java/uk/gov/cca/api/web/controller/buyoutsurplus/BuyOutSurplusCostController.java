@@ -60,7 +60,7 @@ public class BuyOutSurplusCostController {
 			) {
 
 		return new ResponseEntity<>(targetPeriodService
-				.getTargetPeriodBuyOutDetailsBySchemeVersion(schemeVersion), HttpStatus.OK);
+				.getTargetPeriodBuyOutDetailsBySchemeVersionAndStartDateDesc(schemeVersion), HttpStatus.OK);
 	}
 	
 	@PatchMapping("/{tp}")

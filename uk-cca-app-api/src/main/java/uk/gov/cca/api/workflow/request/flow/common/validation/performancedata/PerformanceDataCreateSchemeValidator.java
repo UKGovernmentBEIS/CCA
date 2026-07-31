@@ -18,7 +18,7 @@ public class PerformanceDataCreateSchemeValidator {
     private final TargetPeriodService targetPeriodService;
 
     public boolean isAvailableForScheme(SchemeVersion scheme, LocalDate submissionDate) {
-        List<TargetPeriodDetailsDTO> targetPeriods = targetPeriodService.getTargetPeriodDetailsBySchemeVersion(scheme);
+        List<TargetPeriodDetailsDTO> targetPeriods = targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme);
 
         // Find the min start reporting date for TPs
         Optional<LocalDate> minStartReportingDate = targetPeriods.stream()

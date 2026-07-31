@@ -4,7 +4,8 @@ import { GovukDatePipe } from '@netz/common/pipes';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP } from '@shared/pipes';
 import { Improvement } from '@shared/types';
-import { toNumber } from '@shared/utils';
+import { to7DecimalPlacesNumber, toBigNumber, toNumber } from '@shared/utils';
+import BigNumber from 'bignumber.js';
 
 import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
 
@@ -15,7 +16,7 @@ import { isCarbonMeasurementType, resolveMeasurementUnit } from '../utils';
 type TotalsOnlySummaryDataArgs = {
   referenceData: PerformanceDataFacilityReferenceData;
   performanceData: PerformanceDataFacilityInputData;
-  targetVariableEnergy: number | null;
+  targetVariableEnergy: number | BigNumber | null;
   isEditable: boolean;
 };
 
@@ -83,7 +84,11 @@ export function toTPRBaselineDataDetails(
     .addRow(
       `Total baseline energy for the facility (${MEASUREMENT_TYPE_TO_UNIT_MAP[baselineAndTargets?.measurementType]})`,
       decimalPipe.transform(
-        toNumber(baselineAndTargets?.totalFixedEnergy) + toNumber(baselineAndTargets?.baselineVariableEnergy),
+        to7DecimalPlacesNumber(
+          toBigNumber(baselineAndTargets?.totalFixedEnergy).plus(
+            toBigNumber(baselineAndTargets?.baselineVariableEnergy),
+          ),
+        ),
         '1.0-7',
       ),
     );
@@ -139,7 +144,12 @@ export function toTotalsOnlySummaryData(args: TotalsOnlySummaryDataArgs): Summar
       .addSection('Calculated energy amounts', '../details')
       .addRow(
         `Total target variable ${isCarbonMeasurement ? 'carbon dioxide' : 'energy'} (${measurementUnit})`,
-        decimalPipe.transform(args.targetVariableEnergy, '1.0-7'),
+        decimalPipe.transform(
+          args.targetVariableEnergy instanceof BigNumber
+            ? to7DecimalPlacesNumber(args.targetVariableEnergy)
+            : args.targetVariableEnergy,
+          '1.0-7',
+        ),
       );
   }
 

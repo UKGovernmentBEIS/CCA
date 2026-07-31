@@ -20,7 +20,7 @@ import { NoticeOfIntentPeerReviewStore } from '../+state';
 
       <button govukButton type="button" (click)="onSubmit()" class="govuk-!-margin-top-6">Confirm and complete</button>
 
-      <p class="govuk-body govuk-!-margin-top-6">
+      <p class="govuk-!-margin-top-6">
         <a routerLink="../../../" class="govuk-link">Return to: Peer review notice of intent</a>
       </p>
     </div>

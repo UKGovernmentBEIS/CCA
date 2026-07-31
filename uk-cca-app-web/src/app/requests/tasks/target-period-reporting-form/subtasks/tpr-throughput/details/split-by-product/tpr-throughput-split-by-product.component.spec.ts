@@ -156,7 +156,16 @@ describe('TprThroughputSplitByProductComponent', () => {
   it('should prepopulate actual throughput from saved throughput details', async () => {
     const actualThroughput = component['form'].controls.products.at(0).controls.actualThroughput.value;
 
-    expect(actualThroughput).toBe(321.1234567);
+    expect(actualThroughput).toBe('321.1234567');
+  });
+
+  it('should remain rendered when a product throughput contains invalid characters', () => {
+    const actualThroughput = component['form'].controls.products.at(0).controls.actualThroughput;
+    actualThroughput.setValue('`');
+
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(actualThroughput.invalid).toBe(true);
+    expect(component['productCalculations']()[0].adjustedThroughput.toNumber()).toBe(0);
   });
 
   it('should show the underlying agreement selection hint', () => {
@@ -178,5 +187,132 @@ describe('TprThroughputSplitByProductComponent', () => {
 
     expect(getByText(/Interim target %/, fixture.nativeElement)).toBeTruthy();
     expect(() => getByText(/Improvement target %/, fixture.nativeElement)).toThrow();
+  });
+
+  it('should display baseline energy intensity values with units', () => {
+    // The energy column is the 3rd column (index 2) in the table
+    const rows = fixture.nativeElement.querySelectorAll('tbody tr');
+    const firstRowEnergyCell = rows[0].querySelectorAll('.govuk-table__cell')[2];
+    const secondRowEnergyCell = rows[1].querySelectorAll('.govuk-table__cell')[2];
+
+    // Blue Widgets: 1000 / 1000 = 1, rendered as "1 kWh/tonnes"
+    expect(firstRowEnergyCell.textContent?.replace(/\s+/g, ' ').trim()).toBe('1 kWh/tonnes');
+    // Green Widgets: 2000 / 500 = 4, rendered as "4 kWh/tonnes"
+    expect(secondRowEnergyCell.textContent?.replace(/\s+/g, ' ').trim()).toBe('4 kWh/tonnes');
+  });
+
+  describe('with carbon measurement type', () => {
+    const mockCarbonByProductState = {
+      ...mockByProductState,
+      requestTaskItem: {
+        ...mockByProductState.requestTaskItem,
+        requestTask: {
+          ...mockByProductState.requestTaskItem.requestTask,
+          payload: {
+            ...mockByProductState.requestTaskItem.requestTask.payload,
+            referenceData: {
+              ...(
+                mockByProductState.requestTaskItem.requestTask
+                  .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+              ).referenceData,
+              baselineAndTargets: {
+                ...(
+                  mockByProductState.requestTaskItem.requestTask
+                    .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+                ).referenceData?.baselineAndTargets,
+                measurementType: 'CARBON_TONNE',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    beforeEach(() => {
+      store.setState(mockCarbonByProductState as RequestTaskState);
+      fixture.detectChanges();
+    });
+
+    it('should display CO2e column headers for carbon-based facilities', () => {
+      const headers = fixture.nativeElement.querySelectorAll('thead th');
+      const headerTexts = Array.from(headers).map((th) => (th as HTMLElement).textContent?.trim());
+
+      expect(headerTexts).toContain('Baseline CO2e intensity');
+      expect(headerTexts).toContain('Target CO2e');
+      expect(headerTexts).not.toContain('Baseline energy intensity');
+      expect(headerTexts).not.toContain('Target energy');
+    });
+
+    it('should display carbon dioxide labels in paragraph and heading', () => {
+      const content = fixture.nativeElement.textContent;
+
+      expect(content).toContain('Baseline CO2e intensity');
+      expect(content).toContain('Total target variable carbon dioxide');
+      expect(content).not.toContain('Total target variable energy');
+    });
+  });
+
+  it('should format large baseline energy intensity with comma separators', async () => {
+    // Set up a product with large energy values that would produce a thousand-separator-needing intensity
+    const largeValueState = {
+      ...mockByProductState,
+      requestTaskItem: {
+        ...mockByProductState.requestTaskItem,
+        requestTask: {
+          ...mockByProductState.requestTaskItem.requestTask,
+          payload: {
+            ...mockByProductState.requestTaskItem.requestTask.payload,
+            referenceData: {
+              ...(
+                mockByProductState.requestTaskItem.requestTask
+                  .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+              ).referenceData,
+              baselineAndTargets: {
+                ...(
+                  mockByProductState.requestTaskItem.requestTask
+                    .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+                ).referenceData?.baselineAndTargets,
+                variableEnergyConsumptionDataByProduct: [
+                  {
+                    productName: 'Large Widget',
+                    baselineYear: 2022,
+                    productStatus: 'LIVE',
+                    energy: '1234567',
+                    throughput: '1000',
+                    throughputUnit: 'tonnes',
+                  },
+                ],
+              },
+            },
+            performanceData: {
+              ...(
+                mockByProductState.requestTaskItem.requestTask
+                  .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+              ).performanceData,
+              throughputDetails: {
+                totalTargetVariableEnergy: '0',
+                variableEnergyConsumptionDataByProduct: [
+                  {
+                    productName: 'Large Widget',
+                    actualThroughput: '500',
+                    targetImprovement: '8',
+                    adjustedThroughput: '500',
+                    targetEnergy: '567890',
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    };
+
+    store.setState(largeValueState as RequestTaskState);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    // 1234567 / 1000 = 1234.567, formatted as "1,234.567 kWh/tonnes"
+    const energyCell = fixture.nativeElement.querySelector('tbody tr .govuk-table__cell:nth-child(3)');
+    expect(energyCell.textContent?.replace(/\s+/g, ' ').trim()).toBe('1,234.567 kWh/tonnes');
   });
 });

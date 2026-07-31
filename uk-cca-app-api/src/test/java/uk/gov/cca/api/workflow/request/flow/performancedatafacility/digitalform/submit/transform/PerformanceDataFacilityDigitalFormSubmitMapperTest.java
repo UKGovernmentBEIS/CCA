@@ -32,7 +32,6 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domai
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
@@ -120,6 +119,7 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
 
         // Verify
         assertThat(result).isEqualTo(expected);
+        assertThat(result.getBaselineYear()).isEqualTo(expected.getBaselineYear());
     }
 
     @Test
@@ -196,6 +196,7 @@ class PerformanceDataFacilityDigitalFormSubmitMapperTest {
 
         // Verify
         assertThat(result).isEqualTo(expected);
+        assertThat(result.getBaselineYear()).isEqualTo(expected.getBaselineYear());
     }
 
     @Test

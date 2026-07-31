@@ -713,7 +713,7 @@ class PerformanceDataFacilityValidatorTest {
                 .build();
 
         final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
-        		.baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                 .variableEnergyConsumptionDataByProduct(List.of(
                         ProductVariableEnergyConsumptionData.builder()
@@ -761,7 +761,7 @@ class PerformanceDataFacilityValidatorTest {
                 .build();
 
         final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
-        		.baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
         		.build();
 
         when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
@@ -803,7 +803,7 @@ class PerformanceDataFacilityValidatorTest {
                 .build();
 
         final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
-        		.baselineDate(LocalDate.of(2024, 1, 1))
+                .baselineYear(Year.of(2024))
                 .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                 .variableEnergyConsumptionDataByProduct(List.of(
                         ProductVariableEnergyConsumptionData.builder()
@@ -853,7 +853,7 @@ class PerformanceDataFacilityValidatorTest {
                 .build();
 
         final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
-        		.baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                 .build();
 
@@ -898,7 +898,7 @@ class PerformanceDataFacilityValidatorTest {
                 .build();
 
         final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
-        		.baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
                 .variableEnergyConsumptionDataByProduct(List.of(
                         ProductVariableEnergyConsumptionData.builder()

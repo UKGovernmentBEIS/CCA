@@ -4,7 +4,6 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import { tprFormQuery } from '@requests/common';
-import { toNumber } from '@shared/utils';
 import { CCAGovukValidators } from '@shared/validators';
 
 import { PerformanceDataFacilityProductVariableEnergyData, ProductVariableEnergyConsumptionData } from 'cca-api';
@@ -14,7 +13,7 @@ type ProductRowForm = FormGroup<{
   baselineYear: FormControl<number>;
   energy: FormControl<string>;
   targetImprovement: FormControl<number>;
-  actualThroughput: FormControl<number>;
+  actualThroughput: FormControl<string>;
   throughputUnit: FormControl<string>;
   adjustedThroughput: FormControl<number>;
   targetEnergy: FormControl<number>;
@@ -55,7 +54,7 @@ function createProductRowForm(
     baselineYear: fb.control<number>(product.baselineYear),
     energy: fb.control<string>(product.energy),
     targetImprovement: fb.control<number>(0),
-    actualThroughput: fb.control<number>(toNumber(savedProduct?.actualThroughput), {
+    actualThroughput: fb.control<string>(savedProduct?.actualThroughput ?? '', {
       validators: [
         GovukValidators.required('Enter the actual throughput'),
         GovukValidators.min(0, 'Enter a value equal to or greater than 0'),

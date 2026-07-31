@@ -3,6 +3,8 @@ package uk.gov.cca.api.workflow.request.flow.common.jsonprovider;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.ADMIN_TERMINATION_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_ACCOUNT_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_RUN_REQUEST_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_FACILITY_RUN_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA2_EXTENSION_NOTICE_RUN_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_PAYLOAD;
@@ -38,8 +40,10 @@ import com.fasterxml.jackson.databind.jsontype.NamedType;
 
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusRunRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.common.domain.BuyOutSurplusFacilityRunRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.processing.domain.BuyOutSurplusFacilityAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.common.domain.Cca2ExtensionNoticeRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestPayload;
@@ -119,7 +123,10 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
 
 				new NamedType(FacilityPerformanceAccountTemplateDataUploadRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PAYLOAD),
 				new NamedType(FacilityPerformanceAccountTemplateDataProcessingRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_PAYLOAD),
-				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_PAYLOAD)
+				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_PAYLOAD),
+				
+				new NamedType(BuyOutSurplusFacilityRunRequestPayload.class, BUY_OUT_SURPLUS_FACILITY_RUN_REQUEST_PAYLOAD),
+				new NamedType(BuyOutSurplusFacilityAccountProcessingRequestPayload.class, BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_PAYLOAD)
 		);
 	}
 

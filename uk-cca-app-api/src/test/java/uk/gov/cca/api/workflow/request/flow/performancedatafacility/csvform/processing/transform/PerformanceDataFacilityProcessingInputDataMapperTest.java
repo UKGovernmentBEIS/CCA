@@ -50,6 +50,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -123,6 +124,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -188,6 +190,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -253,6 +256,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -320,6 +324,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -385,6 +390,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -489,6 +495,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -634,6 +641,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -701,6 +709,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -768,6 +777,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -836,6 +846,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -951,6 +962,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1041,6 +1053,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1131,6 +1144,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1214,6 +1228,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1335,6 +1350,7 @@ class PerformanceDataFacilityProcessingInputDataMapperTest {
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(

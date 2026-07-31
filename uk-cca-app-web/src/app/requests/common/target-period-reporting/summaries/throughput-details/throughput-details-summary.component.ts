@@ -16,11 +16,13 @@ import {
   calculateFacilityImprovementTarget,
   calculateProductTargetEnergy,
   calculateThroughputAdjustmentFactor,
+  isCarbonMeasurementType,
   resolveProductEnergyCarbonIntensity,
 } from '@requests/common';
 import { PaginationComponent } from '@shared/components';
-import { MeasurementTypeToUnitPipe } from '@shared/pipes';
-import { toNumber } from '@shared/utils';
+import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementTypeToUnitPipe } from '@shared/pipes';
+import { to7DecimalPlacesNumber } from '@shared/utils';
+import BigNumber from 'bignumber.js';
 
 import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
 
@@ -54,17 +56,27 @@ export class ThroughputDetailsSummaryComponent {
 
   protected readonly measurementUnit = computed(() => this.referenceData()?.baselineAndTargets?.measurementType);
 
+  protected readonly isCarbonMeasurement = computed(() =>
+    isCarbonMeasurementType(MEASUREMENT_TYPE_TO_UNIT_MAP[this.measurementUnit()]),
+  );
+
   protected readonly tableColumns: Signal<GovukTableColumn[]> = computed(() => [
     { field: 'productName', header: 'Product name' },
     { field: 'baselineYear', header: 'Baseline year' },
-    { field: 'energy', header: 'Baseline energy intensity' },
+    {
+      field: 'energy',
+      header: this.isCarbonMeasurement() ? 'Baseline CO2e intensity' : 'Baseline energy intensity',
+    },
     {
       field: 'improvementTarget',
       header: this.reportType() === 'INTERIM' ? 'Interim target %' : 'Improvement target %',
     },
     { field: 'throughput', header: 'Actual throughput' },
     { field: 'adjustedThroughput', header: 'Adjusted throughput' },
-    { field: 'targetEnergy', header: 'Target energy' },
+    {
+      field: 'targetEnergy',
+      header: this.isCarbonMeasurement() ? 'Target CO2e' : 'Target energy',
+    },
   ]);
 
   protected readonly tableRows = computed(() => {
@@ -73,9 +85,7 @@ export class ThroughputDetailsSummaryComponent {
     const referenceData = this.referenceData();
     const savedProductsByName = new Map(savedProducts.map((product) => [product.productName, product]));
 
-    const baselineDateStr = referenceData?.baselineAndTargets?.baselineDate;
-    const parsedBaseYear = baselineDateStr ? Number.parseInt(baselineDateStr.substring(0, 4), 10) : null;
-    const facilityBaseYear = parsedBaseYear != null && !Number.isNaN(parsedBaseYear) ? parsedBaseYear : null;
+    const facilityBaselineYear = referenceData?.baselineAndTargets?.baselineYear;
 
     const facilityImprovementTarget = calculateFacilityImprovementTarget(
       referenceData,
@@ -84,9 +94,9 @@ export class ThroughputDetailsSummaryComponent {
     );
 
     const throughputAdjustmentFactor = calculateThroughputAdjustmentFactor(
-      toNumber(this.performanceData()?.energyFuelDetails?.standardFuels?.['GRID_ELECTRICITY']?.deliveredEnergy),
-      toNumber(this.performanceData()?.energyFuelDetails?.standardFuels?.['NON_GRID_ELECTRICITY']?.deliveredEnergy),
-      toNumber(this.performanceData()?.energyFuelDetails?.electricitySuppliedFromCHP),
+      this.performanceData()?.energyFuelDetails?.standardFuels?.['GRID_ELECTRICITY']?.deliveredEnergy ?? '0',
+      this.performanceData()?.energyFuelDetails?.standardFuels?.['NON_GRID_ELECTRICITY']?.deliveredEnergy ?? '0',
+      this.performanceData()?.energyFuelDetails?.electricitySuppliedFromCHP ?? '0',
     );
 
     const useSRM = referenceData?.baselineAndTargets?.usedReportingMechanism ?? false;
@@ -100,18 +110,18 @@ export class ThroughputDetailsSummaryComponent {
         const productBaseYear = product.baselineYear;
         let improvementTarget = facilityImprovementTarget;
 
-        if (facilityBaseYear && productBaseYear > facilityBaseYear) {
+        if (facilityBaselineYear != null && productBaseYear !== facilityBaselineYear) {
           improvementTarget = calculateAdjustedImprovementTarget(
             referenceData,
             this.reportType(),
             this.targetPeriodType(),
-            facilityBaseYear,
+            facilityBaselineYear,
             productBaseYear,
           );
         }
 
         const adjustedThroughput =
-          calculateAdjustedThroughput(actualThroughput, throughputAdjustmentFactor, useSRM) ?? 0;
+          calculateAdjustedThroughput(actualThroughput, throughputAdjustmentFactor, useSRM) ?? new BigNumber(0);
 
         const baselineEnergyIntensity = resolveProductEnergyCarbonIntensity(product);
 
@@ -134,9 +144,11 @@ export class ThroughputDetailsSummaryComponent {
       });
   });
 
-  protected readonly totalTargetVariableEnergy = computed(() =>
-    this.tableRows().reduce((sum, row) => sum + (row.targetEnergy ?? 0), 0),
+  readonly totalTargetVariableEnergy = computed(() =>
+    this.tableRows().reduce((sum, row) => sum.plus(row.targetEnergy ?? new BigNumber(0)), new BigNumber(0)),
   );
+
+  readonly displayRounded = to7DecimalPlacesNumber;
 
   protected readonly shouldShowPagination = computed(() => this.tableRows().length > 10);
 

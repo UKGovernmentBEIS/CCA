@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.service.BuyOutSurplusAccountProcessingCreateRequestService;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.service.BuyOutSurplusAccountProcessingCreateRequestService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
 import static org.mockito.Mockito.times;

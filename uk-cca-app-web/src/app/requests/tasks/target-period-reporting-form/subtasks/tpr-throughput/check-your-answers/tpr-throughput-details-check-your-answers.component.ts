@@ -26,6 +26,7 @@ import {
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { logger } from '@shared/utils';
+import BigNumber from 'bignumber.js';
 import { produce } from 'immer';
 
 import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalFormSavePayload } from '../../../transform';
@@ -77,19 +78,17 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
   protected readonly targetPeriodYear = this.requestTaskStore.select(tprFormQuery.selectTargetPeriodYear);
   protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
 
-  private readonly facilityBaseYear = computed(() => {
-    const baselineDate = this.referenceData()?.baselineAndTargets?.baselineDate;
-    if (!baselineDate) return null;
+  private readonly apiProducts = computed(
+    () => this.referenceData()?.baselineAndTargets?.variableEnergyConsumptionDataByProduct ?? [],
+  );
 
-    const year = Number.parseInt(baselineDate.substring(0, 4), 10);
-    return Number.isNaN(year) ? null : year;
-  });
+  private readonly facilityBaselineYear = computed(() => this.referenceData()?.baselineAndTargets?.baselineYear);
 
   private readonly throughputAdjustmentFactor = computed(() =>
     calculateThroughputAdjustmentFactor(
-      Number(this.performanceData()?.energyFuelDetails?.standardFuels?.['GRID_ELECTRICITY']?.deliveredEnergy ?? 0),
-      Number(this.performanceData()?.energyFuelDetails?.standardFuels?.['NON_GRID_ELECTRICITY']?.deliveredEnergy ?? 0),
-      Number(this.performanceData()?.energyFuelDetails?.electricitySuppliedFromCHP ?? 0),
+      this.performanceData()?.energyFuelDetails?.standardFuels?.['GRID_ELECTRICITY']?.deliveredEnergy ?? '0',
+      this.performanceData()?.energyFuelDetails?.standardFuels?.['NON_GRID_ELECTRICITY']?.deliveredEnergy ?? '0',
+      this.performanceData()?.energyFuelDetails?.electricitySuppliedFromCHP ?? '0',
     ),
   );
 
@@ -117,10 +116,10 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
   );
 
   private buildByProductThroughputDetails() {
-    const baselineProducts = this.referenceData()?.baselineAndTargets?.variableEnergyConsumptionDataByProduct ?? [];
+    const baselineProducts = this.apiProducts();
     const savedProducts = this.performanceData()?.throughputDetails?.variableEnergyConsumptionDataByProduct ?? [];
     const savedProductsByName = new Map(savedProducts.map((product) => [product.productName, product]));
-    const facilityBaseYear = this.facilityBaseYear();
+    const facilityBaselineYear = this.facilityBaselineYear();
     const facilityImprovementTarget = calculateFacilityImprovementTarget(
       this.referenceData(),
       this.reportType(),
@@ -129,29 +128,30 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
     const throughputFactor = this.throughputAdjustmentFactor();
     const useSRM = this.referenceData()?.baselineAndTargets?.usedReportingMechanism ?? false;
 
-    let totalTargetVariableEnergy = 0;
+    let totalTargetVariableEnergy = new BigNumber(0);
 
     const variableEnergyConsumptionDataByProduct = baselineProducts.map((product) => {
       const savedProduct = savedProductsByName.get(product.productName);
       let improvementTarget = facilityImprovementTarget;
 
-      if (facilityBaseYear != null && product.baselineYear > facilityBaseYear) {
+      if (facilityBaselineYear != null && product.baselineYear !== facilityBaselineYear) {
         improvementTarget = calculateAdjustedImprovementTarget(
           this.referenceData(),
           this.reportType(),
           this.targetPeriodType(),
-          facilityBaseYear,
+          facilityBaselineYear,
           product.baselineYear,
         );
       }
 
       const adjustedThroughput =
-        calculateAdjustedThroughput(savedProduct?.actualThroughput ?? null, throughputFactor, useSRM) ?? 0;
+        calculateAdjustedThroughput(savedProduct?.actualThroughput ?? null, throughputFactor, useSRM) ??
+        new BigNumber(0);
 
       const baselineEnergyIntensity = resolveProductEnergyCarbonIntensity(product);
 
       const targetEnergy = calculateProductTargetEnergy(baselineEnergyIntensity, adjustedThroughput, improvementTarget);
-      totalTargetVariableEnergy += targetEnergy;
+      totalTargetVariableEnergy = totalTargetVariableEnergy.plus(targetEnergy);
 
       return {
         productName: product.productName,
@@ -189,9 +189,11 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
           ...byProductThroughputDetails,
         };
       } else if (draft.throughputDetails?.targetImprovement != null) {
-        const targetImprovement = Number(draft.throughputDetails.targetImprovement);
+        const targetImprovement = new BigNumber(draft.throughputDetails.targetImprovement);
 
-        const normalizedTargetImprovement = targetImprovement > 1 ? targetImprovement / 100 : targetImprovement;
+        const normalizedTargetImprovement = targetImprovement.isGreaterThan(1)
+          ? targetImprovement.div(100)
+          : targetImprovement;
 
         const calculatedTargetVariableEnergy = calculations.targetVariableEnergy;
         const adjustedThroughput = calculations.adjustedThroughput;
@@ -199,11 +201,10 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
         draft.throughputDetails = {
           actualThroughput: draft.throughputDetails?.actualThroughput,
           targetImprovement: roundHalfUpTo7Decimals(normalizedTargetImprovement),
-          adjustedThroughput: roundHalfUpTo7Decimals(adjustedThroughput ?? 0),
-          totalTargetVariableEnergy:
-            calculatedTargetVariableEnergy != null && calculatedTargetVariableEnergy > 0
-              ? roundHalfUpTo7Decimals(calculatedTargetVariableEnergy)
-              : roundHalfUpTo7Decimals(draft.throughputDetails.totalTargetVariableEnergy),
+          adjustedThroughput: roundHalfUpTo7Decimals(adjustedThroughput ?? new BigNumber(0)),
+          totalTargetVariableEnergy: calculatedTargetVariableEnergy?.isGreaterThan(0)
+            ? roundHalfUpTo7Decimals(calculatedTargetVariableEnergy)
+            : roundHalfUpTo7Decimals(draft.throughputDetails.totalTargetVariableEnergy),
         };
       }
     });

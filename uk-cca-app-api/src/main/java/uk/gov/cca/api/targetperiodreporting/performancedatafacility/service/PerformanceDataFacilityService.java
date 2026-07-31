@@ -68,7 +68,7 @@ public class PerformanceDataFacilityService {
     }
     
     private Stream<TargetPeriodDetailsDTO> getTargetPeriods(SchemeVersion schemeVersion) {
-        return targetPeriodService.getTargetPeriodDetailsBySchemeVersion(schemeVersion)
+        return targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(schemeVersion)
                 .stream();
     }
 }

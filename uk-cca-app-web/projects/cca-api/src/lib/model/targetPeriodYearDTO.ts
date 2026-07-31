@@ -21,6 +21,7 @@ export interface TargetPeriodYearDTO {
   performanceDataEndDate?: string;
   buyOutStartDate?: string;
   buyOutEndDate?: string;
+  buyOutCost?: number;
   secondaryReportingStartDate?: string;
   current?: boolean;
 }

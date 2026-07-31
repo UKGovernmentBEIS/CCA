@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/tpr_pat_data_facility_ddl.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_create_tpr_pat_data_facility_sequence" author="P70311">
+        <createSequence sequenceName="tpr_pat_data_facility_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS tpr_pat_data_facility_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_table_tpr_pat_data_facility" author="P70311">
+        <createTable tableName="tpr_pat_data_facility" remarks="Represents PAT data facility submission data">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="tpr_pat_data_facility_pk"
+                             nullable="false"/>
+            </column>
+            <column name="data" type="jsonb" remarks="PAT data facility representation as json">
+                <constraints nullable="false"/>
+            </column>
+            <column name="facility_id" type="bigint" remarks="The facility identifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="target_period_year" type="int" remarks="The reporting target period year">
+                <constraints nullable="false"/>
+            </column>
+            <column name="report_version" type="int" defaultValueNumeric="1" remarks="The reporting version">
+                <constraints nullable="false"/>
+            </column>
+            <column name="submission_date" type="timestamp" remarks="The submission date of PAT data facility">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint
+                tableName="tpr_pat_data_facility"
+                columnNames="facility_id, target_period_year"
+                constraintName="tpr_pat_data_facility_uc"/>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS tpr_pat_data_facility CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

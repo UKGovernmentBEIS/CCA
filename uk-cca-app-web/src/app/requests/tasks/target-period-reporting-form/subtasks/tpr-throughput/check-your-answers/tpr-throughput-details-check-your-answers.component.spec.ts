@@ -307,6 +307,7 @@ describe('TprThroughputDetailsCheckYourAnswersComponent', () => {
                   mockByProductState.requestTaskItem.requestTask
                     .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
                 ).referenceData?.baselineAndTargets,
+                baselineYear: 2022,
                 variableEnergyConsumptionDataByProduct: [
                   {
                     productName: 'Blue Widgets',

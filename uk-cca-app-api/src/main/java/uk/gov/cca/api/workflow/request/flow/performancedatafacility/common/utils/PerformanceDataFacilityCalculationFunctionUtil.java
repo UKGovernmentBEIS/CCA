@@ -154,6 +154,7 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
 
     /**
      * TP Weighted conversion factor = [sum(Primary TP energy amount x Conversion factor)]/ Actual TP energy
+     * For carbon-based facilities: [sum(Primary CO2 for each fuel)]/ [sum(Delivered energy x Primary conversion factor)]
      */
     public final TriFunction<PerformanceDataFacilityInputEnergyFuelDetails, BigDecimal, MeasurementType, BigDecimal> WEIGHTED_CONVERSION_FACTOR =
             (fuelDetails, actualEnergyCarbon, measurementType) -> {
@@ -161,18 +162,39 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
             return BigDecimal.ZERO;
         }
 
-        BigDecimal sumOfStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getStandardFuels(),
-                entry -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
-                        .apply(entry, measurementType)
-                        .multiply(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(entry.getKey(), measurementType), MathContext.DECIMAL128));
+        return switch (measurementType) {
+            case ENERGY_KWH, ENERGY_MWH, ENERGY_GJ -> {
+                BigDecimal sumOfStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getStandardFuels(),
+                        entry -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
+                                .apply(entry, measurementType)
+                                .multiply(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(entry.getKey(), measurementType), MathContext.DECIMAL128));
 
-        BigDecimal sumOfNonStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_NON_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getNonStandardFuels(),
-                fuel -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
-                        .apply(fuel, measurementType)
-                        .multiply(fuel.getConversionFactor(), MathContext.DECIMAL128));
+                BigDecimal sumOfNonStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_NON_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getNonStandardFuels(),
+                        fuel -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
+                                .apply(fuel, measurementType)
+                                .multiply(fuel.getConversionFactor(), MathContext.DECIMAL128));
 
-        return sumOfStandardFuels.add(sumOfNonStandardFuels).divide(actualEnergyCarbon, MathContext.DECIMAL128);
-				
+                yield sumOfStandardFuels.add(sumOfNonStandardFuels).divide(actualEnergyCarbon, MathContext.DECIMAL128);
+            }
+            case CARBON_KG, CARBON_TONNE -> {
+                BigDecimal sumOfStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getStandardFuels(),
+                        entry -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
+                                .apply(entry, measurementType));
+                BigDecimal sumOfNonStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_NON_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getNonStandardFuels(),
+                        fuel -> PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
+                                .apply(fuel, measurementType));
+
+                BigDecimal denominatorSumOfStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getStandardFuels(),
+                        entry -> entry.getValue().getDeliveredEnergy()
+                                .multiply(entry.getKey().getPrimaryFactor(), MathContext.DECIMAL128));
+                BigDecimal denominatorSumOfNonStandardFuels = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_NON_STANDARD_FUELS_DELIVERED_ENERGY.apply(fuelDetails.getNonStandardFuels(),
+                        nonStandardFuel -> nonStandardFuel.getDeliveredEnergy()
+                                .multiply(PerformanceDataFacilityCalculationCommonFunctionUtil.NON_STANDARD_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128));
+
+                yield sumOfStandardFuels.add(sumOfNonStandardFuels)
+                        .divide(denominatorSumOfStandardFuels.add(denominatorSumOfNonStandardFuels), MathContext.DECIMAL128);
+            }
+        };
     };
 
     /**

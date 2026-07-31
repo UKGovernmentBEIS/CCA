@@ -1,0 +1,27 @@
+<govuk-table [columns]="columns" [data]="buyOutCosts()">
+  <ng-template let-column="column" let-row="row">
+    @switch (column.field) {
+      @case ('buyOutCost') {
+        <div class="govuk-!-text-align-right">
+          @if (row.buyOutCost === null || row.buyOutCost === undefined) {
+            Not yet defined
+          } @else {
+            £{{ row.buyOutCost | number }} / tCO2e
+          }
+        </div>
+      }
+
+      @case ('actions') {
+        <div class="govuk-!-text-align-right">
+          <a [routerLink]="['cost', row.businessId]" class="govuk-link">
+            Change<span class="govuk-visually-hidden"> buy-out cost for {{ row.businessId }}</span>
+          </a>
+        </div>
+      }
+
+      @default {
+        {{ row[column.field] }}
+      }
+    }
+  </ng-template>
+</govuk-table>

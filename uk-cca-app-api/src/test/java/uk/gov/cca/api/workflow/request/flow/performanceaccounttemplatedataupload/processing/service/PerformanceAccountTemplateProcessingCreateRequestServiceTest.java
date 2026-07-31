@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.service.PerformanceAccountTemplateDataQueryService;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.service.PerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;

@@ -30,8 +30,7 @@ import {
 } from '@requests/common';
 import { TextInputComponent, WizardStepComponent } from '@shared/components';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
-import { toNumber } from '@shared/utils';
-import { logger } from '@shared/utils';
+import { logger, to7DecimalPlacesNumber, toBigNumber, toNumber } from '@shared/utils';
 import { produce } from 'immer';
 
 import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalFormSavePayload } from '../../../transform';
@@ -104,15 +103,13 @@ export class EnergyFuelAmountDetailsComponent {
   )?.controls.deliveredEnergy;
 
   protected readonly gridElectricity = toSignal(
-    (this.gridElectricityCtrl ? this.gridElectricityCtrl.valueChanges : of('0')).pipe(map((value) => toNumber(value))),
-    { initialValue: toNumber(this.gridElectricityCtrl?.value) },
+    this.gridElectricityCtrl ? this.gridElectricityCtrl.valueChanges : of('0'),
+    { initialValue: this.gridElectricityCtrl?.value ?? '0' },
   );
 
   protected readonly nonGridElectricity = toSignal(
-    (this.nonGridElectricityCtrl ? this.nonGridElectricityCtrl.valueChanges : of('0')).pipe(
-      map((value) => toNumber(value)),
-    ),
-    { initialValue: toNumber(this.nonGridElectricityCtrl?.value) },
+    this.nonGridElectricityCtrl ? this.nonGridElectricityCtrl.valueChanges : of('0'),
+    { initialValue: this.nonGridElectricityCtrl?.value ?? '0' },
   );
 
   protected readonly specialReportingMethodologyValue = toSignal(
@@ -122,13 +119,15 @@ export class EnergyFuelAmountDetailsComponent {
 
   protected readonly throughputAdjustmentFactor = computed(() =>
     calculateThroughputAdjustmentFactor(
-      this.gridElectricity(),
-      this.nonGridElectricity(),
-      toNumber(this.specialReportingMethodologyValue()),
+      this.gridElectricity() ?? '0',
+      this.nonGridElectricity() ?? '0',
+      this.specialReportingMethodologyValue() ?? '0',
     ),
   );
 
   protected readonly nonStandardCount = computed(() => this.fuelRows().filter((row) => row.value.isCustom).length);
+
+  readonly displayRounded = to7DecimalPlacesNumber;
 
   protected readonly tableColumns: Signal<GovukTableColumn[]> = computed(() => [
     { field: 'fuelType', header: 'Fuel type' },
@@ -172,9 +171,9 @@ export class EnergyFuelAmountDetailsComponent {
     const standardFuels = this.form.controls.fuels.controls.reduce<
       Record<string, { deliveredEnergy: string; primaryEnergy: string }>
     >((acc, ctrl) => {
-      const deliveredEnergy = toNumber(ctrl.value.deliveredEnergy);
+      const deliveredEnergy = ctrl.value.deliveredEnergy;
 
-      if (ctrl.value.fuelKey && deliveredEnergy !== 0) {
+      if (ctrl.value.fuelKey && !toBigNumber(deliveredEnergy).isZero()) {
         const primaryFactor = toNumber(ctrl.value.primaryEnergyConversionFactor);
         const conversionFactor = toNumber(ctrl.value.co2ConversionFactor);
 
@@ -185,7 +184,7 @@ export class EnergyFuelAmountDetailsComponent {
           : roundHalfUpTo7Decimals(calculatePrimaryEnergy(deliveredEnergy, primaryFactor));
 
         acc[ctrl.value.fuelKey] = {
-          deliveredEnergy: String(deliveredEnergy),
+          deliveredEnergy: deliveredEnergy ?? '0',
           primaryEnergy,
         };
       }
@@ -196,16 +195,16 @@ export class EnergyFuelAmountDetailsComponent {
     const nonStandardFuels = this.form.controls.fuels.controls
       .filter((ctrl) => ctrl.value.isCustom)
       .map((ctrl) => {
-        const deliveredEnergy = toNumber(ctrl.value.deliveredEnergy);
-        const conversionFactor = toNumber(ctrl.value.co2ConversionFactor);
+        const deliveredEnergy = ctrl.value.deliveredEnergy;
+        const conversionFactorBN = toBigNumber(ctrl.value.co2ConversionFactor);
 
         return {
-          deliveredEnergy: String(deliveredEnergy),
+          deliveredEnergy: deliveredEnergy ?? '0',
           name: ctrl.value.fuelType.trim(),
-          conversionFactor: String(conversionFactor),
+          conversionFactor: roundHalfUpTo7Decimals(conversionFactorBN),
           primaryEnergy: this.isCarbonPrimaryOutput()
             ? roundHalfUpTo7Decimals(
-                calculatePrimaryCarbon(deliveredEnergy, 1, conversionFactor, this.measurementUnit()),
+                calculatePrimaryCarbon(deliveredEnergy, 1, conversionFactorBN, this.measurementUnit()),
               )
             : roundHalfUpTo7Decimals(calculatePrimaryEnergy(deliveredEnergy, 1)),
         };

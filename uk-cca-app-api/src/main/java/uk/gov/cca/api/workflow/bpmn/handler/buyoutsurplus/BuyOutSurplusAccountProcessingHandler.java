@@ -6,9 +6,9 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountState;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.validation.BuyOutSurplusViolation;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.service.BuyOutSurplusAccountProcessingService;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusAccountState;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.validation.BuyOutSurplusViolation;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.service.BuyOutSurplusAccountProcessingService;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 

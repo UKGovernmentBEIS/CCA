@@ -14,8 +14,9 @@
     <p>{{ variableEnergyType() }}</p>
 
     <p>
-      The variable energy and total energy amounts will be calculated based on your products' "Baseline energy
-      intensity".
+      The variable {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }} and total
+      {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }} amounts will be calculated based on your products'
+      "Baseline {{ isCarbonMeasurement() ? 'CO2e' : 'energy' }} intensity".
     </p>
 
     <govuk-details summary="View more details about energy calculations">
@@ -42,21 +43,20 @@
                 }
 
                 @case ('energy') {
-                  {{ row['baselineEnergyIntensity'] }} {{ measurementUnit() | measurementTypeToUnit }}/{{
-                    row['throughputUnit']
-                  }}
+                  {{ row.energy | number: '1.0-7' }}
+                  {{ measurementUnit() | measurementTypeToUnit }}/{{ row['throughputUnit'] }}
                 }
 
                 @case ('improvementTarget') {
-                  {{ productCalculations()[index]?.improvementTarget | percent: '1.0-3' }}
+                  {{ productCalculations()[index]?.improvementTarget?.toNumber() | percent: '1.0-3' }}
                 }
 
                 @case ('adjustedThroughput') {
-                  {{ productCalculations()[index]?.adjustedThroughput | number: '1.0-3' }}
+                  {{ productCalculations()[index]?.adjustedThroughput?.toNumber() | number: '1.0-3' }}
                 }
 
                 @case ('targetEnergy') {
-                  {{ productCalculations()[index]?.targetEnergy | number: '1.0-3' }}
+                  {{ productCalculations()[index]?.targetEnergy?.toNumber() | number: '1.0-3' }}
                 }
 
                 @default {
@@ -78,9 +78,13 @@
   </div>
 
   <div class="govuk-!-margin-top-9 govuk-!-margin-bottom-9">
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Total target variable energy</h3>
-    <p class="govuk-body govuk-!-margin-top-1">
-      {{ totalTargetVariableEnergy() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
+      Total target variable {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }}
+    </h3>
+
+    <p class="govuk-!-margin-top-1">
+      {{ displayRounded(totalTargetVariableEnergy()) | number: '1.0-7' }}
+      {{ measurementUnit() | measurementTypeToUnit }}
     </p>
   </div>
 </cca-wizard-step>

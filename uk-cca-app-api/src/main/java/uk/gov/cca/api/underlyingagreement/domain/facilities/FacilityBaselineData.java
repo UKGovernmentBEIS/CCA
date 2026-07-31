@@ -1,5 +1,6 @@
 package uk.gov.cca.api.underlyingagreement.domain.facilities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import uk.gov.netz.api.common.validation.SpELExpression;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -58,4 +60,19 @@ public class FacilityBaselineData {
     @Builder.Default
     @JsonSetter(nulls = Nulls.SKIP)
     private CarbonConversionFactorMeasurementType carbonConversionFactorMeasurement = CarbonConversionFactorMeasurementType.KGCO2E_PER_KWH;
+
+    @JsonIgnore
+    public Year getBaselineYear() {
+        if(this.baselineDate == null) {
+            return null;
+        }
+
+        LocalDate changeOfYear = this.baselineDate.isLeapYear()
+                ? LocalDate.of(this.baselineDate.getYear(), 7, 1)
+                : LocalDate.of(this.baselineDate.getYear(), 7, 2);
+
+        return this.baselineDate.isAfter(changeOfYear)
+                ? Year.of(this.baselineDate.getYear() + 1)
+                : Year.of(this.baselineDate.getYear());
+    }
 }

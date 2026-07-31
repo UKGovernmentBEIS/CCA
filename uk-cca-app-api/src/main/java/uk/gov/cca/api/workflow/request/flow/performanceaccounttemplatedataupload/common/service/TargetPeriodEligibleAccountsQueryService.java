@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.utils.PerformanceAccountTemplateUtils;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.utils.PerformanceAccountTemplateUtils;
 
 @Service
 @RequiredArgsConstructor

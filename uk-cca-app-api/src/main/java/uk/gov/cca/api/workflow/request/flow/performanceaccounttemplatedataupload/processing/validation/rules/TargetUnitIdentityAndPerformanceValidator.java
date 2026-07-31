@@ -11,7 +11,7 @@ import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateReportData;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.TargetUnitIdentityAndPerformanceCellsReferenceEnum;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateViolation;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.TargetType;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.TargetType;
 import static uk.gov.cca.api.common.utils.ExcelCellUtils.isBigDecimal;
 
 @Component

@@ -4732,6 +4732,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/buy-out-surplus/cost/{tp}:
+    patch:
+      tags:
+        - Buy-out and surplus cost info
+      summary: Updates the buy-out cost for the specified target period
+      operationId: updateBuyOutCost
+      parameters:
+        - name: tp
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - TP5
+              - TP6
+              - TP7
+              - TP8
+              - TP9
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TargetPeriodBuyOutCostUpdateDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed \t\n TPR1002 | Target period scheme version is not updatable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/users/signature:
     get:
       tags:
@@ -6347,18 +6398,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
   /v1.0/request-notes/{requestId}/files:
     get:
       tags:
@@ -6706,12 +6772,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - NONE
+                      - VIEW_ONLY
+                      - EXECUTE
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - NONE
+                      - VIEW_ONLY
+                      - EXECUTE
   /v1.0/notification-templates:
     get:
       tags:
@@ -8006,6 +8094,70 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/buy-out-surplus/run/available-target-periods:
+    get:
+      tags:
+        - Buy-out and surplus info
+      summary: Retrieves the available TPs for buy-out run
+      operationId: getAvailableBuyOutTargetPeriods
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableTargetPeriodsBuyOutDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/buy-out-surplus/cost:
+    get:
+      tags:
+        - Buy-out and surplus cost info
+      summary: >-
+        Retrieves the buy-out cost for each target period in the specified
+        scheme
+      operationId: getBuyOutCosts
+      parameters:
+        - name: schemeVersion
+          in: query
+          description: The scheme version
+          required: true
+          schema:
+            type: string
+            enum:
+              - CCA_2
+              - CCA_3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TargetPeriodBuyOutDetailsDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/authorities/regulator-roles:
     get:
       tags:
@@ -8470,6 +8622,8 @@ components:
         host:
           type: object
           properties:
+            hostString:
+              type: string
             address:
               type: object
               properties:
@@ -8509,8 +8663,6 @@ components:
               type: boolean
             hostName:
               type: string
-            hostString:
-              type: string
         all:
           type: object
           additionalProperties:
@@ -8525,6 +8677,15 @@ components:
         contentLength:
           type: integer
           format: int64
+        connection:
+          type: array
+          items:
+            type: string
+        ifModifiedSince:
+          type: integer
+          format: int64
+        contentType:
+          $ref: '#/components/schemas/MediaType'
         origin:
           type: string
         contentLanguage:
@@ -8575,15 +8736,6 @@ components:
           writeOnly: true
         cacheControl:
           type: string
-        connection:
-          type: array
-          items:
-            type: string
-        ifModifiedSince:
-          type: integer
-          format: int64
-        contentType:
-          $ref: '#/components/schemas/MediaType'
       additionalProperties:
         type: array
         items:
@@ -9477,6 +9629,23 @@ components:
           type: object
           additionalProperties:
             type: string
+    TargetPeriodBuyOutDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        businessId:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        buyOutCost:
+          type: integer
+          format: int32
     RequestDetailsDTO:
       type: object
       properties:
@@ -10155,6 +10324,15 @@ components:
           type: string
         filename:
           type: string
+    FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload:
+      required:
+        - performanceAccountTemplateDataUpload
+      type: object
+      properties:
+        payloadType:
+          type: string
+        performanceAccountTemplateDataUpload:
+          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataUpload'
     AccountNoteResponse:
       type: object
       properties:
@@ -10186,6 +10364,41 @@ components:
           items:
             type: string
             format: uuid
+    TargetPeriodDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        businessId:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        name:
+          type: string
+        targetPeriodYearsContainer:
+          $ref: '#/components/schemas/TargetPeriodYearsContainer'
+        buyOutStartDate:
+          type: string
+          format: date
+        buyOutPrimaryPaymentDeadline:
+          type: string
+          format: date
+        buyOutCost:
+          type: integer
+          format: int32
+        secondaryReportingStartDate:
+          type: string
+          format: date
+        schemeVersion:
+          type: string
+          enum:
+            - CCA_2
+            - CCA_3
     TargetComposition:
       required:
         - agreementCompositionType
@@ -10444,6 +10657,7 @@ components:
           $ref: '#/components/schemas/UnderlyingAgreementTargetUnitResponsiblePerson'
     PerformanceData:
       required:
+        - buyOutCost
         - sector
         - submissionType
         - targetPeriod
@@ -10456,6 +10670,9 @@ components:
           type: string
           enum:
             - TP6
+        buyOutCost:
+          type: integer
+          format: int32
         targetPeriod:
           type: string
           enum:
@@ -10666,6 +10883,21 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+    FacilityPerformanceAccountTemplateDataUpload:
+      required:
+        - files
+        - targetYear
+      type: object
+      properties:
+        targetYear:
+          type: integer
+          format: int16
+        files:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uuid
     NonComplianceNoticeOfIntent:
       required:
         - file
@@ -10751,6 +10983,22 @@ components:
           format: int64
         isNew:
           type: boolean
+    FacilityPerformanceAccountTemplateProcessingRequestMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        reportVersion:
+          type: integer
+          format: int32
+        targetYear:
+          type: integer
+          format: int16
+        submittedDate:
+          type: string
+          format: date
+        uploadRequestId:
+          type: string
     NonComplianceConclusionSaveRequestTaskActionPayload:
       type: object
       properties:
@@ -11049,6 +11297,15 @@ components:
             $ref: '#/components/schemas/RequestActionUserInfo'
         officialDocument:
           $ref: '#/components/schemas/FileInfoDTO'
+    TargetPeriodYearsContainer:
+      required:
+        - targetPeriodYears
+      type: object
+      properties:
+        targetPeriodYears:
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetPeriodYear'
     PerformanceAccountTemplateDataUpload:
       required:
         - reportPackages
@@ -11151,7 +11408,7 @@ components:
         errorMessage:
           type: string
           enum:
-            - CSV_FAILED
+            - SUBMISSION_RESULTS_CSV_FAILED
             - MESSAGE_PROCESSING_FAILED
         facilityReports:
           type: object
@@ -11299,6 +11556,17 @@ components:
           $ref: '#/components/schemas/FileInfoDTO'
         underlyingAgreementDocument:
           $ref: '#/components/schemas/FileInfoDTO'
+    FacilityPerformanceAccountTemplateDataUploadRequestMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        targetYear:
+          type: integer
+          format: int16
+        submittedDate:
+          type: string
+          format: date-time
     PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload:
       type: object
       properties:
@@ -11622,11 +11890,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NotAccountRelatedUploadErrorReport'
-        numberOfFilesSucceeded:
+        numberOfFilesFailed:
           type: integer
           format: int32
           readOnly: true
-        numberOfFilesFailed:
+        numberOfFilesSucceeded:
           type: integer
           format: int32
           readOnly: true
@@ -13266,6 +13534,23 @@ components:
           type: object
           additionalProperties:
             type: string
+    FacilityPerformanceAccountTemplateUploadReport:
+      type: object
+      properties:
+        facilityId:
+          type: integer
+          format: int64
+        facilityBusinessId:
+          type: string
+        accountId:
+          type: integer
+          format: int64
+        succeeded:
+          type: boolean
+        errors:
+          type: array
+          items:
+            type: string
     UnderlyingAgreementVariationActivationRequestTaskPayload:
       type: object
       properties:
@@ -13920,6 +14205,37 @@ components:
         lastUpdatedDate:
           type: string
           format: date-time
+    FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        sendEmailNotification:
+          type: boolean
+        sectorAssociationInfo:
+          $ref: '#/components/schemas/SectorAssociationInfo'
+        performanceAccountTemplateDataUpload:
+          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataUpload'
+        processingStatus:
+          type: string
+          enum:
+            - NOT_STARTED_YET
+            - IN_PROGRESS
+            - COMPLETED
+        errorMessage:
+          type: string
+          enum:
+            - SUBMISSION_RESULTS_CSV_FAILED
+            - MESSAGE_PROCESSING_FAILED
+        facilityReports:
+          type: object
+          additionalProperties:
+            $ref: >-
+              #/components/schemas/FacilityPerformanceAccountTemplateUploadReport
+        uploadAttachments:
+          type: object
+          additionalProperties:
+            type: string
     AuditTrackCorrectiveActionsRequestTaskPayload:
       required:
         - auditTrackCorrectiveActions
@@ -14786,6 +15102,17 @@ components:
           enum:
             - INTERIM
             - FINAL
+        targetPeriodYear:
+          $ref: '#/components/schemas/TargetPeriodYear'
+        targetPeriods:
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetPeriodDetailsDTO'
+        submissionType:
+          type: string
+          enum:
+            - PRIMARY
+            - SECONDARY
         submittedDate:
           type: string
           format: date-time
@@ -15417,6 +15744,9 @@ components:
         baselineDate:
           type: string
           format: date
+        baselineYear:
+          type: integer
+          format: int16
         isTwelveMonths:
           type: boolean
         energyCarbonFactor:
@@ -16774,11 +17104,25 @@ components:
         buyOutEndDate:
           type: string
           format: date
+        buyOutCost:
+          type: integer
+          format: int32
         secondaryReportingStartDate:
           type: string
           format: date
         current:
           type: boolean
+    AvailableTargetPeriodsBuyOutDTO:
+      type: object
+      properties:
+        currentTargetPeriods:
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetPeriodBuyOutDetailsDTO'
+        previousTargetPeriods:
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetPeriodBuyOutDetailsDTO'
     RequestNoteResponse:
       type: object
       properties:
@@ -18277,9 +18621,19 @@ components:
           $ref: '#/components/schemas/Apply70Rule'
         cca3BaselineAndTargets:
           $ref: '#/components/schemas/Cca3FacilityBaselineAndTargets'
+    TargetPeriodBuyOutCostUpdateDTO:
+      required:
+        - buyOutCost
+      type: object
+      properties:
+        buyOutCost:
+          type: integer
+          format: int32
+      description: The buy-out cost
     TP6PerformanceData:
       required:
         - actualTargetPeriodPerformance
+        - buyOutCost
         - performanceResult
         - primaryDetermination
         - secondaryDetermination
@@ -18509,6 +18863,29 @@ components:
         secondaryBuyOutCost:
           type: string
           format: decimal
+    TargetPeriodYear:
+      required:
+        - endDate
+        - reportingStartDate
+        - startDate
+        - targetYear
+      type: object
+      properties:
+        targetYear:
+          type: integer
+          format: int16
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        reportingStartDate:
+          type: string
+          format: date
+        reportingEndDate:
+          type: string
+          format: date
     AuditTrackCorrectiveActions:
       required:
         - correctiveActionResponses

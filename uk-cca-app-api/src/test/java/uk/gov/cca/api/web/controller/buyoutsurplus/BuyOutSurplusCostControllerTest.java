@@ -57,7 +57,7 @@ class BuyOutSurplusCostControllerTest {
                 .buyOutCost(25)
                 .build();
 
-        when(targetPeriodService.getTargetPeriodBuyOutDetailsBySchemeVersion(SchemeVersion.CCA_3))
+        when(targetPeriodService.getTargetPeriodBuyOutDetailsBySchemeVersionAndStartDateDesc(SchemeVersion.CCA_3))
                 .thenReturn(List.of(dto));
 
         mockMvc.perform(get(REQUEST_PATH)
@@ -67,7 +67,7 @@ class BuyOutSurplusCostControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].buyOutCost").value(25));
 
-        verify(targetPeriodService).getTargetPeriodBuyOutDetailsBySchemeVersion(SchemeVersion.CCA_3);
+        verify(targetPeriodService).getTargetPeriodBuyOutDetailsBySchemeVersionAndStartDateDesc(SchemeVersion.CCA_3);
     }
     
     @Test

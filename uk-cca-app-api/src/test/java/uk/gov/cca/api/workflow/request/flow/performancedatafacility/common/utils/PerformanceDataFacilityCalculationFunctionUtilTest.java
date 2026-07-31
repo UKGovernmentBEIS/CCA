@@ -54,13 +54,14 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domai
 class PerformanceDataFacilityCalculationFunctionUtilTest  {
 
     @Test
-    void test_ENERGY_KWH_Fixed() {
+    void test_TP7_ENERGY_KWH_Fixed() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -124,13 +125,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Fixed_no_SRM() {
+    void test_TP7_ENERGY_KWH_no_SRM_fixed() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -192,13 +194,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Fixed_TP8() {
+    void test_TP8_ENERGY_KWH_fixed() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.12))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -261,13 +264,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Fixed_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_KWH_fixed() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -328,13 +332,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Fixed_zeros() {
+    void test_TP7_ENERGY_KWH_zeros() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.ZERO)
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -384,13 +389,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 	
 
     @Test
-    void test_ENERGY_KWH_Variable_TOTAL() {
+    void test_TP7_ENERGY_KWH_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -456,13 +462,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Variable_TOTAL_no_SRM() {
+    void test_TP7_ENERGY_KWH_no_SRM_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -527,13 +534,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Variable_TOTAL_TP8() {
+    void test_TP8_ENERGY_KWH_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.12))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -599,13 +607,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Variable_TOTAL_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_KWH_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -671,13 +680,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Variable_TOTAL_zeros() {
+    void test_TP7_ENERGY_KWH_totals_zeros() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.ZERO)
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -726,13 +736,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Variable_PRODUCTS() {
+    void test_TP7_ENERGY_KWH_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -826,13 +837,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Variable_PRODUCTS_no_SRM() {
+    void test_TP7_ENERGY_KWH_no_SRM_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -925,13 +937,130 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Variable_PRODUCTS_TP8() {
+    void test_TP7_ENERGY_KWH_no_SRM_by_product_diff_facility_base_year() {
+        final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
+                .targetPeriodType(TargetPeriodType.TP7)
+                .targetYear(Year.of(2026))
+                .tpMultiplier(BigDecimal.ONE)
+                .targetImprovement(BigDecimal.valueOf(0.06122449))
+                .baselineDate(LocalDate.of(2022, 10, 1))
+                .baselineYear(Year.of(2023))
+                .measurementType(MeasurementType.ENERGY_KWH)
+                .usedReportingMechanism(false)
+                .improvements(Map.of(
+                        TargetImprovementType.TP7, BigDecimal.valueOf(6.1224490),
+                        TargetImprovementType.TP8, BigDecimal.valueOf(10.2040816),
+                        TargetImprovementType.TP9, BigDecimal.valueOf(14.2857143)
+                ))
+                .totalFixedEnergy(BigDecimal.ZERO)
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("A")
+                                .baselineYear(Year.of(2022))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(10000))
+                                .throughput(BigDecimal.valueOf(60))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("B")
+                                .baselineYear(Year.of(2023))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(50000))
+                                .throughput(BigDecimal.valueOf(80))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("C")
+                                .baselineYear(Year.of(2024))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(24000))
+                                .throughput(BigDecimal.valueOf(75))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("D")
+                                .baselineYear(Year.of(2025))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(70000))
+                                .throughput(BigDecimal.valueOf(80))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("E")
+                                .baselineYear(Year.of(2026))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(30000))
+                                .throughput(BigDecimal.valueOf(60))
+                                .throughputUnit("units")
+                                .build()
+                ))
+                .lastYearPerTp(Map.of(
+                        TargetPeriodType.TP7, 2026,
+                        TargetPeriodType.TP8, 2028,
+                        TargetPeriodType.TP9, 2030
+                ))
+                .build();
+        final PerformanceDataFacilityInputData data = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(
+                                PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(1000)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NON_GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(1000)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NATURAL_GAS, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(1000)).build()
+                        ))
+                        .nonStandardFuels(List.of(
+                                PerformanceDataFacilityNonStandardFuel.builder()
+                                        .name("Biofuel")
+                                        .deliveredEnergy(BigDecimal.valueOf(10000))
+                                        .conversionFactor(BigDecimal.valueOf(0.2345600))
+                                        .build()
+                        ))
+                        .build())
+                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+                        .variableEnergyConsumptionDataByProduct(List.of(
+                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("A").actualThroughput(BigDecimal.valueOf(0)).build(),
+                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("B").actualThroughput(BigDecimal.valueOf(2000)).build(),
+                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("C").actualThroughput(BigDecimal.valueOf(3000)).build(),
+                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("D").actualThroughput(BigDecimal.valueOf(4000)).build(),
+                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("E").actualThroughput(BigDecimal.valueOf(5000)).build()
+                        ))
+                        .build())
+                .build();
+
+        PerformanceDataFacilityCalculatedResults results = calculateResults(calculatedInfoData, data);
+
+        // Verify
+        assertThat(results.getActualEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(14100).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(8019001.3019987).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(-8004901.3019987).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.1942628).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(1557.7939419).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(2.739106).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getCo2EmissionsDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(-1555.0548359).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.998282582).setScale(9, RoundingMode.HALF_UP));
+        assertThat(results.getTargetPeriodResultType()).isEqualTo(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET);
+        assertThat(results.getSurplusGained()).isEqualTo(BigDecimal.valueOf(1555));
+        assertThat(results.getBuyOutRequired()).isEqualTo(BigDecimal.ZERO);
+    }
+
+    @Test
+    void test_TP8_ENERGY_KWH_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.12))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1025,13 +1154,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_fixed_Variable_PRODUCTS_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_KWH_fixed_Products() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1122,13 +1252,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_KWH_fixed_Variable_PRODUCTS_diff_base_years_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_KWH_fixed_by_product_diff_base_years() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1219,13 +1350,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_Variable_PRODUCTS_zeros() {
+    void test_TP7_ENERGY_KWH_by_product_zeros() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.ZERO)
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -1302,13 +1434,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_fixed_TOTAL() {
+    void test_TP7_ENERGY_KWH_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1374,13 +1507,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_fixed_TOTAL_no_SRM() {
+    void test_TP7_ENERGY_no_SRM_KWH_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -1445,13 +1579,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_fixed_TOTAL_TP8() {
+    void test_TP8_ENERGY_KWH_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.12))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1517,13 +1652,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_fixed_TOTAL_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_KWH_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1586,13 +1722,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_fixed_PRODUCTS() {
+    void test_TP7_ENERGY_KWH_fixed_Products() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1686,13 +1823,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_fixed_PRODUCTS_no_SRM() {
+    void test_TP7_ENERGY_KWH_no_SRM_fixed_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -1785,13 +1923,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_KWH_fixed_PRODUCTS_TP8() {
+    void test_TP8_ENERGY_KWH_fixed_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.12))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1886,13 +2025,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 
 
     @Test
-    void test_ENERGY_KWH_fixed_PRODUCTS_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_KWH_fixed_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -1983,13 +2123,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_MWh_Fixed_no_SRM() {
+    void test_TP7_ENERGY_MWh_no_SRM_fixed() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_MWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -2051,13 +2192,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_MWH_Variable_TOTAL() {
+    void test_TP7_ENERGY_MWH_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_MWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2123,13 +2265,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_MWH_Variable_TOTAL_multiple_custom_fuels() {
+    void test_TP7_ENERGY_MWH_fixed_totals_multiple_custom_fuels() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_MWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2200,13 +2343,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_MWH_TP8_fixed_variable_by_product_diff_base_year() {
+    void test_TP8_ENERGY_MWH_fixed_by_product_diff_base_years() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
         		.targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.12))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_MWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2300,13 +2444,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_MWH_TP8_fixed_variable_by_product_all_base_year_2022() {
+    void test_TP8_ENERGY_MWH_fixed_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
         		.targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.12))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_MWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2400,13 +2545,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_MWH_fixed_Variable_PRODUCTS_diff_base_years_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_MWH_fixed_by_product_prods_diff_base_years() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_MWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2497,13 +2643,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_MWH_fixed_Variable_PRODUCTS_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_MWH_fixed_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_MWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2594,13 +2741,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_KWH_TP7_fixed_variable_by_product_same_base_year() {
+    void test_TP7_ENERGY_KWH_fixed_by_product_diff_facility_base_year() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
         		.targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.488372093))
-                .baselineDate(LocalDate.of(2023, 1, 1))
+                .baselineDate(LocalDate.of(2022, 10, 1))
+                .baselineYear(Year.of(2023))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2675,13 +2823,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_GJ_Fixed_no_SRM() {
+    void test_TP7_ENERGY_GJ_no_SRM_fixed() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -2743,13 +2892,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_Variable_TOTAL() {
+    void test_TP7_ENERGY_GJ_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2815,13 +2965,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_GJ_fixed_variable_by_product_2() {
+    void test_TP7_ENERGY_GJ_fixed_by_product_2() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.87))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -2906,13 +3057,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_fixed_variable_by_product_3() {
+    void test_TP7_ENERGY_GJ_fixed_by_product_3() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.87))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3004,13 +3156,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_fixed_variable_by_product() {
+    void test_TP7_ENERGY_GJ_fixed_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3104,13 +3257,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_TP8_fixed_variable_by_product() {
+    void test_TP8_ENERGY_GJ_fixed_by_product() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.67))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3195,13 +3349,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_TP8_fixed_variable_by_product_2() {
+    void test_TP8_ENERGY_GJ_fixed_by_product_diff_facility_base_year() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.055))
-                .baselineDate(LocalDate.of(2023, 1, 1))
+                .baselineDate(LocalDate.of(2022, 10, 1))
+                .baselineYear(Year.of(2023))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3283,13 +3438,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_TP8_fixed_variable_by_product_3() {
+    void test_TP8_ENERGY_KWH_fixed_by_product_3() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.0558526345))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -3343,13 +3499,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_ENERGY_GJ_fixed_variable_by_product_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_GJ_fixed_by_product_diff_facility_base_year() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.043037975))
-                .baselineDate(LocalDate.of(2023, 1, 1))
+                .baselineDate(LocalDate.of(2022, 10, 1))
+                .baselineYear(Year.of(2023))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -3435,15 +3592,147 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 		assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(-0.364864865).setScale(9, RoundingMode.HALF_UP));
     }
+
+    @Test
+    void test_TP8_interim_ENERGY_KWH_fixed_by_product_diff_facility_base_year() {
+        final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
+                .targetPeriodType(TargetPeriodType.TP8)
+                .targetYear(Year.of(2027))
+                .tpMultiplier(BigDecimal.ONE)
+                .targetImprovement(BigDecimal.valueOf(0.043037975))
+                .baselineDate(LocalDate.of(2022, 10, 1))
+                .baselineYear(Year.of(2023))
+                .measurementType(MeasurementType.ENERGY_KWH)
+                .usedReportingMechanism(true)
+                .improvements(Map.of(
+                        TargetImprovementType.TP7, BigDecimal.valueOf(3.7974684),
+                        TargetImprovementType.TP8, BigDecimal.valueOf(4.8101266),
+                        TargetImprovementType.TP9, BigDecimal.valueOf(8.8607595)
+                ))
+                .totalFixedEnergy(BigDecimal.valueOf(1000000))
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Product 1")
+                                .baselineYear(Year.of(2022))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(1000000))
+                                .throughput(BigDecimal.valueOf(10000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Product 2")
+                                .baselineYear(Year.of(2022))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(2000000))
+                                .throughput(BigDecimal.valueOf(20000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Product 3")
+                                .baselineYear(Year.of(2023))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(3000000))
+                                .throughput(BigDecimal.valueOf(30000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Product 4")
+                                .baselineYear(Year.of(2024))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(1000000))
+                                .throughput(BigDecimal.valueOf(10000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Product 5")
+                                .baselineYear(Year.of(2025))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(1000000))
+                                .throughput(BigDecimal.valueOf(10000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Product 6")
+                                .baselineYear(Year.of(2026))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(1000000))
+                                .throughput(BigDecimal.valueOf(10000))
+                                .throughputUnit("units")
+                                .build(),
+                        ProductVariableEnergyConsumptionData.builder()
+                                .productName("Product 7")
+                                .baselineYear(Year.of(2027))
+                                .productStatus(ProductStatus.LIVE)
+                                .energy(BigDecimal.valueOf(1000000))
+                                .throughput(BigDecimal.valueOf(10000))
+                                .throughputUnit("units")
+                                .build()
+                ))
+                .lastYearPerTp(Map.of(
+                        TargetPeriodType.TP7, 2026,
+                        TargetPeriodType.TP8, 2028,
+                        TargetPeriodType.TP9, 2030
+                ))
+                .build();
+        final PerformanceDataFacilityInputData data = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(
+                                PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(2000000)).build(),
+                                PerformanceDataFacilityFixedConversionFactor.NATURAL_GAS, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(5000000)).build()
+                        ))
+                        .nonStandardFuels(List.of(
+                                PerformanceDataFacilityNonStandardFuel.builder()
+                                        .name("Biofuel")
+                                        .deliveredEnergy(BigDecimal.valueOf(500000))
+                                        .conversionFactor(BigDecimal.valueOf(0.1))
+                                        .build()
+                        ))
+                        .electricitySuppliedFromCHP(BigDecimal.valueOf(500000))
+                        .build())
+		                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+		                        .variableEnergyConsumptionDataByProduct(List.of(
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Product 1").actualThroughput(BigDecimal.valueOf(0)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Product 2").actualThroughput(BigDecimal.valueOf(0)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Product 3").actualThroughput(BigDecimal.valueOf(5000)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Product 4").actualThroughput(BigDecimal.valueOf(5000)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Product 5").actualThroughput(BigDecimal.valueOf(5000)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Product 6").actualThroughput(BigDecimal.valueOf(5000)).build(),
+		                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("Product 7").actualThroughput(BigDecimal.valueOf(5000)).build()
+		                        ))
+		                        .build())
+                .build();
+
+        PerformanceDataFacilityCalculatedResults results = calculateResults(calculatedInfoData, data);
+
+        // Verify
+        assertThat(results.getActualEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(9700000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(2918061.1522426).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(6781938.8477574).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(0.1427456).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(416.5402937).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(1384.6320000).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getCo2EmissionsDifference().setScale(7, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(968.0917063).setScale(7, RoundingMode.HALF_UP));
+		assertThat(results.getActualImprovement().setScale(9, RoundingMode.HALF_UP))
+		        .isEqualTo(BigDecimal.valueOf(-2.233333333).setScale(9, RoundingMode.HALF_UP));
+    }
     
     @Test
-    void test_ENERGY_GJ_fixed_Variable_PRODUCTS_diff_base_years_TP8_INTERIM() {
+    void test_TP8_interim_ENERGY_GJ_fixed_by_product_diff_base_years() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2027))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.1))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3534,13 +3823,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_fixed_Variable_PRODUCTS_diff_base_years_TP9() {
+    void test_TP9_ENERGY_GJ_fixed_by_product_diff_base_years() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP9)
                 .targetYear(Year.of(2030))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.16))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3634,13 +3924,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_ENERGY_GJ_fixed_Variable_PRODUCTS_diff_base_years_TP9_INTERIM() {
+    void test_TP9_interim_ENERGY_GJ_fixed_by_product_diff_base_years() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP9)
                 .targetYear(Year.of(2029))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.14))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_GJ)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3735,13 +4026,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
      * CARBON
      */
     @Test
-    void test_CARBON_KG_fixed_TOTAL() {
+    void test_TP7_CARBON_KG_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_KG)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3792,7 +4084,7 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-47055.2928851725).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
-                .isEqualTo(BigDecimal.valueOf(0.1403856).setScale(7, RoundingMode.HALF_UP));
+                .isEqualTo(BigDecimal.valueOf(0.1098553).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(802.6206896552).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3807,13 +4099,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_CARBON_KG_fixed_TOTAL_no_SRM() {
+    void test_TP7_CARBON_KG_no_SRM_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_KG)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -3863,7 +4156,7 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-72434.60323).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
-                .isEqualTo(BigDecimal.valueOf(0.1403856).setScale(7, RoundingMode.HALF_UP));
+                .isEqualTo(BigDecimal.valueOf(0.1098553).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(828).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3878,13 +4171,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_CARBON_KG_fixed_TOTAL_TP8() {
+    void test_TP8_CARBON_KG_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP8)
                 .targetYear(Year.of(2028))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.12))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_KG)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -3935,7 +4229,7 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-100158.741161035).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
-                .isEqualTo(BigDecimal.valueOf(0.1403856).setScale(7, RoundingMode.HALF_UP));
+                .isEqualTo(BigDecimal.valueOf(0.1098553).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(855.7241379).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3950,13 +4244,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_CARBON_KG_fixed_TOTAL_zeros() {
+    void test_TP7_CARBON_KG_totals_zeros() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.ZERO)
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_KG)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -4005,13 +4300,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_CARBON_KG_fixed_TOTAL_zeros_with_fuel_non_grid() {
+    void test_TP7_CARBON_KG_fixed_totals_zeros_with_fuel_non_grid_and_fuel_with_zero_conversion_factor() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.ZERO)
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_KG)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -4033,6 +4329,13 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
                         .standardFuels(Map.of(
                                 PerformanceDataFacilityFixedConversionFactor.NON_GRID_ELECTRICITY, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(BigDecimal.valueOf(1000000)).build()
+                        ))
+                        .nonStandardFuels(List.of(
+                                PerformanceDataFacilityNonStandardFuel.builder()
+                                        .name("Other Fuel 01")
+                                        .deliveredEnergy(BigDecimal.valueOf(90000))
+                                        .conversionFactor(BigDecimal.ZERO)
+                                        .build()
                         ))
                         .build())
                 .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
@@ -4065,13 +4368,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_CARBON_KG_fixed_Variable_PRODUCTS_diff_base_years_TP9() {
+    void test_TP9_CARBON_KG_fixed_by_product_diff_base_years() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP9)
                 .targetYear(Year.of(2030))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.16))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_KG)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -4150,7 +4454,7 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-24334243.9969605).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
-		        .isEqualTo(BigDecimal.valueOf(0.1390355).setScale(7, RoundingMode.HALF_UP));
+		        .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(28064.6689970).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4165,13 +4469,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_CARBON_TONNE_fixed_TOTAL_no_SRM() {
+    void test_TP7_CARBON_TONNE_no_SRM_fixed_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_TONNE)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -4221,7 +4526,7 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-1649228.1952300).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
-                .isEqualTo(BigDecimal.valueOf(0.1345127).setScale(7, RoundingMode.HALF_UP));
+                .isEqualTo(BigDecimal.valueOf(0.0001175).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(1656000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4236,13 +4541,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_CARBON_TONNE_variable_only_TOTAL_no_SRM() {
+    void test_TP7_CARBON_TONNE_no_SRM_totals() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.04))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_TONNE)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -4282,7 +4588,7 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(113.5873458).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
-                .isEqualTo(BigDecimal.valueOf(0.1602819).setScale(7, RoundingMode.HALF_UP));
+                .isEqualTo(BigDecimal.valueOf(0.0001494).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(1146.7190467).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4297,13 +4603,14 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
     
     @Test
-    void test_CARBON_TONNE_fixed_Variable_PRODUCTS_diff_base_years_TP9() {
+    void test_TP9_CARBON_TONNE_fixed_by_product_diff_base_years() {
         final PerformanceDataFacilityCalculationParameters calculatedInfoData = PerformanceDataFacilityCalculationParameters.builder()
                 .targetPeriodType(TargetPeriodType.TP9)
                 .targetYear(Year.of(2030))
                 .tpMultiplier(BigDecimal.TWO)
                 .targetImprovement(BigDecimal.valueOf(0.16))
                 .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.CARBON_TONNE)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -4382,7 +4689,7 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-28060938.5719605).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
-		        .isEqualTo(BigDecimal.valueOf(0.1390355).setScale(7, RoundingMode.HALF_UP));
+		        .isEqualTo(BigDecimal.valueOf(0.0001203).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(28064668.9969605).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getActualCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4397,7 +4704,7 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
     }
 
     @Test
-    void test_INTERIM_TARGET() {
+    void test_interim_TARGET() {
         final Map<TargetImprovementType, BigDecimal> improvements = Map.of(
                 TargetImprovementType.TP7, BigDecimal.valueOf(4.9849844),
                 TargetImprovementType.TP8, BigDecimal.valueOf(6.1855425),

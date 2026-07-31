@@ -4,8 +4,8 @@ package uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedatauploa
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.util.CellAddress;
 import org.springframework.stereotype.Component;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.ActionCategoryType;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.EnergyConsumptionOrCarbonEmissionsImpactedType;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.ActionCategoryType;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.EnergyConsumptionOrCarbonEmissionsImpactedType;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.EnergyOrCarbonSavingActionsAndMeasuresImplementedProcessor;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateReportData;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateReportData.EnergyOrCarbonSavingActionsAndMeasuresImplementedRow;

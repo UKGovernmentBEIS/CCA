@@ -1,5 +1,11 @@
 import { inject } from '@angular/core';
-import { Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, Routes } from '@angular/router';
+
+import { map } from 'rxjs';
+
+import { userIsRegulatorGuard } from '@shared/guards';
+
+import { BuyOutAndSurplusCostInfoService } from 'cca-api';
 
 import { BuyoutSurplusStore } from './buy-out-surplus.store';
 import { paymentStatusRedirectGuard } from './payment-status.guard';
@@ -47,6 +53,29 @@ export const BUY_OUT_SURPLUS_ROUTES: Routes = [
       import('./transactions-list-tab/transaction-details-container/transaction-details.routes').then(
         (r) => r.TRANSACTION_DETAILS_ROUTES,
       ),
+  },
+  {
+    path: 'cost/:targetPeriodType',
+    canActivate: [userIsRegulatorGuard],
+    resolve: {
+      targetPeriodDetails: (route: ActivatedRouteSnapshot) =>
+        inject(BuyOutAndSurplusCostInfoService)
+          .getBuyOutCosts('CCA_3')
+          .pipe(map((costs) => costs.find(({ businessId }) => businessId === route.paramMap.get('targetPeriodType')))),
+    },
+    children: [
+      {
+        path: '',
+        data: { breadcrumb: false, backlink: '../..' },
+        loadComponent: () => import('./cost-tab/change-cost/change-cost.component').then((c) => c.ChangeCostComponent),
+      },
+      {
+        path: 'confirmation',
+        data: { breadcrumb: false, backlink: false },
+        loadComponent: () =>
+          import('./cost-tab/change-cost/confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+      },
+    ],
   },
   {
     path: 'confirmation',

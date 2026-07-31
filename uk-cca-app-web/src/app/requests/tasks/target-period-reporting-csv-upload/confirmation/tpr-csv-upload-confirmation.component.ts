@@ -11,7 +11,7 @@ import { PanelComponent } from '@netz/govuk-components';
         <govuk-panel title="Target period report submitted"></govuk-panel>
 
         <h2 class="govuk-heading-m">What happens next</h2>
-        <p class="govuk-body">
+        <p>
           The service will calculate and store the performance for each facility using the energy and throughput data
           you uploaded.
         </p>

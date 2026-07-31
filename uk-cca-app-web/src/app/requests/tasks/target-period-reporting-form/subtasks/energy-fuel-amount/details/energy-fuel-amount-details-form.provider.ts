@@ -13,7 +13,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import { FUEL_MAP, FuelReference, FuelRow, FuelTypeKey, mapStandardFuelRows, tprFormQuery } from '@requests/common';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP } from '@shared/pipes';
-import { toNumber } from '@shared/utils';
+import { formatScientificZero, toNumber } from '@shared/utils';
 import { CCAGovukValidators } from '@shared/validators';
 
 type FuelRowForm = FormGroup<{
@@ -59,16 +59,21 @@ const SPECIAL_REPORTING_METHODLOGY_VALIDATORS = [
 ];
 
 /**
- * Validates SRM consistency: if SRM has a value,
- * at least one of grid or non-grid electricity must have a value > 0.
- * Returns a validator function factory that captures the FormGroup context.
+ * Cross-field validator that ensures SRM consistency across the entire form group.
+ *
+ * Attached to the FORM GROUP (not a single control) so that it re-runs whenever
+ * ANY descendant control changes — including fuel row deliveredEnergy values.
+ *
+ * Rather than returning an error on the group itself, it manually sets/clears
+ * the srmInconsistent error on the specialReportingMethodology control so the
+ * existing template error display continues to work unchanged.
  */
 function srmConsistencyValidator(formGroup: FormGroup): ValidatorFn {
   return (): ValidationErrors | null => {
     const fuelsArray = formGroup.get('fuels') as FormArray;
     const srmControl = formGroup.get('specialReportingMethodology');
 
-    if (!fuelsArray || !srmControl) return null;
+    if (!fuelsArray || !srmControl || srmControl.disabled) return null;
 
     const srmValue = toNumber(srmControl.getRawValue());
     const srmHasValue = srmValue > 0;
@@ -80,11 +85,21 @@ function srmConsistencyValidator(formGroup: FormGroup): ValidatorFn {
         toNumber(fuel.value.deliveredEnergy) > 0,
     );
 
-    // If SRM has a value but no grid/non-grid electricity, set error
+    const currentErrors = (srmControl.errors || {}) as Record<string, unknown>;
+    const { srmInconsistent: _, ...otherErrors } = currentErrors;
+
     if (srmHasValue && !hasGridOrNonGridElectricity) {
-      return { srmInconsistent: 'Input inconsistent with SRM rules. Contact your regulator' };
+      // Set the error on the SRM control so it's displayed in the template
+      srmControl.setErrors(
+        { ...otherErrors, srmInconsistent: 'Input inconsistent with SRM rules. Contact your regulator' },
+        { emitEvent: false },
+      );
+    } else if ('srmInconsistent' in currentErrors) {
+      // Condition is satisfied — remove only the srmInconsistent error
+      srmControl.setErrors(Object.keys(otherErrors).length > 0 ? otherErrors : null, { emitEvent: false });
     }
 
+    // Always return null for the group itself
     return null;
   };
 }
@@ -129,7 +144,7 @@ export const EnergyFuelAmountDetailsFormProvider: Provider = {
       fuelFormArray.push(
         createNonStandardFuelRowGroup(fb, {
           fuelType: fuel.name,
-          co2ConversionFactor: fuel.conversionFactor,
+          co2ConversionFactor: formatScientificZero(fuel.conversionFactor),
           deliveredEnergy: fuel.deliveredEnergy,
         }),
       );
@@ -140,23 +155,23 @@ export const EnergyFuelAmountDetailsFormProvider: Provider = {
       atLeastSeventyPercentEnergyUsed: fb.control<boolean | null>(
         energyFuelDetails?.atLeastSeventyPercentEnergyUsed ?? null,
         GovukValidators.required(
-          'Select yes if at least 70% of the total energy used in carrying out eligible activities',
+          'Select yes if at least 70% of the total energy was used in carrying out eligible activities for this period.',
         ),
       ),
       specialReportingMethodology: fb.control<string | null>(electricitySuppliedFromCHP ?? null),
     });
 
     if (referenceData?.baselineAndTargets?.usedReportingMechanism) {
-      group.controls.specialReportingMethodology.setValidators([
-        ...SPECIAL_REPORTING_METHODLOGY_VALIDATORS,
-        srmConsistencyValidator(group),
-      ]);
+      group.controls.specialReportingMethodology.setValidators(SPECIAL_REPORTING_METHODLOGY_VALIDATORS);
+      // Attach the cross-field validator at the GROUP level so it re-runs
+      // whenever any descendant control changes (e.g., fuel deliveredEnergy)
+      group.setValidators(srmConsistencyValidator(group));
     } else {
       group.controls.specialReportingMethodology.setValue(null);
       group.controls.specialReportingMethodology.disable();
     }
 
-    group.controls.specialReportingMethodology.updateValueAndValidity();
+    group.updateValueAndValidity();
 
     return group;
   },

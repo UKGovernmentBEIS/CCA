@@ -22,8 +22,9 @@ import {
 } from '@requests/common';
 import { SummaryComponent, TextInputComponent, WizardStepComponent } from '@shared/components';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementTypeToUnitPipe } from '@shared/pipes';
-import { logger } from '@shared/utils';
+import { logger, to7DecimalPlacesNumber } from '@shared/utils';
 import { CCAGovukValidators } from '@shared/validators';
+import BigNumber from 'bignumber.js';
 import { produce } from 'immer';
 
 import {
@@ -111,10 +112,12 @@ export class TprThroughputTotalsOnlyComponent {
     this.reportType() === 'INTERIM' ? 'Interim target' : 'Improvement target',
   );
 
-  protected readonly baselineEnergyIntensity = computed(() => this.calculations().baselineEnergyIntensity);
-  protected readonly improvementTarget = computed(() => this.calculations().improvementTarget);
-  protected readonly adjustedThroughput = computed(() => this.calculations().adjustedThroughput);
-  protected readonly targetVariableEnergy = computed(() => this.calculations().targetVariableEnergy);
+  readonly baselineEnergyIntensity = computed(() => this.calculations().baselineEnergyIntensity);
+  readonly improvementTarget = computed(() => this.calculations().improvementTarget);
+  readonly adjustedThroughput = computed(() => this.calculations().adjustedThroughput);
+  readonly targetVariableEnergy = computed(() => this.calculations().targetVariableEnergy);
+
+  readonly displayRounded = to7DecimalPlacesNumber;
 
   onSubmit() {
     if (this.form.invalid) return;
@@ -126,8 +129,8 @@ export class TprThroughputTotalsOnlyComponent {
       draft.throughputDetails = {
         actualThroughput: this.actualThroughput(),
         targetImprovement: roundHalfUpTo7Decimals(this.improvementTarget()),
-        adjustedThroughput: roundHalfUpTo7Decimals(this.adjustedThroughput() ?? 0),
-        totalTargetVariableEnergy: roundHalfUpTo7Decimals(this.targetVariableEnergy() ?? 0),
+        adjustedThroughput: roundHalfUpTo7Decimals(this.adjustedThroughput() ?? new BigNumber(0)),
+        totalTargetVariableEnergy: roundHalfUpTo7Decimals(this.targetVariableEnergy() ?? new BigNumber(0)),
       };
     });
 

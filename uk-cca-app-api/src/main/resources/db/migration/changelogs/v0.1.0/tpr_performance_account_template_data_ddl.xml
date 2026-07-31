@@ -79,4 +79,35 @@
 		</rollback>
 	</changeSet>
 
+	<changeSet id="0_1_0_tpr_performance_account_template_data_rename_table" author="P70311">
+		<comment>Rename to tpr_pat_data table</comment>
+		<renameTable newTableName="tpr_pat_data" oldTableName="tpr_performance_account_template_data" />
+		<sql>
+			ALTER TABLE tpr_pat_data RENAME CONSTRAINT tpr_performance_acc_templ_data_pk TO tpr_pat_data_pk;
+		</sql>
+		<renameSequence oldSequenceName="tpr_performance_account_template_data_seq" newSequenceName="tpr_pat_data_seq" />
+		<rollback>
+			<renameTable newTableName="tpr_performance_account_template_data" oldTableName="tpr_pat_data" />
+			<sql>
+				ALTER TABLE tpr_performance_account_template_data RENAME CONSTRAINT tpr_pat_data_pk TO tpr_performance_acc_templ_data_pk;
+			</sql>
+			<renameSequence oldSequenceName="tpr_pat_data_seq" newSequenceName="tpr_performance_account_template_data_seq" />
+		</rollback>
+	</changeSet>
+
+	<changeSet id="0_1_0_tpr_pat_data_rename_unique_constraint" author="P70311">
+		<sql>
+			ALTER TABLE tpr_pat_data
+				RENAME CONSTRAINT tpr_performance_acc_templ_data_uc
+				TO tpr_pat_data_uc;
+		</sql>
+		<rollback>
+			<sql>
+				ALTER TABLE tpr_pat_data
+				RENAME CONSTRAINT tpr_pat_data_uc
+				TO tpr_performance_acc_templ_data_uc;
+			</sql>
+		</rollback>
+	</changeSet>
+
 </databaseChangeLog>

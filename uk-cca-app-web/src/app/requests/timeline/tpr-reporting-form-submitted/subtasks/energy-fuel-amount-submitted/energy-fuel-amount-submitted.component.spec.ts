@@ -113,6 +113,9 @@ describe('EnergyFuelAmountSubmittedComponent', () => {
     expect(html).toContain('Grid electricity and electricity from combustion of a renewable fuel');
     expect(html).toContain('Custom fuel');
     expect(html).toContain('70% rule');
+    expect(html).toContain(
+      'Was at least 70% of the total energy used in carrying out eligible activities for this period?',
+    );
     expect(html).toContain('Yes');
   });
 

@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.PerformanceAccountTemplateDataContainer;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataContainer;
 import uk.gov.cca.api.workflow.request.flow.common.configuration.WorkbookFactoryConfiguration.CustomWorkbookFactory;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.common.domain.AccountUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateReportData;

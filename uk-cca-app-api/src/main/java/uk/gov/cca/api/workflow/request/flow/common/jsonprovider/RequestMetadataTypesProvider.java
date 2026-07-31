@@ -1,5 +1,7 @@
 package uk.gov.cca.api.workflow.request.flow.common.jsonprovider;
 
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.*;
+
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -7,19 +9,21 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.common.domain.BuyOutSurplusFacilityRunRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.processing.domain.BuyOutSurplusFacilityAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.common.domain.Cca2ExtensionNoticeRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2TerminationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.processing.domain.Cca2TerminationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestMetadata;
-import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestMetadata;
-import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.generate.common.domain.PerformanceDataSpreadsheetGenerateRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.domain.PerformanceDataFacilityProcessingRequestMetadata;
@@ -32,30 +36,6 @@ import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.do
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestMetadata;
 import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
-
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.BUY_OUT_SURPLUS_ACCOUNT_PROCESSING;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.BUY_OUT_SURPLUS_RUN;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA2_EXTENSION_NOTICE_RUN;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA2_TERMINATION_ACCOUNT_PROCESSING;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA2_TERMINATION_RUN;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA3_EXISTING_FACILITIES_MIGRATION_RUN;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_CERTIFICATION_ACCOUNT_PROCESSING;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_CERTIFICATION_RUN;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_FACILITY_DATA_UPLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_FACILITY_PROCESSING;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_GENERATE;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_PROCESSING;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.SECTOR_MOA;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.SUBSISTENCE_FEES_RUN;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.TARGET_UNIT_ACCOUNT_CREATION;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.TARGET_UNIT_MOA;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.UNDERLYING_AGREEMENT;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.UNDERLYING_AGREEMENT_VARIATION;
 
 @Component
 public class RequestMetadataTypesProvider implements JsonSubTypesProvider {
@@ -74,6 +54,8 @@ public class RequestMetadataTypesProvider implements JsonSubTypesProvider {
 				new NamedType(TargetUnitMoaRequestMetadata.class, TARGET_UNIT_MOA),
 				new NamedType(BuyOutSurplusRunRequestMetadata.class, BUY_OUT_SURPLUS_RUN),
 				new NamedType(BuyOutSurplusAccountProcessingRequestMetadata.class, BUY_OUT_SURPLUS_ACCOUNT_PROCESSING),
+				new NamedType(BuyOutSurplusFacilityRunRequestMetadata.class, BUY_OUT_SURPLUS_FACILITY_RUN),
+				new NamedType(BuyOutSurplusFacilityAccountProcessingRequestMetadata.class, BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING),
 				new NamedType(FacilityCertificationRunRequestMetadata.class, FACILITY_CERTIFICATION_RUN),
 				new NamedType(FacilityCertificationAccountProcessingRequestMetadata.class, FACILITY_CERTIFICATION_ACCOUNT_PROCESSING),
 				new NamedType(Cca3ExistingFacilitiesMigrationRunRequestMetadata.class, CCA3_EXISTING_FACILITIES_MIGRATION_RUN),

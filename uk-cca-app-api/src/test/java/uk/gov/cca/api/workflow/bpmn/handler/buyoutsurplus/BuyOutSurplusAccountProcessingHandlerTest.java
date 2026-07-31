@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.workflow.bpmn.exception.BpmnExecutionException;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountState;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.service.BuyOutSurplusAccountProcessingService;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusAccountState;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.service.BuyOutSurplusAccountProcessingService;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 

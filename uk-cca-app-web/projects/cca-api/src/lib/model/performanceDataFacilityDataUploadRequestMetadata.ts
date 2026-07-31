@@ -9,10 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { TargetPeriodYear } from './targetPeriodYear';
+import { TargetPeriodDetailsDTO } from './targetPeriodDetailsDTO';
 
 export interface PerformanceDataFacilityDataUploadRequestMetadata {
   type?: string;
   targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   reportType?: 'INTERIM' | 'FINAL';
+  targetPeriodYear?: TargetPeriodYear;
+  targetPeriods?: TargetPeriodDetailsDTO[];
+  submissionType?: 'PRIMARY' | 'SECONDARY';
   submittedDate?: string;
 }

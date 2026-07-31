@@ -3369,4 +3369,32 @@
         </sql>
     </changeSet>
 
+	<changeSet id="0_1_0_ADD_BUY_OUT_SURPLUS_FACILITY_RUN" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'BUY_OUT_SURPLUS_FACILITY_RUN', 'Generate a new buy out surplus facility run', 'PROCESS_BUY_OUT_SURPLUS_FACILITY_RUN', 'CA', false, true, false, true, 'CA');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'BUY_OUT_SURPLUS_FACILITY_RUN';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING', 'Generate a new buy out surplus per facility for target unit account', 'PROCESS_BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING', 'UNA', false, false, false, false, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
+    
 </databaseChangeLog>

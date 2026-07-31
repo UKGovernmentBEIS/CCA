@@ -103,7 +103,7 @@ describe('energy-fuel-amount-submitted utils', () => {
         co2ConversionFactor: 0.18254,
         deliveredEnergy: 1.8,
         primaryEnergyConversionFactor: 1,
-        primaryEnergy: 0.000328572,
+        primaryEnergy: 0.0003286,
         isCustom: false,
       },
     ]);

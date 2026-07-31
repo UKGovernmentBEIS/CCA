@@ -22,7 +22,7 @@ export interface PerformanceDataFacilityDataUploadSubmitRequestTaskPayload {
   performanceDataUpload?: PerformanceDataFacilityUpload;
   processingStatus?: 'NOT_STARTED_YET' | 'IN_PROGRESS' | 'COMPLETED';
   results?: PerformanceDataFacilityUploadResults;
-  errorMessage?: 'CSV_FAILED' | 'MESSAGE_PROCESSING_FAILED';
+  errorMessage?: 'SUBMISSION_RESULTS_CSV_FAILED' | 'MESSAGE_PROCESSING_FAILED';
   facilityReports?: Record<string, FacilityUploadReport>;
   csvRowErrors?: PerformanceDataFacilityCsvErrorEntry[];
   uploadAttachments?: Record<string, string>;

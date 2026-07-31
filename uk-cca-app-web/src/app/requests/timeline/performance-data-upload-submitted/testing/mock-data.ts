@@ -48,6 +48,7 @@ const performanceDataTp6: PerformanceDataTp6 = {
   },
   reportDate: '2025-02-07',
   actualTargetPeriodPerformance: null,
+  buyOutCost: 0,
   reportVersion: 1,
   templateVersion: null,
   targetPeriod: 'TP6',

@@ -105,12 +105,12 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
      */
     public final BiFunction<PerformanceDataFacilityCalculationParameters, ProductVariableEnergyConsumptionData, BigDecimal> PRODUCT_TARGET_IMPROVEMENT =
             (calculatedParameters, originalProduct) -> {
-        if(calculatedParameters.getBaselineDate().getYear() == originalProduct.getBaselineYear().getValue()) {
+        if(calculatedParameters.getBaselineYear().equals(originalProduct.getBaselineYear())) {
             return calculatedParameters.getTargetImprovement();
         }
 
         BigDecimal productBaseYear = BigDecimal.valueOf(originalProduct.getBaselineYear().getValue());
-        BigDecimal facilityBaseYear = BigDecimal.valueOf(calculatedParameters.getBaselineDate().getYear());
+        BigDecimal facilityBaseYear = BigDecimal.valueOf(calculatedParameters.getBaselineYear().getValue());
 
         BigDecimal progressAtProductBaseYear = BigDecimal.ZERO;
         for (Map.Entry<TargetPeriodType, Integer> entry : calculatedParameters.getLastYearPerTp().entrySet()) {
@@ -133,8 +133,11 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
                         .orElse(BigDecimal.ZERO);
             }).orElse(facilityBaseYear);
 
-            BigDecimal progressAtProductBaseYearTP = productBaseYear.min(BigDecimal.valueOf(entry.getValue()))
-                    .subtract(previousYear).max(BigDecimal.ZERO)
+            BigDecimal progressAtProductBaseYearTPNumerator = entry.getKey().equals(TargetPeriodType.TP7)
+                    ? productBaseYear.min(BigDecimal.valueOf(entry.getValue())).subtract(previousYear)
+                    : productBaseYear.min(BigDecimal.valueOf(entry.getValue())).subtract(previousYear).max(BigDecimal.ZERO);
+
+            BigDecimal progressAtProductBaseYearTP = progressAtProductBaseYearTPNumerator
                     .divide(BigDecimal.valueOf(entry.getValue()).subtract(previousYear), MathContext.DECIMAL128)
                     .multiply(facilityTargetTP.subtract(previousFacilityTargetTP, MathContext.DECIMAL128), MathContext.DECIMAL128);
 

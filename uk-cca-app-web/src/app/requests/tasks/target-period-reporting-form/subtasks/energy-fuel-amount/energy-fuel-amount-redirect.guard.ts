@@ -6,13 +6,11 @@ import { TaskItemStatus, TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK, tprFormQuery } fr
 
 export const energyFuelAmountRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const store = inject(RequestTaskStore);
-  const sectionsCompleted = store.select(tprFormQuery.selectSectionsCompleted)();
+  const sectionsCompleted = store.select(tprFormQuery.selectSectionsCompleted)() ?? {};
   const sectionStatus = sectionsCompleted[TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK];
-  const statusPending = sectionStatus === TaskItemStatus.NOT_STARTED || sectionStatus === TaskItemStatus.IN_PROGRESS;
-
-  if (statusPending) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
 
   if (sectionStatus === TaskItemStatus.COMPLETED) return createUrlTreeFromSnapshot(route, ['summary']);
+  if (sectionStatus === TaskItemStatus.IN_PROGRESS) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
 
   return createUrlTreeFromSnapshot(route, ['details']);
 };

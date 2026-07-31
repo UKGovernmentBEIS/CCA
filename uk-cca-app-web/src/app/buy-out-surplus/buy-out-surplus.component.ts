@@ -23,6 +23,7 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
     ButtonDirective,
     WarningTextComponent,
     WorkflowHistoryTabComponent,
+    // CostTabComponent,
     TransactionsFiltersComponent,
     TransactionsTableComponent,
   ],

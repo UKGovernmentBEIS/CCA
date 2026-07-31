@@ -59,7 +59,9 @@
 <h2 class="govuk-heading-m">70% rule</h2>
 <dl govuk-summary-list>
   <div govukSummaryListRow>
-    <dt govukSummaryListRowKey>Is at least 70% of the total energy used in carrying out eligible activities?</dt>
+    <dt govukSummaryListRowKey>
+      Was at least 70% of the total energy used in carrying out eligible activities for this period?
+    </dt>
     <dd govukSummaryListRowValue>{{ isAtLeast70PercentEnergyUsedText() }}</dd>
 
     @if (isEditable()) {
@@ -92,7 +94,7 @@
 
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Throughput adjustment factor</dt>
-      <dd govukSummaryListRowValue>{{ throughputAdjustmentFactor() | number: '1.0-7' }}</dd>
+      <dd govukSummaryListRowValue>{{ displayRounded(throughputAdjustmentFactor()) | number: '1.0-7' }}</dd>
     </div>
   </dl>
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,12 @@ public class TargetPeriodService {
     private static final TargetPeriodMapper MAPPER = Mappers.getMapper(TargetPeriodMapper.class);
     private static final List<SchemeVersion> EXCLUDED_SCHEME_VERSIONS = List.of(SchemeVersion.CCA_2);
 
-    public List<TargetPeriodDetailsDTO> getTargetPeriodDetailsBySchemeVersion(SchemeVersion schemeVersion) {
-        return repository.findAllBySchemeVersion(schemeVersion).stream().map(MAPPER::toTargetPeriodDetailsDTO).toList();
+    public List<TargetPeriodDetailsDTO> getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(SchemeVersion schemeVersion) {
+        return repository.findAllBySchemeVersionOrderByStartDateDesc(schemeVersion).stream().map(MAPPER::toTargetPeriodDetailsDTO).toList();
     }
     
-    public List<TargetPeriodBuyOutDetailsDTO> getTargetPeriodBuyOutDetailsBySchemeVersion(SchemeVersion schemeVersion) {
-        return repository.findAllBySchemeVersion(schemeVersion).stream().map(MAPPER::toTargetPeriodBuyOutDetailsDTO).toList();
+    public List<TargetPeriodBuyOutDetailsDTO> getTargetPeriodBuyOutDetailsBySchemeVersionAndStartDateDesc(SchemeVersion schemeVersion) {
+        return repository.findAllBySchemeVersionOrderByStartDateDesc(schemeVersion).stream().map(MAPPER::toTargetPeriodBuyOutDetailsDTO).toList();
     }
 
     public List<TargetPeriodDetailsDTO> getTargetPeriodDetailsByTargetPeriodTypes(Set<TargetPeriodType> targetPeriodTypes) {
@@ -102,6 +103,12 @@ public class TargetPeriodService {
     public List<TargetPeriod> getTargetPeriodBuyOutCurrentAndPrevious(LocalDate date) {
         return repository.findByBuyOutStartDateLessThanEqualOrderByBuyOutStartDateDesc(date);
     }
+    
+    public Set<TargetPeriodType> getTargetPeriodsForSchemeUpTo(SchemeVersion schemeVersion, LocalDate date) {
+		return repository.findBySchemeVersionAndStartDateLessThanEqual(schemeVersion, date).stream()
+	            .map(TargetPeriod::getBusinessId)
+	            .collect(Collectors.toSet());
+	}
 	
     private TargetPeriod getByTargetPeriodType(TargetPeriodType targetPeriodType) {
         return repository.findByBusinessId(targetPeriodType)

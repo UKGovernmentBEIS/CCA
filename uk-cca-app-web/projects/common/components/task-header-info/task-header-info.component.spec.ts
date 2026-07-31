@@ -35,6 +35,7 @@ describe('TaskHeaderInfoComponent', () => {
     fixture.detectChanges();
 
     expect(page.info.map((el) => el.textContent.trim())).toEqual(['Assigned to: Adam Smith', 'Days Remaining: 13']);
+    expect(page.info.every((el) => el.classList.contains('govuk-body'))).toBeTruthy();
   });
 
   it('should display the content with no deadline', () => {

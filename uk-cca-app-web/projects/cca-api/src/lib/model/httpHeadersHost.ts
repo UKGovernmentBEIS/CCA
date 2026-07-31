@@ -12,9 +12,9 @@
 import { HttpHeadersHostAddress } from './httpHeadersHostAddress';
 
 export interface HttpHeadersHost {
+  hostString?: string;
   address?: HttpHeadersHostAddress;
   port?: number;
   unresolved?: boolean;
   hostName?: string;
-  hostString?: string;
 }

@@ -3,7 +3,7 @@ package uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedatauploa
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.PerformanceAccountTemplateDataContainer;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataContainer;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.netz.api.common.config.MapperConfig;

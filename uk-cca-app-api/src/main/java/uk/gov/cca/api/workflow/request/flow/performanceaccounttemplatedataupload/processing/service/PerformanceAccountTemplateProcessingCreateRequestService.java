@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.service.PerformanceAccountTemplateDataQueryService;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.service.PerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;

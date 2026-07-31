@@ -5,15 +5,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.EnergyOrCarbonSavingActionsAndMeasuresImplementedItem;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.PerformanceAccountTemplateDataContainer;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.EnergyOrCarbonSavingActionsAndMeasuresImplementedItem;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataContainer;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateReportData;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateReportData.EnergyOrCarbonSavingActionsAndMeasuresImplementedRow;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Collections;
 
 class PerformanceAccountTemplateDataContainerMapperTest {

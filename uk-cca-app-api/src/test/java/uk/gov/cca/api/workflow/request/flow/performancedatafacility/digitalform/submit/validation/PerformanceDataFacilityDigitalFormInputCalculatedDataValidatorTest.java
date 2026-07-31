@@ -22,7 +22,6 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domai
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +83,7 @@ class PerformanceDataFacilityDigitalFormInputCalculatedDataValidatorTest {
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
-                .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -149,7 +148,7 @@ class PerformanceDataFacilityDigitalFormInputCalculatedDataValidatorTest {
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
-                .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(false)
                 .improvements(Map.of(
@@ -216,7 +215,7 @@ class PerformanceDataFacilityDigitalFormInputCalculatedDataValidatorTest {
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
-                .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(
@@ -306,7 +305,7 @@ class PerformanceDataFacilityDigitalFormInputCalculatedDataValidatorTest {
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)
                 .targetImprovement(BigDecimal.valueOf(0.08))
-                .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .measurementType(MeasurementType.ENERGY_KWH)
                 .usedReportingMechanism(true)
                 .improvements(Map.of(

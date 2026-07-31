@@ -1,6 +1,7 @@
 package uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service;
 
 import lombok.RequiredArgsConstructor;
+
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,8 +78,11 @@ public class BuyOutSurplusQueryService {
     }
 
     public List<TargetUnitAccountBusinessInfoDTO> getAllEligibleAccountsByTargetPeriod(TargetPeriodType targetPeriodType) {
-        final List<TargetUnitAccountBusinessInfoDTO> eligibleAccounts = eligibleAccountsCustomRepository
-                .findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType);
+    	List<TargetUnitAccountBusinessInfoDTO> eligibleAccounts =
+                switch (targetPeriodType.getResourceType()) {
+                    case ACCOUNT -> findEligibleAccountsForAccountPerformanceData(targetPeriodType);
+                    case FACILITY -> findEligibleAccountsForFacilityPerformanceData(targetPeriodType);
+                };
 
         final List<Long> excluded = buyOutSurplusExclusionRepository.findAllAccountIds();
 
@@ -88,8 +92,11 @@ public class BuyOutSurplusQueryService {
     }
 
     public List<TargetUnitAccountBusinessInfoDTO> getAllExcludedEligibleAccountsByTargetPeriod(TargetPeriodType targetPeriodType) {
-        final List<TargetUnitAccountBusinessInfoDTO> eligibleAccounts = eligibleAccountsCustomRepository
-                .findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType);
+    	List<TargetUnitAccountBusinessInfoDTO> eligibleAccounts =
+                switch (targetPeriodType.getResourceType()) {
+                    case ACCOUNT -> findEligibleAccountsForAccountPerformanceData(targetPeriodType);
+                    case FACILITY -> findEligibleAccountsForFacilityPerformanceData(targetPeriodType);
+                };
 
         final List<Long> excluded = buyOutSurplusExclusionRepository.findAllAccountIds();
 
@@ -191,5 +198,27 @@ public class BuyOutSurplusQueryService {
             .map(TARGET_PERIOD_MAPPER::toTargetPeriodBuyOutDetailsDTO)
             .ifPresent(currentTps::add);
 		}
+	}
+
+	private List<TargetUnitAccountBusinessInfoDTO> findEligibleAccountsForAccountPerformanceData(
+			TargetPeriodType targetPeriodType) {
+		return eligibleAccountsCustomRepository.findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType);
+	}
+	
+	private List<TargetUnitAccountBusinessInfoDTO> findEligibleAccountsForFacilityPerformanceData(
+			TargetPeriodType targetPeriodType) {
+		Set<TargetPeriodType> applicableTargetPeriods = determineApplicableTargetPeriods(targetPeriodType);
+		
+		return eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(applicableTargetPeriods);
+	}
+
+	private Set<TargetPeriodType> determineApplicableTargetPeriods(TargetPeriodType targetPeriodType) {
+		TargetPeriod targetPeriod = targetPeriodService.findByTargetPeriodType(targetPeriodType);
+		
+		return LocalDate.now().isBefore(targetPeriod.getSecondaryReportingStartDate()) 
+				? Set.of(targetPeriodType)
+						: targetPeriodService.getTargetPeriodsForSchemeUpTo(
+								targetPeriod.getSchemeVersion(),
+								targetPeriod.getStartDate());
 	}
 }

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { roundHalfUpTo7Decimals } from '@requests/common';
+
 import { PerformanceDataFacilityInputEnergyFuelDetails } from 'cca-api';
 
 import { EnergyFuelAmountSummaryComponent } from '../energy-fuel-amount/energy-fuel-amount-summary.component';
@@ -57,6 +59,9 @@ describe('EnergyFuelAmountSummaryComponent', () => {
 
     const element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toContain('Not provided');
+    expect(element.textContent).toContain(
+      'Was at least 70% of the total energy used in carrying out eligible activities for this period?',
+    );
   });
 
   it('should show the SRM section when reporting mechanism is used and rows exist', () => {
@@ -90,6 +95,31 @@ describe('EnergyFuelAmountSummaryComponent', () => {
 
     const element: HTMLElement = fixture.nativeElement;
     expect(element.textContent).toContain('0.7142857');
+  });
+
+  it('should use consistent 7dp rounding for display and API payload', () => {
+    // GRID=1000, NON_GRID=0, CHP=701 => 1000/1701 = 0.587889476...
+    // At 7dp half-up: 0.5878895
+    fixture.componentRef.setInput('energyFuelDetails', {
+      standardFuels: {
+        GRID_ELECTRICITY: { deliveredEnergy: '1000', primaryEnergy: '1000' },
+        NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+      },
+      nonStandardFuels: [],
+      electricitySuppliedFromCHP: '701',
+    });
+    fixture.componentRef.setInput('usedReportingMechanism', true);
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.textContent).toContain('0.5878895');
+
+    // Verify display rounding matches API rounding for the computed value
+    const factor = component.throughputAdjustmentFactor();
+    const displayed = component.displayRounded(factor);
+    const apiString = roundHalfUpTo7Decimals(factor);
+
+    expect(displayed.toFixed(7)).toBe(Number(apiString).toFixed(7));
   });
 
   it('should show Change links when isEditable is true', () => {

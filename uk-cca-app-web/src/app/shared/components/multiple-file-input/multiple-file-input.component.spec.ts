@@ -60,6 +60,10 @@ describe('MultipleFileInputComponent', () => {
     get input() {
       return this.query<HTMLInputElement>('input');
     }
+
+    get dropzoneHint() {
+      return this.query<HTMLParagraphElement>('.cca-multi-file-upload__dropzone p');
+    }
   }
 
   beforeEach(async () => {
@@ -79,6 +83,7 @@ describe('MultipleFileInputComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(page.dropzoneHint.classList.contains('govuk-body')).toBeTruthy();
   });
 
   it('should display current value', () => {

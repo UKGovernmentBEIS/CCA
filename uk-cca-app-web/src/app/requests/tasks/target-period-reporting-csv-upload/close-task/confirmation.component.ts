@@ -15,7 +15,7 @@ import { tprCSVUploadQuery } from '../target-period-reporting-csv-upload.selecto
 
         @if (processingStatus() === 'COMPLETED') {
           <h2 class="govuk-heading-m">What happens next</h2>
-          <p class="govuk-body">
+          <p>
             The service will calculate and store the performance for each facility using the energy and throughput data
             you uploaded.
           </p>

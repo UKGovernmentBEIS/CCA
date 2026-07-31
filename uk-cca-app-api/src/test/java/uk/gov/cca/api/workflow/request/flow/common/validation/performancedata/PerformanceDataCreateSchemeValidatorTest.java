@@ -35,7 +35,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         final SchemeVersion scheme = SchemeVersion.CCA_3;
         final LocalDate submissionDate = LocalDate.of(2022, 1, 1);
 
-        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersion(scheme))
+        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme))
                 .thenReturn(createTargetPeriods(null));
 
         // Invoke
@@ -44,7 +44,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         // Verify
         assertThat(result).isTrue();
         verify(targetPeriodService, times(1))
-                .getTargetPeriodDetailsBySchemeVersion(scheme);
+                .getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme);
     }
 
     @Test
@@ -52,7 +52,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         final SchemeVersion scheme = SchemeVersion.CCA_3;
         final LocalDate submissionDate = LocalDate.of(2024, 1, 1);
 
-        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersion(scheme))
+        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme))
                 .thenReturn(createTargetPeriods(null));
 
         // Invoke
@@ -61,7 +61,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         // Verify
         assertThat(result).isTrue();
         verify(targetPeriodService, times(1))
-                .getTargetPeriodDetailsBySchemeVersion(scheme);
+                .getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme);
     }
 
     @Test
@@ -69,7 +69,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         final SchemeVersion scheme = SchemeVersion.CCA_3;
         final LocalDate submissionDate = LocalDate.of(2025, 12, 31);
 
-        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersion(scheme))
+        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme))
                 .thenReturn(createTargetPeriods(LocalDate.of(2025, 12, 31)));
 
         // Invoke
@@ -78,7 +78,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         // Verify
         assertThat(result).isTrue();
         verify(targetPeriodService, times(1))
-                .getTargetPeriodDetailsBySchemeVersion(scheme);
+                .getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme);
     }
 
     @Test
@@ -86,7 +86,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         final SchemeVersion scheme = SchemeVersion.CCA_3;
         final LocalDate submissionDate = LocalDate.of(2021, 1, 1);
 
-        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersion(scheme))
+        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme))
                 .thenReturn(createTargetPeriods(null));
 
         // Invoke
@@ -95,7 +95,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         // Verify
         assertThat(result).isFalse();
         verify(targetPeriodService, times(1))
-                .getTargetPeriodDetailsBySchemeVersion(scheme);
+                .getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme);
     }
 
     @Test
@@ -103,7 +103,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         final SchemeVersion scheme = SchemeVersion.CCA_3;
         final LocalDate submissionDate = LocalDate.of(2026, 1, 1);
 
-        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersion(scheme))
+        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme))
                 .thenReturn(createTargetPeriods(LocalDate.of(2025, 12, 31)));
 
         // Invoke
@@ -112,7 +112,7 @@ class PerformanceDataCreateSchemeValidatorTest {
         // Verify
         assertThat(result).isFalse();
         verify(targetPeriodService, times(1))
-                .getTargetPeriodDetailsBySchemeVersion(scheme);
+                .getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(scheme);
     }
 
     private List<TargetPeriodDetailsDTO> createTargetPeriods(LocalDate endDate) {

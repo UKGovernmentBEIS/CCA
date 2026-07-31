@@ -15,6 +15,7 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 import { AccountBuyOutSurplusInfoDTO } from '../model/accountBuyOutSurplusInfoDTO';
+import { AvailableTargetPeriodsBuyOutDTO } from '../model/availableTargetPeriodsBuyOutDTO';
 import { SurplusHistoryDTO } from '../model/surplusHistoryDTO';
 import { SurplusUpdateDTO } from '../model/surplusUpdateDTO';
 import { TargetUnitAccountBusinessInfoDTO } from '../model/targetUnitAccountBusinessInfoDTO';
@@ -239,6 +240,67 @@ export class BuyOutAndSurplusInfoService {
       `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/buy-out-surplus/history`,
       {
         params: queryParameters,
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Retrieves the available TPs for buy-out run
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getAvailableBuyOutTargetPeriods(): Observable<AvailableTargetPeriodsBuyOutDTO>;
+  public getAvailableBuyOutTargetPeriods(
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<AvailableTargetPeriodsBuyOutDTO>>;
+  public getAvailableBuyOutTargetPeriods(
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<AvailableTargetPeriodsBuyOutDTO>>;
+  public getAvailableBuyOutTargetPeriods(
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<AvailableTargetPeriodsBuyOutDTO>;
+  public getAvailableBuyOutTargetPeriods(
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.get<AvailableTargetPeriodsBuyOutDTO>(
+      `${this.configuration.basePath}/v1.0/buy-out-surplus/run/available-target-periods`,
+      {
         responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,

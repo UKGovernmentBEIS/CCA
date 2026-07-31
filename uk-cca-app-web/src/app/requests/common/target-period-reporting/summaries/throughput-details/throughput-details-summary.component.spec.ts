@@ -3,6 +3,7 @@ import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { roundHalfUpTo7Decimals } from '@requests/common';
 import { PaginationComponent } from '@shared/components';
 
 import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
@@ -118,5 +119,81 @@ describe('ThroughputDetailsSummaryComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('12,345.6789012');
+  });
+
+  it('should display CO2e column headers and labels for carbon-based facilities', () => {
+    const carbonBaseline = buildBaselineData(2);
+    carbonBaseline.baselineAndTargets.measurementType = 'CARBON_TONNE';
+    fixture.componentRef.setInput('referenceData', carbonBaseline as PerformanceDataFacilityReferenceData);
+    fixture.componentRef.setInput('performanceData', buildPerformanceData([0, 1]));
+    fixture.detectChanges();
+
+    const content = fixture.nativeElement.textContent;
+
+    // Column headers
+    expect(content).toContain('Baseline CO2e intensity');
+    expect(content).not.toContain('Baseline energy intensity');
+    expect(content).toContain('Target CO2e');
+    expect(content).not.toContain('Target energy');
+
+    // Section labels
+    expect(content).toContain('Calculated carbon dioxide amounts');
+    expect(content).not.toContain('Calculated energy amounts');
+    expect(content).toContain('Total target variable carbon dioxide');
+    expect(content).not.toContain('Total target variable energy');
+  });
+
+  it('should produce display values matching roundHalfUpTo7Decimals for computed values', () => {
+    const baseline = {
+      baselineAndTargets: {
+        measurementType: 'ENERGY_KWH',
+        usedReportingMechanism: false,
+        baselineDate: '2022-01-01',
+        improvements: { TP5: '8', TP6: '0', TP7: '0', TP8: '0', TP9: '0' },
+        variableEnergyConsumptionDataByProduct: [
+          {
+            productName: 'Widgets',
+            baselineYear: 2022,
+            productStatus: 'LIVE',
+            energy: '605377',
+            throughputUnit: 'tonnes',
+            throughput: '1000',
+          },
+        ],
+      },
+    };
+
+    const perf: PerformanceDataFacilityInputData = {
+      energyFuelDetails: {
+        standardFuels: {
+          GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+          NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+        },
+        electricitySuppliedFromCHP: '0',
+        atLeastSeventyPercentEnergyUsed: true,
+      },
+      throughputDetails: {
+        totalTargetVariableEnergy: '0',
+        variableEnergyConsumptionDataByProduct: [
+          {
+            productName: 'Widgets',
+            actualThroughput: '999.99999',
+            targetImprovement: '0',
+            adjustedThroughput: '0',
+            targetEnergy: '0',
+          },
+        ],
+      },
+    };
+
+    fixture.componentRef.setInput('referenceData', baseline as PerformanceDataFacilityReferenceData);
+    fixture.componentRef.setInput('performanceData', perf);
+    fixture.detectChanges();
+
+    const total = component.totalTargetVariableEnergy();
+    const displayed = component.displayRounded(total);
+    const apiString = roundHalfUpTo7Decimals(total);
+
+    expect(displayed.toFixed(7)).toBe(Number(apiString).toFixed(7));
   });
 });

@@ -50,6 +50,8 @@
 
   <include file="tpr_facility_certification_ddl.xml" relativeToChangelogFile="true"/>
 
+  <include file="tpr_pat_data_facility_ddl.xml" relativeToChangelogFile="true"/>
+
   <!-- Keep it as the last tag  -->
   <include file="mi_reports_views.xml" relativeToChangelogFile="true"/>
 

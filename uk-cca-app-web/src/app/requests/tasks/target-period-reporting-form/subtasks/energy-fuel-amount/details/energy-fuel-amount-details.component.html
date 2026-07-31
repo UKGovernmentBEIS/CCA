@@ -87,17 +87,20 @@
                 @case ('primaryEnergy') {
                   @if (isCarbonPrimaryOutput()) {
                     {{
-                      calculatePrimaryCarbon(
-                        row.value.deliveredEnergy,
-                        row.value.primaryEnergyConversionFactor,
-                        row.value.co2ConversionFactor,
-                        measurementUnit()
+                      displayRounded(
+                        calculatePrimaryCarbon(
+                          row.value.deliveredEnergy,
+                          row.value.primaryEnergyConversionFactor,
+                          row.value.co2ConversionFactor,
+                          measurementUnit()
+                        )
                       ) | number: '1.0-7'
                     }}
                   } @else {
                     {{
-                      calculatePrimaryEnergy(row.value.deliveredEnergy, row.value.primaryEnergyConversionFactor)
-                        | number: '1.0-7'
+                      displayRounded(
+                        calculatePrimaryEnergy(row.value.deliveredEnergy, row.value.primaryEnergyConversionFactor)
+                      ) | number: '1.0-7'
                     }}
                   }
                 }
@@ -144,7 +147,7 @@
   <div
     formControlName="atLeastSeventyPercentEnergyUsed"
     govuk-radio
-    legend="Is at least 70% of the total energy used in carrying out eligible activities?"
+    legend="Was at least 70% of the total energy used in carrying out eligible activities for this period?"
     legendSize="medium"
   >
     <govuk-radio-option [value]="false" [label]="'No'" />
@@ -164,7 +167,9 @@
       ></div>
 
       <h2 class="govuk-heading-m">Throughput adjustment factor</h2>
-      <p class="govuk-body govuk-!-margin-bottom-9">{{ throughputAdjustmentFactor() | number: '1.0-7' }}</p>
+      <p class="govuk-!-margin-bottom-9">
+        {{ displayRounded(throughputAdjustmentFactor()) | number: '1.0-7' }}
+      </p>
     </div>
   }
 </cca-wizard-step>

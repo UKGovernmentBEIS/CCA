@@ -4,6 +4,7 @@
 
 export * from './accountNotes.service';
 export * from './authorities.service';
+export * from './buyOutAndSurplusCostInfo.service';
 export * from './buyOutAndSurplusInfo.service';
 export * from './buyOutAndSurplusTransactionInfoView.service';
 export * from './buyOutAndSurplusTransactionsInfoView.service';

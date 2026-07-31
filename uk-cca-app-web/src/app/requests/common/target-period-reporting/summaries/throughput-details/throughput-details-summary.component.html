@@ -16,11 +16,13 @@
           }
 
           @case ('energy') {
-            {{ row.energy | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}/{{ row.throughputUnit }}
+            {{ displayRounded(row.energy) | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}/{{
+              row.throughputUnit
+            }}
           }
 
           @case ('improvementTarget') {
-            {{ row.improvementTarget | percent: '1.0-3' }}
+            {{ row.improvementTarget.toNumber() | percent: '1.0-3' }}
           }
 
           @case ('throughput') {
@@ -28,11 +30,11 @@
           }
 
           @case ('adjustedThroughput') {
-            {{ row.adjustedThroughput | number: '1.0-3' }}
+            {{ row.adjustedThroughput.toNumber() | number: '1.0-3' }}
           }
 
           @case ('targetEnergy') {
-            {{ row.targetEnergy | number: '1.0-3' }}
+            {{ row.targetEnergy.toNumber() | number: '1.0-3' }}
           }
 
           @default {
@@ -54,10 +56,17 @@
   />
 }
 
-<h2 class="govuk-heading-m govuk-!-margin-top-6">Calculated energy amounts</h2>
+<h2 class="govuk-heading-m govuk-!-margin-top-6">
+  Calculated {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }} amounts
+</h2>
+
 <dl govuk-summary-list>
   <div govukSummaryListRow>
-    <dt govukSummaryListRowKey>Total target variable energy ({{ measurementUnit() | measurementTypeToUnit }})</dt>
-    <dd govukSummaryListRowValue>{{ totalTargetVariableEnergy() | number: '1.0-7' }}</dd>
+    <dt govukSummaryListRowKey>
+      Total target variable {{ isCarbonMeasurement() ? 'carbon dioxide' : 'energy' }} ({{
+        measurementUnit() | measurementTypeToUnit
+      }})
+    </dt>
+    <dd govukSummaryListRowValue>{{ displayRounded(totalTargetVariableEnergy()) | number: '1.0-7' }}</dd>
   </div>
 </dl>

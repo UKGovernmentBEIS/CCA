@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskState, RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { TasksApiService } from '@requests/common';
+import { roundHalfUpTo7Decimals, TasksApiService } from '@requests/common';
 import { getByText } from '@testing';
 import { Mocked } from 'vitest';
 
@@ -102,6 +102,15 @@ describe('TprThroughputTotalsOnlyComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should remain rendered when actual throughput contains invalid characters', () => {
+    component['form'].controls.actualThroughput.setValue('`');
+
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(component['form'].controls.actualThroughput.invalid).toBe(true);
+    expect(component.adjustedThroughput()).toBeNull();
+    expect(component.targetVariableEnergy()).toBeNull();
+  });
+
   it('should show the baseline throughput with its throughput unit in the baseline details', () => {
     expect(getByText(/Total baseline throughput \(tonnes\)/, fixture.nativeElement)).toBeTruthy();
     expect(() => getByText(/Total throughput \(kWh\)/, fixture.nativeElement)).toThrow();
@@ -141,5 +150,51 @@ describe('TprThroughputTotalsOnlyComponent', () => {
 
     expect(getByText(/Baseline carbon dioxide \(CO2\) intensity/, fixture.nativeElement)).toBeTruthy();
     expect(getByText(/Total target variable carbon dioxide/, fixture.nativeElement)).toBeTruthy();
+  });
+
+  it('should produce display values matching roundHalfUpTo7Decimals for computed values', () => {
+    // baselineEnergyIntensity = 1000/3 ≈ 333.333333..., target = 333.333... × 1000 × 0.88 ≈ 293333.333333...
+    const precisionState = {
+      ...mockTprRequestTaskStateThroughputTotalsOnly,
+      requestTaskItem: {
+        ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem,
+        requestTask: {
+          ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask,
+          payload: {
+            ...basePayload,
+            referenceData: {
+              ...basePayload.referenceData,
+              baselineAndTargets: {
+                ...basePayload.referenceData?.baselineAndTargets,
+                baselineVariableEnergy: '1000',
+                totalThroughput: '3',
+              },
+            },
+            performanceData: {
+              ...basePayload.performanceData,
+              throughputDetails: {
+                ...basePayload.performanceData?.throughputDetails,
+                actualThroughput: '1000',
+              },
+            },
+          },
+        },
+      },
+    } as RequestTaskState;
+
+    store.setState(precisionState);
+    fixture.detectChanges();
+
+    const target = component.targetVariableEnergy();
+    const displayed = component.displayRounded(target!);
+    const apiString = roundHalfUpTo7Decimals(target!);
+
+    expect(displayed.toFixed(7)).toBe(Number(apiString).toFixed(7));
+
+    const intensity = component.baselineEnergyIntensity();
+    const displayedIntensity = component.displayRounded(intensity!);
+    const apiIntensity = roundHalfUpTo7Decimals(intensity!);
+
+    expect(displayedIntensity.toFixed(7)).toBe(Number(apiIntensity).toFixed(7));
   });
 });

@@ -12,7 +12,7 @@ import {
   TableComponent,
 } from '@netz/govuk-components';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
-import { toNumber } from '@shared/utils';
+import { to7DecimalPlacesNumber, toNumber } from '@shared/utils';
 
 import { PerformanceDataFacilityInputEnergyFuelDetails } from 'cca-api';
 
@@ -85,18 +85,20 @@ export class EnergyFuelAmountSummaryComponent {
     () => this.energyFuelDetails()?.atLeastSeventyPercentEnergyUsed,
   );
 
-  protected readonly throughputAdjustmentFactor = computed(() => {
+  readonly throughputAdjustmentFactor = computed(() => {
     const details = this.energyFuelDetails();
-    const gridElectricity = toNumber(details?.standardFuels?.['GRID_ELECTRICITY']?.deliveredEnergy);
-    const nonGridElectricity = toNumber(details?.standardFuels?.['NON_GRID_ELECTRICITY']?.deliveredEnergy);
-    const chpElectricity = toNumber(details?.electricitySuppliedFromCHP);
-
-    return calculateThroughputAdjustmentFactor(gridElectricity, nonGridElectricity, chpElectricity);
+    return calculateThroughputAdjustmentFactor(
+      details?.standardFuels?.['GRID_ELECTRICITY']?.deliveredEnergy ?? '0',
+      details?.standardFuels?.['NON_GRID_ELECTRICITY']?.deliveredEnergy ?? '0',
+      details?.electricitySuppliedFromCHP ?? '0',
+    );
   });
 
   protected readonly isAtLeast70PercentEnergyUsedText = computed(
     () => boolToString(this.isAtLeast70PercentEnergyUsed()) ?? 'Not provided',
   );
+
+  readonly displayRounded = to7DecimalPlacesNumber;
 
   protected readonly electricitySuppliedFromCHP = computed(() =>
     toNumber(this.energyFuelDetails()?.electricitySuppliedFromCHP),

@@ -79,7 +79,6 @@ describe('DashboardFiltersComponent', () => {
     expect(optionLabels).toEqual([
       'All',
       'Admin termination',
-      'CCA3 migration',
       'Facility audit',
       'Non-compliance',
       'Underlying agreement application',

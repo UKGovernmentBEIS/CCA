@@ -1,0 +1,28 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <cca-wizard-step
+      [formGroup]="form"
+      caption="Change"
+      heading="{{ targetPeriod() }} Buyout cost per tCO2e"
+      submitText="Confirm"
+      (formSubmit)="onSubmit()"
+    >
+      <p>
+        Enter the cost of the buy-out for the selected target period.
+        <strong>You must only enter an amount that has been calculated in accordance with the regulations.</strong>
+        The buy-out and surplus process will use the value you enter after you click the Confirm button. Previous batch
+        runs will not be updated by any change you make.
+      </p>
+
+      <div
+        class="govuk-!-margin-top-6 govuk-!-margin-bottom-6"
+        formControlName="buyOutCost"
+        inputType="number"
+        widthClass="govuk-input--width-5"
+        prefix="£"
+        suffix="per tCO2e"
+        cca-text-input
+      ></div>
+    </cca-wizard-step>
+  </div>
+</div>

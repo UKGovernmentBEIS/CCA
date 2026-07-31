@@ -114,6 +114,10 @@ public enum CcaErrorCode implements NetzErrorCode {
     PERFORMANCE_DATA_FACILITY_REPORT_UPDATE_NOT_VALID("TPRFR1001", HttpStatus.BAD_REQUEST, "Performance Data Facility report cannot be updated"),
     /** Codes for Performance Data Facility Sector Reports. */
     PERFORMANCE_DATA_FACILITY_INVALID_SECTOR_REPORT_STATUS_CRITERIA("TPRF1001", HttpStatus.BAD_REQUEST, "Expected exactly one target year, but found multiple."),
+    /** Codes Facility Performance Account Template. */
+    INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_DATA("FPAT1001", HttpStatus.BAD_REQUEST, "Invalid Facility Performance Account Template CSV Form data"),
+    INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_PROCESS_STATUS("FPAT1002", HttpStatus.BAD_REQUEST, "Facility Performance Account Template CSV is under process or process completed"),
+    INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_FILE_TYPE("FPAT1003", HttpStatus.BAD_REQUEST, "Invalid file type"),
     ;
 
     private final String code;

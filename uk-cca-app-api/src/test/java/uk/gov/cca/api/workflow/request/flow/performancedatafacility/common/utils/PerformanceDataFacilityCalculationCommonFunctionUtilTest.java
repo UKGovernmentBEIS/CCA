@@ -21,7 +21,6 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domai
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ class PerformanceDataFacilityCalculationCommonFunctionUtilTest {
     @Test
     void test_PRODUCT_TARGET_IMPROVEMENT_negative_progressAtProductBaseYear() {
         final PerformanceDataFacilityCalculationParameters parameters = PerformanceDataFacilityCalculationParameters.builder()
-                .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .improvements(Map.of(
                         TargetImprovementType.TP7, BigDecimal.valueOf(8),
                         TargetImprovementType.TP8, BigDecimal.valueOf(10),
@@ -63,7 +62,7 @@ class PerformanceDataFacilityCalculationCommonFunctionUtilTest {
     @Test
     void test_PRODUCT_TARGET_IMPROVEMENT() {
         final PerformanceDataFacilityCalculationParameters parameters = PerformanceDataFacilityCalculationParameters.builder()
-                .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .improvements(Map.of(
                         TargetImprovementType.TP7, BigDecimal.valueOf(15),
                         TargetImprovementType.TP8, BigDecimal.valueOf(10),
@@ -92,7 +91,7 @@ class PerformanceDataFacilityCalculationCommonFunctionUtilTest {
     @Test
     void test_PRODUCT_TARGET_IMPROVEMENT_TP8() {
         final PerformanceDataFacilityCalculationParameters parameters = PerformanceDataFacilityCalculationParameters.builder()
-                .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .improvements(Map.of(
                         TargetImprovementType.TP7, BigDecimal.valueOf(8),
                         TargetImprovementType.TP8, BigDecimal.valueOf(10),
@@ -121,7 +120,7 @@ class PerformanceDataFacilityCalculationCommonFunctionUtilTest {
     @Test
     void test_TOTAL_TARGET_VARIABLE_ENERGY() {
         final PerformanceDataFacilityCalculationParameters parameters = PerformanceDataFacilityCalculationParameters.builder()
-                .baselineDate(LocalDate.of(2022, 1, 1))
+                .baselineYear(Year.of(2022))
                 .targetPeriodType(TargetPeriodType.TP7)
                 .targetYear(Year.of(2026))
                 .tpMultiplier(BigDecimal.ONE)

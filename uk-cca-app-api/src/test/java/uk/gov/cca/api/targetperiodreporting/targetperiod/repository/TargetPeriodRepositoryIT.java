@@ -42,7 +42,7 @@ class TargetPeriodRepositoryIT extends AbstractContainerBaseTest {
         TargetPeriodType businessId = TargetPeriodType.TP7;
 
         TargetPeriod targetPeriod = createTargetPeriod(businessId, SchemeVersion.CCA_3,
-                LocalDate.of(2026, 1, 1));
+                LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 1));
 
         entityManager.persist(targetPeriod);
         flushAndClear();
@@ -65,22 +65,29 @@ class TargetPeriodRepositoryIT extends AbstractContainerBaseTest {
         TargetPeriod differentTargetPeriod = createTargetPeriod(
                 TargetPeriodType.TP6,
                 SchemeVersion.CCA_2,
-                LocalDate.of(2024, 1, 1));
+                LocalDate.of(2024, 1, 1), 
+                LocalDate.of(2026, 1, 1));
 
-        TargetPeriod matchingTargetPeriod = createTargetPeriod(
+        TargetPeriod matchingTargetPeriod1 = createTargetPeriod(
                 TargetPeriodType.TP7,
                 SchemeVersion.CCA_3,
-                LocalDate.of(2024, 1, 1));
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2026, 1, 1));
+        
+        TargetPeriod matchingTargetPeriod2 = createTargetPeriod(
+                TargetPeriodType.TP8,
+                SchemeVersion.CCA_3,
+                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2026, 1, 1));
 
-        entityManager.persist(matchingTargetPeriod);
+        entityManager.persist(matchingTargetPeriod1);
+        entityManager.persist(matchingTargetPeriod2);
         entityManager.persist(differentTargetPeriod);
         flushAndClear();
 
-        List<TargetPeriod> result = repository.findAllBySchemeVersion(SchemeVersion.CCA_3);
+        List<TargetPeriod> result = repository.findAllBySchemeVersionOrderByStartDateDesc(SchemeVersion.CCA_3);
 
-        assertThat(result)
-                .hasSize(1)
-                .contains(matchingTargetPeriod);
+        assertThat(result).hasSize(2).containsExactly(matchingTargetPeriod2, matchingTargetPeriod1);
     }
 
     @Test
@@ -88,12 +95,14 @@ class TargetPeriodRepositoryIT extends AbstractContainerBaseTest {
         TargetPeriod targetPeriod1 = createTargetPeriod(
                 TargetPeriodType.TP6,
                 SchemeVersion.CCA_2,
-                LocalDate.of(2024, 1, 1));
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2026, 1, 1));
 
         TargetPeriod targetPeriod2 = createTargetPeriod(
                 TargetPeriodType.TP7,
                 SchemeVersion.CCA_3,
-                LocalDate.of(2024, 1, 1));
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2026, 1, 1));
 
         entityManager.persist(targetPeriod1);
         entityManager.persist(targetPeriod2);
@@ -111,16 +120,19 @@ class TargetPeriodRepositoryIT extends AbstractContainerBaseTest {
         TargetPeriod older = createTargetPeriod(
                 TargetPeriodType.TP6,
                 SchemeVersion.CCA_2,
+                LocalDate.of(2023, 1, 1),
                 LocalDate.of(2023, 1, 1));
 
         TargetPeriod newer = createTargetPeriod(
                 TargetPeriodType.TP7,
                 SchemeVersion.CCA_3,
+                LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 1, 1));
 
         TargetPeriod future = createTargetPeriod(
                 TargetPeriodType.TP8,
                 SchemeVersion.CCA_3,
+                LocalDate.of(2030, 1, 1),
                 LocalDate.of(2030, 1, 1));
 
         entityManager.persist(older);
@@ -133,14 +145,56 @@ class TargetPeriodRepositoryIT extends AbstractContainerBaseTest {
 
         assertThat(result).containsExactly(newer, older);
     }
+    
+    @Test
+    void shouldFindBySchemeVersionAndStartDateLessThanEqual() {
+        TargetPeriod older = createTargetPeriod(
+                TargetPeriodType.TP7,
+                SchemeVersion.CCA_3,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 1, 1));
+
+        TargetPeriod current = createTargetPeriod(
+                TargetPeriodType.TP8,
+                SchemeVersion.CCA_3,
+                LocalDate.of(2026, 1, 1),
+                LocalDate.of(2025, 1, 1));
+
+        TargetPeriod future = createTargetPeriod(
+                TargetPeriodType.TP9,
+                SchemeVersion.CCA_3,
+                LocalDate.of(2027, 1, 1),
+                LocalDate.of(2026, 1, 1));
+
+        TargetPeriod differentScheme = createTargetPeriod(
+                TargetPeriodType.TP6,
+                SchemeVersion.CCA_2,
+                LocalDate.of(2023, 1, 1),
+                LocalDate.of(2023, 1, 1));
+
+        entityManager.persist(older);
+        entityManager.persist(current);
+        entityManager.persist(future);
+        entityManager.persist(differentScheme);
+
+        flushAndClear();
+
+        List<TargetPeriod> result =
+                repository.findBySchemeVersionAndStartDateLessThanEqual(
+                        SchemeVersion.CCA_3,
+                        LocalDate.of(2026, 1, 1));
+
+        assertThat(result).containsExactlyInAnyOrder(older, current);
+    }
 
     private TargetPeriod createTargetPeriod(TargetPeriodType businessId,
                                              SchemeVersion schemeVersion,
+                                             LocalDate startDate,
                                              LocalDate buyOutStartDate) {
         return TargetPeriod.builder()
                 .businessId(businessId)
                 .name("Test Target Period " + businessId)
-                .startDate(LocalDate.of(2020, 1, 1))
+                .startDate(startDate)
                 .endDate(LocalDate.of(2030, 12, 31))
                 .performanceDataTemplateVersion("1")
                 .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()

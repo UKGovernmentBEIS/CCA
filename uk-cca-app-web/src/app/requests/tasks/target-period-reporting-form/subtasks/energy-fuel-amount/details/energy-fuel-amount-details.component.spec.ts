@@ -86,11 +86,84 @@ describe('EnergyFuelAmountDetailsComponent', () => {
     TestBed.resetTestingModule();
   });
 
+  describe('Carbon measurement facility', () => {
+    const carbonState = {
+      ...mockTprRequestTaskState,
+      requestTaskItem: {
+        ...mockTprRequestTaskState.requestTaskItem,
+        requestTask: {
+          ...mockTprRequestTaskState.requestTaskItem.requestTask,
+          payload: {
+            ...mockTprRequestTaskState.requestTaskItem.requestTask.payload,
+            referenceData: {
+              ...(
+                mockTprRequestTaskState.requestTaskItem.requestTask
+                  .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+              ).referenceData,
+              baselineAndTargets: {
+                ...(
+                  mockTprRequestTaskState.requestTaskItem.requestTask
+                    .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+                ).referenceData?.baselineAndTargets,
+                measurementType: 'CARBON_KG',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    beforeEach(async () => {
+      await setupComponent(carbonState);
+    });
+
+    it('should display Primary CO2e header instead of Primary energy', () => {
+      // The primary energy/carbon column is the 5th column (index 4) in the table
+      const primaryHeader = fixture.nativeElement.querySelector('thead th:nth-child(5)');
+      expect(primaryHeader?.textContent?.trim()).toBe('Primary CO2e (kgCO2e)');
+    });
+
+    it('should add a custom fuel row without throwing errors', () => {
+      const initialCount = getForm().controls.fuels.length;
+
+      expect(() => {
+        component.onAddFuel();
+        fixture.detectChanges();
+      }).not.toThrow();
+
+      expect(getForm().controls.fuels.length).toBe(initialCount + 1);
+    });
+
+    it('should render primary carbon for standard fuel row', () => {
+      // Natural gas: delivered 1000, CO2 factor 0.18254, PE factor 1
+      // primaryCarbon = 1000 × 1 × 0.18254 = 182.54 kgCO2e
+      const rows = Array.from<Element>(fixture.nativeElement.querySelectorAll('tbody tr'));
+      const naturalGasRow = rows.find((row) => row.textContent?.includes('Natural gas'));
+      const primaryCell = naturalGasRow?.querySelectorAll('.govuk-table__cell')[4];
+      expect(primaryCell?.textContent?.trim()).toBe('182.54');
+    });
+  });
+
   describe('Initialization', () => {
     beforeEach(() => setupComponent());
 
     it('should create', () => {
       expect(component).toBeTruthy();
+    });
+
+    it('should display the 70% eligible activities question for the reporting period', () => {
+      expect(fixture.nativeElement.textContent).toContain(
+        'Was at least 70% of the total energy used in carrying out eligible activities for this period?',
+      );
+    });
+
+    it('should use the reporting period validation message for the 70% question', () => {
+      const control = getForm().controls.atLeastSeventyPercentEnergyUsed;
+      control.setValue(null);
+
+      expect(control.errors?.['required']).toBe(
+        'Select yes if at least 70% of the total energy was used in carrying out eligible activities for this period.',
+      );
     });
 
     it('should pre-populate standard fuel delivered energy values from the store', () => {
@@ -188,6 +261,16 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       const element: HTMLElement = fixture.nativeElement;
       expect(element.textContent).toContain('0.7142857');
     });
+
+    it('should remain rendered when an energy input contains invalid characters', () => {
+      const gridElectricity = getForm().controls.fuels.controls.find(
+        (control) => control.controls.fuelKey.value === 'GRID_ELECTRICITY',
+      )!.controls.deliveredEnergy;
+      gridElectricity.setValue('`');
+
+      expect(() => fixture.detectChanges()).not.toThrow();
+      expect(gridElectricity.invalid).toBe(true);
+    });
   });
 
   describe('Throughput adjustment factor when all electricity is zero', () => {
@@ -198,7 +281,7 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       fixture.detectChanges();
       const element: HTMLElement = fixture.nativeElement;
       expect(element.textContent).toContain('Throughput adjustment factor');
-      expect(element.textContent).toContain('Throughput adjustment factor1');
+      expect(element.textContent).toMatch(/Throughput adjustment factor\s+1/);
     });
   });
 
@@ -385,7 +468,44 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       expect(tasksApiService.saveRequestTaskAction).not.toHaveBeenCalled();
     });
 
-    it('should allow submission when CHP is entered and grid electricity is greater than zero', () => {
+    it('should set SRM error when fuel values change without touching SRM field', () => {
+      const form = getForm();
+      // Set CHP to a value greater than 0 first
+      form.controls.specialReportingMethodology.setValue('100');
+      fixture.detectChanges();
+
+      // Now change only the fuel values — don't touch SRM
+      setDeliveredEnergyForFuel('GRID_ELECTRICITY', '0');
+      setDeliveredEnergyForFuel('NON_GRID_ELECTRICITY', '0');
+      fixture.detectChanges();
+
+      // With the group-level validator, error should be set without touching SRM
+      expect(form.controls.specialReportingMethodology.errors).toEqual(
+        expect.objectContaining({ srmInconsistent: 'Input inconsistent with SRM rules. Contact your regulator' }),
+      );
+
+      component.onSubmit();
+      expect(tasksApiService.saveRequestTaskAction).not.toHaveBeenCalled();
+    });
+
+    it('should clear SRM error when fuel values are corrected without touching SRM field', () => {
+      const form = getForm();
+      // Set up inconsistent state
+      form.controls.specialReportingMethodology.setValue('100');
+      setDeliveredEnergyForFuel('GRID_ELECTRICITY', '0');
+      setDeliveredEnergyForFuel('NON_GRID_ELECTRICITY', '0');
+      fixture.detectChanges();
+
+      expect(form.controls.specialReportingMethodology.hasError('srmInconsistent')).toBe(true);
+
+      // Correct grid electricity — don't touch SRM
+      setDeliveredEnergyForFuel('GRID_ELECTRICITY', '1');
+      fixture.detectChanges();
+
+      expect(form.controls.specialReportingMethodology.hasError('srmInconsistent')).toBe(false);
+    });
+
+    it('should allow submission when CHP is entered and non-grid electricity is greater than zero', () => {
       const form = getForm();
       setDeliveredEnergyForFuel('GRID_ELECTRICITY', '1');
       setDeliveredEnergyForFuel('NON_GRID_ELECTRICITY', '0');

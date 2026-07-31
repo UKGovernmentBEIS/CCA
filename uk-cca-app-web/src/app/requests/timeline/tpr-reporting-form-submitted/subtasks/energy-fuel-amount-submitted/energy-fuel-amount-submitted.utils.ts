@@ -7,7 +7,7 @@ import {
   isCarbonMeasurementType,
 } from '@requests/common';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementType, MeasurementUnit } from '@shared/pipes';
-import { toNumber } from '@shared/utils';
+import { to7DecimalPlacesNumber, toBigNumber, toNumber } from '@shared/utils';
 
 import { PerformanceDataFacilityEnergyFuelDetails } from 'cca-api';
 
@@ -42,8 +42,15 @@ export function buildSubmittedEnergyFuelRows(
         deliveredEnergy,
         primaryEnergyConversionFactor,
         primaryEnergy: carbonMeasurement
-          ? calculatePrimaryCarbon(deliveredEnergy, primaryEnergyConversionFactor, co2ConversionFactor, measurementUnit)
-          : toNumber(fuel.primaryEnergy),
+          ? to7DecimalPlacesNumber(
+              calculatePrimaryCarbon(
+                deliveredEnergy,
+                primaryEnergyConversionFactor,
+                co2ConversionFactor,
+                measurementUnit,
+              ),
+            )
+          : to7DecimalPlacesNumber(toBigNumber(fuel.primaryEnergy)),
         isCustom: !fuel.fixedConversionFactorCode,
         _sortKey: fuel.fixedConversionFactorCode as FuelTypeKey | undefined,
       };
@@ -73,5 +80,7 @@ export function calculateSubmittedThroughputAdjustmentFactor(
 
   const chpElectricity = toNumber(energyFuelDetails?.electricitySuppliedFromCHP);
 
-  return calculateThroughputAdjustmentFactor(gridElectricity, nonGridElectricity, chpElectricity);
+  return to7DecimalPlacesNumber(
+    calculateThroughputAdjustmentFactor(gridElectricity, nonGridElectricity, chpElectricity),
+  );
 }

@@ -50,6 +50,7 @@ class PerformanceDataFacilityProcessingMapperTest {
                                 .build()))
                         .baselineAndTargets(PerformanceDataFacilityBaselineAndTargets.builder()
                                 .baselineDate(LocalDate.of(2018, 1, 1))
+                                .baselineYear(Year.of(2018))
                                 .isTwelveMonths(true)
                                 .energyCarbonFactor(BigDecimal.valueOf(0.01))
                                 .measurementType(MeasurementType.ENERGY_KWH)
@@ -73,6 +74,7 @@ class PerformanceDataFacilityProcessingMapperTest {
         final PerformanceDataFacilityCalculationParameters expected =
                 PerformanceDataFacilityCalculationParameters.builder()
                         .baselineDate(LocalDate.of(2018, 1, 1))
+                        .baselineYear(Year.of(2018))
                         .isTwelveMonths(true)
                         .energyCarbonFactor(BigDecimal.valueOf(0.01))
                         .measurementType(MeasurementType.ENERGY_KWH)
@@ -102,6 +104,7 @@ class PerformanceDataFacilityProcessingMapperTest {
 
         // Verify
         assertThat(result).isEqualTo(expected);
+        assertThat(result.getBaselineYear()).isEqualTo(expected.getBaselineYear());
     }
 
     @Test
@@ -122,6 +125,7 @@ class PerformanceDataFacilityProcessingMapperTest {
                                 .build()))
                         .baselineAndTargets(PerformanceDataFacilityBaselineAndTargets.builder()
                                 .baselineDate(LocalDate.of(2022, 1, 1))
+                                .baselineYear(Year.of(2022))
                                 .isTwelveMonths(true)
                                 .energyCarbonFactor(BigDecimal.valueOf(0.01))
                                 .measurementType(MeasurementType.ENERGY_KWH)
@@ -145,6 +149,7 @@ class PerformanceDataFacilityProcessingMapperTest {
         final PerformanceDataFacilityCalculationParameters expected =
                 PerformanceDataFacilityCalculationParameters.builder()
                         .baselineDate(LocalDate.of(2022, 1, 1))
+                        .baselineYear(Year.of(2022))
                         .isTwelveMonths(true)
                         .energyCarbonFactor(BigDecimal.valueOf(0.01))
                         .measurementType(MeasurementType.ENERGY_KWH)
@@ -174,5 +179,6 @@ class PerformanceDataFacilityProcessingMapperTest {
 
         // Verify
         assertThat(result).isEqualTo(expected);
+        assertThat(result.getBaselineYear()).isEqualTo(expected.getBaselineYear());
     }
 }

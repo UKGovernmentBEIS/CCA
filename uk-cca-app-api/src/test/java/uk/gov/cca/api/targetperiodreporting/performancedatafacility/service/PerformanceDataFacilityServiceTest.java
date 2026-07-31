@@ -84,7 +84,7 @@ class PerformanceDataFacilityServiceTest {
                         .build()
         );
 
-        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersion(schemeVersion)).thenReturn(targetPeriods);
+        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(schemeVersion)).thenReturn(targetPeriods);
 
         // Invoke
         List<PerformanceDataReportTypeDTO> result = service.getAvailableTargetPeriodsForPerformanceDataReporting(schemeVersion);
@@ -100,7 +100,7 @@ class PerformanceDataFacilityServiceTest {
                         .reportType(PerformanceDataReportType.FINAL)
                         .build()
         );
-        verify(targetPeriodService).getTargetPeriodDetailsBySchemeVersion(schemeVersion);
+        verify(targetPeriodService).getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(schemeVersion);
     }
     
     @Test
@@ -141,13 +141,13 @@ class PerformanceDataFacilityServiceTest {
                         .build()
         );
 
-        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersion(schemeVersion)).thenReturn(targetPeriods);
+        when(targetPeriodService.getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(schemeVersion)).thenReturn(targetPeriods);
 
         // Invoke
         Set<Year> result = service.getAvailableTargetPeriodYears(schemeVersion);
 
         // Verify
         assertThat(result).containsExactlyInAnyOrder(Year.of(2026), Year.of(2027));
-        verify(targetPeriodService).getTargetPeriodDetailsBySchemeVersion(schemeVersion);
+        verify(targetPeriodService).getTargetPeriodDetailsBySchemeVersionAndStartDateDesc(schemeVersion);
     }
 }

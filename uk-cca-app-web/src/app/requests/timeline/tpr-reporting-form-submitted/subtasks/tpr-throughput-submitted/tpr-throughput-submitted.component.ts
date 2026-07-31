@@ -6,7 +6,7 @@ import { RequestActionStore } from '@netz/common/store';
 import { GovukTableColumn, TableComponent } from '@netz/govuk-components';
 import { isCarbonMeasurementType, resolveProductEnergyCarbonIntensity, tprFormActionQuery } from '@requests/common';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementTypeToUnitPipe } from '@shared/pipes';
-import { toNumber } from '@shared/utils';
+import { to7DecimalPlacesNumber, toNumber } from '@shared/utils';
 
 @Component({
   selector: 'cca-tpr-throughput-submitted',
@@ -54,7 +54,7 @@ export class TprThroughputSubmittedComponent {
         return {
           productName: product.productName,
           baselineYear: product.baselineYear,
-          baselineEnergyIntensity: intensity,
+          baselineEnergyIntensity: to7DecimalPlacesNumber(intensity),
           throughputUnit: product.throughputUnit,
           targetImprovement: toNumber(persisted?.targetImprovement),
           actualThroughput: toNumber(persisted?.actualThroughput),

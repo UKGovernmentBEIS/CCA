@@ -12,6 +12,7 @@
 
 export interface PerformanceData {
   type: 'TP6';
+  buyOutCost: number;
   targetPeriod: 'TP6';
   sector: string;
   reportVersion?: number;

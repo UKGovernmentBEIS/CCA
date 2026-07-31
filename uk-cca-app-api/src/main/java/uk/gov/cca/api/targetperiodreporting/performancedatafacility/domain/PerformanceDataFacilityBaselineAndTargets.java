@@ -15,6 +15,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.VariableEnergyDepict
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import java.util.Objects;
 @SuperBuilder
 public class PerformanceDataFacilityBaselineAndTargets {
     private LocalDate baselineDate;
+    private Year baselineYear;
     private Boolean isTwelveMonths;
     private BigDecimal energyCarbonFactor;
     private MeasurementType measurementType;

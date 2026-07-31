@@ -1,7 +1,7 @@
 <dialog #modal role="dialog" class="govuk-timeout-warning dialog fixed" aria-live="polite">
   <netz-page-heading size="l" id="dialog-title">Your session will end soon</netz-page-heading>
 
-  <div class="govuk-body">
+  <div>
     @if (timeoutBannerService.timeExtensionAllowed()) {
       <p aria-hidden="true" aria-relevant="additions">
         You must select "Continue" within the next

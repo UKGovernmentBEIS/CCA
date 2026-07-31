@@ -2,6 +2,7 @@
 api.module.ts
 api/accountNotes.service.ts
 api/authorities.service.ts
+api/buyOutAndSurplusCostInfo.service.ts
 api/buyOutAndSurplusInfo.service.ts
 api/buyOutAndSurplusTransactionInfoView.service.ts
 api/buyOutAndSurplusTransactionsInfoView.service.ts
@@ -138,6 +139,7 @@ model/auditTrackCorrectiveActionsSubmitRequestTaskActionPayload.ts
 model/auditTrackCorrectiveActionsSubmittedRequestActionPayload.ts
 model/authorisationAndAdditionalEvidence.ts
 model/authorityManagePermissionDTO.ts
+model/availableTargetPeriodsBuyOutDTO.ts
 model/bankAccountDetailsDTO.ts
 model/baselineData.ts
 model/buyOutCalculatedDetails.ts
@@ -216,6 +218,12 @@ model/facilityExtent.ts
 model/facilityHeaderInfoDTO.ts
 model/facilityInfoDTO.ts
 model/facilityItem.ts
+model/facilityPerformanceAccountTemplateDataUpload.ts
+model/facilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.ts
+model/facilityPerformanceAccountTemplateDataUploadRequestMetadata.ts
+model/facilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.ts
+model/facilityPerformanceAccountTemplateProcessingRequestMetadata.ts
+model/facilityPerformanceAccountTemplateUploadReport.ts
 model/facilityPerformanceDataReportDetailsDTO.ts
 model/facilityPerformanceDataStatusInfoDTO.ts
 model/facilityPerformanceDataUpdateLockDTO.ts
@@ -505,8 +513,13 @@ model/targetCommitmentsUpdateDTO.ts
 model/targetComposition.ts
 model/targetPeriod5Details.ts
 model/targetPeriod6Details.ts
+model/targetPeriodBuyOutCostUpdateDTO.ts
+model/targetPeriodBuyOutDetailsDTO.ts
+model/targetPeriodDetailsDTO.ts
 model/targetPeriodPerformanceResult.ts
+model/targetPeriodYear.ts
 model/targetPeriodYearDTO.ts
+model/targetPeriodYearsContainer.ts
 model/targetSetDTO.ts
 model/targetUnitAccountBusinessInfoDTO.ts
 model/targetUnitAccountContactDTO.ts

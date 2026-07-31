@@ -1,7 +1,7 @@
 package uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain;
 
 import org.junit.jupiter.api.Test;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.EnergyConsumptionOrCarbonEmissionsImpactedType;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.EnergyConsumptionOrCarbonEmissionsImpactedType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
