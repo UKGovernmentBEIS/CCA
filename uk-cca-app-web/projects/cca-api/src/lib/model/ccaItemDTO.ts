@@ -30,5 +30,6 @@ export interface CcaItemDTO {
   facilityId?: number;
   facilityBusinessId?: string;
   siteName?: string;
+  _new?: boolean;
   isNew?: boolean;
 }

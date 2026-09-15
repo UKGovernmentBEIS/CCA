@@ -20,5 +20,6 @@ export interface ItemDTO {
   taskAssigneeType?: string;
   taskType?: string;
   daysRemaining?: number;
+  _new?: boolean;
   isNew?: boolean;
 }

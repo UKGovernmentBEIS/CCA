@@ -32,7 +32,6 @@ export interface HttpHeaders {
   accessControlRequestHeaders?: string[];
   accessControlRequestMethod?: object;
   acceptCharset?: string[];
-  contentDisposition?: ContentDisposition;
   etag?: string;
   expires?: number;
   ifMatch?: string[];
@@ -42,6 +41,7 @@ export interface HttpHeaders {
   range?: object[];
   upgrade?: string;
   vary?: string[];
+  contentDisposition?: ContentDisposition;
   empty?: boolean;
   location?: string;
   host?: HttpHeadersHost;

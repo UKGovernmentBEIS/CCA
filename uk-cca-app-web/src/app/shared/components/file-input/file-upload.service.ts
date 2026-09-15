@@ -5,6 +5,7 @@ import { AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import {
   catchError,
   defaultIfEmpty,
+  defer,
   filter,
   forkJoin,
   iif,
@@ -21,7 +22,7 @@ import { MessageValidationErrors } from '@netz/govuk-components';
 import { FileUuidDTO } from 'cca-api';
 
 import { FileUploadEvent } from './file-upload-event';
-import { FileValidators } from './file-validators';
+import { FileValidators, MAX_FILE_SIZE_BYTES } from './file-validators';
 
 export type FileUploadRequest<T = FileUuidDTO> = (file: File) => Observable<HttpEvent<T>>;
 
@@ -33,10 +34,21 @@ export class FileUploadService {
   upload(request: FileUploadRequest): AsyncValidatorFn {
     const requestUpload = this.requestUpload(request);
 
+    // Cache files that already have been attempted to be uploaded, to avoid replays of errored or in progress files
+    const attempts = new WeakMap<File, Observable<MessageValidationErrors>>();
+
     return ({ value }: AbstractControl) => {
       const file = (value as FileUploadEvent)?.file;
 
-      return !file || this.isFileAlreadyUploaded(value) ? of(null) : requestUpload(file);
+      if (!file || this.isFileAlreadyUploaded(value) || this.isFileEmpty(value) || this.isFileLarge(value)) {
+        return of(null);
+      }
+
+      if (!attempts.has(file)) {
+        attempts.set(file, requestUpload(file).pipe(shareReplay({ bufferSize: 1, refCount: false })));
+      }
+
+      return attempts.get(file);
     };
   }
 
@@ -57,7 +69,7 @@ export class FileUploadService {
                   !this.isFileAlreadyUploaded(fileEvent) &&
                   !this.isFileEmpty(fileEvent) &&
                   !this.isFileLarge(fileEvent),
-                requestUpload(fileEvent.file),
+                defer(() => requestUpload(fileEvent.file)),
                 of(null),
               ).pipe(shareReplay({ bufferSize: 1, refCount: false })),
             );
@@ -105,7 +117,7 @@ export class FileUploadService {
   }
 
   private isFileLarge({ file }: FileUploadEvent): boolean {
-    return !(file instanceof File) || file.size >= 20 * 1024 * 1024;
+    return !(file instanceof File) || file.size > MAX_FILE_SIZE_BYTES;
   }
 
   private createValidationError(file: File, error: HttpErrorResponse): MessageValidationErrors {

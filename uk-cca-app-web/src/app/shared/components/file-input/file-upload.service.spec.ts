@@ -109,6 +109,124 @@ describe('FileUploadService', () => {
     });
   });
 
+  it('should upload a single file exactly at the maximum size', () => {
+    testScheduler.run(({ cold, expectObservable, flush }) => {
+      const file = new File(['content'], 'at-limit.txt');
+      vi.spyOn(file, 'size', 'get').mockReturnValue(20 * 1024 * 1024);
+      const control = new FormControl({ file });
+      const upload$ = vi.fn(() =>
+        cold<HttpEvent<FileUuidDTO>>('--a|', {
+          a: new HttpResponse({ status: HttpStatusCode.Ok, body: { uuid: 'abcd' } }),
+        }),
+      );
+
+      expectObservable(service.upload(upload$)(control) as Observable<MessageValidationErrors>).toBe('--a|', {
+        a: null,
+      });
+
+      flush();
+
+      expect(upload$).toHaveBeenCalledWith(file);
+    });
+  });
+
+  it('should not upload a single file larger than the maximum size', () => {
+    testScheduler.run(({ expectObservable, flush }) => {
+      const file = new File(['content'], 'too-large.txt');
+      vi.spyOn(file, 'size', 'get').mockReturnValue(20 * 1024 * 1024 + 1);
+      const control = new FormControl({ file });
+      const upload$ = vi.fn();
+
+      expectObservable(service.upload(upload$)(control) as Observable<MessageValidationErrors>).toBe('(a|)', {
+        a: null,
+      });
+
+      flush();
+
+      expect(upload$).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should upload a file exactly at the maximum size among multiple files', () => {
+    testScheduler.run(({ cold, expectObservable, flush }) => {
+      const file = new File(['content'], 'at-limit.txt');
+      vi.spyOn(file, 'size', 'get').mockReturnValue(20 * 1024 * 1024);
+      const control = new FormControl([{ file }]);
+      const upload$ = vi.fn(() =>
+        cold<HttpEvent<FileUuidDTO>>('--a|', {
+          a: new HttpResponse({ status: HttpStatusCode.Ok, body: { uuid: 'abcd' } }),
+        }),
+      );
+
+      expectObservable(service.uploadMany(upload$)(control) as Observable<MessageValidationErrors>).toBe('---(a|)', {
+        a: null,
+      });
+
+      flush();
+
+      expect(upload$).toHaveBeenCalledWith(file);
+    });
+  });
+
+  it('should not upload files larger than the maximum size among multiple files', () => {
+    testScheduler.run(({ cold, expectObservable, flush }) => {
+      const fileA = new File(['content'], 'valid.txt');
+      const fileB = new File(['content'], 'too-large.txt');
+      vi.spyOn(fileB, 'size', 'get').mockReturnValue(20 * 1024 * 1024 + 1);
+      const control = new FormControl([{ file: fileA }, { file: fileB }]);
+      const upload$ = vi.fn(() =>
+        cold<HttpEvent<FileUuidDTO>>('--a|', {
+          a: new HttpResponse({ status: HttpStatusCode.Ok, body: { uuid: 'abcd' } }),
+        }),
+      );
+
+      expectObservable(service.uploadMany(upload$)(control) as Observable<MessageValidationErrors>).toBe('---(a|)', {
+        a: null,
+      });
+
+      flush();
+
+      expect(upload$).toHaveBeenCalledTimes(1);
+      expect(upload$).toHaveBeenCalledWith(fileA);
+    });
+  });
+
+  it('should not upload an empty single file', () => {
+    testScheduler.run(({ expectObservable, flush }) => {
+      const file = new File([], 'empty.txt');
+      const control = new FormControl({ file });
+      const upload$ = vi.fn();
+
+      expectObservable(service.upload(upload$)(control) as Observable<MessageValidationErrors>).toBe('(a|)', {
+        a: null,
+      });
+
+      flush();
+
+      expect(upload$).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should cache a single file upload attempt across validator runs', () => {
+    testScheduler.run(({ cold, expectObservable, flush }) => {
+      const file = new File(['content'], 'file.txt');
+      const control = new FormControl({ file });
+      const upload$ = vi.fn(() =>
+        cold<HttpEvent<FileUuidDTO>>('--a|', {
+          a: new HttpResponse({ status: HttpStatusCode.Ok, body: { uuid: 'abcd' } }),
+        }),
+      );
+      const validator = service.upload(upload$);
+
+      expectObservable(validator(control) as Observable<MessageValidationErrors>).toBe('--a|', { a: null });
+      expectObservable(validator(control) as Observable<MessageValidationErrors>).toBe('--a|', { a: null });
+
+      flush();
+
+      expect(upload$).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('should emit file upload events from various validations', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const controlA = new FormControl({ file: new File(['some content'], 'single-file.txt') });

@@ -102,9 +102,9 @@ describe('FileInputComponent', () => {
     fixture.detectChanges();
 
     expect(control.touched).toBeTruthy();
-    expect(page.fileText.textContent).toEqual('Big file must be smaller than 1MB');
+    expect(page.fileText.textContent).toEqual('Big file must be 1MB or smaller');
     expect(control.invalid).toBeTruthy();
-    expect(control.errors).toEqual({ 'maxFileSize-0': 'Big file must be smaller than 1MB' });
+    expect(control.errors).toEqual({ 'maxFileSize-0': 'Big file must be 1MB or smaller' });
   });
 
   it('should display upload progress', () => {

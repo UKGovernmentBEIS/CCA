@@ -18,7 +18,6 @@ import java.time.LocalDate;
 @JsonInclude
 public class SectorAssociationSchemeDTO {
 
-    @NotNull
     private Long id;
 
     @NotNull(message = "{sectorAssociationScheme.umbrellaAgreement.notNull}")

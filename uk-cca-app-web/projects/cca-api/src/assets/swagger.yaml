@@ -8584,8 +8584,6 @@ components:
           type: array
           items:
             type: string
-        contentDisposition:
-          $ref: '#/components/schemas/ContentDisposition'
         etag:
           type: string
         expires:
@@ -8614,6 +8612,8 @@ components:
           type: array
           items:
             type: string
+        contentDisposition:
+          $ref: '#/components/schemas/ContentDisposition'
         empty:
           type: boolean
         location:
@@ -10981,6 +10981,8 @@ components:
         daysRemaining:
           type: integer
           format: int64
+        new:
+          type: boolean
         isNew:
           type: boolean
     FacilityPerformanceAccountTemplateProcessingRequestMetadata:
@@ -13867,6 +13869,8 @@ components:
           type: string
         siteName:
           type: string
+        new:
+          type: boolean
         isNew:
           type: boolean
     TargetUnitAccountDetailsResponseDTO:
