@@ -189,12 +189,17 @@ function updateFacilityApplyRule(
     const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
     if (facilityIndex === -1) return;
 
+    // `form.value` leaves disabled controls out, so the 3/7ths fields that the form disabled and
+    // reset when the energy consumed is 70% or more would keep their previously saved values.
+    // Read the raw value so the reset is saved as well, without stringifying a cleared field.
+    const value = form.getRawValue();
+
     draft.facilities[facilityIndex].apply70Rule = {
-      energyConsumed: String(form.value.energyConsumed),
-      energyConsumedProvision: String(form.value.energyConsumedProvision),
-      startDate: form.value.startDate,
+      energyConsumed: value.energyConsumed !== null ? String(value.energyConsumed) : null,
+      energyConsumedProvision: value.energyConsumedProvision !== null ? String(value.energyConsumedProvision) : null,
+      startDate: value.startDate,
       energyConsumedEligible: energyConsumedEligible !== null ? String(energyConsumedEligible) : null,
-      evidenceFile: form.value.evidenceFile?.uuid ?? null,
+      evidenceFile: value.evidenceFile?.uuid ?? null,
     };
   });
 }

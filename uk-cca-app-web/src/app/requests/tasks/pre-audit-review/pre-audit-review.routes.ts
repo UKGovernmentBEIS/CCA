@@ -5,6 +5,7 @@ import { FileDownloadComponent } from '@shared/components';
 export const PRE_AUDIT_REVIEW_ROUTES: Routes = [
   {
     path: '',
+    title: 'Pre-audit review',
     children: [
       {
         path: 'reason',
@@ -34,6 +35,7 @@ export const PRE_AUDIT_REVIEW_ROUTES: Routes = [
       },
       {
         path: 'file-download/:uuid',
+        title: 'Your download has started',
         component: FileDownloadComponent,
       },
     ],

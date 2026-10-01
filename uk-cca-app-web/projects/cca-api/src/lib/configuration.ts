@@ -1,4 +1,7 @@
-import { HttpParameterCodec } from '@angular/common/http';
+import { HttpHeaders, HttpParameterCodec } from '@angular/common/http';
+
+import { Param } from './param';
+import { OpenApiHttpParams } from './query.params';
 
 export interface ConfigurationParameters {
   /**
@@ -13,7 +16,18 @@ export interface ConfigurationParameters {
   accessToken?: string | (() => string);
   basePath?: string;
   withCredentials?: boolean;
+  /**
+   * Takes care of encoding query- and form-parameters.
+   */
   encoder?: HttpParameterCodec;
+  /**
+   * Override the default method for encoding path parameters in various
+   * <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#style-values">styles</a>.
+   * <p>
+   * See {@link README.md} for more details
+   * </p>
+   */
+  encodeParam?: (param: Param) => string;
   /**
    * The keys are the names in the securitySchemes section of the OpenAPI
    * document. They should map to the value used for authentication
@@ -35,7 +49,18 @@ export class Configuration {
   accessToken?: string | (() => string);
   basePath?: string;
   withCredentials?: boolean;
+  /**
+   * Takes care of encoding query- and form-parameters.
+   */
   encoder?: HttpParameterCodec;
+  /**
+   * Encoding of various path parameter
+   * <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#style-values">styles</a>.
+   * <p>
+   * See {@link README.md} for more details
+   * </p>
+   */
+  encodeParam: (param: Param) => string;
   /**
    * The keys are the names in the securitySchemes section of the OpenAPI
    * document. They should map to the value used for authentication
@@ -43,19 +68,40 @@ export class Configuration {
    */
   credentials: Record<string, string | (() => string | undefined)>;
 
-  constructor(configurationParameters: ConfigurationParameters = {}) {
-    this.apiKeys = configurationParameters.apiKeys;
-    this.username = configurationParameters.username;
-    this.password = configurationParameters.password;
-    this.accessToken = configurationParameters.accessToken;
-    this.basePath = configurationParameters.basePath;
-    this.withCredentials = configurationParameters.withCredentials;
-    this.encoder = configurationParameters.encoder;
-    if (configurationParameters.credentials) {
-      this.credentials = configurationParameters.credentials;
-    } else {
-      this.credentials = {};
+  constructor({
+    accessToken,
+    apiKeys,
+    basePath,
+    credentials,
+    encodeParam,
+    encoder,
+    password,
+    username,
+    withCredentials,
+  }: ConfigurationParameters = {}) {
+    if (apiKeys) {
+      this.apiKeys = apiKeys;
     }
+    if (username !== undefined) {
+      this.username = username;
+    }
+    if (password !== undefined) {
+      this.password = password;
+    }
+    if (accessToken !== undefined) {
+      this.accessToken = accessToken;
+    }
+    if (basePath !== undefined) {
+      this.basePath = basePath;
+    }
+    if (withCredentials !== undefined) {
+      this.withCredentials = withCredentials;
+    }
+    if (encoder) {
+      this.encoder = encoder;
+    }
+    this.encodeParam = encodeParam ?? ((param) => this.defaultEncodeParam(param));
+    this.credentials = credentials ?? {};
 
     // init default bearerAuth credential
     if (!this.credentials['bearerAuth']) {
@@ -114,12 +160,44 @@ export class Configuration {
    * @return True if the given MIME is JSON, false otherwise.
    */
   public isJsonMime(mime: string): boolean {
-    const jsonMime = new RegExp('^(application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(;.*)?$', 'i');
-    return mime !== null && (jsonMime.test(mime) || mime.toLowerCase() === 'application/json-patch+json');
+    const jsonMime = /^(application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(;.*)?$/i;
+    return mime !== null && jsonMime.test(mime);
   }
 
   public lookupCredential(key: string): string | undefined {
     const value = this.credentials[key];
     return typeof value === 'function' ? value() : value;
+  }
+
+  public addCredentialToHeaders(
+    credentialKey: string,
+    headerName: string,
+    headers: HttpHeaders,
+    prefix?: string,
+  ): HttpHeaders {
+    const value = this.lookupCredential(credentialKey);
+    return value ? headers.set(headerName, (prefix ?? '') + value) : headers;
+  }
+
+  public addCredentialToQuery(credentialKey: string, paramName: string, query: OpenApiHttpParams): OpenApiHttpParams {
+    const value = this.lookupCredential(credentialKey);
+    return value ? query.set(paramName, value) : query;
+  }
+
+  private defaultEncodeParam(param: Param): string {
+    // This implementation exists as fallback for missing configuration
+    // and for backwards compatibility to older typescript-angular generator versions.
+    // It only works for the 'simple' parameter style.
+    // Date-handling only works for the 'date-time' format.
+    // All other styles and Date-formats are probably handled incorrectly.
+    //
+    // But: if that's all you need (i.e.: the most common use-case): no need for customization!
+
+    const value =
+      param.dataFormat === 'date-time' && param.value instanceof Date
+        ? (param.value as Date).toISOString()
+        : param.value;
+
+    return encodeURIComponent(String(value));
   }
 }

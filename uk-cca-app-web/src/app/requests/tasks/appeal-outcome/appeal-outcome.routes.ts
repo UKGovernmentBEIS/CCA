@@ -5,6 +5,7 @@ import { appealOutcomeRedirectGuard } from './appeal-outcome.guard';
 export const APPEAL_OUTCOME_ROUTES: Routes = [
   {
     path: '',
+    title: 'Provide appeal outcome',
     children: [
       {
         path: '',
@@ -28,6 +29,7 @@ export const APPEAL_OUTCOME_ROUTES: Routes = [
       },
       {
         path: 'confirmation',
+        title: 'Appeal outcome completed',
         data: { breadcrumb: false, backlink: false },
         loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
       },

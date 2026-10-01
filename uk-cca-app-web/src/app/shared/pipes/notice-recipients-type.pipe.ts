@@ -12,7 +12,7 @@ export const noticeRecipientsTypeMap: Record<DefaultNoticeRecipient['recipientTy
 };
 
 export function transformNoticeRecipientsType(type: DefaultNoticeRecipient['recipientType'] | string): string {
-  return type ? noticeRecipientsTypeMap[type] : '';
+  return type ? noticeRecipientsTypeMap[type as DefaultNoticeRecipient['recipientType']] : '';
 }
 
 @Pipe({ name: 'noticeRecipientsType' })

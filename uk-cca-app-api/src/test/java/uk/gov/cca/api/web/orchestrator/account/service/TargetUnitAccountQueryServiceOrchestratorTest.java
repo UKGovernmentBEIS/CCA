@@ -5,8 +5,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
+import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.account.domain.dto.CcaAccountSearchResultInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountSearchCriteria;
 import uk.gov.cca.api.account.service.TargetUnitAccountService;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
@@ -15,9 +19,18 @@ import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDetailsD
 import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDocumentDetailsDTO;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
 import uk.gov.cca.api.web.orchestrator.account.dto.TargetUnitAccountDetailsResponseDTO;
+import uk.gov.netz.api.account.domain.dto.AccountSearchResults;
+import uk.gov.netz.api.account.search.criteria.AccountSearchCommonSortField;
+import uk.gov.netz.api.account.search.criteria.AccountSearchContactFilter;
+import uk.gov.netz.api.account.search.criteria.AccountSearchFilterCriteria;
+import uk.gov.netz.api.account.search.service.AccountSearchQueryService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +47,9 @@ class TargetUnitAccountQueryServiceOrchestratorTest {
 
     @Mock
     private TargetUnitAccountService targetUnitAccountService;
+
+    @Mock
+    private AccountSearchQueryService<TargetUnitAccount, CcaAccountSearchResultInfoDTO> ccaAccountSearchQueryService;
 
     @Mock
     private SubsectorAssociationService subsectorAssociationService;
@@ -158,4 +174,36 @@ class TargetUnitAccountQueryServiceOrchestratorTest {
         verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementDetailsByAccountId(accountId);
     }
 
+    @Test
+    void searchUserAccounts() {
+        final AppUser appUser = AppUser.builder().userId("id").build();
+        final TargetUnitAccountSearchCriteria searchCriteria = TargetUnitAccountSearchCriteria.builder()
+                .page(0).size(5).build();
+
+        final AccountSearchFilterCriteria criteria = AccountSearchFilterCriteria.builder()
+                .term(searchCriteria.getTerm())
+                .paging(PagingRequest.builder()
+                        .pageNumber(0)
+                        .pageSize(5)
+                        .build())
+                .statuses(new HashSet<>())
+                .sortField(AccountSearchCommonSortField.OPERATOR_NAME)
+                .sortDirection(Sort.Direction.ASC)
+                .build();
+        final AccountSearchResults<CcaAccountSearchResultInfoDTO> accountSearchResults = AccountSearchResults.<CcaAccountSearchResultInfoDTO>builder()
+                .accounts(List.of(
+                        new CcaAccountSearchResultInfoDTO(1L, "Account_1", "business_id_1", TargetUnitAccountStatus.NEW.getName())
+                ))
+                .total(2L)
+                .build();
+
+        when(ccaAccountSearchQueryService.search(appUser, criteria, AccountSearchContactFilter.none()))
+                .thenReturn(accountSearchResults);
+
+        // Invoke
+        serviceOrchestrator.searchUserAccounts(appUser, searchCriteria);
+
+        // Verify
+        verify(ccaAccountSearchQueryService, times(1)).search(appUser, criteria, AccountSearchContactFilter.none());
+    }
 }

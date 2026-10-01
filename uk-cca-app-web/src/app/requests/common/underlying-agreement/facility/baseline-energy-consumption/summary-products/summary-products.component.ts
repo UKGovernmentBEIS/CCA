@@ -4,9 +4,10 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthStore, selectUserId } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { FacilityWizardStep, underlyingAgreementQuery } from '@requests/common';
 
+import { underlyingAgreementQuery } from '../../../+state/underlying-agreement.selectors';
 import { SplitByProductTableComponent } from '../../../split-by-product-table';
+import { FacilityWizardStep } from '../../../types';
 
 @Component({
   selector: 'cca-products-table',

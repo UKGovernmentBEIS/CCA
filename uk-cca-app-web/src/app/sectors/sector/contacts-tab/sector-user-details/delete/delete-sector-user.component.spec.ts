@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -22,7 +22,7 @@ describe('DeleteSectorUserComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DeleteSectorUserComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: AuthService,
@@ -60,7 +60,7 @@ describe('DeleteSectorUserComponent', () => {
   });
 
   it('should display correct warning', () => {
-    expect(getByText('You will not be able to undo this action.')).toBeTruthy();
+    expect(getByText(/You will not be able to undo this action/)).toBeTruthy();
   });
 
   it('should display correct deletion info', () => {

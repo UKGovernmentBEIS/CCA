@@ -1,0 +1,16 @@
+package uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facility.transform;
+
+import org.mapstruct.Mapper;
+
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facility.domain.FacilityPerformanceAccountTemplateDataEntity;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facility.domain.dto.FacilityPerformanceAccountTemplateDataReportDetailsDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facility.domain.dto.FacilityPerformanceAccountTemplateDataReportInfoDTO;
+import uk.gov.netz.api.common.config.MapperConfig;
+
+@Mapper(componentModel = "spring", config = MapperConfig.class)
+public interface FacilityPerformanceAccountTemplateMapper {
+
+    FacilityPerformanceAccountTemplateDataReportInfoDTO toFacilityPerformanceAccountTemplateDataReportInfoDTO(FacilityPerformanceAccountTemplateDataEntity entity);
+
+    FacilityPerformanceAccountTemplateDataReportDetailsDTO toFacilityPerformanceAccountTemplateDataReportDetailsDTO(FacilityPerformanceAccountTemplateDataEntity entity);
+}

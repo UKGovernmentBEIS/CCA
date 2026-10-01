@@ -25,7 +25,7 @@ public class PerformanceDataFacilityDataUploadCreateValidator implements Request
     public RequestCreateValidationResult validateAction(Long sectorAssociationId) {
         // CSV form only available for CCA3 Scheme
         if(!performanceDataCreateSchemeValidator.isAvailableForScheme(SchemeVersion.CCA_3, LocalDate.now())) {
-            return RequestCreateValidationResult.builder().valid(true).isAvailable(false).build();
+            return RequestCreateValidationResult.builder().valid(true).available(false).build();
         }
 
         return ccaRequestCreateValidatorService.validate(

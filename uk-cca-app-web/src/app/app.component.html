@@ -2,9 +2,9 @@
   <cca-cookies-container />
 }
 
-<govuk-header title="Manage your Climate Change Agreement">
-  <govuk-skip-link />
+<govuk-skip-link />
 
+<govuk-header title="Manage your Climate Change Agreement">
   <govuk-header-actions-list>
     @if (isLoggedIn()) {
       <a class="govuk-header__link" routerLink="." (click)="authService.logout()"> Sign out </a>
@@ -69,16 +69,19 @@
   }
 </govuk-header>
 
-<section class="govuk-width-container">
-  <cca-phase-bar [isUserLoggedIn]="isLoggedIn()" />
-  <cca-workflow-task-header />
+<div class="govuk-width-container">
+  <section aria-label="Task information">
+    <cca-phase-bar [isUserLoggedIn]="isLoggedIn()" />
+    <cca-workflow-task-header />
+  </section>
+
   <netz-breadcrumbs />
   <netz-back-link />
 
-  <main class="govuk-main-wrapper" id="main-content" role="main" tabindex="0">
-    <router-outlet />
+  <main class="govuk-main-wrapper" id="main-content" tabindex="-1">
+    <router-outlet ccaMainContentFocus />
   </main>
-</section>
+</div>
 
 <govuk-footer>
   <govuk-footer-meta-info>

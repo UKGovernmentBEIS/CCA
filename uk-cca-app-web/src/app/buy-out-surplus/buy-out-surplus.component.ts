@@ -8,6 +8,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { ButtonDirective, TabLazyDirective, TabsComponent, WarningTextComponent } from '@netz/govuk-components';
 
 import { BuyoutSurplusStore } from './buy-out-surplus.store';
+import { CostTabComponent } from './cost-tab/cost-tab.component';
 import { TransactionsFiltersComponent } from './transactions-list-tab/transactions-filters/transactions-filters.component';
 import { TransactionsTableComponent } from './transactions-list-tab/transactions-table/transactions-table.component';
 import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-history-tab.component';
@@ -23,7 +24,7 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
     ButtonDirective,
     WarningTextComponent,
     WorkflowHistoryTabComponent,
-    // CostTabComponent,
+    CostTabComponent,
     TransactionsFiltersComponent,
     TransactionsTableComponent,
   ],

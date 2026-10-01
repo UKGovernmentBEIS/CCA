@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -38,7 +38,7 @@ describe('EditSectorAssociationDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EditSectorAssociationDetailsComponent],
-      providers: [ActiveSectorStore, provideHttpClient(), provideHttpClientTesting()],
+      providers: [ActiveSectorStore, provideHttpClient(withXhr()), provideHttpClientTesting()],
     })
       .overrideProvider(ActivatedRoute, { useValue: new ActivatedRouteStub({ id: 1 }) })
       .compileComponents();

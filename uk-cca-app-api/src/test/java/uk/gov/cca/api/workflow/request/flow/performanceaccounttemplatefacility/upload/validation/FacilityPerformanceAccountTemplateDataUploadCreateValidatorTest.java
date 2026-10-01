@@ -59,7 +59,7 @@ class FacilityPerformanceAccountTemplateDataUploadCreateValidatorTest {
         RequestCreateValidationResult result = validator.validateAction(sectorId);
 
         // Verify
-        assertThat(result).isEqualTo(RequestCreateValidationResult.builder().valid(true).isAvailable(false).build());
+        assertThat(result).isEqualTo(RequestCreateValidationResult.builder().valid(true).available(false).build());
         verify(facilityPerformanceAccountTemplateDataUploadValidator, times(1)).isAvailable();
         verifyNoInteractions(ccaRequestCreateValidatorService);
     }

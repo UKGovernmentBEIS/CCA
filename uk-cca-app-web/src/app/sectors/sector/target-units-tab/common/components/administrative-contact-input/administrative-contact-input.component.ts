@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CheckboxComponent, CheckboxesComponent, TextInputComponent } from '@netz/govuk-components';
@@ -17,6 +17,7 @@ import { existingControlContainer } from '@shared/providers';
     CheckboxComponent,
     CheckboxesComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [existingControlContainer],
 })
 export class AdministrativeContactInputComponent {

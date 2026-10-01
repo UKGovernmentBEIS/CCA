@@ -1,7 +1,10 @@
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-export function changeInputValue(fixture: ComponentFixture<any>, selector: string, value?: any): void {
+/** Values a test can write into an input (text, number, or file uploads). */
+type InputValue = string | number | File | File[];
+
+export function changeInputValue(fixture: ComponentFixture<any>, selector: string, value?: InputValue): void {
   const element = fixture.debugElement.query(By.css(selector));
 
   if (element.name === 'select') {

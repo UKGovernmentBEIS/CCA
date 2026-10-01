@@ -10,7 +10,7 @@
 }
 
 <ng-template #subControlErrors let-controlError="controlError">
-  @for (selfError of controlError.self | keyvalue; track selfError) {
+  @for (selfError of controlError.self | keyvalue; track selfError.key) {
     <li>
       <a
         #anchor
@@ -26,7 +26,7 @@
     </li>
   }
 
-  @for (subControl of controlError.controls | keyvalue: sortByPosition; track subControl) {
+  @for (subControl of controlError.controls | keyvalue: sortByPosition; track subControl.key) {
     <ng-container *ngTemplateOutlet="subControlErrors; context: { controlError: subControl.value }" />
   }
 </ng-template>

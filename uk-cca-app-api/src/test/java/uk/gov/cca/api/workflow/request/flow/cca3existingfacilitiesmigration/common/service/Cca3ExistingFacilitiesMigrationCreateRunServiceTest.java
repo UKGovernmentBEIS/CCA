@@ -128,9 +128,9 @@ class Cca3ExistingFacilitiesMigrationCreateRunServiceTest {
                 .thenReturn(List.of(facility1, facility2, facility3));
         when(targetUnitAccountQueryService.getActiveAccountsByBusinessIds(Set.of(account1, account2)))
                 .thenReturn(liveAccounts);
-        when(cca3ExistingFacilitiesMigrationAccountProcessingCreateValidator.validateAction(1L))
+        when(cca3ExistingFacilitiesMigrationAccountProcessingCreateValidator.checkAvailability(1L))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
-        when(cca3ExistingFacilitiesMigrationAccountProcessingCreateValidator.validateAction(2L))
+        when(cca3ExistingFacilitiesMigrationAccountProcessingCreateValidator.checkAvailability(2L))
                 .thenReturn(RequestCreateValidationResult.builder().valid(false).build());
         when(regulatorAuthorityResourceService.findUsersByCompetentAuthority(CompetentAuthorityEnum.ENGLAND))
                 .thenReturn(List.of("regulator1", "regulator2"));
@@ -153,9 +153,9 @@ class Cca3ExistingFacilitiesMigrationCreateRunServiceTest {
         verify(cca3ExistingFacilitiesMigrationRunValidator, times(1))
                 .validate(anyMap(), eq(liveAccounts), anyList());
         verify(cca3ExistingFacilitiesMigrationAccountProcessingCreateValidator, times(1))
-                .validateAction(1L);
+                .checkAvailability(1L);
         verify(cca3ExistingFacilitiesMigrationAccountProcessingCreateValidator, times(1))
-                .validateAction(2L);
+                .checkAvailability(2L);
         verify(regulatorAuthorityResourceService, times(1))
                 .findUsersByCompetentAuthority(CompetentAuthorityEnum.ENGLAND);
         verify(startProcessRequestService, times(1))

@@ -22,7 +22,13 @@
 
           @case ('assignedTo') {
             @if (editable()) {
-              <div [options]="sectorUserOptions()" formControlName="assignedTo" govuk-select></div>
+              <div
+                [options]="sectorUserOptions()"
+                formControlName="assignedTo"
+                govuk-select
+                label="Assigned to"
+                [labelHidden]="true"
+              ></div>
             } @else {
               {{ sectorNames().get(row[column.field]) || 'Unassigned' }}
             }

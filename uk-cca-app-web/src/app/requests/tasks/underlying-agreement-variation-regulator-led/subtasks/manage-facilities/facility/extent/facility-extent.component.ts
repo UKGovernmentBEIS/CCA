@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -64,16 +64,22 @@ export class FacilityExtentComponent {
     },
   );
 
-  protected readonly isActivitiesDescriptionFileExist: Signal<boolean> = computed(() => {
-    if (this.activitiesClaimedExists()) {
-      this.form.controls.activitiesDescriptionFile.enable();
-      return true;
-    } else {
-      this.form.controls.activitiesDescriptionFile.disable();
-      this.form.controls.activitiesDescriptionFile.reset();
-      return false;
-    }
-  });
+  protected readonly isActivitiesDescriptionFileExist: Signal<boolean> = computed(() =>
+    Boolean(this.activitiesClaimedExists()),
+  );
+
+  constructor() {
+    effect(() => {
+      const activitiesDescriptionFile = this.form.controls.activitiesDescriptionFile;
+
+      if (this.isActivitiesDescriptionFileExist()) {
+        activitiesDescriptionFile.enable();
+      } else {
+        activitiesDescriptionFile.disable();
+        activitiesDescriptionFile.reset();
+      }
+    });
+  }
 
   getDownloadUrl(uuid: string) {
     return ['../../../../file-download', uuid];
@@ -123,13 +129,17 @@ function updateFacilityExtent(
     const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
     if (facilityIndex === -1) return;
 
+    // `form.value` leaves disabled controls out, so a control that the effect disabled and reset
+    // would keep its previously saved value. Read the raw value so the reset is saved as well.
+    const value = form.getRawValue();
+
     draft.facilities[facilityIndex].facilityExtent = {
-      areActivitiesClaimed: form.value.areActivitiesClaimed,
-      manufacturingProcessFile: form.value.manufacturingProcessFile?.uuid ?? null,
-      processFlowFile: form.value.processFlowFile?.uuid ?? null,
-      annotatedSitePlansFile: form.value.annotatedSitePlansFile?.uuid ?? null,
-      eligibleProcessFile: form.value.eligibleProcessFile?.uuid ?? null,
-      activitiesDescriptionFile: form.value?.activitiesDescriptionFile?.uuid ?? null,
+      areActivitiesClaimed: value.areActivitiesClaimed,
+      manufacturingProcessFile: value.manufacturingProcessFile?.uuid ?? null,
+      processFlowFile: value.processFlowFile?.uuid ?? null,
+      annotatedSitePlansFile: value.annotatedSitePlansFile?.uuid ?? null,
+      eligibleProcessFile: value.eligibleProcessFile?.uuid ?? null,
+      activitiesDescriptionFile: value.activitiesDescriptionFile?.uuid ?? null,
     };
   });
 }

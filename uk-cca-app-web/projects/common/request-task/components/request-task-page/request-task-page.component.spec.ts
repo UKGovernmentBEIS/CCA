@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -16,24 +16,28 @@ let dynamicSectionsFlag = true;
 
 @Component({
   selector: 'netz-test-content',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<h1>Test content component</h1>`,
 })
 class TestContentComponent {}
 
 @Component({
   selector: 'netz-test-pre-content',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<h2>Test pre content</h2>`,
 })
 class TestPreContentComponent {}
 
 @Component({
   selector: 'netz-test-post-content',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<h2>Test post content</h2>`,
 })
 class TestPostContentComponent {}
 
 @Component({
   selector: 'netz-subtask',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<h1>SUBTASK COMPONENT</h1>',
 })
 class TestSubtaskComponent {}

@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, inject, input } from '@angular/core';
 import { ControlValueAccessor, NgControl, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 
 import { FormService } from '@netz/govuk-components';
@@ -10,6 +10,7 @@ import { FormService } from '@netz/govuk-components';
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'div[cca-radio-option]',
   templateUrl: './radio-option.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
 })
 export class RadioOptionComponent implements ControlValueAccessor {

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
@@ -48,7 +48,7 @@ describe('BuyOutSurplusComponent', () => {
       imports: [BuyOutSurplusComponent],
       providers: [
         BuyoutSurplusStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
@@ -86,7 +86,7 @@ describe('BuyOutSurplusComponent', () => {
 
     const warning = document.querySelector('strong.govuk-warning-text__text');
     expect(warning.textContent.trim()).toBe(
-      'Buy-out and surplus batch is in progress, you cannot initiate a new one until it has finished',
+      'Warning Buy-out and surplus batch is in progress, you cannot initiate a new one until it has finished',
     );
   });
 });

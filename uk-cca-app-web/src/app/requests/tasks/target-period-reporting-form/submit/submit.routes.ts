@@ -16,6 +16,7 @@ export const SUBMIT_ROUTES: Routes = [
       },
       {
         path: 'confirmation',
+        title: 'Target period report submitted',
         data: { backlink: false, breadcrumb: false },
         loadComponent: () =>
           import('./confirmation/tpr-form-submit-confirmation.component').then(
@@ -24,6 +25,7 @@ export const SUBMIT_ROUTES: Routes = [
       },
       {
         path: 'expired',
+        title: 'Target period report expired',
         data: { backlink: false, breadcrumb: false },
         loadComponent: () =>
           import('./expired/tpr-form-submit-expired.component').then((c) => c.TprFormSubmitExpiredComponent),

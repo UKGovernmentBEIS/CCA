@@ -28,7 +28,7 @@ import uk.gov.netz.api.account.domain.dto.AccountInfoDTO;
 import uk.gov.netz.api.account.service.AccountQueryService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 
 import java.util.Comparator;
 import java.util.List;
@@ -45,7 +45,7 @@ public class SubsistenceFeesMoaQueryService implements SubsistenceFeesMoaAuthori
 
     private final SectorAssociationQueryService sectorAssociationQueryService;
     private final AccountQueryService accountQueryService;
-    private final FileDocumentService fileDocumentService;
+    private final FileDocumentStorageService fileDocumentStorageService;
     private final FileEvidenceService fileEvidenceService;
     private final SubsistenceFeesMoaRepository subsistenceFeesMoaRepository;
     private final SubsistenceFeesMoaReceivedAmountHistoryRepository moaReceivedAmountHistoryRepository;
@@ -81,7 +81,7 @@ public class SubsistenceFeesMoaQueryService implements SubsistenceFeesMoaAuthori
         // Get MoA details
         SubsistenceFeesMoaDetails moaDetails = subsistenceFeesMoaRepository.getMoaDetailsById(moaId)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
-        FileInfoDTO fileInfoDTO = fileDocumentService.getFileInfoDTO(moaDetails.getDocumentUuid());
+        FileInfoDTO fileInfoDTO = fileDocumentStorageService.getFileInfoDTO(moaDetails.getDocumentUuid());
         Long resourceId = moaDetails.getResourceId();
 
         // Get details from sector or account

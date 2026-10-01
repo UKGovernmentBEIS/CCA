@@ -26,6 +26,16 @@ import { FileValidators, MAX_FILE_SIZE_BYTES } from './file-validators';
 
 export type FileUploadRequest<T = FileUuidDTO> = (file: File) => Observable<HttpEvent<T>>;
 
+/**
+/**
+ * File controls are filled both by the payload builders and by the inputs themselves, and their
+ * value can be one entry or a list of them. Normalise the value so a validator never has to assume
+ * which shape it was given. Falsy entries are kept so that the `-<index>` error keys a validator
+ * produces keep pointing at the same entry.
+ */
+const toFileEvents = (value: unknown): FileUploadEvent[] =>
+  Array.isArray(value) ? value : value ? [value as FileUploadEvent] : [];
+
 @Injectable({ providedIn: 'root' })
 export class FileUploadService {
   private readonly uploadProgressSubject = new Subject<FileUploadEvent>();
@@ -38,11 +48,15 @@ export class FileUploadService {
     const attempts = new WeakMap<File, Observable<MessageValidationErrors>>();
 
     return ({ value }: AbstractControl) => {
-      const file = (value as FileUploadEvent)?.file;
+      // The value can be shaped as one entry or as a list of them, so upload the first entry that still
+      // has a file to upload instead of reading the value as a single event.
+      const event = toFileEvents(value).find((item) => item?.file instanceof File && !item.uuid);
 
-      if (!file || this.isFileAlreadyUploaded(value) || this.isFileEmpty(value) || this.isFileLarge(value)) {
+      if (!event || this.isFileEmpty(event) || this.isFileLarge(event)) {
         return of(null);
       }
+
+      const file = event.file as File;
 
       if (!attempts.has(file)) {
         attempts.set(file, requestUpload(file).pipe(shareReplay({ bufferSize: 1, refCount: false })));
@@ -60,22 +74,28 @@ export class FileUploadService {
 
     return ({ value }: AbstractControl) =>
       forkJoin(
-        ((value ?? []) as FileUploadEvent[]).map((fileEvent) => {
-          if (!attempts.has(fileEvent.file)) {
+        toFileEvents(value).map((fileEvent) => {
+          const file = fileEvent?.file;
+
+          if (!(file instanceof File)) {
+            return of(null);
+          }
+
+          if (!attempts.has(file)) {
             attempts.set(
-              fileEvent.file,
+              file,
               iif(
                 () =>
                   !this.isFileAlreadyUploaded(fileEvent) &&
                   !this.isFileEmpty(fileEvent) &&
                   !this.isFileLarge(fileEvent),
-                defer(() => requestUpload(fileEvent.file)),
+                defer(() => requestUpload(file)),
                 of(null),
               ).pipe(shareReplay({ bufferSize: 1, refCount: false })),
             );
           }
 
-          return attempts.get(fileEvent.file);
+          return attempts.get(file);
         }),
       ).pipe(map(FileValidators.concatenateErrors), defaultIfEmpty(null));
   }
@@ -103,7 +123,7 @@ export class FileUploadService {
             }),
         }),
         filter((event) => event.type === HttpEventType.Response),
-        map(() => null),
+        map((): null => null),
         catchError((error: HttpErrorResponse) => of(this.createValidationError(file, error))),
       );
   }

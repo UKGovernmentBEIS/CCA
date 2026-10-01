@@ -38,7 +38,7 @@ describe('EmailSentComponent', () => {
   });
 
   it('should display appropriate title for password reset', () => {
-    expect(element.querySelector('h2').textContent.trim()).toEqual('Password reset email sent');
+    expect(element.querySelector('h1').textContent.trim()).toEqual('Password reset email sent');
   });
 
   it('should render details to reveal more information ', () => {

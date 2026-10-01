@@ -9,6 +9,7 @@ import { SectorMoaTUDetailsStore } from './sector-moa-tu-details/sector-moa-tu-d
 export const SECTOR_MOA_DETAILS_ROUTES: Routes = [
   {
     path: '',
+    title: 'Sector MoA',
     loadComponent: () => import('./sector-moa-details.component').then((c) => c.SectorMoaDetailsComponent),
   },
   {

@@ -21,7 +21,7 @@ public class FacilityPerformanceAccountTemplateDataUploadCreateValidator impleme
     public RequestCreateValidationResult validateAction(final Long sectorId) {
         // available for CSV upload
         if (!facilityPerformanceAccountTemplateDataUploadValidator.isAvailable()) {
-            return RequestCreateValidationResult.builder().valid(true).isAvailable(false).build();
+            return RequestCreateValidationResult.builder().valid(true).available(false).build();
         }
 
         return ccaRequestCreateValidatorService

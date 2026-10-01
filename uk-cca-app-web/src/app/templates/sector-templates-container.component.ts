@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { SectorTemplatesComponent } from '@shared/components';
 
@@ -7,6 +7,7 @@ import { SectorTemplatesComponent } from '@shared/components';
     <h1 class="govuk-heading-xl">Templates</h1>
     <cca-sector-templates />
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SectorTemplatesComponent],
 })
 export class SectorTemplatesContainerComponent {}

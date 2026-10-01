@@ -14,7 +14,7 @@ import { toFacilityAuditSummaryData } from './audit-summary-data';
   template: `
     <div class="govuk-!-width-two-thirds">
       @if (inProgressFacilityAuditTask()) {
-        <govuk-warning-text assistiveText="">
+        <govuk-warning-text>
           An audit task is in progress. You cannot start a new one until the previous audit task has been completed.
         </govuk-warning-text>
       }

@@ -67,7 +67,7 @@ class PerformanceDataDownloadCreateValidatorTest {
         RequestCreateValidationResult result = validator.validateAction(sectorId);
 
         // Verify
-        assertThat(result).isEqualTo(RequestCreateValidationResult.builder().isAvailable(false).build());
+        assertThat(result).isEqualTo(RequestCreateValidationResult.builder().available(false).build());
         verify(performanceDataCreateSchemeValidator, times(1))
                 .isAvailableForScheme(eq(SchemeVersion.CCA_2), any());
         verifyNoInteractions(ccaRequestCreateValidatorService);

@@ -1,16 +1,16 @@
-@if (files(); as files) {
-  <div [class.cca-hidden]="files.length === 0" class="cca-multi-file__uploaded-files">
+@if (files()) {
+  <div [class.cca-hidden]="rows().length === 0" class="cca-multi-file__uploaded-files">
     @if (listTitle()) {
       <h2 [class]="'govuk-heading-' + headerSize()">{{ listTitle() }}</h2>
     }
 
-    @if (files.length === 1) {
+    @if (rows().length === 1) {
       <div class="govuk-summary-list">
         <div aria-live="polite" class="govuk-summary-list__value cca-multi-file-upload__message">
           <ng-container
             *ngTemplateOutlet="
-              files[0].errors ? error : files[0].progress === 1 ? success : progress;
-              context: { $implicit: files[0], message: files[0].errors ? files[0].errors : null }
+              rows()[0].errors ? error : rows()[0].progress === 1 ? success : progress;
+              context: { $implicit: rows()[0], message: rows()[0].errors ? rows()[0].errors : null }
             "
           />
         </div>
@@ -18,13 +18,13 @@
         <div class="govuk-summary-list__actions cca-multi-file-upload__actions">
           <ng-container
             [ngTemplateOutlet]="fileDeleteButton"
-            [ngTemplateOutletContext]="{ fileIndex: 0, file: files[0] }"
+            [ngTemplateOutletContext]="{ fileIndex: 0, file: rows()[0] }"
           />
         </div>
       </div>
     } @else {
       <dl class="govuk-summary-list">
-        @for (file of files; track file; let i = $index) {
+        @for (file of rows(); track file.key; let i = $index) {
           <div class="govuk-summary-list__row cca-multi-file-upload__row">
             <dd aria-live="polite" class="govuk-summary-list__value cca-multi-file-upload__message">
               <ng-container
@@ -55,13 +55,15 @@
         name="delete"
         type="button"
       >
-        Delete <span class="govuk-visually-hidden">{{ file.file.name }}</span>
+        Delete <span class="govuk-visually-hidden">{{ file.name }}</span>
       </button>
     </ng-template>
 
     <ng-template #progress let-file>
       <span class="cca-multi-file-upload__filename">
-        <a [routerLink]="file.downloadUrl" class="govuk-link" target="_blank">{{ file.file.name }}</a>
+        <a [routerLink]="file.downloadUrl" class="govuk-link" target="_blank" rel="noreferrer noopener">
+          {{ file.name }}<span class="govuk-visually-hidden"> (opens in a new tab)</span>
+        </a>
       </span>
       <span class="cca-multi-file-upload__progress"> {{ file.progress | percent }}</span>
     </ng-template>
@@ -80,7 +82,10 @@
         >
           <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z" />
         </svg>
-        <a [routerLink]="file.downloadUrl" class="govuk-link" target="_blank">{{ file.file.name }}</a> has been uploaded
+        <a [routerLink]="file.downloadUrl" class="govuk-link" target="_blank" rel="noreferrer noopener">
+          {{ file.name }}<span class="govuk-visually-hidden"> (opens in a new tab)</span>
+        </a>
+        has been uploaded
       </span>
     </ng-template>
 

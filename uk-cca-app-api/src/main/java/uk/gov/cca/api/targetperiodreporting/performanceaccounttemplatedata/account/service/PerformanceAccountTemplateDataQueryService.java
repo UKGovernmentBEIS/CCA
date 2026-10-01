@@ -10,11 +10,11 @@ import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.AccountPerformanceAccountTemplateDataReportInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.AccountPerformanceAccountTemplateDataReportDetailsDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.repository.PerformanceAccountTemplateDataCustomRepository;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.repository.PerformanceAccountTemplateDataRepository;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.transform.PerformanceAccountTemplateMapper;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
@@ -30,13 +30,12 @@ public class PerformanceAccountTemplateDataQueryService {
 	public SectorPerformanceAccountTemplateDataReportListDTO getSectorPerformanceAccountTemplateDataReportListDTO(
 			Long sectorAssociationId, SectorPerformanceAccountTemplateDataReportSearchCriteria criteria) {
 		final int reportYear = 2024;
-		final Year targetPeriodYear = Year.of(reportYear); //TODO make it configurable
-		if(!criteria.getTargetPeriodType().equals(TargetPeriodType.TP6)) {
+		if(!criteria.getTargetPeriodYear().equals(Year.of(reportYear))) {
 			throw new RuntimeException("cannot display pat reports");
 		}
 
 		return customRepo.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(
-				sectorAssociationId, criteria, targetPeriodYear);
+				sectorAssociationId, criteria);
 	}
 
 	public int calculateNextReportVersion(Long accountId, Year targetPeriodYear) {

@@ -1,7 +1,7 @@
 @if (isConfirmationDisplayed() !== true) {
-  <h2 class="govuk-heading-l">Confirm that the user account of {{ regulator | userFullName }} will be deleted</h2>
+  <h1 class="govuk-heading-l">Confirm that the user account of {{ regulator | userFullName }} will be deleted</h1>
 
-  <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+  <govuk-warning-text>You will not be able to undo this action.</govuk-warning-text>
   <p>All tasks currently assigned to this user will be automatically unassigned.</p>
   <p>You may cancel and manually re-assign tasks before attempting to delete this user.</p>
 

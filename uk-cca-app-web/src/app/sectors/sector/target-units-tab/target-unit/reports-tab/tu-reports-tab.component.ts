@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { PatReportComponent } from './pat/pat-report.component';
 import { PerformanceReportComponent } from './performance-data/performance-report.component';
@@ -8,11 +8,10 @@ import { PerformanceReportComponent } from './performance-data/performance-repor
 @Component({
   selector: 'cca-tu-reports-tab-component',
   templateUrl: './tu-reports-tab.component.html',
-  imports: [PerformanceReportComponent, PatReportComponent],
+  imports: [PerformanceReportComponent, PatReportComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TuReportsTabComponent {
-  private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
   currentSection = 'performance'; // Default section
@@ -20,16 +19,6 @@ export class TuReportsTabComponent {
   constructor() {
     this.activatedRoute.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       this.currentSection = params.get('section') || 'performance';
-    });
-  }
-
-  updateSection(event, section: 'performance' | 'pat') {
-    event.preventDefault();
-    this.router.navigate([], {
-      queryParams: { section: section },
-      queryParamsHandling: 'merge',
-      fragment: 'reports',
-      relativeTo: this.activatedRoute,
     });
   }
 }

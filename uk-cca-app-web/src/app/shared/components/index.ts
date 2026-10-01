@@ -43,7 +43,6 @@ export * from './text-input/text-input.component';
 export * from './text-input/text-input.type';
 export * from './timeline/timeline-item.component';
 export * from './two-fa-link/two-fa-link.component';
-export * from './user-input-summary/user-input-summary.component';
 export * from './user-input/user-input.component';
 export * from './wizard/wizard-step.component';
 export * from './workflow-task-header/testing/mock-data';

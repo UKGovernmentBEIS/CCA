@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export const UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW_ROUTES: Routes = [
   {
     path: '',
+    title: 'Application for underlying agreement sent to peer reviewer',
     children: [
       {
         path: 'target-unit-details',

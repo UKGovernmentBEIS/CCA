@@ -6,20 +6,27 @@ import { resetCurrentFacility, setCurrentFacility } from '@requests/common';
 import { WORKFLOW_DETAILS_ROUTES } from '@shared/components';
 import { PendingRequestGuard } from '@shared/guards';
 
+import { TargetUnitAccountDetailsResponseDTO } from 'cca-api';
+
 import { FacilityAuditStore } from './facility-audit/facility-audit.store';
 import { FacilityAvailableReportingPeriodsResolver } from './facility-available-reporting-periods.resolver';
 import { FacilityDetailsResolver } from './facility-details.resolver';
+import { FacilityPATReportStore } from './facility-pat-report.store';
 import { FacilityTargetPeriodReportStore } from './facility-target-period-report.store';
 import { FACILITY_REPORTS_TAB_ROUTES } from './reports-tab/facility-reports-tab.routes';
 
 export const FACILITIES_LIST_ROUTES: Routes = [
   {
     path: ':facilityId',
-    providers: [FacilityTargetPeriodReportStore],
+    providers: [FacilityTargetPeriodReportStore, FacilityPATReportStore],
     canActivate: [setCurrentFacility],
-    canDeactivate: [resetCurrentFacility, () => inject(FacilityTargetPeriodReportStore).reset()],
+    canDeactivate: [
+      resetCurrentFacility,
+      () => inject(FacilityTargetPeriodReportStore).reset(),
+      () => inject(FacilityPATReportStore).reset(),
+    ],
     data: {
-      breadcrumb: ({ targetUnit }) => ({
+      breadcrumb: ({ targetUnit }: { targetUnit: TargetUnitAccountDetailsResponseDTO }) => ({
         text: `${targetUnit.targetUnitAccountDetails.name}`,
         fragment: 'facilities',
       }),
@@ -43,6 +50,7 @@ export const FACILITIES_LIST_ROUTES: Routes = [
       },
       {
         path: ':certificationPeriod/change-certification-status',
+        title: 'Certification status',
         data: { backlink: '../../', breadcrumb: false },
         resolve: { facilityDetails: FacilityDetailsResolver },
         canActivate: [() => inject(AuthStore).select(selectUserRoleType)() === 'REGULATOR'],
@@ -74,6 +82,7 @@ export const FACILITIES_LIST_ROUTES: Routes = [
       },
       {
         path: 'tp-reporting',
+        title: 'Select the target period you are reporting for',
         data: { backlink: '../process-actions', breadcrumb: false },
         resolve: { availablePeriods: FacilityAvailableReportingPeriodsResolver },
         loadComponent: () => import('./tp-reporting/tp-reporting.component').then((c) => c.TpReportingComponent),

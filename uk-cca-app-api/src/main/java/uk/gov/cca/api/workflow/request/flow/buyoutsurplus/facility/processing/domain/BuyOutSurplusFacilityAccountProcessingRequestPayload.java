@@ -1,5 +1,6 @@
 package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.processing.domain;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -18,11 +19,12 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestPayload;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class BuyOutSurplusFacilityAccountProcessingRequestPayload extends RequestPayload {
 
 	private String submitterId;
-    private TargetPeriodInfoDTO targetPeriodDetails;
+	private LocalDate creationDate;
+    private List<TargetPeriodInfoDTO> targetPeriodsDetails;
+    private boolean applyPrimaryRules;
     private TargetUnitAccountDetailsDTO accountDetails;
     private List<DefaultNoticeRecipient> defaultContacts;
     private FileInfoDTO officialNotice;

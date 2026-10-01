@@ -1,5 +1,6 @@
+<!-- A projected label is only hidden on request; the placeholder label is always hidden. -->
 <label
-  [class.govuk-visually-hidden]="!templateLabel() && isLabelHidden()"
+  [class.govuk-visually-hidden]="templateLabel() ? labelHidden() : isLabelHidden()"
   [for]="identifier"
   [id]="'l.' + identifier"
   [class]="currentLabelSize()"
@@ -39,6 +40,9 @@
       (focus)="onFocus()"
       (input)="onChange(getInputValue($event))"
       (keydown)="onKeyDown($event)"
+      [attr.aria-describedby]="
+        describedBy(hint() ? identifier + '-hint' : null, shouldDisplayErrors ? identifier + '-error' : null)
+      "
       [attr.inputmode]="inputMode()"
       [autocomplete]="autoComplete()"
       [class.govuk-input--error]="shouldDisplayErrors"
@@ -65,6 +69,9 @@
       (focus)="onFocus()"
       (input)="onChange(getInputValue($event))"
       (keydown)="onKeyDown($event)"
+      [attr.aria-describedby]="
+        describedBy(hint() ? identifier + '-hint' : null, shouldDisplayErrors ? identifier + '-error' : null)
+      "
       [attr.inputmode]="inputMode()"
       [autocomplete]="autoComplete()"
       [class.govuk-input--error]="shouldDisplayErrors"

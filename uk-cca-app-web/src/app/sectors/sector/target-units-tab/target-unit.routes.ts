@@ -4,6 +4,8 @@ import { Routes } from '@angular/router';
 import { NOTES_ROUTES, WORKFLOW_DETAILS_ROUTES } from '@shared/components';
 import { PendingRequestGuard } from '@shared/guards';
 
+import { TargetUnitAccountDetailsResponseDTO } from 'cca-api';
+
 import { ActiveTargetUnitStore } from './active-target-unit.store';
 import { CREATE_TARGET_UNIT_ROUTES } from './create-target-unit/create-target-unit.routes';
 import { TargetUnitGuard } from './target-unit.guard';
@@ -19,6 +21,7 @@ import { USERS_AND_CONTACTS_ROUTES } from './target-unit/users-and-contacts-tab/
 export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
   {
     path: ':targetUnitId',
+    title: 'Target unit details',
     providers: [ActiveTargetUnitStore, PerformanceReportStore, PatReportStore, BuyoutAndSurplusTabStore],
     canActivate: [TargetUnitGuard],
     canDeactivate: [
@@ -28,12 +31,13 @@ export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
     ],
     resolve: { targetUnit: () => inject(ActiveTargetUnitStore).state },
     data: {
-      breadcrumb: ({ targetUnit }) => `${targetUnit.targetUnitAccountDetails.name}`,
-      pageTitle: 'Target unit details',
+      breadcrumb: ({ targetUnit }: { targetUnit: TargetUnitAccountDetailsResponseDTO }) =>
+        `${targetUnit.targetUnitAccountDetails.name}`,
     },
     children: [
       {
         path: '',
+        title: 'Target unit details',
         loadComponent: () => import('./target-unit/target-unit.component').then((c) => c.TargetUnitComponent),
       },
       {
@@ -44,6 +48,7 @@ export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: ':unaId/file-download/:fileType/:uuid',
+        title: 'Your download has started',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
       {

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
@@ -24,7 +24,7 @@ describe('ChangeCertificationStatusComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ChangeCertificationStatusComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: activatedRouteStub },
       ],

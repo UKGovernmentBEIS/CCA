@@ -48,15 +48,26 @@ export class TargetUnitAccountSearchComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly targetUnitAccountInfoViewService = inject(TargetUnitAccountInfoViewService);
 
-  protected readonly state = signal<AccountSearchState>({
-    accounts: [],
-    totalItems: 0,
-  });
+  // Results for the query currently in the URL, or null until its response arrives. Null keeps the
+  // previous query's results out of the rendered output, so nothing stale is shown or announced.
+  protected readonly state = signal<AccountSearchState | null>(null);
 
   readonly currentPage = signal(DEFAULT_PAGE);
   readonly pageSize = signal(DEFAULT_PAGE_SIZE);
-  readonly accounts = computed(() => this.state().accounts);
-  readonly count = computed(() => this.state().totalItems);
+  readonly accounts = computed(() => this.state()?.accounts ?? []);
+  readonly count = computed(() => this.state()?.totalItems ?? 0);
+  readonly hasAccounts = computed(() => this.accounts().length > 0);
+  // Kept in a region that is always rendered: a live region that is added already filled is not
+  // announced, so only its text may change once results arrive. Blank until the response lands, so
+  // "There are no results to show" is announced for an empty result set too, not only when the count
+  // changes.
+  readonly resultsStatus = computed(() => {
+    if (!this.state()) return '';
+
+    const count = this.count();
+
+    return this.hasAccounts() ? `${count} result${count === 1 ? '' : 's'}` : 'There are no results to show';
+  });
 
   readonly searchForm: FormGroup<{ term: FormControl<string | null> }> = this.fb.group({
     term: this.fb.control<string | null>(null, {
@@ -81,8 +92,11 @@ export class TargetUnitAccountSearchComponent {
           this.pageSize.set(pageSize);
           this.searchForm.get('term')?.setValue(term);
         }),
+        // Clear before fetching: results shown while the request is in flight belong to the previous
+        // query.
+        tap(() => this.state.set(null)),
         switchMap(({ term, page, pageSize }) =>
-          this.targetUnitAccountInfoViewService.searchUserAccounts(page - 1, pageSize, term),
+          this.targetUnitAccountInfoViewService.searchUserAccounts({ page: page - 1, size: pageSize, term }),
         ),
         catchError(() => of({ accounts: [], total: 0 })),
         tap(({ accounts, total }) => {

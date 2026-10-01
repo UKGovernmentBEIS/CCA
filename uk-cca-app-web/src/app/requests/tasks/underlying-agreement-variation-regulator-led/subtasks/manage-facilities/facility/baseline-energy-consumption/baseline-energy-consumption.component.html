@@ -1,7 +1,7 @@
 <cca-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  [caption]="facility()?.facilityDetails?.name"
+  [caption]="$safeNavigationMigration(facility()?.facilityDetails?.name)"
   heading="Baseline energy or carbon"
   data-testid="baseline-energy-consumption-form"
 >
@@ -15,18 +15,11 @@
 
   <div class="govuk-grid-row govuk-!-margin-top-7">
     <div class="govuk-grid-column-two-thirds">
-      <p class="govuk-!-margin-bottom-0">
-        Enter the fixed amount of energy consumed (or carbon dioxide emitted) during the baseline
-      </p>
-      <p class="govuk-hint govuk-!-margin-top-1">
-        Fixed energy consumption is the portion of a facility's total energy consumed (or carbon dioxide emitted) that
-        does not vary with throughput. This value may be entered as zero
-      </p>
-
       <div
-        class="govuk-!-width-one-half"
         govuk-text-input
         formControlName="totalFixedEnergy"
+        label="Enter the fixed amount of energy consumed (or carbon dioxide emitted) during the baseline"
+        hint="Fixed energy consumption is the portion of a facility's total energy consumed (or carbon dioxide emitted) that does not vary with throughput. This value may be entered as zero"
         inputType="number"
         widthClass="govuk-!-width-one-half"
         [suffix]="facilityThroughputUnit | measurementTypeToUnit"
@@ -111,14 +104,15 @@
   @if (showThroughputFields()) {
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-        <p class="govuk-label--s govuk-!-margin-bottom-0">Total baseline throughput</p>
-        <p class="govuk-hint govuk-!-margin-top-1">
-          For facilities where SRM is used, this must be the adjusted throughput
-        </p>
-      </div>
-
-      <div class="govuk-grid-column-one-quarter">
-        <div govuk-text-input formControlName="totalThroughput" inputType="number"></div>
+        <div
+          govuk-text-input
+          formControlName="totalThroughput"
+          label="Total baseline throughput"
+          labelSize="small"
+          hint="For facilities where SRM is used, this must be the adjusted throughput"
+          inputType="number"
+          widthClass="govuk-!-width-one-quarter"
+        ></div>
       </div>
     </div>
 

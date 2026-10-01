@@ -1,7 +1,7 @@
 <cca-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  [caption]="facility().facilityDetails?.name"
+  [caption]="$safeNavigationMigration(facility().facilityDetails?.name)"
   heading="Add facility contact details"
   data-testid="add-facility-contact-form"
 >

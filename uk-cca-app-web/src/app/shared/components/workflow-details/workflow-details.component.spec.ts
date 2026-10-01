@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -15,7 +15,7 @@ describe('WorkflowDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WorkflowDetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         {
           provide: ActivatedRoute,
           useValue: new ActivatedRouteStub(null, null, {

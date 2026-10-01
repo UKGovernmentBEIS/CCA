@@ -12,7 +12,7 @@ export class BusinessErrorService {
   private readonly errorSubject = new BehaviorSubject<BusinessError>(null);
   readonly error$ = this.errorSubject.asObservable();
 
-  showError(error: BusinessError): Observable<boolean> {
+  showError(error: BusinessError): Observable<never> {
     this.errorSubject.next(error);
 
     return from(this.router.navigate(['/error/business'], { skipLocationChange: true })).pipe(ignoreElements());
@@ -20,7 +20,7 @@ export class BusinessErrorService {
 
   // this method is used to bypass the pendingRequestGuard when the error has to be caught before the
   // PendingRequestService tracks the request
-  showErrorForceNavigation(error: BusinessError): Observable<boolean> {
+  showErrorForceNavigation(error: BusinessError): Observable<never> {
     this.errorSubject.next(error);
 
     return from(

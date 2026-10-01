@@ -21,7 +21,7 @@ export const ChangeCostFormProvider: Provider = {
     return fb.group({
       buyOutCost: fb.control(targetPeriodDetails?.buyOutCost ?? null, [
         GovukValidators.required('Enter a buy-out cost'),
-        GovukValidators.naturalNumber('Enter a positive integer value'),
+        GovukValidators.naturalNumber('Enter a positive amount rounded to the nearest whole pound'),
       ]),
     });
   },

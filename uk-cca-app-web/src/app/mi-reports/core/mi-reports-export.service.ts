@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
-import { utils, writeFileXLSX } from 'xlsx';
+import { SpreadsheetExportService } from '@shared/services';
 
 import { ExtendedMiReportResult } from './mi-interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class MiReportsExportService {
-  exportToExcel(miReportResult: ExtendedMiReportResult, filename: string) {
-    const ws = utils.json_to_sheet(miReportResult.results);
-    const wb = utils.book_new();
+  private readonly spreadsheetExportService = inject(SpreadsheetExportService);
 
-    utils.book_append_sheet(wb, ws, 'Data');
-    writeFileXLSX(wb, `${filename}.xlsx`);
+  exportToExcel(miReportResult: ExtendedMiReportResult, filename: string) {
+    this.spreadsheetExportService.exportToExcel(miReportResult.results, `${filename}.xlsx`);
   }
 }

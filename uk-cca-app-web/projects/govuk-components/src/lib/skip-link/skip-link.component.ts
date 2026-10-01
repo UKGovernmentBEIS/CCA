@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, input, DOCUMENT } from '@angular/core';
+import { Component, inject, input, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 
@@ -15,6 +15,7 @@ import { filter, map, tap } from 'rxjs';
       >
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     div {
       float: left;

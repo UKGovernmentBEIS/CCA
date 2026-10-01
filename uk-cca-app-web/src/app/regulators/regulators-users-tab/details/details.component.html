@@ -91,27 +91,17 @@
   @if (isEditable) {
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-s">Set base permissions</h2>
-        <div class="govuk-button-group">
-          <button
-            (click)="setBasePermissions('regulator_administrator')"
-            govukSecondaryButton
-            id="regulator_administrator"
-            type="button"
-            [attr.aria-pressed]="basePermissionSelected === 'regulator_administrator'"
+        <div [formGroup]="basePermissionsForm">
+          <div
+            govuk-radio
+            formControlName="basePermission"
+            legend="Set base permissions"
+            legendSize="medium"
+            [isInline]="true"
           >
-            Administrator User
-          </button>
-
-          <button
-            (click)="setBasePermissions('regulator_basic_user')"
-            govukSecondaryButton
-            id="regulator_basic_user"
-            type="button"
-            [attr.aria-pressed]="basePermissionSelected === 'regulator_basic_user'"
-          >
-            Basic User
-          </button>
+            <govuk-radio-option [value]="'regulator_administrator'" label="Administrator User" />
+            <govuk-radio-option [value]="'regulator_basic_user'" label="Basic User" />
+          </div>
         </div>
       </div>
     </div>
@@ -142,7 +132,10 @@
                 } @else {
                   @if (userPermissions?.[row.permission] === column.field) {
                     <div [id]="'check-' + row.permission + '-' + column.field">
-                      <strong>&#10004;</strong>
+                      <strong>
+                        <span aria-hidden="true">&#10004;</span>
+                        <span class="govuk-visually-hidden">{{ column.header }}</span>
+                      </strong>
                     </div>
                   }
                 }

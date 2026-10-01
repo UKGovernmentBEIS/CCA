@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -28,7 +28,7 @@ describe('TrackCorrectiveActionsSummaryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TrackCorrectiveActionsSummaryComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         { provide: ActivatedRoute, useValue: route },
         { provide: TasksService, useValue: tasksService },
       ],

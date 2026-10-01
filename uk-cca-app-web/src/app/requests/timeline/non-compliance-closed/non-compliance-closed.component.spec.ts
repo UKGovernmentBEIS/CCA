@@ -37,7 +37,7 @@ describe('NonComplianceClosedComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Reason for closing this task', 'Supporting documents'],
-        ['There is nothing left to complete.', 'close-task.pdf'],
+        ['There is nothing left to complete.', 'close-task.pdf (opens in a new tab)'],
       ],
     ]);
   });

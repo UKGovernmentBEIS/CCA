@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { ConditionalContentDirective } from '../directives';
 import { ErrorMessageComponent } from '../error-message';
 import { GovukValidators } from '../error-message';
-import { FieldsetDirective, FieldsetHintDirective, LegendDirective } from '../fieldset';
+import { FieldsetDirective, FieldsetHintDirective, LegendContentDirective, LegendDirective } from '../fieldset';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { CheckboxesComponent } from './checkboxes.component';
 
@@ -17,7 +17,13 @@ describe('CheckboxesComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    imports: [ReactiveFormsModule, CheckboxesComponent, CheckboxComponent, ConditionalContentDirective],
+    imports: [
+      ReactiveFormsModule,
+      CheckboxesComponent,
+      CheckboxComponent,
+      ConditionalContentDirective,
+      LegendContentDirective,
+    ],
     template: `
       <form [formGroup]="form">
         <div govuk-checkboxes formControlName="checkboxes" legend="Some options" hint="Choose an option">
@@ -57,6 +63,7 @@ describe('CheckboxesComponent', () => {
         ConditionalContentDirective,
         FieldsetDirective,
         FieldsetHintDirective,
+        LegendContentDirective,
         LegendDirective,
         TestComponent,
         ErrorMessageComponent,

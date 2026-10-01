@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -71,7 +71,7 @@ describe('FacilitiesListComponent', () => {
       providers: [
         { provide: FacilityInfoViewService, useValue: facilityServiceMock },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
       ],
     });

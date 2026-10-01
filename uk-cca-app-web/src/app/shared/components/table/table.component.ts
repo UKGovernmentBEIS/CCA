@@ -16,6 +16,8 @@ import { SortEvent } from '@netz/govuk-components';
 
 import { CcaTableColumn, SelectableRow } from './types';
 
+let tableInstanceId = 0;
+
 @Component({
   selector: 'cca-table',
   templateUrl: './table.component.html',
@@ -31,6 +33,8 @@ import { CcaTableColumn, SelectableRow } from './types';
 })
 export class TableComponent {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+  protected readonly idPrefix = `cca-table-${tableInstanceId++}`;
 
   protected readonly columns = input.required<CcaTableColumn[]>();
   protected readonly data = input.required<Record<string, unknown>[]>();
@@ -89,6 +93,7 @@ export class TableComponent {
   }
 
   isRowSelected(row: unknown): boolean {
-    return this.selectedRows().has(row[this.primaryColumn()]);
+    if (typeof row !== 'object' || row === null) return false;
+    return this.selectedRows().has((row as Record<string, unknown>)[this.primaryColumn()]);
   }
 }

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+
+import { FacilityAuditUpdateDTO } from 'cca-api';
 
 import { mockFacilityDetails } from '../../testing/mock-data';
 import { FacilityAuditStore } from '../facility-audit.store';
@@ -21,7 +23,7 @@ describe('AuditComponent', () => {
       auditRequired: false,
       reasons: [],
       comments: '',
-    },
+    } as FacilityAuditUpdateDTO,
     updateAudit: vi.fn().mockReturnValue(of({ auditRequired: false, reasons: [], comments: '' })),
     init: vi.fn(),
   };
@@ -30,7 +32,7 @@ describe('AuditComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AuditComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         FacilityAuditStore,
         {

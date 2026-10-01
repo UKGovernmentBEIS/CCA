@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 
-import { ItemActionTypePipe, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
+import { getItemActionHeader, ItemActionTypePipe, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
 import {
   getRequestActionPageCanActivateGuard,
   getRequestActionPageCanDeactivateGuard,
@@ -28,12 +28,11 @@ export const TIMELINE_ROUTES: Routes = [
   {
     path: ':actionId',
     data: {
-      breadcrumb: ({ requestAction, isTaskTimeline }) =>
+      breadcrumb: ({ requestAction, isTaskTimeline }: { requestAction: RequestActionDTO; isTaskTimeline: boolean }) =>
         isTaskTimeline ? false : new ActionTypeToBreadcrumbPipe().transform(requestAction),
-      backlink: ({ isTaskTimeline }) => (isTaskTimeline ? '../..' : false),
+      backlink: ({ isTaskTimeline }: { isTaskTimeline: boolean }) => (isTaskTimeline ? '../..' : false),
     },
-    title: () =>
-      new ActionTypeToBreadcrumbPipe().transform(inject(RequestActionStore).select(requestActionQuery.selectAction)()),
+    title: () => getItemActionHeader(inject(RequestActionStore).select(requestActionQuery.selectAction)()),
     resolve: {
       requestAction: () => inject(RequestActionStore).select(requestActionQuery.selectAction)(),
       isTaskTimeline: (route: ActivatedRouteSnapshot) => !!route.params.taskId,
@@ -116,6 +115,13 @@ export const TIMELINE_ROUTES: Routes = [
         loadChildren: () =>
           import('./tpr-reporting-form-submitted/tpr-reporting-form-submitted.routes').then(
             (r) => r.TPR_REPORTING_FORM_SUBMITTED_ROUTES,
+          ),
+      },
+      {
+        path: 'facility-pat-reporting-submitted',
+        loadChildren: () =>
+          import('./facility-pat-reporting-submitted/facility-pat-reporting-submitted.routes').then(
+            (r) => r.FACILITY_PAT_REPORTING_SUBMITTED_ROUTES,
           ),
       },
       {

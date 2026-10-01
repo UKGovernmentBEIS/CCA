@@ -67,4 +67,8 @@ export const taskRelatedActionsMap: RelatedActionsMap = {
     path: ['target-period-reporting-form', 'refresh-baseline-data'],
   },
   PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_CLOSE: { text: 'Close task', path: ['tpr-csv-upload', 'close-task'] },
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSE: {
+    text: 'Close task',
+    path: ['pat-csv-upload', 'close-task'],
+  },
 };

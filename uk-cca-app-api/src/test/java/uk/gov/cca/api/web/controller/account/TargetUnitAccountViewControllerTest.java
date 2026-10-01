@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.framework.DefaultAopProxyFactory;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,22 +17,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
-import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
+import uk.gov.cca.api.account.domain.dto.CcaAccountSearchResultInfoDTO;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountSearchCriteria;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.account.dto.TargetUnitAccountDetailsResponseDTO;
 import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountQueryServiceOrchestrator;
-import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
-import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria.SortBy;
-import uk.gov.netz.api.account.domain.dto.AccountSearchResultInfoDTO;
 import uk.gov.netz.api.account.domain.dto.AccountSearchResults;
-import uk.gov.netz.api.account.service.AccountSearchServiceDelegator;
 import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.constants.RoleTypeConstants;
-import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
@@ -71,12 +66,6 @@ class TargetUnitAccountViewControllerTest {
 
     @Mock
     private AppUserAuthorizationService appUserAuthorizationService;
-
-    @Mock
-    private AccountSearchServiceDelegator accountSearchServiceDelegator;
-
-    @Mock
-    private TargetUnitAccountQueryService targetUnitAccountQueryService;
 
     @BeforeEach
     void setUp() {
@@ -151,41 +140,30 @@ class TargetUnitAccountViewControllerTest {
                 .build();
         
         String term = "NEW";
-        final PagingRequest pageRequest = PagingRequest.builder()
-                .pageSize(5)
-                .pageNumber(0)
-                .build();
-        AccountSearchCriteria accountSearchCriteria = AccountSearchCriteria.builder()
-                .term(term)
-                .paging(pageRequest)
-                .sortBy(SortBy.ACCOUNT_BUSINESS_ID)
-                .direction(Direction.ASC)
-                .build();
+        TargetUnitAccountSearchCriteria accountSearchCriteria = TargetUnitAccountSearchCriteria.builder()
+                .term(term).page(0).size(5).build();
 
+        final CcaAccountSearchResultInfoDTO accountSearchResultInfoDTO1 =
+                new CcaAccountSearchResultInfoDTO(1L, "Account_1", "business_id_1", TargetUnitAccountStatus.NEW.getName());
+        final CcaAccountSearchResultInfoDTO accountSearchResultInfoDTO2 =
+                new CcaAccountSearchResultInfoDTO(2L, "Account_2", "business_id_2", TargetUnitAccountStatus.NEW.getName());
 
-        final AccountSearchResultInfoDTO accountSearchResultInfoDTO1 =
-                new AccountSearchResultInfoDTO(1L, "Account_1", "business_id_1", TargetUnitAccountStatus.NEW);
-
-        final AccountSearchResultInfoDTO accountSearchResultInfoDTO2 =
-                new AccountSearchResultInfoDTO(2L, "Account_2", "business_id_2", TargetUnitAccountStatus.NEW);
-
-
-        final AccountSearchResults accountSearchResults = AccountSearchResults.builder()
+        final AccountSearchResults<CcaAccountSearchResultInfoDTO> accountSearchResults = AccountSearchResults.<CcaAccountSearchResultInfoDTO>builder()
                 .accounts(List.of(accountSearchResultInfoDTO1, accountSearchResultInfoDTO2))
                 .total(2L)
                 .build();
 
         //mock
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
-        when(accountSearchServiceDelegator.getAccountsByUserAndSearchCriteria(authUser, accountSearchCriteria))
+        when(targetUnitAccountQueryServiceOrchestrator.searchUserAccounts(authUser, accountSearchCriteria))
                 .thenReturn(accountSearchResults);
 
         //invoke
         mockMvc.perform(MockMvcRequestBuilders
                         .get(BASE_PATH)
                         .param("term", accountSearchCriteria.getTerm())
-                        .param("page", String.valueOf(accountSearchCriteria.getPaging().getPageNumber()))
-                        .param("size", String.valueOf(accountSearchCriteria.getPaging().getPageSize()))
+                        .param("page", String.valueOf(accountSearchCriteria.getPage()))
+                        .param("size", String.valueOf(accountSearchCriteria.getSize()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total").value(2))
@@ -193,6 +171,6 @@ class TargetUnitAccountViewControllerTest {
                 .andExpect(jsonPath("$.accounts[1].name").value(accountSearchResults.getAccounts().get(1).getName()));
 
         // verify
-        verify(accountSearchServiceDelegator, times(1)).getAccountsByUserAndSearchCriteria(authUser, accountSearchCriteria);
+        verify(targetUnitAccountQueryServiceOrchestrator, times(1)).searchUserAccounts(authUser, accountSearchCriteria);
     }
 }

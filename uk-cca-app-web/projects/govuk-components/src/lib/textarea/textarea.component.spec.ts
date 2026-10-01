@@ -16,7 +16,9 @@ describe('TextareaComponent', () => {
         govuk-textarea
         [formControl]="control"
         [maxLength]="maxLength()"
+        [hint]="hint()"
         [label]="label()"
+        [labelHidden]="labelHidden()"
         [labelSize]="labelSize()"
       ></div>
     `,
@@ -24,7 +26,9 @@ describe('TextareaComponent', () => {
   class TestComponent {
     control = new FormControl();
     maxLength = signal<number | undefined>(undefined);
+    hint = signal<string | undefined>(undefined);
     label = signal<string | undefined>(undefined);
+    labelHidden = signal(false);
     labelSize = signal<LabelSizeType | undefined>(undefined);
   }
 
@@ -78,7 +82,6 @@ describe('TextareaComponent', () => {
     expect(component.control.value).toEqual('This is a test \n Test');
   });
 
-  // TODO: try a more proper implementation, removing `changeDetectorRef.markForCheck`
   it('should show character count info and error', async () => {
     const element: HTMLElement = hostComponentFixture.nativeElement;
     expect(element.querySelector('.govuk-character-count__message')).toBeNull();
@@ -87,16 +90,14 @@ describe('TextareaComponent', () => {
     component.control.clearValidators();
     component.control.setValidators(GovukValidators.maxLength(10, 'no more than 10'));
     component.control.updateValueAndValidity();
-    hostComponentFixture.changeDetectorRef.markForCheck();
-    await hostComponentFixture.whenStable();
+    hostComponentFixture.detectChanges();
 
     expect(element.querySelector('.govuk-character-count__message').textContent.trim()).toEqual('');
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message')).toBeNull();
 
     const withinLimit = '1234567890';
     component.control.setValue(withinLimit);
-    hostComponentFixture.changeDetectorRef.markForCheck();
-    await hostComponentFixture.whenStable();
+    hostComponentFixture.detectChanges();
 
     expect(element.querySelector('.govuk-character-count__message').textContent.trim()).toEqual(
       'You have 0 characters remaining',
@@ -105,8 +106,7 @@ describe('TextareaComponent', () => {
 
     const stringValue = '12345678901';
     component.control.setValue(stringValue);
-    hostComponentFixture.changeDetectorRef.markForCheck();
-    await hostComponentFixture.whenStable();
+    hostComponentFixture.detectChanges();
 
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message')).toBeTruthy();
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message').textContent.trim()).toEqual(
@@ -143,5 +143,33 @@ describe('TextareaComponent', () => {
     await hostComponentFixture.whenStable();
 
     expect(label.className).toEqual('govuk-label govuk-visually-hidden govuk-label--l');
+  });
+
+  it('should describe the textarea with its hint, error and character count', () => {
+    hostComponent.hint.set('Add more detail');
+    hostComponent.maxLength.set(10);
+    component.control.setValidators(GovukValidators.maxLength(10, 'no more than 10'));
+    component.control.setValue('12345678901');
+    hostComponentFixture.detectChanges();
+
+    const textarea = (hostComponentFixture.nativeElement as HTMLElement).querySelector<HTMLTextAreaElement>('textarea');
+
+    expect(textarea.getAttribute('aria-describedby')).toEqual(
+      `${textarea.id}-info ${textarea.id}-hint ${textarea.id}-error`,
+    );
+  });
+
+  it('should hide the label when labelHidden is set', async () => {
+    hostComponent.label.set('Additional information');
+    await hostComponentFixture.whenStable();
+
+    const label = hostComponentFixture.nativeElement.querySelector('label') as HTMLLabelElement;
+    expect(label.textContent.trim()).toEqual('Additional information');
+    expect(label.className).toEqual('govuk-label');
+
+    hostComponent.labelHidden.set(true);
+    await hostComponentFixture.whenStable();
+
+    expect(label.className).toEqual('govuk-label govuk-visually-hidden');
   });
 });

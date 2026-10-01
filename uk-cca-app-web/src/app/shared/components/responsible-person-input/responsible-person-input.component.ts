@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CheckboxComponent, CheckboxesComponent } from '@netz/govuk-components';
@@ -19,6 +19,7 @@ import { TextInputComponent } from '../text-input/text-input.component';
     CheckboxComponent,
     CheckboxesComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [existingControlContainer],
 })
 export class ResponsiblePersonInputComponent {

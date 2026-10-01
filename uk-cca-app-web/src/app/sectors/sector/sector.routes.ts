@@ -13,6 +13,7 @@ import { TARGET_UNIT_ROUTES } from './target-units-tab/target-unit.routes';
 export const SECTOR_ROUTES: Routes = [
   {
     path: '',
+    title: 'Sector details',
     loadComponent: () => import('./sector.component').then((c) => c.SectorComponent),
   },
   ...DETAILS_ROUTES,

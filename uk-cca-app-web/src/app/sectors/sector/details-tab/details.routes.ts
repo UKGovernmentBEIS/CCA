@@ -8,9 +8,9 @@ const CanEditGuard = () => inject(ActiveSectorStore).state.editable;
 export const DETAILS_ROUTES: Routes = [
   {
     path: 'edit-details',
+    title: 'Edit sector details',
     canActivate: [CanEditGuard],
     data: {
-      pageTitle: 'Edit sector details',
       backlink: '../',
       breadcrumb: false,
     },
@@ -21,9 +21,9 @@ export const DETAILS_ROUTES: Routes = [
   },
   {
     path: 'edit-contact-details',
+    title: 'Edit sector contact details',
     canActivate: [CanEditGuard],
     data: {
-      pageTitle: 'Edit sector contact details',
       backlink: '../',
       breadcrumb: false,
     },

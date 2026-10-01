@@ -21,6 +21,7 @@ import { EnforcementResponseNoticeSentComponent } from './enforcement-response-n
 import { DetailsCorrectiveActionsCompletedComponent } from './facility-audit/details-corrective-actions-completed/details-corrective-actions-completed.component';
 import { PreAuditReviewCompletedComponent } from './facility-audit/pre-audit-review-completed/pre-audit-review-completed.component';
 import { TrackCorrectiveActionsCompletedComponent } from './facility-audit/track-corrective-actions-completed/track-corrective-actions-completed.component';
+import { FacilityPATReportingSubmittedComponent } from './facility-pat-reporting-submitted/facility-pat-reporting-submitted.component';
 import { NonComplianceAppealProvidedComponent } from './non-compliance-appeal-provided/non-compliance-appeal-provided.component';
 import { NonComplianceClosedComponent } from './non-compliance-closed/non-compliance-closed.component';
 import { NonComplianceConclusionSubmittedComponent } from './non-compliance-conclusion-submitted/non-compliance-conclusion-submitted.component';
@@ -28,6 +29,7 @@ import { NonComplianceDetailsSubmittedComponent } from './non-compliance-details
 import { NonComplianceEnforcementResponseNoticePeerReviewerDecisionComponent } from './non-compliance-enforcement-response-notice-peer-reviewer-decision/non-compliance-enforcement-response-notice-peer-reviewer-decision.component';
 import { NonComplianceNoticeOfIntentPeerReviewerDecisionComponent } from './non-compliance-notice-of-intent-peer-reviewer-decision/non-compliance-notice-of-intent-peer-reviewer-decision.component';
 import { NonComplianceNoticeOfIntentSubmittedComponent } from './non-compliance-notice-of-intent-submitted/non-compliance-notice-of-intent-submitted.component';
+import { PatReportingSubmittedComponent } from './pat-reporting-submitted/pat-reporting-submitted.component';
 import { PATUploadSubmittedComponent } from './performance-account-template-upload-submitted/pat-upload-submitted.component';
 import { PerformanceDataUploadSubmittedComponent } from './performance-data-upload-submitted/performance-data-upload-submitted.component';
 import { SectorMoaGeneratedComponent } from './sector-moa-generated/sector-moa-generated.component';
@@ -338,6 +340,26 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     };
   },
 
+  // BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED: () => {
+  //   const store = inject(RequestActionStore);
+  //   const action = store.select(requestActionQuery.selectAction)();
+
+  //   return {
+  //     header: getItemActionHeader(action),
+  //     component: BuyOutSurplusFacilityBatchRunCompletedComponent,
+  //   };
+  // },
+
+  // BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES: () => {
+  //   const store = inject(RequestActionStore);
+  //   const action = store.select(requestActionQuery.selectAction)();
+
+  //   return {
+  //     header: getItemActionHeader(action),
+  //     component: BuyOutSurplusFacilityBatchRunCompletedComponent,
+  //   };
+  // },
+
   TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED: () => {
     const store = inject(RequestActionStore);
     const action = store.select(requestActionQuery.selectAction)();
@@ -625,6 +647,26 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: TprReportingFormSubmittedComponent,
+    };
+  },
+
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PatReportingSubmittedComponent,
+    };
+  },
+
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: FacilityPATReportingSubmittedComponent,
     };
   },
 };

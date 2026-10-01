@@ -85,7 +85,7 @@ public class RegulatorUserManagementController {
             @RequestPart @Valid @Parameter(description = "The regulator user to update", required = true) RegulatorUserUpdateDTO regulatorUserUpdateDTO,
             @RequestPart(name = "signature", required = false) @Parameter(description = "The signature file") MultipartFile signature
     ) throws IOException {
-        FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature);
+        FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature, currentUser.getUserId());
         regulatorUserAuthorityUpdateOrchestrator.updateRegulatorUserByUserId(currentUser, userId, regulatorUserUpdateDTO, signatureDTO);
         return new ResponseEntity<>(regulatorUserUpdateDTO, HttpStatus.OK);
     }
@@ -104,7 +104,7 @@ public class RegulatorUserManagementController {
             @RequestPart @Valid @Parameter(description = "The regulator user to update", required = true) RegulatorUserUpdateDTO regulatorUserUpdateDTO,
             @RequestPart(name = "signature", required = false) @Parameter(description = "The signature file") MultipartFile signature
     ) throws IOException {
-        FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature);
+        FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature, currentUser.getUserId());
         regulatorUserAuthorityUpdateOrchestrator
                 .updateRegulatorUserByUserId(currentUser, currentUser.getUserId(), regulatorUserUpdateDTO, signatureDTO);
         return new ResponseEntity<>(regulatorUserUpdateDTO, HttpStatus.OK);

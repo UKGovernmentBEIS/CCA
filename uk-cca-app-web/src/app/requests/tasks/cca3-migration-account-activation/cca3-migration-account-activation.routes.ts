@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export const CCA3_MIGRATION_ACCOUNT_ACTIVATION_ROUTES: Routes = [
   {
     path: '',
+    title: 'Upload target unit assent',
     children: [
       {
         path: 'provide-evidence',

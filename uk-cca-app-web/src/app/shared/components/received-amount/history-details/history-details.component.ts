@@ -16,13 +16,15 @@ import { toHistoryDetailsSummary } from './history-details-summary';
       Amount {{ +amountHistory()?.transactionAmount > 0 ? 'added' : 'subtracted' }}
       {{
         +amountHistory()?.transactionAmount > 0
-          ? (amountHistory()?.transactionAmount | number)
+          ? ($safeNavigationMigration(amountHistory()?.transactionAmount) | number)
           : (amountHistory()?.transactionAmount.split('-')[1] | number)
       }}
       GBP by "{{ amountHistory()?.submitter }}"
     </netz-page-heading>
 
-    <p class="govuk-!-margin-bottom-9">{{ amountHistory()?.submissionDate | govukDate: 'datetime' }}</p>
+    <p class="govuk-!-margin-bottom-9">
+      {{ $safeNavigationMigration(amountHistory()?.submissionDate) | govukDate: 'datetime' }}
+    </p>
 
     <cca-summary [data]="data()" />
   `,

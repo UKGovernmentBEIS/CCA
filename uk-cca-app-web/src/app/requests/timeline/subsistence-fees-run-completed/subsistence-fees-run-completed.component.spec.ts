@@ -37,7 +37,7 @@ describe('SubsistenceFeesRunCompletedComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Payment request ID', 'Charging year', 'Status', 'Invoices sent', 'Detailed report'],
-        ['S2501', '2025', 'Completed', '1', 'S2501 subsistence fees summary report.csv'],
+        ['S2501', '2025', 'Completed', '1', 'S2501 subsistence fees summary report.csv (opens in a new tab)'],
       ],
     ]);
   });

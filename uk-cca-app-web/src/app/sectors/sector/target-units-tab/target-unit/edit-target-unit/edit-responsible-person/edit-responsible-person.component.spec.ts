@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -65,7 +65,7 @@ describe('EditResponsiblePersonComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EditResponsiblePersonComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         ActiveTargetUnitStore,
         { provide: UpdateTargetUnitAccountService, useValue: updateTargetUnitAccountService },

@@ -5,17 +5,20 @@ import { ReceivedAmountGuard } from './received-amount.guard';
 export const RECEIVED_AMOUNT_ROUTES: Routes = [
   {
     path: '',
+    title: 'Received amount',
     data: { backlink: '..', breadcrumb: false },
     loadComponent: () => import('./received-amount.component').then((c) => c.ReceivedAmountComponent),
   },
   {
     path: 'history-details/:detailsId',
+    title: 'Received amount history',
     data: { backlink: '../..', breadcrumb: false },
     canActivate: [ReceivedAmountGuard],
     loadComponent: () => import('./history-details/history-details.component').then((c) => c.HistoryDetailsComponent),
   },
   {
     path: 'check-your-answers',
+    title: 'Check your answers',
     data: { backlink: '..', breadcrumb: false },
     canActivate: [ReceivedAmountGuard],
     loadComponent: () =>
@@ -23,12 +26,14 @@ export const RECEIVED_AMOUNT_ROUTES: Routes = [
   },
   {
     path: 'confirmation',
+    title: 'Received amount updated',
     data: { backlink: false, breadcrumb: false },
     canActivate: [ReceivedAmountGuard],
     loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
   },
   {
     path: 'evidence-file-download/:fileType/:uuid',
+    title: 'Your download has started',
     loadComponent: () => import('@shared/components').then((m) => m.EvidenceFileDownloadComponent),
   },
 ];

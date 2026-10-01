@@ -1,6 +1,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <netz-page-heading [caption]="facility()?.facilityDetails?.name">Split by product</netz-page-heading>
+    <netz-page-heading [caption]="$safeNavigationMigration(facility()?.facilityDetails?.name)"
+      >Split by product</netz-page-heading
+    >
   </div>
 </div>
 

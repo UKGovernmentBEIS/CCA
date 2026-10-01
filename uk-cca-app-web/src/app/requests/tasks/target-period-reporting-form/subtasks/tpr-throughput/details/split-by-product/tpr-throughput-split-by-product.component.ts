@@ -161,7 +161,7 @@ export class TprThroughputSplitByProductComponent {
       const productBaseYear = product.baselineYear;
       let improvementTarget = facilityImprovementTarget;
 
-      if (facilityBaselineYear != null && productBaseYear !== facilityBaselineYear) {
+      if (facilityBaselineYear != null && productBaseYear > facilityBaselineYear) {
         improvementTarget = calculateAdjustedImprovementTarget(
           this.referenceData(),
           this.reportType(),

@@ -11,6 +11,14 @@ import { GovukSelectOption } from '@netz/govuk-components';
       align-items: baseline;
       margin-left: auto !important;
     }
+
+    .govuk-pagination__item--current .govuk-pagination__link {
+      color: var(--govuk-white);
+    }
+
+    .govuk-pagination__item--current .govuk-pagination__link:focus {
+      color: var(--govuk-focus-text-colour);
+    }
   `,
   imports: [ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

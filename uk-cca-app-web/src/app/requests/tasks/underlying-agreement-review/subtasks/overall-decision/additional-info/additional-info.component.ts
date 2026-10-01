@@ -22,7 +22,12 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
       heading="Provide any additional information here to support your decision (optional)"
       (formSubmit)="submit()"
     >
-      <div govuk-textarea formControlName="additionalInfo" hint="This will be included in the official notice."></div>
+      <div
+        govuk-textarea
+        formControlName="additionalInfo"
+        label="Additional information (optional)"
+        hint="This will be included in the official notice."
+      ></div>
       <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files" />
     </cca-wizard-step>
 

@@ -14,6 +14,7 @@ export const PRE_AUDIT_REVIEW_AUDIT_REASON_ROUTES: Routes = [
       },
       {
         path: 'audit-reason',
+        title: 'Why should this facility be audited?',
         data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./audit-reason/pre-audit-review-audit-reason.component').then(
@@ -22,6 +23,7 @@ export const PRE_AUDIT_REVIEW_AUDIT_REASON_ROUTES: Routes = [
       },
       {
         path: 'check-your-answers',
+        title: 'Check your answers',
         data: { breadcrumb: false, backlink: '../audit-reason' },
         loadComponent: () =>
           import('./check-your-answers/pre-audit-review-audit-reason-check-your-answers.component').then(
@@ -30,6 +32,7 @@ export const PRE_AUDIT_REVIEW_AUDIT_REASON_ROUTES: Routes = [
       },
       {
         path: 'summary',
+        title: 'Summary',
         data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./summary/pre-audit-review-audit-reason-summary.component').then(

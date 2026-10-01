@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/file_attachment_cca.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+    <changeSet id="0_1_0_update_file_attachment_created_by_system" author="P70383">
+        <sql>
+            update file_attachment
+            set created_by = 'system'
+            where created_by = 'System';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

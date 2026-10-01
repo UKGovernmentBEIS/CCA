@@ -17,7 +17,7 @@
   <p class="govuk-hint">
     You can add, edit or remove SIC codes. <br />You can find a
     <a class="govuk-link" rel="noreferrer noopener" href="https://resources.companieshouse.gov.uk/sic/" target="_blank">
-      condensed list of all SIC codes
+      condensed list of all SIC codes<span class="govuk-visually-hidden"> (opens in a new tab)</span>
     </a>
     on the Companies House website.
   </p>
@@ -26,20 +26,19 @@
     @for (sicCode of sicCodeFormArray.controls; let i = $index; track sicCode) {
       <div class="row-flex govuk-!-margin-right-3">
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-          <div [formControlName]="i" govuk-text-input class="govuk-!-width-full"></div>
+          <div [formControlName]="i" govuk-text-input label="SIC code" class="govuk-!-width-full"></div>
         </div>
 
         <div class="govuk-grid-column-one-third">
           @if (sicCodeFormArray.length > 1) {
-            <a
-              govukLink
+            <button
+              type="button"
+              govukSecondaryButton
+              class="govuk-!-margin-bottom-0 govuk-!-width-two-thirds"
               (click)="removeCode(i)"
-              (keydown)="removeCode(i)"
-              role="button"
-              tabindex="0"
-              class="govuk-!-width-two-thirds"
-              >Remove</a
             >
+              Remove
+            </button>
           }
         </div>
       </div>

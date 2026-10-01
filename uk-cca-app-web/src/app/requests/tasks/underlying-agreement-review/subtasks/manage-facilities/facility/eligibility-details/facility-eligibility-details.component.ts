@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -108,48 +108,45 @@ export class FacilityEligibilityDetailsComponent {
     },
   );
 
-  protected readonly isEnvironmental: Signal<boolean> = computed(() => {
-    const agreementType = this.agreementType();
-
-    if (agreementType === 'ENVIRONMENTAL_PERMITTING_REGULATIONS') {
-      this.form.get('erpAuthorisationExists').enable();
-      return true;
-    } else {
-      this.form.get('erpAuthorisationExists').disable();
-      this.form.get('authorisationNumber').disable();
-      this.form.get('regulatorName').disable();
-      this.form.get('permitFile').disable();
-
-      this.form.get('erpAuthorisationExists').reset();
-      this.form.get('authorisationNumber').reset();
-      this.form.get('regulatorName').reset();
-      this.form.get('permitFile').reset();
-      return false;
-    }
-  });
+  protected readonly isEnvironmental: Signal<boolean> = computed(
+    () => this.agreementType() === 'ENVIRONMENTAL_PERMITTING_REGULATIONS',
+  );
 
   private readonly erpAuthorisationExists: Signal<EligibilityDetailsAndAuthorisation['erpAuthorisationExists']> =
     toSignal(this.form.get('erpAuthorisationExists').valueChanges, {
       initialValue: this.form.get('erpAuthorisationExists').value,
     });
 
-  protected readonly isAuthorisation: Signal<boolean> = computed(() => {
-    if (this.erpAuthorisationExists()) {
-      this.form.get('authorisationNumber').enable();
-      this.form.get('regulatorName').enable();
-      this.form.get('permitFile').enable();
-      return true;
-    } else {
-      this.form.get('authorisationNumber').disable();
-      this.form.get('regulatorName').disable();
-      this.form.get('permitFile').disable();
+  protected readonly isAuthorisation: Signal<boolean> = computed(() => Boolean(this.erpAuthorisationExists()));
 
-      this.form.get('authorisationNumber').reset();
-      this.form.get('regulatorName').reset();
-      this.form.get('permitFile').reset();
-      return false;
-    }
-  });
+  constructor() {
+    effect(() => {
+      const erpAuthorisationExists = this.form.get('erpAuthorisationExists');
+      const authorisationNumber = this.form.get('authorisationNumber');
+      const regulatorName = this.form.get('regulatorName');
+      const permitFile = this.form.get('permitFile');
+
+      if (this.isEnvironmental()) {
+        erpAuthorisationExists.enable();
+      } else {
+        erpAuthorisationExists.disable();
+        erpAuthorisationExists.reset();
+      }
+
+      if (this.isEnvironmental() && this.isAuthorisation()) {
+        authorisationNumber.enable();
+        regulatorName.enable();
+        permitFile.enable();
+      } else {
+        authorisationNumber.disable();
+        regulatorName.disable();
+        permitFile.disable();
+        authorisationNumber.reset();
+        regulatorName.reset();
+        permitFile.reset();
+      }
+    });
+  }
 
   getDownloadUrl(uuid: string) {
     return ['../../../../file-download', uuid];
@@ -208,15 +205,19 @@ function update(
     const facilityIndex = draft.facilities.findIndex((f) => f.facilityId === facilityId);
     if (facilityIndex === -1) return;
 
+    // `form.value` leaves disabled controls out, so a control that the effect disabled and reset
+    // would keep its previously saved value. Read the raw value so the reset is saved as well.
+    const value = form.getRawValue();
+
     // Make sure all required fields are included
     draft.facilities[facilityIndex].eligibilityDetailsAndAuthorisation = {
       isConnectedToExistingFacility: form.value.isConnectedToExistingFacility || false,
       adjacentFacilityId: form.value.adjacentFacilityId,
       agreementType: form.value.agreementType || 'ENVIRONMENTAL_PERMITTING_REGULATIONS',
-      erpAuthorisationExists: form.value.erpAuthorisationExists,
-      authorisationNumber: form.value.authorisationNumber,
-      regulatorName: form.value.regulatorName,
-      permitFile: form.value.permitFile?.uuid ?? null,
+      erpAuthorisationExists: value.erpAuthorisationExists,
+      authorisationNumber: value.authorisationNumber,
+      regulatorName: value.regulatorName,
+      permitFile: value.permitFile?.uuid ?? null,
     };
   });
 }

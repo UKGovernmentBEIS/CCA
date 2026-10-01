@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { TextInputComponent } from '@netz/govuk-components';
@@ -8,6 +8,7 @@ import { existingControlContainer } from '../../providers/control-container.fact
   selector: 'cca-county-address-input',
   templateUrl: './county-address-input.component.html',
   imports: [TextInputComponent, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [existingControlContainer],
 })
 export class CountyAddressInputComponent {}

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
@@ -54,7 +54,7 @@ describe('WorkflowNotesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WorkflowNotesComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideRouter([]),
         { provide: RequestNotesService, useValue: mockRequestNotesService },

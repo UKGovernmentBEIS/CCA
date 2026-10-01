@@ -189,6 +189,24 @@ describe('TableComponent', () => {
     expect(sortButtons[1].parent.attributes['aria-sort']).toBe('ascending');
   });
 
+  it('should not expose arrow characters in sort names or live region announcements', () => {
+    hostComponent.columns.set([{ header: 'Name', field: 'name', isSortable: true }]);
+    hostComponent.data.set([{ name: 'A' }]);
+    fixture.detectChanges();
+
+    const hostElement: HTMLElement = fixture.nativeElement;
+    const button = hostElement.querySelector<HTMLButtonElement>('[aria-sort] button');
+    expect(button.textContent.trim()).toBe('Name');
+    expect(button.textContent).not.toMatch(/[▲▼↑↓]/);
+
+    button.click();
+    fixture.detectChanges();
+
+    const status = hostElement.querySelector<HTMLElement>('[role="status"]');
+    expect(status.textContent).toContain('Sort by Name (ascending)');
+    expect(status.textContent).not.toMatch(/[▲▼↑↓]/);
+  });
+
   it('should display custom template', () => {
     const templateFixture = TestBed.createComponent(TestTemplateComponent);
     templateFixture.componentInstance.data.set([{ link: 'Go to', text: 'Something to watch' }]);

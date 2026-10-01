@@ -5,11 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { underlyingAgreementQuery } from '@requests/common';
 import { AccountAddressFormModel, createAccountAddressForm, phoneInputValidators } from '@shared/components';
 import { textFieldValidators } from '@shared/validators';
 
 import { TargetUnitAccountContactDTO } from 'cca-api';
+
+import { underlyingAgreementQuery } from '../../+state/underlying-agreement.selectors';
 
 export type FacilityContactFormModel = {
   sameContact: FormControl<boolean[]>;

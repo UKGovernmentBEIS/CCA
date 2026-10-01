@@ -9,8 +9,10 @@
         >
           <a
             class="govuk-link"
-            href="#"
-            (click)="updateSection($event, 'target-period')"
+            [routerLink]="[]"
+            [queryParams]="{ section: 'target-period' }"
+            queryParamsHandling="merge"
+            fragment="reports"
             [attr.aria-current]="currentSection === 'target-period' ? 'location' : null"
           >
             Target period
@@ -18,11 +20,15 @@
         </li>
         <li class="cca-side-navigation__item" [class.cca-side-navigation__item--active]="currentSection === 'pat'">
           <a
-            href="#"
-            (click)="updateSection($event, 'pat')"
+            class="govuk-link"
+            [routerLink]="[]"
+            [queryParams]="{ section: 'pat' }"
+            queryParamsHandling="merge"
+            fragment="reports"
             [attr.aria-current]="currentSection === 'pat' ? 'location' : null"
-            >PAT</a
           >
+            PAT
+          </a>
         </li>
       </ul>
     </nav>
@@ -34,7 +40,7 @@
     </div>
   } @else {
     <div class="govuk-grid-column-three-quarters govuk-!-margin-top-5">
-      <!-- <cca-pat-report /> -->
+      <cca-pat-report />
     </div>
   }
 </div>

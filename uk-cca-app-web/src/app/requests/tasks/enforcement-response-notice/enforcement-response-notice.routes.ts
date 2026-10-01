@@ -5,6 +5,7 @@ import { CLOSE_TASK_ROUTES, isEditableGuard, isEditableSummaryRedirectGuard } fr
 export const ENFORCEMENT_RESPONSE_NOTICE_ROUTES: Routes = [
   {
     path: '',
+    title: 'Upload enforcement response notice',
     children: [
       {
         path: 'upload-enforcement-response-notice',

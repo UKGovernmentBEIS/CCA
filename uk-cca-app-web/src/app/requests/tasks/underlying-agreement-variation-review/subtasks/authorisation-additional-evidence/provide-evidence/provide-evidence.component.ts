@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -61,6 +61,7 @@ import { applySaveActionSideEffects, deleteDecision } from '../../../utils';
     <netz-return-to-task-or-action-page />
   `,
   imports: [WizardStepComponent, ReactiveFormsModule, ReturnToTaskOrActionPageComponent, MultipleFileInputComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ProvideEvidenceFormProvider],
 })
 export class ProvideEvidenceComponent {

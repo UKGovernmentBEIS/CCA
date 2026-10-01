@@ -1,6 +1,6 @@
 @for (section of displayData(); track $index) {
   @if (section.header) {
-    <h2 [classList]="section.opts?.headerClasses">{{ section.header }}</h2>
+    <h2 [classList]="$safeNavigationMigration(section.opts?.headerClasses)">{{ section.header }}</h2>
   }
 
   @if (section.data?.length) {
@@ -13,11 +13,11 @@
               @if (!row.value.length) {
                 <span>No files provided</span>
               } @else {
-                <cca-summary-download-files [files]="$any(row.value)" />
+                <cca-summary-download-files [files]="row.value" />
               }
             } @else if (row.isLinkList) {
               @for (value of row.value; track value; let last = $last) {
-                <a class="govuk-link" [routerLink]="value['link']">{{ value['text'] }}</a>
+                <a class="govuk-link" [routerLink]="value.link">{{ value.text }}</a>
 
                 @if (!last) {
                   <br />
@@ -38,14 +38,15 @@
             }
           </dd>
 
-          @if (row.change) {
+          @if (row.change && (row.changeLink || section.changeLink)) {
             <dd govukSummaryListRowActions>
               <a
                 class="govuk-link"
                 [routerLink]="row.changeLink || section.changeLink"
                 [queryParams]="row | parseQueryParams"
-                >Change</a
               >
+                Change<span class="govuk-visually-hidden"> {{ row.key }}</span>
+              </a>
             </dd>
           }
 

@@ -34,8 +34,11 @@ export const ItemActionEnum: Record<string, string> = {
   SECTOR_MOA_GENERATED: 'Sector MoA generated',
   TARGET_UNIT_MOA_GENERATED: 'Subsistence fees payment request received',
   BUY_OUT_SURPLUS_RUN_SUBMITTED: 'Buy-out and surplus batch run submitted',
+  BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED: 'Buy-out and surplus batch run submitted',
   BUY_OUT_SURPLUS_RUN_COMPLETED: 'Buy-out and surplus batch run completed',
   BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES: 'Buy-out and surplus batch run completed with failures',
+  BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED: 'Buy-out and surplus batch run completed',
+  BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES: 'Buy-out and surplus batch run completed with failures',
   ADMIN_TERMINATION_PEER_REVIEW_REQUESTED: 'Peer review requested',
   ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_ACCEPTED: 'Peer review agreement',
   ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_REJECTED: 'Peer review disagreement',
@@ -52,6 +55,8 @@ export const ItemActionEnum: Record<string, string> = {
   FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED: 'Track corrective actions completed',
   FACILITY_AUDIT_CANCELLED: 'Audit facility cancelled',
   REQUEST_TERMINATED: 'Workflow terminated by the system',
+  REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE:
+    'Workflow terminated by the system due to successful CSV update for the target period',
   CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED: 'CCA2 Underlying agreement terminated',
   NON_COMPLIANCE_DETAILS_SUBMITTED: 'Non-compliance details provided',
   NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED: 'Notice of intent submitted',
@@ -76,6 +81,9 @@ export const ItemActionEnum: Record<string, string> = {
   PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED: 'Target period reporting submitted',
   PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED: 'Target period reporting submitted',
   PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED: 'Target period reporting closed',
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED: 'PAT reporting submitted',
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED: 'PAT reporting submitted',
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED: 'PAT reporting closed',
 };
 
 @Pipe({ name: 'itemActionType', pure: true })

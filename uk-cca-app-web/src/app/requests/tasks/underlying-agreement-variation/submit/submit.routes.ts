@@ -13,6 +13,7 @@ export const SUBMIT_ROUTES: Routes = [
       },
       {
         path: 'confirmation',
+        title: 'Variation application sent to regulator',
         loadComponent: () =>
           import('./confirmation/variation-submit-confirmation.component').then(
             (c) => c.VariationSubmitConfirmationComponent,

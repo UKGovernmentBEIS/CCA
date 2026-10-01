@@ -10,7 +10,9 @@
 
       @if (changeLink) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">
+            Change<span class="govuk-visually-hidden"> first name</span>
+          </a>
         </dd>
       }
     </div>
@@ -21,7 +23,9 @@
 
       @if (changeLink) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">
+            Change<span class="govuk-visually-hidden"> last name</span>
+          </a>
         </dd>
       }
     </div>
@@ -32,7 +36,9 @@
 
       @if (changeLink) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">
+            Change<span class="govuk-visually-hidden"> job title</span>
+          </a>
         </dd>
       }
     </div>
@@ -48,11 +54,13 @@
   <dl govuk-summary-list data-testid="sector-user-organisation-details-list">
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Contact type</dt>
-      <dd govukSummaryListRowValue>{{ details?.contactType | contactType }}</dd>
+      <dd govukSummaryListRowValue>{{ $safeNavigationMigration(details?.contactType) | contactType }}</dd>
 
       @if (changeContactType) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">
+            Change<span class="govuk-visually-hidden"> contact type</span>
+          </a>
         </dd>
       }
     </div>
@@ -63,7 +71,9 @@
 
       @if (changeLink) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">
+            Change<span class="govuk-visually-hidden"> organisation name</span>
+          </a>
         </dd>
       }
     </div>
@@ -71,12 +81,15 @@
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Phone number 1</dt>
       <dd govukSummaryListRowValue>
-        {{ details?.phoneNumber?.countryCode | phoneNumber }} {{ details?.phoneNumber?.number }}
+        {{ $safeNavigationMigration(details?.phoneNumber?.countryCode) | phoneNumber }}
+        {{ details?.phoneNumber?.number }}
       </dd>
 
       @if (changeLink) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">
+            Change<span class="govuk-visually-hidden"> phone number 1</span>
+          </a>
         </dd>
       }
     </div>
@@ -84,12 +97,15 @@
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Phone number 2</dt>
       <dd govukSummaryListRowValue>
-        {{ details?.mobileNumber?.countryCode | phoneNumber }} {{ details?.mobileNumber?.number }}
+        {{ $safeNavigationMigration(details?.mobileNumber?.countryCode) | phoneNumber }}
+        {{ details?.mobileNumber?.number }}
       </dd>
 
       @if (changeLink) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+          <a class="govuk-link" [routerLink]="'edit'" [queryParams]="queryParams">
+            Change<span class="govuk-visually-hidden"> phone number 2</span>
+          </a>
         </dd>
       }
     </div>

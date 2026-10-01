@@ -13,6 +13,7 @@ export const SUBMIT_ROUTES: Routes = [
       },
       {
         path: 'confirmation',
+        title: 'Application sent to regulator',
         loadComponent: () =>
           import('./confirmation/confirmation.component').then((c) => c.UnderlyingAgreementSubmitConfirmationComponent),
       },

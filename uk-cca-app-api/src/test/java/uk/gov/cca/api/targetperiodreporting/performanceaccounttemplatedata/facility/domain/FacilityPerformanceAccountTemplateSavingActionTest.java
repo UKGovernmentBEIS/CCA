@@ -68,7 +68,7 @@ class FacilityPerformanceAccountTemplateSavingActionTest {
         assertThat(violations).extracting(ConstraintViolation::getMessage)
                 .containsExactlyInAnyOrder("must be less than or equal to 100",
                         "numeric value out of bounds (<2 digits>.<7 digits> expected)",
-                        "{performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.typeMismatch}");
+                        "{performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.mandatoryFieldsIncomplete}");
     }
 
     @Test
@@ -101,6 +101,18 @@ class FacilityPerformanceAccountTemplateSavingActionTest {
 
         assertThat(violations).isNotEmpty();
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsExactlyInAnyOrder("{performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.typeMismatch}");
+                .containsExactly("{performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.mandatoryFieldsIncomplete}");
+    }
+
+    @Test
+    void validate_no_actionCategoryType_not_valid() {
+        final FacilityPerformanceAccountTemplateSavingAction data = FacilityPerformanceAccountTemplateSavingAction.builder()
+                .build();
+
+        final Set<ConstraintViolation<FacilityPerformanceAccountTemplateSavingAction>> violations = validator.validate(data);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactly("must not be null");
     }
 }

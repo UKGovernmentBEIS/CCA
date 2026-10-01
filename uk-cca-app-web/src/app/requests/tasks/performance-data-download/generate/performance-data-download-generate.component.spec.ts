@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
@@ -44,7 +44,7 @@ describe('PerformanceDataDownloadGenerateComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PerformanceDataDownloadGenerateComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -87,7 +87,7 @@ describe('PerformanceDataDownloadGenerateComponent', () => {
     expect(page.summaryListValues).toEqual([
       ['Sector ID', 'ADS_2'],
       ['Sector name', 'Aerospace_2'],
-      ['Target period', 'Select\n TP6'],
+      ['Target period', 'Select target period\n TP6'],
     ]);
   });
 

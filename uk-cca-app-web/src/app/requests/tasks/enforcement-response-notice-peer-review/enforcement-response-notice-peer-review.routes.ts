@@ -5,6 +5,7 @@ import { userIsAssigneeGuard } from 'src/app/shared/guards/user-is-assignee.guar
 export const ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_ROUTES: Routes = [
   {
     path: '',
+    title: 'Peer review enforcement response notice',
     children: [
       {
         path: 'upload-enforcement-response-notice',

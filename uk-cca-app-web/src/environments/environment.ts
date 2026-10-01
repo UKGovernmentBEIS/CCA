@@ -2,10 +2,10 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { KeycloakConfig, KeycloakInitOptions } from 'keycloak-js';
+import type { KeycloakInitOptions, KeycloakServerConfig } from 'keycloak-js';
 
 // Add here your keycloak setup infos
-const keycloakConfig: KeycloakConfig = {
+const keycloakConfig: Omit<KeycloakServerConfig, 'url'> = {
   realm: 'uk-pmrv',
   clientId: 'uk-cca-web-app',
 };
@@ -24,10 +24,15 @@ const timeoutBanner = {
   timeOffsetSeconds: 120,
 };
 
+const serviceName = 'Climate Change Agreements';
+const serviceNameShort = 'CCA';
+
 export const environment = {
   production: false,
   keycloakConfig,
   keycloakInitOptions,
   apiOptions,
   timeoutBanner,
+  serviceName,
+  serviceNameShort,
 };

@@ -11,11 +11,13 @@ export const FACILITY_AUDIT_ROUTES: Routes = [
     children: [
       {
         path: '',
+        title: 'Facility audit',
         data: { backlink: '../', breadcrumb: false },
         loadComponent: () => import('./audit/audit.component').then((c) => c.AuditComponent),
       },
       {
         path: 'reasons',
+        title: 'Why should this facility be audited?',
         data: { backlink: '..', breadcrumb: false },
         loadComponent: () => import('./reasons/reasons.component').then((c) => c.ReasonsComponent),
       },

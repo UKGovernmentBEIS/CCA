@@ -9,19 +9,26 @@
         >
           <a
             class="govuk-link"
-            href="#"
-            (click)="updateSection($event, 'performance')"
+            [routerLink]="[]"
+            [queryParams]="{ section: 'performance' }"
+            queryParamsHandling="merge"
+            fragment="reports"
             [attr.aria-current]="currentSection === 'performance' ? 'location' : null"
-            >Performance</a
           >
+            Performance
+          </a>
         </li>
         <li class="cca-side-navigation__item" [class.cca-side-navigation__item--active]="currentSection === 'pat'">
           <a
-            href="#"
-            (click)="updateSection($event, 'pat')"
+            class="govuk-link"
+            [routerLink]="[]"
+            [queryParams]="{ section: 'pat' }"
+            queryParamsHandling="merge"
+            fragment="reports"
             [attr.aria-current]="currentSection === 'pat' ? 'location' : null"
-            >PAT</a
           >
+            PAT
+          </a>
         </li>
       </ul>
     </nav>

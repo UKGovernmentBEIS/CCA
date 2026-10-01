@@ -9,7 +9,7 @@ import { PanelComponent } from '@netz/govuk-components';
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <govuk-panel>
-          <strong>{{ targetPeriod() }} Buyout cost per tCO2e updated</strong>
+          <strong>{{ targetPeriod() }} Buy-out cost per tCO2e updated</strong>
         </govuk-panel>
 
         <div class="govuk-!-margin-top-9">

@@ -9,7 +9,7 @@ import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/
 @Component({
   selector: 'cca-delete-product',
   template: `
-    <netz-page-heading [caption]="facility()?.facilityDetails?.name">
+    <netz-page-heading [caption]="$safeNavigationMigration(facility()?.facilityDetails?.name)">
       Are you sure you want to delete {{ this.productName }}?
     </netz-page-heading>
 
@@ -18,7 +18,7 @@ import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/
       permanently.
     </p>
 
-    <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+    <govuk-warning-text>You will not be able to undo this action.</govuk-warning-text>
     <button (click)="onDelete()" class="govuk-button govuk-button--warning">Delete product</button>
   `,
   imports: [WarningTextComponent, PageHeadingComponent],

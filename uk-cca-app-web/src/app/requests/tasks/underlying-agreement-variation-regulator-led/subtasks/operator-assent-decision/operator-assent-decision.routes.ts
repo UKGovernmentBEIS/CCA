@@ -16,6 +16,7 @@ export const OPERATOR_ASSENT_DECISION_ROUTES: Routes = [
       },
       {
         path: OverallDecisionWizardStep.ADDITIONAL_INFO,
+        title: 'Provide any additional information here to support your decision',
         data: { backlink: `../../../`, breadcrumb: false },
         loadComponent: () =>
           import('./additional-info/additional-info.component').then((c) => c.AdditionalInfoComponent),

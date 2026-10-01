@@ -11,6 +11,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, GovukValidators } from '@netz/govuk-components';
 import {
   calculateThroughputValues,
+  createZeroEnergyValidatorFn,
   decideVariableEnergyType,
   isCarbonMeasurementType,
   roundHalfUpTo7Decimals,
@@ -59,16 +60,24 @@ export class TprThroughputTotalsOnlyComponent {
   protected readonly reportType = this.requestTaskStore.select(tprFormQuery.selectReportType);
   protected readonly targetPeriodType = this.requestTaskStore.select(tprFormQuery.selectTargetPeriodType);
 
-  protected readonly form = new FormGroup({
-    actualThroughput: new FormControl<string | null>(
-      this.performanceData()?.throughputDetails?.actualThroughput ?? null,
-      [
-        GovukValidators.required('Enter the total throughput'),
-        GovukValidators.min(0, 'Enter a value equal to or greater than 0'),
-        CCAGovukValidators.maxDecimalsWithMessage(7, 'Enter a number up to 7 decimal places'),
-      ],
-    ),
-  });
+  private readonly zeroEnergyValidator = createZeroEnergyValidatorFn(
+    this.performanceData()?.energyFuelDetails,
+    this.referenceData()?.baselineAndTargets,
+  );
+
+  protected readonly form = new FormGroup(
+    {
+      actualThroughput: new FormControl<string | null>(
+        this.performanceData()?.throughputDetails?.actualThroughput ?? null,
+        [
+          GovukValidators.required('Enter the total throughput'),
+          GovukValidators.min(0, 'Enter a value equal to or greater than 0'),
+          CCAGovukValidators.maxDecimalsWithMessage(7, 'Enter a number up to 7 decimal places'),
+        ],
+      ),
+    },
+    { validators: [this.zeroEnergyValidator] },
+  );
 
   private readonly variableEnergyExists = computed(
     () => this.referenceData()?.baselineAndTargets?.baselineVariableEnergy,

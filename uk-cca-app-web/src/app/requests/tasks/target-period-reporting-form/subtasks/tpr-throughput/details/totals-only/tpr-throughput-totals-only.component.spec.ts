@@ -197,4 +197,84 @@ describe('TprThroughputTotalsOnlyComponent', () => {
 
     expect(displayedIntensity.toFixed(7)).toBe(Number(apiIntensity).toFixed(7));
   });
+
+  it('should set zeroEnergy form-level error when delivered energy is 0 and baseline total is non-zero', async () => {
+    const zeroEnergyState = {
+      ...mockTprRequestTaskStateThroughputTotalsOnly,
+      requestTaskItem: {
+        ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem,
+        requestTask: {
+          ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask,
+          payload: {
+            ...basePayload,
+            performanceData: {
+              ...basePayload.performanceData,
+              energyFuelDetails: {
+                ...basePayload.performanceData?.energyFuelDetails,
+                standardFuels: {
+                  GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+                  NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+                },
+                nonStandardFuels: [],
+              },
+            },
+          },
+        },
+      },
+    } as RequestTaskState;
+
+    store.setState(zeroEnergyState);
+
+    fixture = TestBed.createComponent(TprThroughputTotalsOnlyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component['form'].invalid).toBe(true);
+    expect(component['form'].errors).toEqual({
+      zeroEnergy: 'Total energy/fuel amount consumed during the period must be greater than zero',
+    });
+  });
+
+  it('should not set zeroEnergy error when delivered energy is 0 but baseline total is also zero', async () => {
+    const zeroEnergyAllowedState = {
+      ...mockTprRequestTaskStateThroughputTotalsOnly,
+      requestTaskItem: {
+        ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem,
+        requestTask: {
+          ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask,
+          payload: {
+            ...basePayload,
+            referenceData: {
+              ...basePayload.referenceData,
+              baselineAndTargets: {
+                ...basePayload.referenceData?.baselineAndTargets,
+                baselineVariableEnergy: '0',
+              },
+            },
+            performanceData: {
+              ...basePayload.performanceData,
+              energyFuelDetails: {
+                ...basePayload.performanceData?.energyFuelDetails,
+                standardFuels: {
+                  GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+                  NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+                },
+                nonStandardFuels: [],
+              },
+            },
+          },
+        },
+      },
+    } as RequestTaskState;
+
+    store.setState(zeroEnergyAllowedState);
+
+    fixture = TestBed.createComponent(TprThroughputTotalsOnlyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component['form'].errors).toBeNull();
+  });
 });

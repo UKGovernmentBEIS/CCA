@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
-import { adminTerminationPeerReviewQuery, toPeerReviewSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+
+import { adminTerminationPeerReviewQuery } from './peer-review-submitted.component.selectors';
+import { toPeerReviewSummaryData } from './peer-review-submitted-summary-data';
 
 @Component({
   selector: 'cca-peer-review-submitted',

@@ -13,12 +13,19 @@
 
       <div govukSummaryListRow>
         <dt govukSummaryListRowKey>Corrective action deadline</dt>
-        <dd govukSummaryListRowValue>{{ correctiveActionResponse?.deadline | date: 'dd MMM yyyy' }}</dd>
+        <dd govukSummaryListRowValue>
+          {{ $safeNavigationMigration(correctiveActionResponse?.deadline) | date: 'dd MMM yyyy' }}
+        </dd>
       </div>
     </dl>
 
-    <p class="govuk-label govuk-label--m">Are you satisfied the operator has carried out this corrective action?</p>
-    <div class="govuk-!-margin-bottom-9" formControlName="isActionCarriedOut" govuk-radio>
+    <div
+      class="govuk-!-margin-bottom-9"
+      formControlName="isActionCarriedOut"
+      govuk-radio
+      legend="Are you satisfied the operator has carried out this corrective action?"
+      legendSize="medium"
+    >
       <govuk-radio-option [value]="true" [label]="'Yes'" />
       <govuk-radio-option [value]="false" [label]="'No'">
         <ng-container govukConditionalContent>

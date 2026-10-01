@@ -1,6 +1,12 @@
 package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.common.domain;
 
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,6 +23,11 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestPayload;
 public class BuyOutSurplusFacilityRunRequestPayload extends RequestPayload {
 
 	private String submitterId;
-	private TargetPeriodInfoDTO targetPeriodDetails;
+	private LocalDate creationDate;
+	private List<TargetPeriodInfoDTO> targetPeriodsDetails;
+	private boolean applyPrimaryRules;
 	private FileInfoDTO csvFile;
+	
+	@Builder.Default
+    private Map<Long, BuyOutSurplusFacilityAccountState> accountStates = new HashMap<>();
 }

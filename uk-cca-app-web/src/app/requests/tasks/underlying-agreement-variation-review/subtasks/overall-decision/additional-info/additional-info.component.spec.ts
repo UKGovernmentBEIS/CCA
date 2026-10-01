@@ -1,16 +1,12 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { of } from 'rxjs';
-
-import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText, queryByText } from '@testing';
 import { produce } from 'immer';
-import { Mocked } from 'vitest';
 
 import { UnderlyingAgreementVariationReviewRequestTaskPayload } from 'cca-api';
 
@@ -18,10 +14,6 @@ import { mockVariationReviewRequestTaskState } from '../../../../../common/under
 import { AdditionalInfoComponent } from './additional-info.component';
 
 describe('AdditionalInfoComponent', () => {
-  const unaTaskService: Partial<Mocked<TaskService>> = {
-    saveSubtask: vi.fn().mockReturnValue(of({})),
-  };
-
   let store: RequestTaskStore;
   let fixture: ComponentFixture<AdditionalInfoComponent>;
 
@@ -29,11 +21,10 @@ describe('AdditionalInfoComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AdditionalInfoComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         RequestTaskStore,
-        { provide: TaskService, useValue: unaTaskService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Review application for underlying agreement' },
       ],

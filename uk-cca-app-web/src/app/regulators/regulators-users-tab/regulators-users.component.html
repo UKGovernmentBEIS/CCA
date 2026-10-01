@@ -3,7 +3,7 @@
 }
 
 @if (isEditable()) {
-  <button govukButton id="add-regulator" routerLink="add" type="button">Add a new user</button>
+  <a govukButton id="add-regulator" routerLink="add">Add a new user</a>
 }
 
 <form (ngSubmit)="saveRegulators()" [formGroup]="regulatorsForm" id="regulators-form">
@@ -32,6 +32,8 @@
                     [options]="authorityStatus === 'ACCEPTED' ? authorityStatusesAccepted : authorityStatuses"
                     formControlName="authorityStatus"
                     govuk-select
+                    label="Account status"
+                    [labelHidden]="true"
                     widthClass="govuk-!-width-full"
                   ></div>
                 } @else {

@@ -22,6 +22,7 @@ export class AnalyticsService {
 
     if (this.currentScript) {
       console.warn('GTM script already loaded in DOM - Aborting...');
+      return;
     }
 
     console.log('Logging to Google Analytics - [GTM Container ID]:', gtmContainerId);

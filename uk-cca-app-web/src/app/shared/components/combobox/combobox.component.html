@@ -1,5 +1,15 @@
+@if (label()) {
+  <label
+    [for]="identifier"
+    [id]="'l.' + identifier"
+    class="govuk-label"
+    [class.govuk-visually-hidden]="labelHidden()"
+    >{{ label() }}</label
+  >
+}
+
 @if (showErrors()) {
-  <govuk-error-message [errors]="control?.errors" [identifier]="identifier" />
+  <govuk-error-message [errors]="$safeNavigationMigration(control?.errors)" [identifier]="identifier" />
 }
 
 <div class="cca-combobox-container" [ngClass]="widthClass()">
@@ -12,13 +22,14 @@
       [attr.aria-expanded]="isOpen()"
       [attr.aria-controls]="identifier + '-listbox'"
       [attr.aria-activedescendant]="activeDescendantId()"
+      [attr.aria-describedby]="showErrors() ? identifier + '-error' : null"
       aria-autocomplete="both"
       aria-haspopup="listbox"
       autocomplete="off"
       [value]="inputValue()"
       [placeholder]="placeholder()"
       [disabled]="isDisabled()"
-      (input)="onInput($any($event.target).value)"
+      (input)="onInput($event)"
       (focus)="onFocus()"
       (blur)="onBlur()"
       (keydown)="onKeydown($event)"

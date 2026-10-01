@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -11,6 +11,7 @@ import { RequestActionPageContentFactoryMap } from '../../request-action.types';
 import { RequestActionPageComponent } from './request-action-page.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<h1>TEST CONTENT</h1>`,
 })
 class MockContentComponent {}

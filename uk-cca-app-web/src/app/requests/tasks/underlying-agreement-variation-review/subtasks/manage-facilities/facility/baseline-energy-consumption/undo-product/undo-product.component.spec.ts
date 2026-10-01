@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -47,7 +47,7 @@ describe('UndoProductComponent', () => {
     TestBed.configureTestingModule({
       imports: [UndoProductComponent, RouterModule.forRoot([])],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: mockActivatedRouteWithProductParams },

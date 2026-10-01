@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.utils.MimeTypeUtils;
@@ -133,11 +134,12 @@ public class FtpFileService {
     
     private FileDTO buildFileDTO(String fileName, byte[] fileContent) {
         return FileDTO.builder()
-                        .fileName(fileName)
-                        .fileType(MimeTypeUtils.detect(fileContent, fileName))
-                        .fileContent(fileContent)
-                        .fileSize(fileContent.length)
-                        .build();
+                .fileName(fileName)
+                .fileType(MimeTypeUtils.detect(fileContent, fileName))
+                .fileContent(fileContent)
+                .fileSize(fileContent.length)
+                .createdBy(MigrationConstants.MIGRATION_PROCESS_USER)
+                .build();
     }
     
 }

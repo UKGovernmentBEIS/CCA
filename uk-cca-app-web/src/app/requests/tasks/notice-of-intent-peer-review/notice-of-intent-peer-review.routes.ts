@@ -5,6 +5,7 @@ import { userIsAssigneeGuard } from 'src/app/shared/guards/user-is-assignee.guar
 export const NOTICE_OF_INTENT_PEER_REVIEW_ROUTES: Routes = [
   {
     path: '',
+    title: 'Peer review notice of intent',
     children: [
       {
         path: 'upload-notice-of-intent',

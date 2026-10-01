@@ -12,7 +12,7 @@ import {
 } from 'cca-api';
 
 import { underlyingAgreementQuery, underlyingAgreementReviewQuery } from '../+state';
-import { UPLOAD_DECISION_ATTACHMENT_TYPE } from '../types';
+import { getAttachmentType, UPLOAD_DECISION_ATTACHMENT_TYPE } from '../types';
 import { DecisionFormModel } from './type';
 
 export const DECISION_FORM_PROVIDER = new InjectionToken<DecisionFormModel>('DECISION_FORM_PROVIDER');
@@ -38,7 +38,7 @@ export function decisionFormProvider(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         decision?.details?.files || [],
         attachments,
-        UPLOAD_DECISION_ATTACHMENT_TYPE[requestTaskType],
+        getAttachmentType(UPLOAD_DECISION_ATTACHMENT_TYPE, requestTaskType),
       );
 
       return fb.group({
@@ -77,7 +77,7 @@ export function facilityDecisionFormProvider(): Provider {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         decision?.details?.files || [],
         attachments,
-        UPLOAD_DECISION_ATTACHMENT_TYPE[requestTaskType],
+        getAttachmentType(UPLOAD_DECISION_ATTACHMENT_TYPE, requestTaskType),
       );
 
       return fb.group(
@@ -104,7 +104,8 @@ export function facilityDecisionFormProvider(): Provider {
   };
 }
 
-const startDateValidator: ValidatorFn = (form: FormGroup) => {
+const startDateValidator: ValidatorFn = (control) => {
+  const form = control as FormGroup;
   if (!form) return {};
 
   const type = form.controls.type.value;

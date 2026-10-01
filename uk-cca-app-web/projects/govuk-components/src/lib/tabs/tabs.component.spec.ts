@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ describe('TabsComponent', () => {
 
   @Component({
     imports: [TabsComponent, AsyncPipe, TabDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
       <govuk-tabs>
         @for (tab of tabs$ | async; track tab) {
@@ -30,7 +31,7 @@ describe('TabsComponent', () => {
           <p>This is another paragraph</p>
         </ng-template>
 
-        <ng-template govukTab [id]="syncTab.id" [label]="syncTab.label"></ng-template>
+        <ng-template govukTab [id]="syncTab().id" [label]="syncTab().label"></ng-template>
       </govuk-tabs>
     `,
   })
@@ -41,7 +42,7 @@ describe('TabsComponent', () => {
       { id: 'span', label: 'A span', body: 'This is a span' },
     ]).pipe(delay(200));
 
-    syncTab = { id: 'paragraph3', label: 'A static link', body: 'This is a static link' };
+    syncTab = signal({ id: 'paragraph3', label: 'A static link', body: 'This is a static link' });
   }
 
   beforeEach(async () => {
@@ -174,9 +175,7 @@ describe('TabsComponent', () => {
     vi.advanceTimersByTime(200);
     fixture.detectChanges();
 
-    hostComponent.syncTab.label = 'Another static link';
-
-    fixture.changeDetectorRef.markForCheck();
+    hostComponent.syncTab.set({ ...hostComponent.syncTab(), label: 'Another static link' });
     fixture.detectChanges();
 
     expect(getAnchorTexts()).toContain('Another static link');

@@ -3,15 +3,10 @@
 
   @if (currentPage() > 1) {
     <div class="govuk-pagination__prev">
-      <a
+      <button
+        type="button"
         class="govuk-link govuk-pagination__link"
-        rel="prev"
-        href="javascript:void(0)"
         (click)="onPreviousPage()"
-        (keydown.enter)="onPreviousPage()"
-        (keydown.space)="onPreviousPage(); $event.preventDefault()"
-        role="button"
-        tabindex="1"
         aria-label="Go to previous page"
       >
         <svg
@@ -28,7 +23,7 @@
           ></path>
         </svg>
         <span class="govuk-pagination__link-title"> Previous<span class="govuk-visually-hidden"> page</span> </span>
-      </a>
+      </button>
     </div>
   }
 
@@ -43,19 +38,15 @@
               class="govuk-pagination__item"
             >
               @if (!isDots(pageNumber, currentPage())) {
-                <a
+                <button
+                  type="button"
                   class="govuk-link govuk-pagination__link"
-                  href="javascript:void(0)"
                   (click)="onPageChange(pageNumber)"
-                  (keydown.enter)="onPageChange(pageNumber)"
-                  (keydown.space)="onPageChange(pageNumber); $event.preventDefault()"
-                  role="button"
-                  [attr.tabindex]="$index + 2"
                   [attr.aria-label]="'Go to page ' + pageNumber"
                   [attr.aria-current]="currentPage() === pageNumber ? 'page' : null"
                 >
                   {{ pageNumber }}
-                </a>
+                </button>
               } @else {
                 &ctdot;
               }
@@ -68,15 +59,10 @@
 
   @if (currentPage() < totalPages()) {
     <div class="govuk-pagination__next">
-      <a
+      <button
+        type="button"
         class="govuk-link govuk-pagination__link"
-        rel="next"
-        href="javascript:void(0)"
         (click)="onNextPage()"
-        (keydown.enter)="onNextPage()"
-        (keydown.space)="onNextPage(); $event.preventDefault()"
-        role="button"
-        [attr.tabindex]="pageNumbers().length + 2"
         aria-label="Go to next page"
       >
         <span class="govuk-pagination__link-title"> Next<span class="govuk-visually-hidden"> page</span> </span>
@@ -93,7 +79,7 @@
             d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"
           ></path>
         </svg>
-      </a>
+      </button>
     </div>
   }
 
@@ -109,7 +95,6 @@
             id="pageSize"
             name="pageSize"
             (change)="onPageSizeChange()"
-            tabindex="0"
           >
             @for (option of pageSizeNumbers; track $index) {
               <option [value]="option.value">{{ option.text }}</option>

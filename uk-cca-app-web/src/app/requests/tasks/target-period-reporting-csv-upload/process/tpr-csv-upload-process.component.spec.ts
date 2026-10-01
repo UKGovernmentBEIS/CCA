@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -36,7 +36,7 @@ describe('TprCsvUploadProcessComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TprCsvUploadProcessComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },

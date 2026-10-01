@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -33,7 +33,7 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         { provide: TasksApiService, useValue: tasksApiService },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: RequestTaskStore, useValue: requestTaskStore },
@@ -59,7 +59,7 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
   it('should submit and navigate to confirmation page', async () => {
     const navigateSpy = vi.spyOn(router, 'navigate');
     const tasksApiServiceSpy = vi.spyOn(tasksApiService, 'saveRequestTaskAction');
-    const submitButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find(
+    const submitButton = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
       (button: HTMLButtonElement) => button.textContent?.trim() === 'Confirm and send',
     ) as HTMLButtonElement;
     submitButton.click();

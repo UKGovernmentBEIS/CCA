@@ -340,33 +340,30 @@ class TargetPeriodServiceTest {
     }
     
     @Test
-    void getPreviousTargetPeriodsInScheme() {
+    void getTargetPeriodsInfoForSchemeUpTo() {
         final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final LocalDate date = LocalDate.of(2026, 1, 1);
-
         final TargetPeriod previousTargetPeriod1 = TargetPeriod.builder()
                 .id(1L)
                 .businessId(TargetPeriodType.TP7)
                 .build();
-
         final TargetPeriod previousTargetPeriod2 = TargetPeriod.builder()
                 .id(2L)
                 .businessId(TargetPeriodType.TP8)
                 .build();
 
-        when(repository.findBySchemeVersionAndStartDateLessThanEqual(schemeVersion, date))
-        		.thenReturn(List.of(previousTargetPeriod1, previousTargetPeriod2));
+        when(repository.findBySchemeVersionAndStartDateLessThanEqualOrderByStartDateAsc(schemeVersion, date))
+                .thenReturn(List.of(previousTargetPeriod1, previousTargetPeriod2));
 
-        Set<TargetPeriodType> result = service.getTargetPeriodsForSchemeUpTo(schemeVersion, date);
+        List<TargetPeriodInfoDTO> result = service.getTargetPeriodsInfoForSchemeUpTo(schemeVersion, date);
 
         // Verify
         assertThat(result)
-                .containsExactlyInAnyOrder(
+                .extracting(TargetPeriodInfoDTO::getBusinessId)
+                .containsExactly(
                         TargetPeriodType.TP7,
                         TargetPeriodType.TP8);
-
-        verify(repository).findBySchemeVersionAndStartDateLessThanEqual(
-        		schemeVersion, date);
+        verify(repository).findBySchemeVersionAndStartDateLessThanEqualOrderByStartDateAsc(schemeVersion, date);
     }
 }
 

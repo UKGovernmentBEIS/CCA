@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
@@ -49,7 +49,7 @@ describe('ProvideAppealDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProvideAppealDetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideRouter([]),
         ProvideAppealDetailsStore,
@@ -109,7 +109,7 @@ describe('ProvideAppealDetailsComponent', () => {
   it('should store appeal details and navigate to check your answers', () => {
     component['form'].setValue({
       registrationDate: new Date(2026, 0, 1),
-      files: [{ uuid: 'uuid-1', file: { name: 'appeal.pdf' } as File }],
+      files: [{ uuid: 'uuid-1', file: { name: 'appeal.pdf' } }],
       comments: 'Appeal comments',
     });
 

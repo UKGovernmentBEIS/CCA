@@ -12,7 +12,9 @@ export class FacilityPerformanceReportStatusPipe implements PipeTransform {
   transform(value: string | null): string {
     if (!value) return '';
 
-    const text = FacilityPerformanceReportStatusEnum[value];
+    const text = Object.hasOwn(FacilityPerformanceReportStatusEnum, value)
+      ? FacilityPerformanceReportStatusEnum[value as keyof typeof FacilityPerformanceReportStatusEnum]
+      : undefined;
 
     return text ?? value;
   }

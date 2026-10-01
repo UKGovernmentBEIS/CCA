@@ -9,13 +9,13 @@ import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/
 @Component({
   selector: 'cca-exclude-product',
   template: `
-    <netz-page-heading [caption]="facility()?.facilityDetails?.name">
+    <netz-page-heading [caption]="$safeNavigationMigration(facility()?.facilityDetails?.name)">
       Are you sure you want to exclude {{ productName }}?
     </netz-page-heading>
 
     <p>Your product and all its data will remain available but will be marked as excluded.</p>
 
-    <govuk-warning-text assistiveText=""
+    <govuk-warning-text
       >The product will be treated as excluded and removed from all baseline calculations.</govuk-warning-text
     >
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SelectComponent, TextInputComponent } from '@netz/govuk-components';
@@ -9,6 +9,7 @@ import { existingControlContainer } from '@shared/providers';
   selector: 'cca-account-address-input',
   templateUrl: './account-address-input.component.html',
   imports: [TextInputComponent, ReactiveFormsModule, SelectComponent, CountriesDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [existingControlContainer],
 })
 export class AccountAddressInputComponent {}

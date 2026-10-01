@@ -12,13 +12,14 @@ export const CONTACTS_ROUTES: Routes = [
     children: [
       {
         path: 'add',
+        title: 'Add new user',
         canActivate: [CanAddSectorUserGuard],
-        data: { pageTitle: 'Add new user' },
         loadComponent: () =>
           import('./add-sector-user/add-sector-user.component').then((c) => c.AddSectorUserComponent),
       },
       {
         path: 'add-confirmation',
+        title: 'Account confirmation email sent',
         loadComponent: () =>
           import('./add-confirmation/confirmation.component').then((c) => c.AddSectorConfirmationComponent),
       },

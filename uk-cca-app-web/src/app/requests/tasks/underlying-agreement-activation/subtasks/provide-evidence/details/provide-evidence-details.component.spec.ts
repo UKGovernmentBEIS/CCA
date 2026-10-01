@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -39,7 +39,7 @@ describe('ProvideEvidenceDetailsComponent', () => {
     TestBed.configureTestingModule({
       imports: [ProvideEvidenceDetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -62,6 +62,6 @@ describe('ProvideEvidenceDetailsComponent', () => {
 
   it('should show form values', () => {
     expect(page.comments).toEqual('My comments');
-    expect(page.filesText.map((row) => row.textContent.trim())).toEqual(['evidenceFile.xlsx']);
+    expect(page.filesText.map((row) => row.textContent.trim())).toEqual(['evidenceFile.xlsx (opens in a new tab)']);
   });
 });

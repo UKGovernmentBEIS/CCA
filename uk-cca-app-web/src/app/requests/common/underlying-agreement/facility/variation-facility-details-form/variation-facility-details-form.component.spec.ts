@@ -1,19 +1,20 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { mockRequestTaskState } from '@requests/common';
 
+import { mockRequestTaskState } from '../../testing/mock-data';
 import { VariationFacilityDetailsFormComponent } from './variation-facility-details-form.component';
 import { VARIATION_FACILITY_DETAILS_FORM } from './variation-facility-details-form.provider';
 
 @Component({
   template: `<form [formGroup]="form"><cca-variation-facility-details-form /></form>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [VariationFacilityDetailsFormComponent, ReactiveFormsModule],
 })
 class TestHostComponent {
@@ -30,7 +31,7 @@ describe('VariationFacilityDetailsFormComponent', () => {
       imports: [VariationFacilityDetailsFormComponent],
       providers: [
         RequestTaskStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: VARIATION_FACILITY_DETAILS_FORM,

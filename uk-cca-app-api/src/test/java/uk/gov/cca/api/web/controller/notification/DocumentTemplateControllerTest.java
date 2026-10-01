@@ -245,11 +245,12 @@ class DocumentTemplateControllerTest {
         byte[] fileContent = "content".getBytes();
         MockMultipartFile file = new MockMultipartFile("file", originalFilename, contentType, fileContent);
         FileDTO fileDTO = FileDTO.builder()
-            .fileName(originalFilename)
-            .fileType(contentType)
-            .fileContent(fileContent)
-            .fileSize(file.getSize())
-            .build();
+                .fileName(originalFilename)
+                .fileType(contentType)
+                .fileContent(fileContent)
+                .fileSize(file.getSize())
+                .createdBy(userId)
+                .build();
         
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
         
@@ -257,7 +258,7 @@ class DocumentTemplateControllerTest {
                 .file(file)).andExpect(status().isNoContent());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(documentTemplateUpdateService, times(1)).updateDocumentTemplateFile(documentTemplateId, fileDTO, userId);
+        verify(documentTemplateUpdateService, times(1)).updateDocumentTemplateFile(documentTemplateId, fileDTO);
     }
     
     @Test

@@ -6,7 +6,7 @@ import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransforma
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.service.CalculateAdminTerminationWithdrawExpirationRemindersService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
-import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
+import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateSyncWorkflowParamsProvider;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class AdminTerminationSubmittedDocumentTemplateWorkflowParamsProvider implements
-        DocumentTemplateWorkflowParamsProvider<AdminTerminationRequestPayload> {
+        DocumentTemplateSyncWorkflowParamsProvider<AdminTerminationRequestPayload> {
 
     private final CalculateAdminTerminationWithdrawExpirationRemindersService calculateAdminTerminationWithdrawExpirationRemindersService;
     private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;

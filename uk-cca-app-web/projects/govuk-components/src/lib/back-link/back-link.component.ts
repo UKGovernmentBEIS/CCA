@@ -1,9 +1,10 @@
-import { Component, input, OnChanges } from '@angular/core';
+import { Component, input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, Params, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'govuk-back-link',
   imports: [RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a
       [routerLink]="routerLink"

@@ -1,7 +1,7 @@
 <div class="govuk-grid-row govuk-!-padding-5">
   <h3 class="govuk-heading-m">Notes</h3>
 
-  <button type="button" govukSecondaryButton routerLink="notes/add-note">Add a note</button>
+  <a govukSecondaryButton routerLink="notes/add-note">Add a note</a>
 
   @if (hasNotes()) {
     <ul class="govuk-list">
@@ -13,7 +13,7 @@
 
               @if (note.payload?.files) {
                 <ul class="govuk-list">
-                  @for (file of note.payload?.files | keyvalue; track file.key) {
+                  @for (file of $safeNavigationMigration(note.payload?.files) | keyvalue; track file.key) {
                     <li class="govuk-!-margin-bottom-1">
                       <a class="govuk-link" [routerLink]="['notes', 'file-download', file.key]">{{ file.value }}</a>
                     </li>

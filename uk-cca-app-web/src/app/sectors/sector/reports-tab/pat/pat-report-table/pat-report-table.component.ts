@@ -1,24 +1,25 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-
-import { EMPTY, switchMap, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 
 import { GovukDatePipe } from '@netz/common/pipes';
 import { ButtonDirective, GovukTableColumn, TableComponent } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
 
-import {
-  SectorLevelPerformanceAccountTemplateDataViewPagesService,
-  SectorPerformanceAccountTemplateDataReportItemDTO,
-} from 'cca-api';
+import { SectorLevelPerformanceAccountTemplateDataViewPagesService } from 'cca-api';
 
 import { ReportingExportService } from '../../services/reporting-export.service';
-import { PatCriteria } from '../pat-report-form.provider';
+import {
+  getPatReportStatus,
+  isFacilityPatYear,
+  PatCriteria,
+  PatReportItem,
+  toPatTargetPeriodYear,
+} from '../pat-report-form.provider';
 
 interface PatReportsState {
-  patReportItems: SectorPerformanceAccountTemplateDataReportItemDTO[];
+  patReportItems: PatReportItem[];
   currentPage: number;
   pageSize: number;
   totalItems: number;
@@ -26,6 +27,21 @@ interface PatReportsState {
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 50;
+
+const ACCOUNT_TABLE_COLUMNS: GovukTableColumn[] = [
+  { field: 'businessId', header: 'Target unit ID' },
+  { field: 'name', header: 'Operator' },
+];
+
+const FACILITY_TABLE_COLUMNS: GovukTableColumn[] = [
+  { field: 'businessId', header: 'Facility ID' },
+  { field: 'name', header: 'Facility site name' },
+];
+
+const COMMON_TABLE_COLUMNS: GovukTableColumn[] = [
+  { field: 'submissionDate', header: 'Date submitted' },
+  { field: 'status', header: 'Status' },
+];
 
 @Component({
   selector: 'cca-pat-report-table',
@@ -43,13 +59,23 @@ export class PatReportTableComponent {
 
   protected readonly sectorId = +this.activatedRoute.snapshot.paramMap.get('sectorId');
 
-  protected readonly tableColumns: GovukTableColumn[] = [
-    { field: 'targetUnitAccountBusinessId', header: 'TU ID' },
-    { field: 'operatorName', header: 'Operator' },
-    { field: 'submissionDate', header: 'Date submitted' },
-    { field: 'status', header: 'Status' },
-    { field: 'submissionType', header: 'Type' },
-  ];
+  private readonly queryParamMap = toSignal(this.activatedRoute.queryParamMap, {
+    initialValue: this.activatedRoute.snapshot.queryParamMap,
+  });
+
+  private readonly targetPeriodYear = computed(() =>
+    toPatTargetPeriodYear(this.queryParamMap().get('targetPeriodYear')),
+  );
+
+  /**
+   * TP6 reports are submitted by target unit; CCA3 years are submitted per facility, so the identifying columns differ.
+   */
+  protected readonly isFacilityReport = computed(() => isFacilityPatYear(this.targetPeriodYear()));
+
+  protected readonly tableColumns = computed<GovukTableColumn[]>(() => [
+    ...(this.isFacilityReport() ? FACILITY_TABLE_COLUMNS : ACCOUNT_TABLE_COLUMNS),
+    ...COMMON_TABLE_COLUMNS,
+  ]);
 
   protected readonly state = signal<PatReportsState>({
     patReportItems: [],
@@ -59,44 +85,35 @@ export class PatReportTableComponent {
   });
 
   constructor() {
-    this.activatedRoute.queryParamMap
-      .pipe(
-        takeUntilDestroyed(),
-        switchMap((queryParamMap) => {
-          if (queryParamMap.get('reportType') !== 'PAT') return EMPTY;
+    effect((onCleanup) => {
+      const queryParamMap = this.queryParamMap();
+      this.state.update((state) => ({ ...state, patReportItems: [], totalItems: 0 }));
 
-          const criteria: PatCriteria = {
-            targetUnitAccountBusinessId: queryParamMap.get('targetUnitAccountBusinessId'),
-            targetPeriodType: (queryParamMap.get('targetPeriodType') as 'TP5' | 'TP6') ?? 'TP6',
-            status: queryParamMap.get('status') as PatCriteria['status'],
-            submissionType: queryParamMap.get('submissionType') as PatCriteria['submissionType'],
-            pageNumber: (+queryParamMap.get('page') || DEFAULT_PAGE) - 1,
-            pageSize: +queryParamMap.get('pageSize') || DEFAULT_PAGE_SIZE,
-          };
+      if (queryParamMap.get('reportType') !== 'PAT') return;
 
-          if (criteria?.targetUnitAccountBusinessId?.length > 0 && criteria?.targetUnitAccountBusinessId?.length < 3)
-            return EMPTY;
+      const criteria = toPatCriteria(queryParamMap);
+      if (!criteria) return;
 
+      if ((criteria.term?.length > 0 && criteria.term.length < 3) || criteria.term?.length > 255) return;
+
+      this.state.update((state) => ({
+        ...state,
+        currentPage: criteria.pageNumber + 1,
+        pageSize: criteria.pageSize,
+      }));
+
+      const subscription = untracked(() =>
+        this.getReportList(criteria).subscribe((resp) =>
           this.state.update((state) => ({
             ...state,
-            currentPage: criteria.pageNumber + 1,
-            pageSize: criteria.pageSize,
-          }));
-
-          return this.sectorLevelPerformanceAccountTemplateDataViewPagesService.getSectorPerformanceAccountTemplateDataReportList(
-            this.sectorId,
-            criteria,
-          );
-        }),
-        tap((resp) =>
-          this.state.update((state) => ({
-            ...state,
-            patReportItems: resp.items,
-            totalItems: resp.total,
+            patReportItems: resp.items ?? [],
+            totalItems: resp.total ?? 0,
           })),
         ),
-      )
-      .subscribe();
+      );
+
+      onCleanup(() => subscription.unsubscribe());
+    });
   }
 
   onPageChange(page: number) {
@@ -109,9 +126,31 @@ export class PatReportTableComponent {
     this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
-  exportToXlsx(): void {
-    const criteria = extractCriteria(this.activatedRoute.snapshot.queryParams);
-    this.exportService.exportPatData(this.sectorId, { ...criteria, pageNumber: 0, pageSize: this.state().totalItems });
+  exportToCsv(): void {
+    const totalItems = this.state().totalItems;
+    const criteria = this.extractCriteria();
+    if (totalItems === 0 || !criteria) return;
+
+    this.exportService.exportPatData(this.sectorId, criteria, totalItems);
+  }
+
+  private getReportList(criteria: PatCriteria) {
+    return isFacilityPatYear(criteria.targetPeriodYear)
+      ? this.sectorLevelPerformanceAccountTemplateDataViewPagesService.getSectorFacilityPerformanceAccountTemplateDataReportList(
+          this.sectorId,
+          criteria,
+        )
+      : this.sectorLevelPerformanceAccountTemplateDataViewPagesService.getSectorAccountPerformanceAccountTemplateDataReportList(
+          this.sectorId,
+          criteria,
+        );
+  }
+
+  private extractCriteria(): PatCriteria | null {
+    return toPatCriteria(this.activatedRoute.snapshot.queryParamMap, {
+      pageNumber: 0,
+      pageSize: this.state().totalItems,
+    });
   }
 
   private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {
@@ -124,13 +163,23 @@ export class PatReportTableComponent {
   }
 }
 
-function extractCriteria(queryParams: Record<string, string>): PatCriteria {
+function toPatCriteria(
+  queryParamMap: ParamMap,
+  overrides: Partial<Pick<PatCriteria, 'pageNumber' | 'pageSize'>> = {},
+): PatCriteria | null {
+  const targetPeriodYear = toPatTargetPeriodYear(queryParamMap.get('targetPeriodYear'));
+  if (!targetPeriodYear) return null;
+
   return {
-    targetUnitAccountBusinessId: queryParams.targetUnitAccountBusinessId,
-    status: queryParams.status,
-    submissionType: queryParams.submissionType,
-    targetPeriodType: queryParams.targetPeriodType,
-    pageSize: queryParams.pageSize ? +queryParams.pageSize : DEFAULT_PAGE_SIZE,
-    pageNumber: queryParams.page ? +queryParams.page - 1 : DEFAULT_PAGE - 1,
-  } as PatCriteria;
+    term: queryParamMap.get('term'),
+    targetPeriodYear,
+    status: getPatReportStatus(queryParamMap.get('status')),
+    pageNumber: overrides.pageNumber ?? toPositiveInteger(queryParamMap.get('page'), DEFAULT_PAGE) - 1,
+    pageSize: overrides.pageSize ?? toPositiveInteger(queryParamMap.get('pageSize'), DEFAULT_PAGE_SIZE),
+  };
+}
+
+function toPositiveInteger(value: string | null, fallback: number): number {
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : fallback;
 }

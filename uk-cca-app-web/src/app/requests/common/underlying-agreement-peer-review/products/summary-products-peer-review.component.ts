@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
-import { underlyingAgreementPeerReviewQuery } from '@requests/common';
-import { SplitByProductTableComponent } from '@requests/common';
+
+import { SplitByProductTableComponent } from '../../underlying-agreement/split-by-product-table/split-by-product-table.component';
+import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer-review.selectors';
 
 @Component({
   selector: 'cca-products-peer-review-table',

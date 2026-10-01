@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -42,7 +42,7 @@ describe('ChangeAmountComponent (dumb tests)', () => {
           provide: BuyOutSurplusTransactionUpdateControllerService,
           useValue: mockUpdateService,
         },
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
       ],
     })

@@ -1,15 +1,11 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { of } from 'rxjs';
-
-import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { BASELINE_AND_TARGETS_SUBTASK, BaselineAndTargetPeriodsSubtasks } from '@requests/common';
-import { Mocked } from 'vitest';
 
 import { RequestTaskItemDTO } from 'cca-api';
 
@@ -20,21 +16,16 @@ describe('BaselineAndTargetsSummaryComponent', () => {
   let store: RequestTaskStore;
   let fixture: ComponentFixture<BaselineAndTargetsSummaryComponent>;
 
-  const unaTaskService: Partial<Mocked<TaskService>> = {
-    saveSubtask: vi.fn().mockReturnValue(of({})),
-  };
-
   const setupComponent = (period: BaselineAndTargetPeriodsSubtasks, taskItem: RequestTaskItemDTO) => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [BaselineAndTargetsSummaryComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: BASELINE_AND_TARGETS_SUBTASK, useValue: period },
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
-        { provide: TaskService, useValue: unaTaskService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Apply to vary the underlying agreement' },
       ],

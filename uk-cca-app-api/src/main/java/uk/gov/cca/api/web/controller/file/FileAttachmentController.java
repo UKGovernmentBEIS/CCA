@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.netz.api.files.attachments.service.FileAttachmentTokenService;
+import uk.gov.netz.api.files.attachments.service.storage.FileAttachmentStorageService;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 
@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 @SecurityRequirements
 public class FileAttachmentController {
 
-    private final FileAttachmentTokenService fileAttachmentTokenService;
+    private final FileAttachmentStorageService fileAttachmentStorageService;
 
     @GetMapping(path = "/{token}")
     @Operation(summary = "Get the file attachment resource for the provided file attachment token")
@@ -47,7 +47,7 @@ public class FileAttachmentController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<Resource> getFileAttachment(
             @PathVariable("token") @Parameter(description = "The file attachment token", required = true) @NotEmpty String token) {
-        FileDTO file = fileAttachmentTokenService.getFileDTOByToken(token);
+        FileDTO file = fileAttachmentStorageService.getFileDTOByToken(token);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,

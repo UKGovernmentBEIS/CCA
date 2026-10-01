@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 
-import { NOTES_ROUTES, WorkflowDetailsResolver } from '@shared/components';
+import { NOTES_ROUTES, ResolvedWorkflowDetails, WorkflowDetailsResolver } from '@shared/components';
 
 export const SUBSISTENCE_FEES_WORKFLOW_HISTORY_ROUTES: Routes = [
   {
     path: ':workflowId',
     resolve: { details: WorkflowDetailsResolver },
     data: {
-      breadcrumb: ({ details }) => ({
+      breadcrumb: ({ details }: { details: ResolvedWorkflowDetails }) => ({
         text: `${details.workflowDetails.id}`,
         link: `/subsistence-fees/workflow-history/${details.workflowDetails.id}`,
       }),
@@ -15,6 +15,7 @@ export const SUBSISTENCE_FEES_WORKFLOW_HISTORY_ROUTES: Routes = [
     children: [
       {
         path: '',
+        title: 'Workflow history',
         loadComponent: () => import('./workflow-history.component').then((c) => c.WorkflowHistoryComponent),
       },
       {

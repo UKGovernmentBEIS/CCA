@@ -14,6 +14,7 @@ export const PRE_AUDIT_REVIEW_REQUESTED_DOCUMENTS_ROUTES: Routes = [
       },
       {
         path: 'upload-documents',
+        title: 'Upload documents',
         data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./upload-documents/pre-audit-review-requested-documents-upload.component').then(
@@ -22,6 +23,7 @@ export const PRE_AUDIT_REVIEW_REQUESTED_DOCUMENTS_ROUTES: Routes = [
       },
       {
         path: 'check-your-answers',
+        title: 'Check your answers',
         data: { breadcrumb: false, backlink: '../upload-documents' },
         loadComponent: () =>
           import('./check-your-answers/pre-audit-review-requested-documents-check-your-answers.component').then(
@@ -30,6 +32,7 @@ export const PRE_AUDIT_REVIEW_REQUESTED_DOCUMENTS_ROUTES: Routes = [
       },
       {
         path: 'summary',
+        title: 'Summary',
         data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./summary/pre-audit-review-requested-documents-summary.component').then(

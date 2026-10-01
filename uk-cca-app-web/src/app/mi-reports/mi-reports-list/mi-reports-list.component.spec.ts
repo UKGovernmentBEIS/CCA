@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
@@ -47,7 +47,7 @@ describe('MiReportsListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MiReportsListComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideRouter([]),
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
@@ -98,13 +98,13 @@ describe('MiReportsListComponent', () => {
     expect(deleteLinks.length).toBe(2);
   });
 
-  it('should render Export to Excel link for each row', () => {
+  it('should render Export to Excel button for each row', () => {
     const compiled = fixture.nativeElement;
-    const exportLinks = Array.from<HTMLAnchorElement>(compiled.querySelectorAll('tbody tr td a.govuk-link')).filter(
-      (a) => a.textContent.includes('Export to Excel'),
-    );
+    const exportButtons = Array.from<HTMLButtonElement>(
+      compiled.querySelectorAll('tbody tr td button.govuk-link'),
+    ).filter((b) => b.textContent.includes('Export to Excel'));
 
-    expect(exportLinks.length).toBe(2);
+    expect(exportButtons.length).toBe(2);
   });
 
   it('should call export services when exportToExcel is triggered', () => {

@@ -32,7 +32,7 @@ describe('KeycloakService', () => {
       tokenParsed: { exp: 9999999999 },
       refreshTokenParsed: { exp: 9999999999, iat: 1000000 },
       login: vi.fn().mockResolvedValue(undefined),
-      createLoginUrl: vi.fn().mockReturnValue('https://cca-sign-in.example'),
+      createLoginUrl: vi.fn().mockResolvedValue('https://cca-sign-in.example'),
       logout: vi.fn().mockResolvedValue(undefined),
       updateToken: vi.fn().mockResolvedValue(true),
       loadUserProfile: vi.fn().mockResolvedValue({ email: 'test@test.com' }),
@@ -58,7 +58,7 @@ describe('KeycloakService', () => {
     await expect(service.login()).rejects.toEqual('Keycloak not initialized');
     await expect(service.logout()).rejects.toEqual('Keycloak not initialized');
     await expect(service.loadUserProfile()).rejects.toEqual('Keycloak not initialized');
-    expect(() => service.createLoginUrl()).toThrowError('Keycloak not initialized');
+    await expect(service.createLoginUrl()).rejects.toThrow('Keycloak not initialized');
     expect(service.isTokenExpired()).toBe(true);
   });
 
@@ -80,7 +80,7 @@ describe('KeycloakService', () => {
 
   it('should call login, logout, updateToken, loadUserProfile', async () => {
     await service.login();
-    const loginUrl = service.createLoginUrl({ redirectUri: 'http://redirect' });
+    const loginUrl = await service.createLoginUrl({ redirectUri: 'http://redirect' });
     await service.logout('http://redirect');
     await service.updateToken(30);
     const profile = await service.loadUserProfile();

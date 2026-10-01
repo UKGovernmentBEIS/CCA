@@ -14,7 +14,7 @@ import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsServic
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 import uk.gov.netz.api.notificationapi.mail.config.property.NotificationProperties;
 import uk.gov.netz.api.notificationapi.mail.domain.EmailData;
 import uk.gov.netz.api.notificationapi.mail.domain.EmailNotificationTemplateData;
@@ -37,7 +37,7 @@ public class CcaOfficialNoticeSendService {
     private final AccountReferenceDetailsService accountReferenceDetailsService;
     private final SectorReferenceDetailsService sectorReferenceDetailsService;
     private final NotificationEmailService notificationEmailService;
-    private final FileDocumentService fileDocumentService;
+    private final FileDocumentStorageService fileDocumentStorageService;
     private final NotificationProperties notificationProperties;
     private final List<RequestDefaultNoticeRecipients> requestDefaultNoticeRecipients;
     private final TargetUnitAccountNoticeRecipients targetUnitAccountNoticeRecipients;
@@ -87,7 +87,7 @@ public class CcaOfficialNoticeSendService {
                 .attachments(attachments.stream()
                         .collect(Collectors.toMap(
                                 FileInfoDTO::getName,
-                                file -> fileDocumentService.getFileDTO(file.getUuid()).getFileContent())
+                                file -> fileDocumentStorageService.getFileDTO(file.getUuid()).getFileContent())
                         )
                 ).build();
 
@@ -116,7 +116,7 @@ public class CcaOfficialNoticeSendService {
                 .attachments(attachments.stream()
                         .collect(Collectors.toMap(
                                 FileInfoDTO::getName,
-                                file -> fileDocumentService.getFileDTO(file.getUuid()).getFileContent())
+                                file -> fileDocumentStorageService.getFileDTO(file.getUuid()).getFileContent())
                         )
                 ).build();
 

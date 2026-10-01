@@ -41,16 +41,16 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
     public RequestCreateValidationResult validateAction(Long facilityId) {
         // Digital forms only available for CCA3 Scheme
         if(!performanceDataCreateSchemeValidator.isAvailableForScheme(SchemeVersion.CCA_3, LocalDate.now())) {
-            return RequestCreateValidationResult.builder().valid(true).isAvailable(false).build();
+            return RequestCreateValidationResult.builder().valid(true).available(false).build();
         }
 
         // Facility only available for CCA3 participating Scheme
         final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(facilityId);
         if(!facility.getParticipatingSchemeVersions().contains(SchemeVersion.CCA_3)) {
-            return RequestCreateValidationResult.builder().valid(true).isAvailable(false).build();
+            return RequestCreateValidationResult.builder().valid(true).available(false).build();
         }
 
-        return RequestCreateValidationResult.builder().valid(true).isAvailable(true).build();
+        return RequestCreateValidationResult.builder().valid(true).available(true).build();
     }
 
     @Override
@@ -105,7 +105,7 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE, validationFacilityProductsResult.getViolations());
         }
 
-        return RequestCreateValidationResult.builder().valid(true).isAvailable(true).build();
+        return RequestCreateValidationResult.builder().valid(true).available(true).build();
     }
 
     @Override

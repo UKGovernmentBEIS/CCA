@@ -92,7 +92,7 @@ export const FACILITY_ROUTES: Routes = [
         title: (route: ActivatedRouteSnapshot) => {
           const store = inject(RequestTaskStore);
           const facility = store.select(underlyingAgreementQuery.selectFacility(route.params.facilityId))();
-          return facility.facilityDetails.name;
+          return `Facility decision - ${facility.facilityDetails.name}`;
         },
         data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('./decision/facility-decision.component').then((c) => c.FacilityDecisionComponent),
@@ -108,7 +108,7 @@ export const FACILITY_ROUTES: Routes = [
         title: 'View Products',
         data: {
           breadcrumb: false,
-          backlink: ({ sectionStatus }) =>
+          backlink: ({ sectionStatus }: { sectionStatus: TaskItemStatus }) =>
             sectionStatus === TaskItemStatus.COMPLETED ? '../summary' : '../check-your-answers',
         },
         resolve: {

@@ -51,7 +51,7 @@ describe('TargetUnitAccountsListComponent', () => {
     const rows = fixture.nativeElement.querySelectorAll('tr');
     const pipe = new StatusPipe();
 
-    Array.from(rows)
+    Array.from<HTMLTableRowElement>(rows)
       .slice(1)
       .forEach((row: HTMLTableRowElement, index: number) => {
         const cells = row.querySelectorAll('td');

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -20,7 +20,7 @@ describe('CompanyRegistrationNumberComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CompanyRegistrationNumberComponent, RouterTestingModule],
-      providers: [{ provide: ActivatedRoute, useValue: route }, provideHttpClient(), CreateTargetUnitStore],
+      providers: [{ provide: ActivatedRoute, useValue: route }, provideHttpClient(withXhr()), CreateTargetUnitStore],
     }).compileComponents();
 
     router = TestBed.inject(Router);

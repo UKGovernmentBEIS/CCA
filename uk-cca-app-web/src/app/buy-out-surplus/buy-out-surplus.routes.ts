@@ -8,11 +8,13 @@ import { userIsRegulatorGuard } from '@shared/guards';
 import { BuyOutAndSurplusCostInfoService } from 'cca-api';
 
 import { BuyoutSurplusStore } from './buy-out-surplus.store';
+import { AvailableTargetPeriodsResolver } from './new-batch/new-batch.resolver';
 import { paymentStatusRedirectGuard } from './payment-status.guard';
 
 export const BUY_OUT_SURPLUS_ROUTES: Routes = [
   {
     path: '',
+    title: 'Buy-out and surplus',
     pathMatch: 'full',
     providers: [BuyoutSurplusStore],
     canActivate: [paymentStatusRedirectGuard],
@@ -26,6 +28,7 @@ export const BUY_OUT_SURPLUS_ROUTES: Routes = [
   },
   {
     path: 'new-batch',
+    title: 'New buy-out and surplus batch',
     data: {
       breadcrumb: {
         text: 'Buy-out and surplus',
@@ -33,6 +36,7 @@ export const BUY_OUT_SURPLUS_ROUTES: Routes = [
         link: '/buyout-surplus',
       },
     },
+    resolve: { availableTargetPeriods: AvailableTargetPeriodsResolver },
     loadComponent: () => import('./new-batch/new-batch.component').then((c) => c.NewBatchComponent),
   },
   {
@@ -66,11 +70,13 @@ export const BUY_OUT_SURPLUS_ROUTES: Routes = [
     children: [
       {
         path: '',
+        title: 'Buy-out cost per tCO2e',
         data: { breadcrumb: false, backlink: '../..' },
         loadComponent: () => import('./cost-tab/change-cost/change-cost.component').then((c) => c.ChangeCostComponent),
       },
       {
         path: 'confirmation',
+        title: 'Buy-out cost per tCO2e updated',
         data: { breadcrumb: false, backlink: false },
         loadComponent: () =>
           import('./cost-tab/change-cost/confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
@@ -79,10 +85,12 @@ export const BUY_OUT_SURPLUS_ROUTES: Routes = [
   },
   {
     path: 'confirmation',
+    title: 'Batch in progress',
     loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
   },
   {
     path: 'request-error',
+    title: 'New buy-out and surplus batch',
     loadComponent: () => import('./request-error/request-error.component').then((c) => c.RequestErrorComponent),
   },
 ];

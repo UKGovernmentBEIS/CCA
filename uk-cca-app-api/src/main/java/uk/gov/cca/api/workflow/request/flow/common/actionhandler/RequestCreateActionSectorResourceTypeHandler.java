@@ -35,7 +35,7 @@ public class RequestCreateActionSectorResourceTypeHandler <T extends RequestCrea
                 .filter(requestCreateValidator -> requestCreateValidator.getRequestType().equals(requestType))
                 .findFirst()
                 .map(requestCreateBySectorAssociationValidator -> requestCreateBySectorAssociationValidator.validateAction(sectorId))
-                .orElse(RequestCreateValidationResult.builder().valid(true).isAvailable(true).build());
+                .orElse(RequestCreateValidationResult.builder().valid(true).available(true).build());
 
         if (!validationResult.isValid() || !validationResult.isAvailable()) {
             throw new BusinessException(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED, validationResult);

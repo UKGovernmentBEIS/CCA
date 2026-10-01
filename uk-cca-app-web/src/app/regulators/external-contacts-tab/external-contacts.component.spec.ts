@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { CaExternalContactsDTO, CaExternalContactsService } from 'cca-api';
 
 import { ExternalContactsComponent } from './external-contacts.component';
 
-@Component({ template: '' })
+@Component({ changeDetection: ChangeDetectionStrategy.OnPush, template: '' })
 class DummyComponent {}
 
 describe('ExternalContactsComponent', () => {

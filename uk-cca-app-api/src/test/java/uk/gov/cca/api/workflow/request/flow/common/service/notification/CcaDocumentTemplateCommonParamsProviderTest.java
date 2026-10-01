@@ -5,11 +5,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
-import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.notification.template.domain.TargetUnitAccountTemplateParams;
+import uk.gov.cca.api.workflow.request.flow.common.domain.TargetUnitAccountTemplateParams;
 import uk.gov.cca.api.notification.template.domain.TargetUnitDetailsParams;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
@@ -17,9 +17,9 @@ import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeInfo;
 import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
-import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityDTO;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityService;
@@ -32,6 +32,7 @@ import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.user.regulator.domain.RegulatorUserDTO;
 import uk.gov.netz.api.user.regulator.service.RegulatorUserAuthService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -50,7 +51,7 @@ class CcaDocumentTemplateCommonParamsProviderTest {
     private CcaDocumentTemplateCommonParamsProvider ccaDocumentTemplateCommonParamsProvider;
 
     @Mock
-    private AccountReferenceDetailsService accountReferenceDetailsService;
+    private CcaDocumentTemplateAccountDataCollectFromAccountService ccaDocumentTemplateAccountDataCollectFromAccountService;
 
     @Mock
     private DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
@@ -69,66 +70,16 @@ class CcaDocumentTemplateCommonParamsProviderTest {
 
     @Test
     void getAccountTemplateParams() {
-        final long accountId = 1L;
-        final TargetUnitAccountDetailsDTO accountDetails = TargetUnitAccountDetailsDTO.builder()
-                .name("name")
-                .competentAuthority(CompetentAuthorityEnum.ENGLAND)
-                .companyRegistrationNumber("registrationNumber")
-                .businessId("Business Id")
-                .address(AccountAddressDTO.builder()
-                        .line1("Acc Line 1")
-                        .line2("Acc Line 2")
-                        .city("Acc City")
-                        .county("Acc County")
-                        .postcode("Acc code")
-                        .country("GR")
-                        .build())
-                .responsiblePerson(TargetUnitAccountContactDTO.builder()
-                        .firstName("First")
-                        .lastName("Last")
-                        .email("responsible@example.com")
-                        .address(AccountAddressDTO.builder()
-                                .line1("Res Line 1")
-                                .line2("Res Line 2")
-                                .city("Res City")
-                                .county("Res County")
-                                .postcode("Res code")
-                                .country("GR")
-                                .build())
-                        .build())
-                .build();
-
-        final TargetUnitAccountTemplateParams expected = TargetUnitAccountTemplateParams.builder()
-                .name("name")
-                .companyRegistrationNumber("registrationNumber")
-                .targetUnitIdentifier("Business Id")
-                .targetUnitAddress("Acc Line 1\nAcc Line 2\nAcc City\nAcc code\nAcc County\nGreece")
-                .primaryContact("First Last")
-                .primaryContactEmail("responsible@example.com")
-                .location("Res Line 1\nRes Line 2\nRes City\nRes code\nRes County\nGreece")
-                .competentAuthority(CompetentAuthorityEnum.ENGLAND)
-                .build();
-
-        when(accountReferenceDetailsService.getTargetUnitAccountDetails(accountId))
-                .thenReturn(accountDetails);
-        when(documentTemplateTransformationMapper.constructAccountAddressDTO(accountDetails.getAddress()))
-                .thenReturn("Acc Line 1\nAcc Line 2\nAcc City\nAcc code\nAcc County\nGreece");
-        when(documentTemplateTransformationMapper.constructAccountAddressDTO(accountDetails.getResponsiblePerson().getAddress()))
-                .thenReturn("Res Line 1\nRes Line 2\nRes City\nRes code\nRes County\nGreece");
-
+        final Long accountId = 1L;
+        final Request request = Request.builder().build();
+        addAccountResourceToRequest(accountId, request);
 
         // Invoke
-        TargetUnitAccountTemplateParams actual = ccaDocumentTemplateCommonParamsProvider
-                .getAccountTemplateParams(accountId);
+        ccaDocumentTemplateCommonParamsProvider.getAccountTemplateParams(request, TargetUnitAccountTemplateParams.builder().build());
 
         // Verify
-        assertThat(actual).isEqualTo(expected);
-        verify(accountReferenceDetailsService, times(1))
-                .getTargetUnitAccountDetails(accountId);
-        verify(documentTemplateTransformationMapper, times(1))
-                .constructAccountAddressDTO(accountDetails.getAddress());
-        verify(documentTemplateTransformationMapper, times(1))
-                .constructAccountAddressDTO(accountDetails.getResponsiblePerson().getAddress());
+        verify(ccaDocumentTemplateAccountDataCollectFromAccountService, times(1))
+                .collect(accountId);
     }
 
     @Test
@@ -289,5 +240,15 @@ class CcaDocumentTemplateCommonParamsProviderTest {
     void getPermitReferenceId() {
         assertThat(ccaDocumentTemplateCommonParamsProvider.getPermitReferenceId(1L))
                 .isEmpty();
+    }
+
+    private void addAccountResourceToRequest(Long accountId, Request request) {
+        RequestResource accountResource = RequestResource.builder()
+                .resourceType(ResourceType.ACCOUNT)
+                .resourceId(accountId.toString())
+                .request(request)
+                .build();
+
+        request.getRequestResources().add(accountResource);
     }
 }

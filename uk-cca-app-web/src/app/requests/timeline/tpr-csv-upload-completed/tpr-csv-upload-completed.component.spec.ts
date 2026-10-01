@@ -38,7 +38,7 @@ describe('TprCSVUploadCompletedComponent', () => {
 
     expect(summaryValues[0]).toEqual([
       ['Reporting period', 'Report type', 'Uploaded files'],
-      ['TP7', 'Final', 'dummy.csv'],
+      ['TP7', 'Final', 'dummy.csv (opens in a new tab)'],
     ]);
 
     const [headers, values] = summaryValues[1];
@@ -56,6 +56,6 @@ describe('TprCSVUploadCompletedComponent', () => {
     expect(values[1]).toBe('1');
     expect(values[2]).toBe('0');
     expect(values[3]).toBe('1');
-    expect(values[4]).toBe('Upload_Summary.csv');
+    expect(values[4]).toBe('Upload_Summary.csv (opens in a new tab)');
   });
 });

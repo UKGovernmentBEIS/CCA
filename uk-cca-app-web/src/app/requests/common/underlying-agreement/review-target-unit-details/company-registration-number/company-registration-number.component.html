@@ -2,14 +2,10 @@
   (formSubmit)="onSubmitCompanyRegistrationNumber()"
   [formGroup]="form"
   [caption]="caption()"
-  heading="Does the operator have a company number?"
+  heading="Company registration number"
   data-testid="conpany-registration-number-form"
 >
   <div class="govuk-!-width-two-thirds">
-    <p class="govuk-hint">
-      If the operator is registered with Companies House or Mutual Public Register, you must enter their company number.
-    </p>
-
     <govuk-details summary="Where you can find the company number">
       <p>You can find the company number on:</p>
       <ul>
@@ -34,7 +30,13 @@
       </p>
     </govuk-details>
 
-    <div formControlName="isCompanyRegistrationNumber" govuk-radio>
+    <div
+      formControlName="isCompanyRegistrationNumber"
+      govuk-radio
+      legend="Does the operator have a company number?"
+      legendSize="medium"
+      hint="If the operator is registered with Companies House or Mutual Public Register, you must enter their company number."
+    >
       <govuk-radio-option [value]="true" label="Yes, the operator is registered and has a company number">
         <ng-container govukConditionalContent>
           <div

@@ -29,6 +29,7 @@ export class ItemLinkPipe implements PipeTransform {
       case 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW':
       case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM':
       case 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD':
+      case 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD':
         return [routerLooks + 'tasks', value.taskId];
 
       default:

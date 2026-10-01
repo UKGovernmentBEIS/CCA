@@ -3,13 +3,15 @@ import { Routes } from '@angular/router';
 
 import { SectorMoaDetailsStore } from '@shared/components';
 
+import { SubsistenceFeesMoaDetailsDTO, SubsistenceFeesRunDetailsDTO } from 'cca-api';
+
 import { SectorMoasDetailsResolver } from './sector-moas.resolver';
 
 export const SECTOR_MOAS_ROUTES: Routes = [
   {
     path: ':moaId',
     data: {
-      breadcrumb: ({ subFeesDetails }) => ({
+      breadcrumb: ({ subFeesDetails }: { subFeesDetails: SubsistenceFeesRunDetailsDTO }) => ({
         text: `${subFeesDetails.paymentRequestId}: Sector MoAs`,
         link: `/subsistence-fees/sent-subsistence-fees/${subFeesDetails.runId}`,
         fragment: 'sector-moas',
@@ -33,12 +35,14 @@ export const SECTOR_MOAS_ROUTES: Routes = [
         ],
         resolve: { sectorMoaDetails: SectorMoasDetailsResolver },
         data: {
-          breadcrumb: ({ sectorMoaDetails }) => `${sectorMoaDetails.transactionId}`,
+          breadcrumb: ({ sectorMoaDetails }: { sectorMoaDetails: SubsistenceFeesMoaDetailsDTO }) =>
+            `${sectorMoaDetails.transactionId}`,
         },
         loadChildren: () => import('@shared/components').then((r) => r.SECTOR_MOA_DETAILS_ROUTES),
       },
       {
         path: 'file-download/:fileType/:uuid',
+        title: 'Your download has started',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
     ],

@@ -19,5 +19,7 @@ public interface PerformanceDataFacilityStatusMapper {
 	@Mapping(target = "submissionDate", source = "entity.lastPerformanceData.submissionDate")
 	@Mapping(target = "lockEditable", expression = "java(RoleTypeConstants.REGULATOR.equals(roleType) && !LocalDate.now().isBefore(secondaryReportingStartDate) && entity.getLastPerformanceData().isFinal())")
 	@Mapping(target = "variationIndicatorEditable", expression = "java(RoleTypeConstants.REGULATOR.equals(roleType))")
+	@Mapping(target = "reportType", source = "entity.lastPerformanceData.reportType")
+	@Mapping(target = "submissionType", source = "entity.lastPerformanceData.submissionType")
 	FacilityPerformanceDataStatusInfoDTO toFacilityPerformanceDataStatusInfoDTO(PerformanceDataFacilityStatus entity, LocalDate secondaryReportingStartDate, String roleType);
 }

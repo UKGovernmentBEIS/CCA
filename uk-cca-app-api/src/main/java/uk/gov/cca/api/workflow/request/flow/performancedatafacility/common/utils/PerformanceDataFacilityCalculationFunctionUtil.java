@@ -63,8 +63,21 @@ public class PerformanceDataFacilityCalculationFunctionUtil {
                 .apply(improvements, targetPeriodType);
     }
 
-    public final Function<PerformanceDataFacilityCalculationParameters, BigDecimal> TARGET_IMPROVEMENT =
-            PerformanceDataFacilityCalculationParameters::getTargetImprovement;
+    /**
+     * 1 - (totalTargetEnergyOrCarbonAtTPThroughput / totalBYEnergyOrCarbonAtTPThroughput)
+     * if totalBYEnergyOrCarbonAtTPThroughput = 0 then return 0
+     */
+    public final BiFunction<PerformanceDataFacilityCalculationParameters, PerformanceDataFacilityInputData, BigDecimal> TARGET_IMPROVEMENT =
+            (calculatedParameters, data) -> {
+        BigDecimal totalTargetEnergyOrCarbonAtTPThroughput = PerformanceDataFacilityCalculationFunctionUtil.TARGET_ENERGY_CARBON
+                .apply(calculatedParameters, data);
+        BigDecimal totalBYEnergyOrCarbonAtTPThroughput = PerformanceDataFacilityCalculationCommonFunctionUtil.TOTAL_BY_ENERGY_CARBON_AT_TP_THROUGHPUT
+                        .apply(calculatedParameters, data);
+
+        return totalBYEnergyOrCarbonAtTPThroughput.compareTo(BigDecimal.ZERO) == 0
+                ? BigDecimal.ZERO
+                : BigDecimal.ONE.subtract(totalTargetEnergyOrCarbonAtTPThroughput.divide(totalBYEnergyOrCarbonAtTPThroughput, MathContext.DECIMAL128));
+    };
 
     /**
      * Sum of Primary energy/carbon for all fuels where the value is not zero

@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export const ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW_ROUTES: Routes = [
   {
     path: '',
+    title: 'Admin termination sent for peer review',
     children: [
       {
         path: 'reason-for-admin-termination',

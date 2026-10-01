@@ -20,7 +20,7 @@
       <div govukSummaryListRow>
         <dt govukSummaryListRowKey>Activation date</dt>
         <dd govukSummaryListRowValue>
-          <span>{{ agreement()?.activationDate | date: 'dd MMM y' }}</span>
+          <span>{{ $safeNavigationMigration(agreement()?.activationDate) | date: 'dd MMM y' }}</span>
         </dd>
         <dd govukSummaryListRowActions></dd>
       </div>
@@ -29,7 +29,7 @@
         <div govukSummaryListRow>
           <dt govukSummaryListRowKey>Termination date</dt>
           <dd govukSummaryListRowValue>
-            <span>{{ agreement()?.terminatedDate | date: 'dd MMM y' }}</span>
+            <span>{{ $safeNavigationMigration(agreement()?.terminatedDate) | date: 'dd MMM y' }}</span>
           </dd>
           <dd govukSummaryListRowActions></dd>
         </div>

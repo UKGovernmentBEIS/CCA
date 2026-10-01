@@ -1,5 +1,5 @@
-import { provideHttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { provideHttpClient, withXhr } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -14,7 +14,7 @@ import { TasksApiService } from '@requests/common';
 import { mockAuditDetailsAndCorrectiveActionsState } from '../../../testing/mock-data';
 import { AuditDetailsComponent } from './audit-details.component';
 
-@Component({ template: '' })
+@Component({ changeDetection: ChangeDetectionStrategy.OnPush, template: '' })
 class DummyComponent {}
 
 describe('AuditDetailsComponent', () => {
@@ -42,7 +42,7 @@ describe('AuditDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AuditDetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideRouter([{ path: '**', component: DummyComponent }]),
         RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },

@@ -7,10 +7,13 @@
     submitText="Save and continue"
     data-testid="audit-form"
   >
-    <p class="govuk-!-padding-bottom-4">Select the reasons that apply for this audit.</p>
-
-    <h2 class="govuk-heading-m">Audit reasons</h2>
-    <div formControlName="reasons" govuk-checkboxes>
+    <div
+      formControlName="reasons"
+      govuk-checkboxes
+      legend="Audit reasons"
+      legendSize="medium"
+      hint="Select the reasons that apply for this audit."
+    >
       @for (option of reasonOptions; track option) {
         <govuk-checkbox
           [value]="option"

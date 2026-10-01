@@ -85,7 +85,11 @@ export class EditOperatorDetailsComponent {
         );
 
     updateObs
-      .pipe(catchBadRequest([ErrorCodes.FORM1001], () => this.businessErrorService.showError(operatorUserUpdateError)))
+      .pipe(
+        catchBadRequest<never>([ErrorCodes.FORM1001], () =>
+          this.businessErrorService.showError(operatorUserUpdateError),
+        ),
+      )
       .subscribe((user: CcaOperatorUserDetailsDTO) => {
         this.store.updateState({ details: user });
         this.router.navigate(['..'], { relativeTo: this.activatedRoute, replaceUrl: true });

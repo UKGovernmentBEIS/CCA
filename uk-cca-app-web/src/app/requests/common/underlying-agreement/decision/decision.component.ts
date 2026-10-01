@@ -10,9 +10,13 @@ import { generateDownloadUrl } from '@shared/utils';
 @Component({
   selector: 'cca-decision',
   template: `
-    <h2 class="govuk-heading-m">What is your decision on the information submitted?</h2>
-    <span class="govuk-hint">Use your judgement to make minor changes within the details if needed</span>
-    <div govuk-radio formControlName="type">
+    <div
+      govuk-radio
+      formControlName="type"
+      legend="What is your decision on the information submitted?"
+      legendSize="medium"
+      hint="Use your judgement to make minor changes within the details if needed"
+    >
       <govuk-radio-option label="Accepted" value="ACCEPTED" />
       <govuk-radio-option label="Rejected" value="REJECTED" />
     </div>

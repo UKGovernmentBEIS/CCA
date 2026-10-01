@@ -1,8 +1,17 @@
 package uk.gov.cca.api.web.controller.mireport;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +28,17 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorFactory;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.cca.api.web.orchestrator.mireport.dto.CcaMiReportUserDefinedDTO;
 import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
@@ -32,28 +50,18 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.mireport.jsonprovider.MiReportSystemParamsTypesProvider;
 import uk.gov.netz.api.mireport.jsonprovider.MiReportSystemResultTypesProvider;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedDTO;
+import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedGeneratorDelegator;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedInfoDTO;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedResult;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedResults;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedService;
+import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedUpdateDTO;
 import uk.gov.netz.api.mireport.userdefined.custom.CustomMiReportQuery;
+import uk.gov.netz.api.mireport.userdefined.custom.ValidSqlQueryValidator;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
 import uk.gov.netz.api.security.AuthorizedRoleAspect;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class MiReportUserDefinedControllerTest {
@@ -76,6 +84,9 @@ class MiReportUserDefinedControllerTest {
 
     @Mock
     private MiReportUserDefinedService miReportQueryService;
+
+    @Mock
+    private MiReportUserDefinedGeneratorDelegator miReportUserDefinedGeneratorDelegator;
 
     private ObjectMapper objectMapper;
 
@@ -102,12 +113,36 @@ class MiReportUserDefinedControllerTest {
 
         FormattingConversionService conversionService = new FormattingConversionService();
 
+        LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
+        validatorFactoryBean.setProviderClass(org.hibernate.validator.HibernateValidator.class);
+        validatorFactoryBean.setConstraintValidatorFactory(new ConstraintValidatorFactory() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
+                if (key == ValidSqlQueryValidator.class) {
+                    return (T) new ValidSqlQueryValidator(miReportUserDefinedGeneratorDelegator);
+                }
+                try {
+                    return key.getDeclaredConstructor().newInstance();
+                } catch (ReflectiveOperationException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+
+            @Override
+            public void releaseInstance(ConstraintValidator<?, ?> instance) {
+                // No resources to release.
+            }
+        });
+        validatorFactoryBean.afterPropertiesSet();
+
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new ExceptionControllerAdvice())
                 .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
                 .setMessageConverters(mappingJackson2HttpMessageConverter)
                 .addFilters(new FilterChainProxy(Collections.emptyList()))
                 .setConversionService(conversionService)
+                .setValidator(validatorFactoryBean)
                 .build();
 
         objectMapper = new ObjectMapper();
@@ -119,7 +154,12 @@ class MiReportUserDefinedControllerTest {
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
 
-        final MiReportUserDefinedDTO miReportQueryDTO = MiReportUserDefinedDTO.builder()
+        final CcaMiReportUserDefinedDTO ccaMiReportUserDefinedDTO = CcaMiReportUserDefinedDTO.builder()
+                .reportName("test report name")
+                .queryDefinition("select * from facility_audit")
+                .description("bla bla bla")
+                .build();
+        final MiReportUserDefinedDTO miReportUserDefinedDTO = MiReportUserDefinedDTO.builder()
                 .reportName("test report name")
                 .queryDefinition("select * from facility_audit")
                 .description("bla bla bla")
@@ -127,17 +167,17 @@ class MiReportUserDefinedControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(MI_REPORT_QUERY_BASE_CONTROLLER_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(miReportQueryDTO)))
+                        .content(objectMapper.writeValueAsString(ccaMiReportUserDefinedDTO)))
                 .andExpect(status().isNoContent());
 
-        verify(miReportQueryService, times(1)).create(user.getUserId(), user.getCompetentAuthority(), miReportQueryDTO);
+        verify(miReportQueryService, times(1)).create(user, miReportUserDefinedDTO);
     }
 
     @Test
     void create_forbidden() throws Exception {
         AppUser appUser = AppUser.builder().roleType(RoleTypeConstants.VERIFIER).build();
 
-        final MiReportUserDefinedDTO miReportQueryDTO = MiReportUserDefinedDTO.builder()
+        final CcaMiReportUserDefinedDTO ccaMiReportUserDefinedDTO = CcaMiReportUserDefinedDTO.builder()
                 .reportName("test report name")
                 .queryDefinition("select * from facility_audit")
                 .description("bla bla bla")
@@ -151,7 +191,7 @@ class MiReportUserDefinedControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(MI_REPORT_QUERY_BASE_CONTROLLER_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(miReportQueryDTO)))
+                        .content(objectMapper.writeValueAsString(ccaMiReportUserDefinedDTO)))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(miReportQueryService);
@@ -165,19 +205,27 @@ class MiReportUserDefinedControllerTest {
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
 
-        final MiReportUserDefinedDTO miReportQueryDTO = MiReportUserDefinedDTO.builder()
+        final CcaMiReportUserDefinedDTO ccaMiReportUserDefinedUpdateDTO = CcaMiReportUserDefinedDTO.builder()
                 .reportName("test report name")
                 .queryDefinition("select * from facility_audit")
                 .description("bla bla bla")
                 .build();
+        final MiReportUserDefinedUpdateDTO miReportUserDefinedUpdateDTO = MiReportUserDefinedUpdateDTO.builder()
+                .userDefinedDTO(MiReportUserDefinedDTO.builder()
+                        .reportName("test report name")
+                        .queryDefinition("select * from facility_audit")
+                        .description("bla bla bla")
+                        .build())
+                .reasonForChange("Not provided")
+                .build();
 
         mockMvc.perform(MockMvcRequestBuilders.put(MI_REPORT_QUERY_BASE_CONTROLLER_PATH + "/" + queryId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(miReportQueryDTO)))
+                        .content(objectMapper.writeValueAsString(ccaMiReportUserDefinedUpdateDTO)))
                 .andExpect(status().isNoContent());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(miReportQueryService, times(1)).update(queryId, miReportQueryDTO);
+        verify(miReportQueryService, times(1)).update(queryId, user, miReportUserDefinedUpdateDTO);
     }
 
     @Test
@@ -209,14 +257,14 @@ class MiReportUserDefinedControllerTest {
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(miReportQueryService.findById(queryId)).thenReturn(miReportQueryDTO);
+        when(miReportQueryService.findById(user, queryId)).thenReturn(miReportQueryDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get(MI_REPORT_QUERY_BASE_CONTROLLER_PATH + "/" + queryId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.queryDefinition").value(queryDefinition));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(miReportQueryService, times(1)).findById(queryId);
+        verify(miReportQueryService, times(1)).findById(user, queryId);
     }
     
     @Test
@@ -316,14 +364,9 @@ class MiReportUserDefinedControllerTest {
 
     private AppUser buildMockAuthenticatedUser() {
         return AppUser.builder()
-                .authorities(
-                        Arrays.asList(
-                                AppAuthority.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).build()
-                        )
-                )
+                .authorities(List.of(AppAuthority.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).build()))
                 .roleType(RoleTypeConstants.REGULATOR)
                 .userId("USER_ID")
                 .build();
     }
-
 }

@@ -93,11 +93,12 @@ describe('ButtonDirective', () => {
     expect(fixture.componentInstance.onClick).toHaveBeenCalledTimes(0);
   });
 
-  it('should get clicked if keydown is space', () => {
-    const event = new KeyboardEvent('keydown', { key: ' ', code: 'Space' });
+  it('should not synthesise a click on space keydown', () => {
+    const event = new KeyboardEvent('keydown', { key: ' ', code: 'Space', cancelable: true });
     vi.spyOn(fixture.componentInstance, 'onClick');
     const button: HTMLButtonElement = fixture.componentInstance.simpleButton().nativeElement;
     button.dispatchEvent(event);
-    expect(fixture.componentInstance.onClick).toHaveBeenCalledTimes(1);
+    expect(fixture.componentInstance.onClick).toHaveBeenCalledTimes(0);
+    expect(event.defaultPrevented).toBe(false);
   });
 });

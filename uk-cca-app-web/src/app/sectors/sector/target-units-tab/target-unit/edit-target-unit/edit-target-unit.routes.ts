@@ -10,9 +10,9 @@ export const EDIT_TARGET_UNIT_ROUTES: Routes = [
     children: [
       {
         path: 'details',
+        title: 'Edit target unit details',
         resolve: { subSectorScheme: EditTargetUnitSubSectorResolver },
         data: {
-          pageTitle: 'Edit target unit details',
           backlink: '../../',
           breadcrumb: false,
         },
@@ -21,7 +21,8 @@ export const EDIT_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: 'financial-independence',
-        data: { backlink: '../../', breadcrumb: false, pageTitle: 'Edit financial independence' },
+        title: 'Edit financial independence',
+        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
           import('./edit-financial-independence/edit-financial-independence.component').then(
             (c) => c.EditFinancialIndependenceComponent,
@@ -29,8 +30,8 @@ export const EDIT_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: 'responsible-person',
+        title: 'Edit responsible person details',
         data: {
-          pageTitle: 'Edit responsible person details',
           backlink: '../../',
           breadcrumb: false,
         },
@@ -42,8 +43,8 @@ export const EDIT_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: 'administrative-contact',
+        title: 'Edit administrative contact details',
         data: {
-          pageTitle: 'Edit administrative contact details',
           backlink: '../../',
           breadcrumb: false,
         },

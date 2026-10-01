@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserId } from '@netz/common/auth';
-import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 
@@ -10,19 +9,17 @@ import { ButtonDirective } from '@netz/govuk-components';
   selector: 'cca-admin-termination-peer-review-precontent',
   template: `
     @if (isUserAssignee()) {
-      <button
-        netzPendingButton
+      <a
         govukButton
-        type="button"
         routerLink="admin-termination-peer-review/peer-review-decision"
         [relativeTo]="activatedRoute"
         [replaceUrl]="true"
       >
         Peer review decision
-      </button>
+      </a>
     }
   `,
-  imports: [ButtonDirective, PendingButtonDirective, RouterLink],
+  imports: [ButtonDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminTerminationPeerReviewPrecontentComponent {

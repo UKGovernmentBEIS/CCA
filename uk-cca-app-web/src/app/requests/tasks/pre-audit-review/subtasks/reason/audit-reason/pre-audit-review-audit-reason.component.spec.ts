@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -35,7 +35,7 @@ describe('PreAuditReviewAuditReasonComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PreAuditReviewAuditReasonComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         RequestTaskStore,
         { provide: Router, useValue: { navigate: vi.fn() } },
         { provide: TasksApiService, useValue: mockTasksApiService },

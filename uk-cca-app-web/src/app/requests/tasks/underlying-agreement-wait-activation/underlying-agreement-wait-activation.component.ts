@@ -4,7 +4,7 @@ import { WarningTextComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-underlying-agreement-wait-activation',
-  template: `<govuk-warning-text assistiveText="">Waiting for the operator's assent/activation</govuk-warning-text>`,
+  template: `<govuk-warning-text>Waiting for the operator's assent/activation</govuk-warning-text>`,
   imports: [WarningTextComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

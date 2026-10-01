@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -18,7 +18,7 @@ describe('TargetPeriod6Component', () => {
     await TestBed.configureTestingModule({
       imports: [TargetPeriod6Component],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestActionStore,
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },

@@ -54,15 +54,29 @@ export class TemplateSearchComponent {
   protected readonly templateType = input.required<'document' | 'email'>();
   protected readonly fragment = input.required<string>();
 
-  protected readonly state = signal<{ templates: NotificationTemplateDTO[] | DocumentTemplateDTO[]; total: number }>({
-    templates: [],
-    total: 0,
-  });
+  // Results for the query currently in the URL, or null until its response arrives. Null keeps the
+  // previous query's results out of the rendered output, so nothing stale is shown or announced.
+  protected readonly state = signal<{
+    templates: NotificationTemplateDTO[] | DocumentTemplateDTO[];
+    total: number;
+  } | null>(null);
 
   protected readonly currentPage = signal(DEFAULT_PAGE);
   protected readonly pageSize = signal(DEFAULT_PAGE_SIZE);
-  protected readonly templates = computed(() => this.state().templates);
-  protected readonly count = computed(() => this.state().total);
+  protected readonly templates = computed(() => this.state()?.templates ?? []);
+  protected readonly count = computed(() => this.state()?.total ?? 0);
+  protected readonly hasTemplates = computed(() => this.templates().length > 0);
+  // Kept in a region that is always rendered: a live region that is added already filled is not
+  // announced, so only its text may change once results arrive. Blank until the response lands, so
+  // "There are no results to show" is announced for an empty result set too, not only when the count
+  // changes.
+  protected readonly resultsStatus = computed(() => {
+    if (!this.state()) return '';
+
+    const count = this.count();
+
+    return this.hasTemplates() ? `${count} result${count === 1 ? '' : 's'}` : 'There are no results to show';
+  });
 
   protected readonly searchForm = new FormGroup<{ term: FormControl<string | null> }>({
     term: new FormControl<string | null>(null, {
@@ -88,6 +102,9 @@ export class TemplateSearchComponent {
           this.pageSize.set(pageSize);
           this.searchForm.get('term')?.setValue(term);
         }),
+        // Clear before fetching: results shown while the request is in flight belong to the previous
+        // query.
+        tap(() => this.state.set(null)),
         switchMap(({ term, page, pageSize, fetchFn }) => fetchFn(page - 1, pageSize, term)),
         catchError(() => of({ templates: [], total: 0 })),
         tap(({ templates, total }) => {

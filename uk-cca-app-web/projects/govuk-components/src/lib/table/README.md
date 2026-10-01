@@ -6,6 +6,23 @@ Design details can be found at [GOV.UK Design System](https://design-system.serv
 If an `<ng-template>` is provided as component content, then it is used as a cell template.
 Its context consists of the current `row` and `column` variables.
 
+### Controls inside cells
+
+A cell's column header already names anything rendered in that column, so a form control in a cell
+must not repeat that name as a visible label — pass `labelHidden` (and, where the control needs an
+accessible name, the same `label` text) so the label stays in the DOM for assistive technology but is
+not shown twice. Deriving the label from the column keeps the two in step:
+
+```html
+<div govuk-select formControlName="status" [options]="statuses"
+     [label]="column.header" [labelHidden]="true"></div>
+```
+
+Radio, checkbox and date part labels are exempt: they sit inside their own fieldset rather than being
+named by the column. `assertInCellControlLabelsHidden` (in `src/testing`) enforces this in specs — call
+it in every spec whose table renders one of these controls inside a cell, so the convention stays
+covered as tables are added.
+
 ### Inputs
 
 - `data` - An array of objects of any type.

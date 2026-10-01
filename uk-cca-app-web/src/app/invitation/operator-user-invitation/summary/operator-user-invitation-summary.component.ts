@@ -23,7 +23,7 @@ function toSummaryData(user: InvitedOperatorUserExtended): SummaryData {
     .addChangeRow('Job title', user.jobTitle)
     .addChangeRow('Email address', user.email)
     .addSection('Your organization details', '../', { testid: 'operator-user-invitation-organisation-details-list' })
-    .addChangeRow('Contact type', ContactTypeEnum[user.contactType])
+    .addChangeRow('Contact type', ContactTypeEnum[user.contactType as keyof typeof ContactTypeEnum])
     .addChangeRow('Organisation name', user.organisationName)
     .addChangeRow('Phone number 1', transformPhoneNumber(user.phoneNumber))
     .addChangeRow('Phone number 2', transformPhoneNumber(user.mobileNumber))

@@ -1,9 +1,9 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, RouterModule } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -28,7 +28,7 @@ describe('FacilityDetailsComponent', () => {
   const route = {
     snapshot: {
       params: { facilityId: 'ADS_1-F00001' },
-      pathFromRoot: [],
+      pathFromRoot: [] as ActivatedRouteSnapshot[],
     },
   };
 
@@ -72,7 +72,7 @@ describe('FacilityDetailsComponent', () => {
     TestBed.configureTestingModule({
       imports: [FacilityDetailsComponent, ReactiveFormsModule, RouterModule],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },

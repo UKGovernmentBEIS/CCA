@@ -79,7 +79,7 @@ export class EditSectorUserDetailsComponent {
       this.sectorUsersService
         .updateCurrentSectorUser(this.sectorId, data)
         .pipe(
-          catchBadRequest([ErrorCodes.FORM1001, ErrorCodes.SECTOR1001], () =>
+          catchBadRequest<never>([ErrorCodes.FORM1001, ErrorCodes.SECTOR1001], () =>
             this.businessErrorService.showError(sectorUserDetailsUpdateError),
           ),
         )
@@ -91,7 +91,7 @@ export class EditSectorUserDetailsComponent {
       this.sectorUsersService
         .updateSectorUserBySectorAssociationIdAndUserId(this.sectorId, this.sectorUserId, data)
         .pipe(
-          catchBadRequest([ErrorCodes.FORM1001, ErrorCodes.SECTOR1001], () =>
+          catchBadRequest<never>([ErrorCodes.FORM1001, ErrorCodes.SECTOR1001], () =>
             this.businessErrorService.showError(sectorUserDetailsUpdateError),
           ),
         )

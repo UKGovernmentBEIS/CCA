@@ -137,6 +137,10 @@ export function toTotalsOnlySummaryData(args: TotalsOnlySummaryDataArgs): Summar
       `Total throughput (${baselineAndTargets?.throughputUnit})`,
       decimalPipe.transform(args.performanceData?.throughputDetails?.actualThroughput, '1.0-7'),
       { change: args.isEditable },
+    )
+    .addRow(
+      `Adjusted throughput (${baselineAndTargets?.throughputUnit})`,
+      decimalPipe.transform(args.performanceData?.throughputDetails?.adjustedThroughput, '1.0-3'),
     );
 
   if (args.targetVariableEnergy !== null) {

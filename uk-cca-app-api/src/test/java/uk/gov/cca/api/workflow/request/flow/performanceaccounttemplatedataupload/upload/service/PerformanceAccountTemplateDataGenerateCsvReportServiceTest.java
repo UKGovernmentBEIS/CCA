@@ -86,7 +86,7 @@ class PerformanceAccountTemplateDataGenerateCsvReportServiceTest {
 		
 		String csvUuid = UUID.randomUUID().toString();
 		when(ccaFileAttachmentService.createSystemFileAttachment(Mockito.any(FileDTO.class),
-				Mockito.eq(FileStatus.SUBMITTED), Mockito.eq("sectorUserAsignee"))).thenReturn(csvUuid);
+				Mockito.eq(FileStatus.SUBMITTED))).thenReturn(csvUuid);
 		
 		cut.generateCsvReport(requestTaskId, fileReports);
 		
@@ -97,9 +97,8 @@ class PerformanceAccountTemplateDataGenerateCsvReportServiceTest {
 		
 		ArgumentCaptor<FileDTO> fileDTOCaptor = ArgumentCaptor.forClass(FileDTO.class);
 		ArgumentCaptor<FileStatus> fileStatusCaptor = ArgumentCaptor.forClass(FileStatus.class);
-		ArgumentCaptor<String> assigneeCaptor = ArgumentCaptor.forClass(String.class);
 		verify(ccaFileAttachmentService, times(1)).createSystemFileAttachment(fileDTOCaptor.capture(),
-				fileStatusCaptor.capture(), assigneeCaptor.capture());
+				fileStatusCaptor.capture());
 		FileDTO csvFile = fileDTOCaptor.getValue();
 		assertThat(csvFile.getFileName()).isEqualTo("req1_Summary.csv");
 		String csvContent = new String(csvFile.getFileContent(), StandardCharsets.UTF_8);
@@ -108,7 +107,6 @@ class PerformanceAccountTemplateDataGenerateCsvReportServiceTest {
 				",fileName3,Error,Error with file name 3");
 		
 		assertThat(fileStatusCaptor.getValue()).isEqualTo(FileStatus.SUBMITTED);
-		assertThat(assigneeCaptor.getValue()).isEqualTo("sectorUserAsignee");
 	}
 	
 }

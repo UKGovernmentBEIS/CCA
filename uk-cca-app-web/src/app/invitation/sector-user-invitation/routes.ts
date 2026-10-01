@@ -12,17 +12,19 @@ import { SectorUserInvitationStore } from './sector-user-invitation.store';
 export const SECTOR_USER_INVITATION_ROUTES: Routes = [
   {
     path: 'sector-user',
-    data: { blockSignInRedirect: true, pageTitle: 'Create user account' },
+    data: { blockSignInRedirect: true },
     providers: [SectorUserInvitationStore],
     children: [
       {
         path: '',
+        title: 'Enter your details',
         loadComponent: () => import('./sector-user-invitation.component').then((c) => c.SectorUserInvitationComponent),
         canActivate: [SectorUserInvitationGuard],
         canDeactivate: [PendingRequestGuard],
       },
       {
         path: 'create-password',
+        title: 'Create a password',
         data: { backlink: '../' },
         loadComponent: () =>
           import('./sector-user-invitation-create-password/sector-user-invitation-create-password.component').then(
@@ -32,6 +34,7 @@ export const SECTOR_USER_INVITATION_ROUTES: Routes = [
       },
       {
         path: 'set-password-only',
+        title: 'Create a password',
         loadComponent: () =>
           import('./sector-user-invitation-password-only/sector-user-invitation-password-only.component').then(
             (c) => c.SectorUserInvitationPasswordOnlyComponent,
@@ -40,6 +43,7 @@ export const SECTOR_USER_INVITATION_ROUTES: Routes = [
       },
       {
         path: 'summary',
+        title: 'Check your answers',
         data: { backlink: '../create-password' },
         loadComponent: () =>
           import('./sector-user-invitation-summary/sector-user-invitation-summary.component').then(
@@ -49,7 +53,7 @@ export const SECTOR_USER_INVITATION_ROUTES: Routes = [
       },
       {
         path: 'confirmed',
-        data: { pageTitle: "You've successfully activated your user account" },
+        title: "You've successfully activated your user account",
         loadComponent: () =>
           import('../invitation-confirmation/invitation-confirmation.component').then(
             (c) => c.InvitationConfirmationComponent,
@@ -59,7 +63,7 @@ export const SECTOR_USER_INVITATION_ROUTES: Routes = [
       },
       {
         path: 'confirmed-existing',
-        data: { pageTitle: 'You are successfully added to a sector account' },
+        title: 'You are successfully added to a sector account',
         loadComponent: () =>
           import('../invitation-existing-confirmation/invitation-existing-confirmation.component').then(
             (c) => c.InvitationExistingConfirmationComponent,
@@ -68,7 +72,7 @@ export const SECTOR_USER_INVITATION_ROUTES: Routes = [
       },
       {
         path: 'invalid-link',
-        data: { pageTitle: 'This link is invalid/expired' },
+        title: 'This link is invalid/expired',
         loadComponent: () => import('../invalid-link/invalid-link.component').then((c) => c.InvalidLinkComponent),
       },
     ],

@@ -4,6 +4,7 @@ export * from './contact-type.pipe';
 export * from './duration-pipe';
 export * from './final-decision-type.pipe';
 export * from './facility-audit-reason.pipe';
+export * from './facility-pat-reporting-types.pipe';
 export * from './include.pipe';
 export * from './marking-of-facilities-status.pipe';
 export * from './measurement-type-to-unit.pipe';

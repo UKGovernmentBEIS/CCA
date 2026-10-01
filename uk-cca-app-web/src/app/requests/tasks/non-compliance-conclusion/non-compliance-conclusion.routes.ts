@@ -10,6 +10,7 @@ import {
 export const NON_COMPLIANCE_CONCLUSION_ROUTES: Routes = [
   {
     path: '',
+    title: 'Provide non-compliance conclusion',
     children: [
       {
         path: '',

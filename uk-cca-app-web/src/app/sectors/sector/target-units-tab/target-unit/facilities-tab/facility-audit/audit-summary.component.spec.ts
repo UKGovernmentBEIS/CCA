@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -14,7 +14,11 @@ describe('AuditComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AuditSummaryComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ActivatedRoute, useValue: route }],
+      providers: [
+        provideHttpClient(withXhr()),
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: route },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AuditSummaryComponent);

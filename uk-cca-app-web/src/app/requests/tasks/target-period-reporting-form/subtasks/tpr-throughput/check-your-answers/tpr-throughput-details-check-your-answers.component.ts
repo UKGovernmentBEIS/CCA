@@ -134,7 +134,7 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
       const savedProduct = savedProductsByName.get(product.productName);
       let improvementTarget = facilityImprovementTarget;
 
-      if (facilityBaselineYear != null && product.baselineYear !== facilityBaselineYear) {
+      if (facilityBaselineYear != null && product.baselineYear > facilityBaselineYear) {
         improvementTarget = calculateAdjustedImprovementTarget(
           this.referenceData(),
           this.reportType(),

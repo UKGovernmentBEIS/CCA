@@ -49,7 +49,11 @@ export class SectorListComponent {
     const multiplier = direction === 'ascending' ? 1 : -1;
 
     return [...this._sectors()].sort(
-      (a, b) => this.collator.compare(String(a[column] ?? ''), String(b[column] ?? '')) * multiplier,
+      (a, b) =>
+        this.collator.compare(
+          String(a[column as keyof SectorAssociationInfoDTO] ?? ''),
+          String(b[column as keyof SectorAssociationInfoDTO] ?? ''),
+        ) * multiplier,
     );
   });
 

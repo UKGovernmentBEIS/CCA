@@ -88,13 +88,13 @@ class SectorAssociationSchemeDocumentServiceTest {
 
     @Test
     void createSectorAssociationSchemeDocument() {
-        AppUser user = AppUser.builder().firstName("firstName").userId("userId").lastName("lastName").build();
         byte[] contentBytes = "dummycontent".getBytes();
         FileDTO fileDTO = FileDTO.builder()
                 .fileName("name")
                 .fileSize(contentBytes.length)
                 .fileType("application/pdf")
                 .fileContent(contentBytes)
+                .createdBy("userId")
                 .build();
         FileStatus status = FileStatus.PENDING;
         SectorAssociationSchemeDocument document = SectorAssociationSchemeDocument.builder()
@@ -106,7 +106,7 @@ class SectorAssociationSchemeDocumentServiceTest {
 
         when(sectorAssociationSchemeDocumentMapper.toSectorAssociationSchemeDocument(fileDTO)).thenReturn(document);
 
-        String fileEvidenceUuid = sectorAssociationSchemeDocumentService.createSectorAssociationSchemeDocument(fileDTO, user);
+        String fileEvidenceUuid = sectorAssociationSchemeDocumentService.createSectorAssociationSchemeDocument(fileDTO);
 
         assertThat(fileEvidenceUuid).isNotNull();
         ArgumentCaptor<SectorAssociationSchemeDocument> evidenceCaptor = ArgumentCaptor.forClass(SectorAssociationSchemeDocument.class);

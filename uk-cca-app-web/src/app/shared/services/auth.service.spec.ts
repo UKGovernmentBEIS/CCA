@@ -101,10 +101,10 @@ describe('AuthService', () => {
     expect(usersService.getCurrentUser).toHaveBeenCalledTimes(1);
   });
 
-  it('should create a login URL', () => {
-    keycloakService.createLoginUrl.mockReturnValue('https://cca-sign-in.example');
+  it('should create a login URL', async () => {
+    keycloakService.createLoginUrl.mockResolvedValue('https://cca-sign-in.example');
 
-    expect(service.createLoginUrl({ redirectUri: location.origin })).toBe('https://cca-sign-in.example');
+    await expect(service.createLoginUrl({ redirectUri: location.origin })).resolves.toBe('https://cca-sign-in.example');
     expect(keycloakService.createLoginUrl).toHaveBeenCalledWith({ redirectUri: location.origin });
   });
 

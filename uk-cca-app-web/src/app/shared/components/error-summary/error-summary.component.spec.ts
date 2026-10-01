@@ -47,4 +47,22 @@ describe('ErrorSummaryComponent', () => {
     expect(link).toBeTruthy();
     expect(link?.textContent).toContain('Go to test link');
   });
+
+  it('should not render link when linkText is not provided or empty', () => {
+    fixture.componentRef.setInput('errorSummaryInfo', {
+      message: 'Test error message without link',
+    });
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('a')).toBeNull();
+
+    fixture.componentRef.setInput('errorSummaryInfo', {
+      message: 'Test error message with empty linkText',
+      link: '',
+      linkText: '',
+    });
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('a')).toBeNull();
+  });
 });

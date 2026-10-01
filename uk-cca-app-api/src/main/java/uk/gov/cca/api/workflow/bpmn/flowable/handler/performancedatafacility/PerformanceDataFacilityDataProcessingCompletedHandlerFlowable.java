@@ -23,6 +23,7 @@ import java.util.Map;
 public class PerformanceDataFacilityDataProcessingCompletedHandlerFlowable implements JavaDelegate {
 
     private final RequestService requestService;
+    private static final String EMPTY_JSON_OBJECT = "{}";
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -39,6 +40,7 @@ public class PerformanceDataFacilityDataProcessingCompletedHandlerFlowable imple
             execution.setVariable(CcaBpmnProcessConstants.PERFORMANCE_DATA_FACILITY_DATA_PROCESSING_MESSAGE_FAILED, false);
         } catch (JsonProcessingException e) {
             log.error("Cannot generate message for request {}", requestPayload.getParentRequestId(), e);
+            execution.setVariable(CcaBpmnProcessConstants.FACILITY_REPORTS, EMPTY_JSON_OBJECT);
             execution.setVariable(CcaBpmnProcessConstants.PERFORMANCE_DATA_FACILITY_DATA_PROCESSING_MESSAGE_FAILED, true);
         } finally {
             execution.setVariable(BpmnProcessConstants.REQUEST_DELETE_UPON_TERMINATE, true);

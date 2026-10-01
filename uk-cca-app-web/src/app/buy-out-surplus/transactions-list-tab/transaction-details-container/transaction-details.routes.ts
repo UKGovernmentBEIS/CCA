@@ -23,6 +23,7 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
     children: [
       {
         path: '',
+        title: 'Transaction details',
         loadComponent: () =>
           import('./transaction-details-container.component').then((c) => c.TransactionDetailsContainerComponent),
       },
@@ -31,6 +32,7 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
         children: [
           {
             path: '',
+            title: 'Status',
             data: { breadcrumb: false, backlink: '../' },
             loadComponent: () =>
               import('./transcation-details-tab/change-status/change-status.component').then(
@@ -39,6 +41,7 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
           },
           {
             path: 'confirmation',
+            title: 'Payment status updated',
             data: { breadcrumb: false },
             loadComponent: () =>
               import('./transcation-details-tab/change-status/confirmation/confirmation.component').then(
@@ -52,6 +55,7 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
         children: [
           {
             path: '',
+            title: 'Amount',
             data: { breadcrumb: false, backlink: '../' },
             loadComponent: () =>
               import('./transcation-details-tab/change-amount/change-amount.component').then(
@@ -60,6 +64,7 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
           },
           {
             path: 'confirmation',
+            title: 'Current amount updated',
             data: { breadcrumb: false },
             loadComponent: () =>
               import('./transcation-details-tab/change-amount/confirmation/confirmation-component').then(
@@ -70,10 +75,12 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
       },
       {
         path: 'file-download/:uuid',
+        title: 'Your download has started',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
       {
         path: 'file-evidences-download/:fileType/:uuid',
+        title: 'Your download has started',
         loadComponent: () => import('@shared/components').then((m) => m.EvidenceFileDownloadComponent),
       },
     ],

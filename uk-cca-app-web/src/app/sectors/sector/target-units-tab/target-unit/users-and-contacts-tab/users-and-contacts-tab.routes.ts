@@ -1,6 +1,8 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
+import { CcaOperatorUserDetailsDTO } from 'cca-api';
+
 import { CanEditOperatorUserDetailsGuard } from './operator-details.guard';
 import { ActiveOperatorStore } from './operator-details/active-operator.store';
 
@@ -10,10 +12,12 @@ export const USERS_AND_CONTACTS_ROUTES: Routes = [
     children: [
       {
         path: 'add',
+        title: 'Add an operator user',
         loadComponent: () => import('./add/add-operator.component').then((c) => c.AddOperatorComponent),
       },
       {
         path: 'confirmation',
+        title: 'Operator user added',
         loadComponent: () =>
           import('./confirmation/confirmation.component').then((c) => c.AddOperatorConfirmationComponent),
       },
@@ -25,17 +29,18 @@ export const USERS_AND_CONTACTS_ROUTES: Routes = [
         children: [
           {
             path: '',
+            title: 'Operator details',
             data: {
-              pageTitle: 'Operator details',
-              breadcrumb: ({ operatorDetails }) => `${operatorDetails.firstName} ${operatorDetails.lastName}`,
+              breadcrumb: ({ operatorDetails }: { operatorDetails: CcaOperatorUserDetailsDTO }) =>
+                `${operatorDetails.firstName} ${operatorDetails.lastName}`,
             },
             loadComponent: () =>
               import('./operator-details/operator-details.component').then((c) => c.OperatorDetailsComponent),
           },
           {
             path: 'edit',
+            title: 'Edit operator details',
             data: {
-              pageTitle: 'Edit operator details',
               breadcrumb: false,
             },
             loadComponent: () =>
@@ -45,8 +50,8 @@ export const USERS_AND_CONTACTS_ROUTES: Routes = [
           },
           {
             path: 'delete',
+            title: 'Delete operator',
             data: {
-              pageTitle: 'Delete operator',
               breadcrumb: false,
               backlink: '../../../',
             },

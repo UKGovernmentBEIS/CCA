@@ -44,7 +44,7 @@ describe('AdminTerminationFinalDecisionSubmittedTimelineComponent', () => {
         [
           'oper3 user, Responsible person, oper3@cca.uka-fname lname, Administrative contact, test-admin@test.comFred_1 William_1, Sector contact, fredwilliam_1@agindustries.org.uk',
           'Regulator England',
-          'Admin Termination Regulatory reason notice.pdf',
+          'Admin Termination Regulatory reason notice.pdf (opens in a new tab)',
         ],
       ],
     ]);

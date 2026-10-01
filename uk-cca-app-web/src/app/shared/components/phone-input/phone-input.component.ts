@@ -1,5 +1,14 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, DestroyRef, DoCheck, HostBinding, inject, input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  HostBinding,
+  inject,
+  input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlContainer,
@@ -8,35 +17,37 @@ import {
   NgControl,
   NgForm,
   ReactiveFormsModule,
+  TouchedChangeEvent,
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
 
-import { BehaviorSubject, filter, map, Observable, of } from 'rxjs';
+import { filter } from 'rxjs';
 
-import { ErrorMessageComponent, FieldsetDirective, FormService, GovukSelectOption } from '@netz/govuk-components';
+import { ErrorMessageComponent, FieldsetDirective, FormService } from '@netz/govuk-components';
 import { transformPhoneInput } from '@shared/pipes';
 import { CountryCallingCodeService, CountryService, UK_COUNTRY_CODES } from '@shared/services';
 import { UKCountryCodes } from '@shared/types';
 
 import { PhoneNumberDTO } from 'cca-api';
 
-type CountryOption = { text: string; value: string };
+type CountryOption = { text: string; value: string; code: string };
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'div[cca-phone-input]',
   templateUrl: './phone-input.component.html',
-  imports: [ReactiveFormsModule, ErrorMessageComponent, AsyncPipe, FieldsetDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, ErrorMessageComponent, FieldsetDirective],
 })
-export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccessor {
+export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   private readonly ngControl = inject(NgControl, { self: true, optional: true });
   private readonly formService = inject(FormService);
   private readonly destroy$ = inject(DestroyRef);
   private readonly container = inject(ControlContainer, { optional: true });
   private readonly countryCallingCodeService = inject(CountryCallingCodeService);
 
-  private readonly countries = inject(CountryService).countries();
+  private readonly countries = inject(CountryService).countries;
 
   protected readonly label = input<string>(undefined);
   protected readonly hint = input<string>(undefined);
@@ -44,7 +55,8 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
   @HostBinding('class.govuk-!-display-block') readonly govukDisplayBlock = true;
   @HostBinding('class.govuk-form-group') readonly govukFormGroupClass = true;
 
-  disabled: boolean;
+  protected readonly disabled = signal(false);
+
   valueTransform = transformPhoneInput;
 
   formGroup = new UntypedFormGroup({
@@ -52,34 +64,37 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
     number: new UntypedFormControl(),
   });
 
-  phoneCodes$: Observable<GovukSelectOption<string>[]> = of(this.countries).pipe(
-    map((countries) => {
-      const emptyOption: CountryOption[] = [{ text: '--', value: '' }];
-      const ukCountries: CountryOption[] = [];
-      const otherCountries: CountryOption[] = [];
+  protected readonly phoneCodes = computed<CountryOption[]>(() => {
+    const emptyOption: CountryOption = { text: '--', value: '', code: '' };
+    const ukCountries: CountryOption[] = [];
+    const otherCountries: CountryOption[] = [];
 
-      countries.forEach((country) => {
-        const callingCode = this.countryCallingCodeService.getCountryCallingCode(country.code);
+    this.countries().forEach((country) => {
+      const callingCode = this.countryCallingCodeService.getCountryCallingCode(country.code);
 
-        const option = {
-          text: `${UKCountryCodes.GB === country.code ? UKCountryCodes.UK : country.code} (${callingCode})`,
-          value: String(callingCode),
-        };
+      const option = {
+        text: `${UKCountryCodes.GB === country.code ? UKCountryCodes.UK : country.code} (${callingCode})`,
+        value: String(callingCode),
+        code: country.code,
+      };
 
-        if ([...UK_COUNTRY_CODES, 'GB'].includes(country.code)) {
-          ukCountries.push(option);
-        } else {
-          otherCountries.push(option);
-        }
-      });
+      if ([...UK_COUNTRY_CODES, 'GB'].includes(country.code)) {
+        ukCountries.push(option);
+      } else {
+        otherCountries.push(option);
+      }
+    });
 
-      return [...this.sortByProp(ukCountries, 'text'), ...emptyOption, ...this.sortByProp(otherCountries, 'text')];
-    }),
-  );
+    return [...this.sortByProp(ukCountries, 'text'), emptyOption, ...this.sortByProp(otherCountries, 'text')];
+  });
+
+  private readonly submitted = signal(false);
+  private readonly controlInvalid = signal(false);
+
+  protected readonly shouldDisplayErrors = computed(() => this.controlInvalid() && (!this.form || this.submitted()));
 
   onChange: (phone: PhoneNumberDTO) => void;
   onBlur: () => void;
-  private touch$ = new BehaviorSubject(false);
 
   constructor() {
     const ngControl = this.ngControl;
@@ -88,11 +103,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
   }
 
   @HostBinding('class.govuk-form-group--error') get govukFormGroupErrorClass() {
-    return this.shouldDisplayErrors;
-  }
-
-  get shouldDisplayErrors(): boolean {
-    return this.control?.invalid && (!this.form || this.form.submitted);
+    return this.shouldDisplayErrors();
   }
 
   get control(): UntypedFormControl {
@@ -111,25 +122,37 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
   }
 
   ngOnInit(): void {
+    this.controlInvalid.set(this.control?.invalid ?? false);
+
     this.formGroup.valueChanges
       .pipe(
         takeUntilDestroyed(this.destroy$),
         filter(() => !!this.onChange),
       )
-      .subscribe((value) => this.onChange({ countryCode: value.countryCode || null, number: value.number || null }));
-  }
+      .subscribe((value: { countryCode?: string; number?: string }) =>
+        this.onChange({ countryCode: value.countryCode || null, number: value.number || null }),
+      );
 
-  ngDoCheck(): void {
-    if (this.touch$.getValue() !== this.control.touched && this.control.touched) {
-      this.formGroup.markAllAsTouched();
-      this.touch$.next(this.control.touched);
-    }
+    // Bridge form-control state into signals so the OnPush template (and host bindings)
+    // update without manual change detection.
+    this.control?.statusChanges
+      .pipe(takeUntilDestroyed(this.destroy$))
+      .subscribe(() => this.controlInvalid.set(this.control.invalid));
+
+    this.form?.ngSubmit.pipe(takeUntilDestroyed(this.destroy$)).subscribe(() => this.submitted.set(true));
+
+    // Propagate the host control's touched state to the inner group (replaces ngDoCheck polling).
+    this.control?.events
+      .pipe(
+        takeUntilDestroyed(this.destroy$),
+        filter((event) => event instanceof TouchedChangeEvent && event.touched),
+      )
+      .subscribe(() => this.formGroup.markAllAsTouched());
   }
 
   onInputBlur(): void {
     if (Object.values(this.formGroup.controls).every((control) => control.touched)) {
       this.onBlur();
-      this.touch$.next(true);
     }
   }
 
@@ -149,7 +172,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    this.disabled.set(isDisabled);
   }
 
   sortByProp(items: CountryOption[], prop: keyof CountryOption) {

@@ -20,7 +20,12 @@ import { resetDeterminationStatus } from '../../../utils';
       heading="Explain why you are rejecting the application"
       (formSubmit)="submit()"
     >
-      <div govuk-textarea formControlName="reason" hint="This will be included in the official notice."></div>
+      <div
+        govuk-textarea
+        formControlName="reason"
+        label="Reason for rejecting the application"
+        hint="This will be included in the official notice."
+      ></div>
     </cca-wizard-step>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />

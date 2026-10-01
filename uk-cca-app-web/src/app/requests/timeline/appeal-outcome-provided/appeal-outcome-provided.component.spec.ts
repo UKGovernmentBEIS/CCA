@@ -37,7 +37,7 @@ describe('AppealOutcomeProvidedComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Was the appeal successful?', 'Date of appeal outcome', 'Uploaded files', 'Comments'],
-        ['Yes', '2 Mar 2025', 'Appeal_outcome_file.pdf', 'A Martini. Shaken, Not Stirred.'],
+        ['Yes', '2 Mar 2025', 'Appeal_outcome_file.pdf (opens in a new tab)', 'A Martini. Shaken, Not Stirred.'],
       ],
     ]);
   });

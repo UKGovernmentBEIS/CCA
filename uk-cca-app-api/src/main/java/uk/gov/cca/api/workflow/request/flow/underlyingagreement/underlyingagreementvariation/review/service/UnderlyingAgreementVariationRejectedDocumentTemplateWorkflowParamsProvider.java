@@ -9,7 +9,7 @@ import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransforma
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
-import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
+import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateSyncWorkflowParamsProvider;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider implements
-        DocumentTemplateWorkflowParamsProvider<UnderlyingAgreementVariationRequestPayload> {
+        DocumentTemplateSyncWorkflowParamsProvider<UnderlyingAgreementVariationRequestPayload> {
 
     private final DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
     private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;

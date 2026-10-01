@@ -6,6 +6,7 @@ import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   ConditionalContentDirective,
+  LegendContentDirective,
   RadioComponent,
   RadioOptionComponent,
   TextareaComponent,
@@ -31,6 +32,7 @@ import {
     RadioComponent,
     RadioOptionComponent,
     ConditionalContentDirective,
+    LegendContentDirective,
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],

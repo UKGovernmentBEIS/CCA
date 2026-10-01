@@ -10,7 +10,7 @@ import { SchemeVersion } from '@shared/types';
 import { underlyingAgreementQuery } from '../../+state/underlying-agreement.selectors';
 import { FacilityTargetCompositionFormModel } from '../../target-periods/types';
 import { measurementTypeValidator } from '../../target-periods/validators';
-import { UPLOAD_SECTION_ATTACHMENT_TYPE } from '../../types';
+import { getAttachmentType, UPLOAD_SECTION_ATTACHMENT_TYPE } from '../../types';
 
 export const TARGET_COMPOSITION_FORM = new InjectionToken<FacilityTargetCompositionFormModel>(
   'Facility target composition form',
@@ -49,7 +49,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.calculatorFile,
       attachments,
-      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       true,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

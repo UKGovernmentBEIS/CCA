@@ -103,8 +103,13 @@ describe('ItemActionTypePipe', () => {
     expect(pipe.transform('TARGET_UNIT_MOA_GENERATED')).toEqual('Subsistence fees payment request received');
 
     expect(pipe.transform('BUY_OUT_SURPLUS_RUN_SUBMITTED')).toEqual('Buy-out and surplus batch run submitted');
+    expect(pipe.transform('BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED')).toEqual('Buy-out and surplus batch run submitted');
     expect(pipe.transform('BUY_OUT_SURPLUS_RUN_COMPLETED')).toEqual('Buy-out and surplus batch run completed');
     expect(pipe.transform('BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES')).toEqual(
+      'Buy-out and surplus batch run completed with failures',
+    );
+    expect(pipe.transform('BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED')).toEqual('Buy-out and surplus batch run completed');
+    expect(pipe.transform('BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES')).toEqual(
       'Buy-out and surplus batch run completed with failures',
     );
 
@@ -125,6 +130,9 @@ describe('ItemActionTypePipe', () => {
     expect(pipe.transform('FACILITY_AUDIT_CANCELLED')).toEqual('Audit facility cancelled');
 
     expect(pipe.transform('REQUEST_TERMINATED')).toEqual('Workflow terminated by the system');
+    expect(pipe.transform('REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE')).toEqual(
+      'Workflow terminated by the system due to successful CSV update for the target period',
+    );
 
     expect(pipe.transform('CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED')).toEqual(
       'CCA2 Underlying agreement terminated',
@@ -171,6 +179,14 @@ describe('ItemActionTypePipe', () => {
       'Target period reporting submitted',
     );
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED')).toEqual('Target period reporting closed');
+
+    expect(pipe.transform('FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED')).toEqual(
+      'PAT reporting submitted',
+    );
+    expect(pipe.transform('FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED')).toEqual(
+      'PAT reporting submitted',
+    );
+    expect(pipe.transform('FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED')).toEqual('PAT reporting closed');
 
     expect(pipe.transform(undefined)).toEqual('Approved Application');
   });

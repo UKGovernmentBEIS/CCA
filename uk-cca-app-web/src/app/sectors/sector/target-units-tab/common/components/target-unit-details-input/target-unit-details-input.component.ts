@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
 import {
   ControlContainer,
   FormArray,
@@ -34,6 +34,7 @@ import { addSicCodeFormControl } from '../../utils';
     SelectComponent,
     ButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [existingControlContainer],
 })
 export class TargetUnitDetailsInputComponent implements OnInit {

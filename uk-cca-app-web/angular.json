@@ -44,7 +44,7 @@
               }
             ],
             "styles": ["node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.css", "src/styles.css"],
-            "allowedCommonJsDependencies": ["keycloak-js", "js-sha256", "google-libphonenumber"]
+            "allowedCommonJsDependencies": ["google-libphonenumber"]
           },
           "configurations": {
             "production": {
@@ -104,7 +104,7 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "buildTarget": "uk-cca-app-web:build:development",
-            "runnerConfig": "vitest.config.ts"
+            "runnerConfig": "vitest.config.mts"
           }
         },
         "lint": {

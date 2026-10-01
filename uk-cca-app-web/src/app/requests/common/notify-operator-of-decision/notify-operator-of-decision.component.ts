@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -13,6 +13,7 @@ import { CaExternalContactsService, RegulatorAuthoritiesService, TasksService } 
   selector: 'cca-notify-operator-of-decision',
   templateUrl: './notify-operator-of-decision.component.html',
   imports: [ReactiveFormsModule, CheckboxComponent, CheckboxesComponent, SelectComponent, NoticeRecipientsTypePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [existingControlContainer],
 })
 export class NotifyOperatorOfDecisionComponent {

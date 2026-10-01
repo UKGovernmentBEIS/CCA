@@ -1,8 +1,10 @@
-import { boolToString, OverallDecisionWizardStep } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
 import { VariationRegulatorLedDetermination } from 'cca-api';
+
+import { boolToString } from '../../utils';
+import { OverallDecisionWizardStep } from '../types';
 
 type ToOperatorAssentDecisionSummaryDataArgs = {
   determination: VariationRegulatorLedDetermination;

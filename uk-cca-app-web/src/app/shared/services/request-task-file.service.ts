@@ -6,7 +6,12 @@ import { Observable } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchTaskReassignedBadRequest } from '@error/business-errors';
-import { createCommonFileAsyncValidators, FileUploadEvent, FileUploadService } from '@shared/components';
+import {
+  createCommonFileAsyncValidators,
+  FileUploadEvent,
+  FileUploadService,
+  storedFileName,
+} from '@shared/components';
 import { requestTaskReassignedError } from '@shared/errors';
 
 import { FileUuidDTO, RequestTaskAttachmentActionProcessDTO, RequestTaskAttachmentsHandlingService } from 'cca-api';
@@ -64,7 +69,10 @@ export class RequestTaskFileService {
     // check common-tasks.store.ts
     return {
       uuid,
-      file: { name: attachments?.[uuid] } as File,
+      // The attachments map is not guaranteed to have an entry for the uuid. `UploadedFileRef.name`
+      // is typed as a string, so resolve it to an empty name rather than leaving it undefined: the
+      // file list renders `UNKNOWN_FILE_NAME` for it and payloads skip it instead of inventing a name.
+      file: { name: storedFileName(uuid, attachments) },
     };
   }
 

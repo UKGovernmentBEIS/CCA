@@ -9,3 +9,4 @@ export * from './latest-terms.service';
 export * from './latest-terms.store';
 export * from './request-task-file.service';
 export * from './file-evidence-upload.service';
+export * from './spreadsheet-export.service';

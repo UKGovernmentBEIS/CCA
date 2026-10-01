@@ -51,6 +51,20 @@ a[role='button'] {
   cursor: pointer;
 }
 
+/* Buttons styled as links (action buttons that look like govuk links) */
+button.govuk-link {
+  appearance: none;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  color: var(--govuk-link-colour);
+  text-align: inherit;
+}
+
 .pre-line {
   white-space: pre-line;
 }
@@ -112,4 +126,11 @@ a[role='button'] {
   span {
     margin-left: 15px;
   }
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 10px;
 }

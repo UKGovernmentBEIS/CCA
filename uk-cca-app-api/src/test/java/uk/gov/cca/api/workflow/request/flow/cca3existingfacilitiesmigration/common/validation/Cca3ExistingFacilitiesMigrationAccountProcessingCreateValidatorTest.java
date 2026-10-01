@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
 import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
+import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEmptyPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestCreateValidationResult;
 
 import java.util.List;
@@ -31,8 +32,9 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateValidatorTest {
     private RequestQueryService requestQueryService;
 
     @Test
-    void validateAction() {
+    void validateCreation() {
         final Long accountId = 1L;
+        final RequestCreateActionEmptyPayload payload =  new RequestCreateActionEmptyPayload();
 
         when(requestQueryService
                 .existsRequestByAccountAndType(accountId, CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING))
@@ -41,7 +43,7 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateValidatorTest {
                 .thenReturn(List.of());
 
         // Invoke
-        RequestCreateValidationResult result = validator.validateAction(accountId);
+        RequestCreateValidationResult result = validator.validateCreation(accountId, payload);
 
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder().valid(true).build());
@@ -53,13 +55,14 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateValidatorTest {
     @Test
     void validateAction_request_exist_not_valid() {
         final Long accountId = 1L;
+        final RequestCreateActionEmptyPayload payload =  new RequestCreateActionEmptyPayload();
 
         when(requestQueryService
                 .existsRequestByAccountAndType(accountId, CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING))
                 .thenReturn(true);
 
         // Invoke
-        RequestCreateValidationResult result = validator.validateAction(accountId);
+        RequestCreateValidationResult result = validator.validateCreation(accountId, payload);
 
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder()
@@ -72,8 +75,9 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateValidatorTest {
     }
 
     @Test
-    void validateAction_in_progress_exist_not_valid() {
+    void validateCreation_in_progress_exist_not_valid() {
         final Long accountId = 1L;
+        final RequestCreateActionEmptyPayload payload =  new RequestCreateActionEmptyPayload();
 
         when(requestQueryService
                 .existsRequestByAccountAndType(accountId, CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING))
@@ -82,7 +86,7 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateValidatorTest {
                 .thenReturn(List.of(Request.builder().type(RequestType.builder().code(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION).build()).build()));
 
         // Invoke
-        RequestCreateValidationResult result = validator.validateAction(accountId);
+        RequestCreateValidationResult result = validator.validateCreation(accountId, payload);
 
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder()
@@ -92,6 +96,17 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateValidatorTest {
         verify(requestQueryService, times(1))
                 .existsRequestByAccountAndType(accountId, CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING);
         verify(requestQueryService, times(1)).findInProgressRequestsByAccount(accountId);
+    }
+
+    @Test
+    void getApplicableAccountStatuses() {
+        assertThat(validator.getApplicableAccountStatuses()).isEmpty();
+    }
+
+    @Test
+    void getMutuallyExclusiveRequests() {
+        assertThat(validator.getMutuallyExclusiveRequests())
+                .containsExactlyInAnyOrder(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION, CcaRequestType.ADMIN_TERMINATION);
     }
 
     @Test

@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import {
+  getAttachmentType,
   measurementTypeValidator,
   normaliseNumber,
   targetCompositionConditionallyRequiredFieldsValidator,
@@ -50,7 +51,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.calculatorFile,
       attachments,
-      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       true,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -63,7 +64,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.conversionEvidences || [],
       attachments,
-      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

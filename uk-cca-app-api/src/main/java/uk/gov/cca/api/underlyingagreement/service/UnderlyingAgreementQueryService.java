@@ -30,7 +30,7 @@ import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementReposito
 import uk.gov.cca.api.underlyingagreement.transform.UnderlyingAgreementMapper;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class UnderlyingAgreementQueryService implements UnderlyingAgreementAutho
 
     private final UnderlyingAgreementRepository underlyingAgreementRepository;
     private final UnderlyingAgreementDocumentRepository underlyingAgreementDocumentRepository;
-    private final FileDocumentService fileDocumentService;
+    private final FileDocumentStorageService fileDocumentStorageService;
 
     private static final UnderlyingAgreementMapper UNA_MAPPER = Mappers.getMapper(UnderlyingAgreementMapper.class);
     private static final int BATCH_SIZE = 500;
@@ -134,6 +134,6 @@ public class UnderlyingAgreementQueryService implements UnderlyingAgreementAutho
     }
 
     private FileInfoDTO getFileInfoDTO(String uuid) {
-    	return Optional.ofNullable(uuid).map(fileDocumentService::getFileInfoDTO).orElse(null);
+    	return Optional.ofNullable(uuid).map(fileDocumentStorageService::getFileInfoDTO).orElse(null);
     }
 }

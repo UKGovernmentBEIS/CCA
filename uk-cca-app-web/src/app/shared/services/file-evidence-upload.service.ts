@@ -45,7 +45,7 @@ export class FileEvidenceUploadService {
   private buildFileEvent(uuid: string, name: string): FileUploadEvent {
     return {
       uuid,
-      file: { name } as File,
+      file: { name },
     };
   }
 

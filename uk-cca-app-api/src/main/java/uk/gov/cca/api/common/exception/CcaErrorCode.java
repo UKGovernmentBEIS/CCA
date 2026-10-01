@@ -118,6 +118,7 @@ public enum CcaErrorCode implements NetzErrorCode {
     INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_DATA("FPAT1001", HttpStatus.BAD_REQUEST, "Invalid Facility Performance Account Template CSV Form data"),
     INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_PROCESS_STATUS("FPAT1002", HttpStatus.BAD_REQUEST, "Facility Performance Account Template CSV is under process or process completed"),
     INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_FILE_TYPE("FPAT1003", HttpStatus.BAD_REQUEST, "Invalid file type"),
+    EXPIRED_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_SUBMISSION_DATE("FPAT1004", HttpStatus.BAD_REQUEST, "The PAT workflow has expired and can no longer be submitted"),
     ;
 
     private final String code;

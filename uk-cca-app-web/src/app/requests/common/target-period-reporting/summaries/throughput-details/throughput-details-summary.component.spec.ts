@@ -3,11 +3,11 @@ import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { roundHalfUpTo7Decimals } from '@requests/common';
 import { PaginationComponent } from '@shared/components';
 
 import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
 
+import { roundHalfUpTo7Decimals } from '../../utils';
 import { ThroughputDetailsSummaryComponent } from './throughput-details-summary.component';
 
 describe('ThroughputDetailsSummaryComponent', () => {

@@ -1,7 +1,7 @@
 import { ErrorSummaryInfo } from '@shared/components';
 
 export type TpReportingErrorCode = 'TPRDF1001' | 'TPRDF1002' | 'TPRDF1003' | 'TPRDF1004' | 'TPRDF1005' | 'TPRDF1009';
-export type TpReportingSubmitErrorCode = 'TPRDF1002' | 'TPRDF1004' | 'TPRDF1005' | 'TPRDF1008';
+export type TpReportingSubmitErrorCode = 'TPRDF1002' | 'TPRDF1004' | 'TPRDF1005' | 'TPRDF1006' | 'TPRDF1008';
 export type TpReportingRefreshErrorCode = 'TPRDF1002' | 'TPRDF1004' | 'TPRDF1005' | 'TPRDF1008' | 'TPRDF1009';
 
 export const TP_REPORTING_PRODUCTS_NOT_ELIGIBLE_MESSAGE =
@@ -35,6 +35,11 @@ export const TP_REPORTING_SUBMIT_ERROR_MESSAGES = {
     message: TP_REPORTING_PRODUCTS_NOT_ELIGIBLE_MESSAGE,
     link: '../../cancel',
     linkText: 'Go to cancel task',
+  },
+  TPRDF1006: {
+    message: 'Some of the information you entered could not be validated. Please check your entries and try again.',
+    link: '',
+    linkText: '',
   },
   TPRDF1008: {
     message:

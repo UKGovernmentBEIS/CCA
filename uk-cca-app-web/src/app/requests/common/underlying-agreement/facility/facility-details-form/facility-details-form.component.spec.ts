@@ -1,19 +1,20 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { mockRequestTaskState } from '@requests/common';
 
+import { mockRequestTaskState } from '../../testing/mock-data';
 import { FacilityDetailsFormComponent } from './facility-details-form.component';
 import { FACILITY_DETAILS_FORM } from './facility-details-form.provider';
 
 @Component({
   template: `<form [formGroup]="form"><cca-facility-details-form /></form>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FacilityDetailsFormComponent, ReactiveFormsModule],
 })
 class TestHostComponent {
@@ -30,7 +31,7 @@ describe('FacilityDetailsFormComponent', () => {
       imports: [FacilityDetailsFormComponent, ReactiveFormsModule],
       providers: [
         RequestTaskStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: FACILITY_DETAILS_FORM,

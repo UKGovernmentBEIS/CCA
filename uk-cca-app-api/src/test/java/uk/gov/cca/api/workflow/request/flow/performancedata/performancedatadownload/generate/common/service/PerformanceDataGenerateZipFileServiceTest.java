@@ -18,7 +18,6 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -46,9 +45,8 @@ class PerformanceDataGenerateZipFileServiceTest {
     private CcaFileAttachmentService ccaFileAttachmentService;
 
     @Test
-    void generateZipFile() throws IOException {
+    void generateZipFile() {
         final String requestId = "requestId";
-        final String sectorUserAssignee = "sector";
         final String file1 = "file1";
         final String file2 = "file2";
         final String fileZip = "fileZip";
@@ -63,7 +61,7 @@ class PerformanceDataGenerateZipFileServiceTest {
                                 1L, TargetUnitAccountReport.builder().succeeded(true).fileInfo(FileInfoDTO.builder().uuid(file1).build()).build(),
                                 2L, TargetUnitAccountReport.builder().succeeded(true).fileInfo(FileInfoDTO.builder().uuid(file2).build()).build()
                         ))
-                        .sectorUserAssignee(sectorUserAssignee)
+                        .sectorUserAssignee("sector")
                         .build())
                 .build();
 
@@ -74,7 +72,7 @@ class PerformanceDataGenerateZipFileServiceTest {
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(fileAttachmentService.getFilesAsStream(Set.of(file1, file2))).thenReturn(fileStream);
-        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(sectorUserAssignee)))
+        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED)))
                 .thenReturn(fileZip);
 
         // Invoke
@@ -85,6 +83,6 @@ class PerformanceDataGenerateZipFileServiceTest {
         verify(requestService, times(1)).findRequestById(requestId);
         verify(fileAttachmentService, times(1)).getFilesAsStream(Set.of(file1, file2));
         verify(ccaFileAttachmentService, times(1))
-                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(sectorUserAssignee));
+                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED));
     }
 }

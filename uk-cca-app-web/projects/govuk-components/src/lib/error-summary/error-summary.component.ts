@@ -117,16 +117,18 @@ export class ErrorSummaryComponent implements OnChanges, AfterViewInit {
   };
 
   private getAbstractControlErrors(control: AbstractControl, path: string[] = []): NestedMessageValidationErrors {
-    let childControlErrors;
+    let childControlErrors: Record<string, NestedMessageValidationErrors>;
 
     if (control instanceof UntypedFormGroup) {
       childControlErrors = Object.entries(control.controls)
         .map(([key, value]) => ({ [key]: this.getAbstractControlErrors(value, path.concat([key])) }))
         .reduce((errors, controlErrors) => ({ ...errors, ...controlErrors }), {});
     } else if (control instanceof UntypedFormArray) {
-      childControlErrors = control.controls.map((arrayControlItem, index) =>
-        this.getAbstractControlErrors(arrayControlItem, path.concat([String(index)])),
-      );
+      childControlErrors = control.controls
+        .map((arrayControlItem, index) => ({
+          [index]: this.getAbstractControlErrors(arrayControlItem, path.concat([String(index)])),
+        }))
+        .reduce((errors, controlErrors) => ({ ...errors, ...controlErrors }), {});
     }
 
     return {

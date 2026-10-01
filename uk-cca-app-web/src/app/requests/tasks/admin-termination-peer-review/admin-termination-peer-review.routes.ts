@@ -5,6 +5,7 @@ import { userIsAssigneeGuard } from 'src/app/shared/guards/user-is-assignee.guar
 export const ADMIN_TERMINATION_PEER_REVIEW_ROUTES: Routes = [
   {
     path: '',
+    title: 'Peer review admin termination request',
     children: [
       {
         path: 'reason-for-admin-termination',

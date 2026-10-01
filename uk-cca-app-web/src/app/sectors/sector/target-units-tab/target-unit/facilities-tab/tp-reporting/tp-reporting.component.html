@@ -14,12 +14,16 @@
       <li>TP9 final report from 1 January 2031</li>
     </ul>
 
-    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Select target period</h2>
     <p class="govuk-hint govuk-!-margin-top-1">
       Choose the preferred target period from the options that are currently available.
     </p>
 
-    <div [options]="availablePeriodTypes" formControlName="targetPeriodType" govuk-select></div>
+    <div
+      [options]="availablePeriodTypes"
+      formControlName="targetPeriodType"
+      govuk-select
+      label="Select target period"
+    ></div>
 
     <govuk-details summary="The target period I need isn't displayed">
       <p>

@@ -33,6 +33,7 @@ public interface PerformanceDataFacilityReferenceDataMapper {
         if(!ObjectUtils.isEmpty(baselineTargets.getVariableEnergyConsumptionDataByProduct())) {
             List<ProductVariableEnergyConsumptionData> products = baselineTargets.getVariableEnergyConsumptionDataByProduct().stream()
                     .filter(p -> p.getBaselineYear().getValue() <= targetPeriodYear.getValue())
+                    .filter(p -> p.getBaselineYear().getValue() >= baselineTargets.getBaselineYear().getValue())
                     .toList();
             baselineTargets.setVariableEnergyConsumptionDataByProduct(products);
         }

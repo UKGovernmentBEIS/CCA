@@ -9,7 +9,9 @@
 
     @if (isEditable()) {
       <dd govukSummaryListRowActions>
-        <a class="govuk-link" routerLink="../has-actions" [queryParams]="{ change: true }">Change</a>
+        <a class="govuk-link" routerLink="../has-actions" [queryParams]="{ change: true }">
+          Change<span class="govuk-visually-hidden"> corrective actions</span>
+        </a>
       </dd>
     }
   </div>
@@ -24,20 +26,20 @@
 
           <div class="govuk-grid-column-one-quarter govuk-!-text-align-right govuk-!-padding-right-0">
             @if (isEditable()) {
-              <a class="govuk-link" routerLink="../actions" [queryParams]="{ change: true }"> Change </a>
+              <a class="govuk-link" routerLink="../actions" [queryParams]="{ change: true }">
+                Change<span class="govuk-visually-hidden"> corrective action {{ i + 1 }}</span>
+              </a>
             }
 
             @if (correctiveActions()?.actions.length > 1 && isEditable()) {
               <span> | </span>
-              <a
-                class="govuk-link"
+              <button
+                type="button"
+                class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
                 (click)="onRemoveAction(i)"
-                (keydown)="onRemoveAction(i)"
-                role="button"
-                tabindex="0"
               >
                 Remove
-              </a>
+              </button>
             }
           </div>
         </div>
@@ -53,7 +55,7 @@
           <div govukSummaryListRow>
             <dt govukSummaryListRowKey>Corrective action deadline</dt>
             <dd govukSummaryListRowValue>
-              <span>{{ action?.deadline | date: 'dd MMM yyyy' }}</span>
+              <span>{{ $safeNavigationMigration(action?.deadline) | date: 'dd MMM yyyy' }}</span>
             </dd>
           </div>
         </dl>

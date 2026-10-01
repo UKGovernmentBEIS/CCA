@@ -25,9 +25,9 @@ export const VariationDetailsFormProvider: Provider = {
   useFactory: (fb: FormBuilder, requestTaskStore: RequestTaskStore) => {
     const variationDetails = requestTaskStore.select(underlyingAgreementVariationQuery.selectVariationDetails)();
 
-    let requireOperatorAssent = [];
-    let dontRequireOperatorAssent = [];
-    let otherChanges = [];
+    let requireOperatorAssent: UnderlyingAgreementVariationDetails['modifications'] = [];
+    let dontRequireOperatorAssent: UnderlyingAgreementVariationDetails['modifications'] = [];
+    let otherChanges: UnderlyingAgreementVariationDetails['modifications'] = [];
 
     if (variationDetails?.modifications?.length) {
       requireOperatorAssent = requireOperatorAssentTypes.filter((c) => variationDetails.modifications.includes(c));

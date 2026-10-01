@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -28,7 +28,7 @@ describe('DocumentsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DocumentsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: DocumentTemplatesService, useValue: documentTemplatesService },
@@ -64,6 +64,11 @@ describe('DocumentsComponent', () => {
   it('should render pagination when templates are available', () => {
     const pagination = fixture.debugElement.query(By.css('cca-pagination'));
     expect(pagination).toBeTruthy();
+  });
+
+  it('should render the results status region when templates are available', () => {
+    const statusRegion = fixture.debugElement.query(By.css('p[role="status"]'));
+    expect(statusRegion.nativeElement.textContent.trim()).toBe(`${mockDocumentTemplateSearchResults.total} results`);
   });
 
   it('should render no results message when no templates', () => {

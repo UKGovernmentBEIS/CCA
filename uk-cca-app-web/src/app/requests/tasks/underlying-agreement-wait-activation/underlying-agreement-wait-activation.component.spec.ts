@@ -28,6 +28,6 @@ describe('UnderlyingAgreementWaitActivationComponent', () => {
   });
 
   it('should show content', () => {
-    expect(page.warningText).toEqual(`!Waiting for the operator's assent/activation`);
+    expect(page.warningText).toEqual(`!WarningWaiting for the operator's assent/activation`);
   });
 });

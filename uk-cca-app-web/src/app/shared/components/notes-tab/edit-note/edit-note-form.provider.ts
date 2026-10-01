@@ -31,10 +31,7 @@ export const EditNoteFormProvider: Provider = {
 
     const attachments = note?.payload?.files ?? {};
 
-    const prepopulatedFiles: FileUploadEvent[] = fileUtils.toFiles(
-      Object.keys(attachments),
-      attachments,
-    ) as FileUploadEvent[];
+    const prepopulatedFiles: FileUploadEvent[] = fileUtils.toFiles(Object.keys(attachments), attachments);
 
     const filesControl = fb.control<FileUploadEvent[]>(prepopulatedFiles, {
       asyncValidators: [

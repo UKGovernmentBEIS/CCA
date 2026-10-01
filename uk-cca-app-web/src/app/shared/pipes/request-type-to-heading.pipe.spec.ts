@@ -30,6 +30,9 @@ describe('RequestTypeToHeadingPipe', () => {
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DIGITAL_FORM')).toEqual('Target period report');
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DATA_UPLOAD')).toEqual('Target period report');
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_PROCESSING')).toEqual('Target period report');
+
+    expect(pipe.transform('FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD')).toEqual('PAT report');
+    expect(pipe.transform('FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING')).toEqual('PAT report');
   });
 
   it('should transform PERFORMANCE_DATA_SPREADSHEET_PROCESSING with metadata', () => {

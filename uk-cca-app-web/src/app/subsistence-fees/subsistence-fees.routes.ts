@@ -6,6 +6,7 @@ import { SubsistenceFeesStore } from './subsistence-fees.store';
 export const SUBSISTENCE_FEES_ROUTES: Routes = [
   {
     path: '',
+    title: 'Subsistence fees',
     providers: [SubsistenceFeesStore],
     canDeactivate: [
       () => {
@@ -17,6 +18,7 @@ export const SUBSISTENCE_FEES_ROUTES: Routes = [
   },
   {
     path: 'new-payment-request',
+    title: 'New payment request',
     data: {
       breadcrumb: {
         text: 'Subsistence fees',
@@ -48,10 +50,12 @@ export const SUBSISTENCE_FEES_ROUTES: Routes = [
   },
   {
     path: 'confirmation',
+    title: 'Payment requests process in progress',
     loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
   },
   {
     path: 'request-error',
+    title: 'New payment request',
     loadComponent: () => import('./request-error/request-error.component').then((c) => c.RequestErrorComponent),
   },
 ];

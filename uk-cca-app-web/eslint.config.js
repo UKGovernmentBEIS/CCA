@@ -166,21 +166,22 @@ module.exports = tseslint.config(
       ...angular.configs.tsRecommended,
     ],
     rules: {
+      // Generated code: the auto-fixer cannot resolve the `<any>` casts used
+      // for query/form parameter plumbing. Every other rule stays enabled and
+      // is fixed by the `ng lint --fix` step in postgenerate:api.
       '@typescript-eslint/no-explicit-any': 'off',
-      'no-useless-escape': 'off',
-      'no-control-regex': 'off',
-      'no-unused-vars': 'off', // or "@typescript-eslint/no-unused-vars": "off",
       'unused-imports/no-unused-imports': 'error',
-      '@angular-eslint/prefer-inject': 'off',
-      'unused-imports/no-unused-vars': [
-        'warn',
+      'simple-import-sort/imports': [
+        'error',
         {
-          vars: 'all',
-          varsIgnorePattern: '^_',
-          args: 'after-used',
-          argsIgnorePattern: '^_',
+          groups: [['(@angular)(/.*|$)'], ['(rxjs)(/.*|$)'], ['()(/.*|$)'], ['^cca-api'], ['^[.].*']],
         },
       ],
     },
+  },
+  {
+    files: ['vitest.config.mts'],
+    extends: [eslint.configs.recommended, ...tseslint.configs.recommended],
+    rules: {},
   },
 );

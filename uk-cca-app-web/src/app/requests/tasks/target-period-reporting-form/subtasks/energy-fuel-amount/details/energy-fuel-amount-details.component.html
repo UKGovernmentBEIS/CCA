@@ -61,7 +61,13 @@
               @switch (column.field) {
                 @case ('fuelType') {
                   @if (row.value.isCustom) {
-                    <div cca-text-input formControlName="fuelType" class="govuk-!-margin-bottom-0"></div>
+                    <div
+                      cca-text-input
+                      formControlName="fuelType"
+                      [label]="column.header"
+                      [labelHidden]="true"
+                      class="govuk-!-margin-bottom-0"
+                    ></div>
                   } @else {
                     <strong>{{ row.value[column.field] }}</strong>
                   }
@@ -69,7 +75,13 @@
 
                 @case ('co2ConversionFactor') {
                   @if (row.value.isCustom) {
-                    <div cca-text-input formControlName="co2ConversionFactor" class="govuk-!-margin-bottom-0"></div>
+                    <div
+                      cca-text-input
+                      formControlName="co2ConversionFactor"
+                      [label]="column.header"
+                      [labelHidden]="true"
+                      class="govuk-!-margin-bottom-0"
+                    ></div>
                   } @else {
                     {{ row.value[column.field] | number: '1.0-7' }}
                   }
@@ -79,6 +91,8 @@
                   <div
                     cca-text-input
                     formControlName="deliveredEnergy"
+                    [label]="column.header"
+                    [labelHidden]="true"
                     [suffix]="resolvedMeasurementUnit()"
                     class="govuk-!-margin-bottom-0"
                   ></div>
@@ -112,16 +126,14 @@
                 @case ('actions') {
                   @if (row.value.isCustom) {
                     <div class="govuk-!-text-align-center">
-                      <a
-                        class="govuk-!-padding-left-1 govuk-link"
-                        role="button"
-                        tabindex="0"
+                      <button
+                        type="button"
+                        govukSecondaryButton
+                        class="govuk-!-margin-bottom-0"
                         (click)="onRemoveFuel(index)"
-                        (keydown.enter)="onRemoveFuel(index)"
-                        (keydown.space)="onRemoveFuel(index)"
                       >
                         Delete
-                      </a>
+                      </button>
                     </div>
                   }
                 }

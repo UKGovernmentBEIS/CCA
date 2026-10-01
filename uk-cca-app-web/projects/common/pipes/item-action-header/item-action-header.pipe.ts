@@ -25,6 +25,7 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
     case 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED':
     case 'SUBSISTENCE_FEES_RUN_SUBMITTED':
     case 'BUY_OUT_SURPLUS_RUN_SUBMITTED':
+    case 'BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED':
     case 'SECTOR_MOA_GENERATED':
     case 'ADMIN_TERMINATION_PEER_REVIEW_REQUESTED':
     case 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW_REQUESTED':
@@ -67,6 +68,9 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
     case 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED':
     case 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED':
     case 'PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED':
+    case 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED':
+    case 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED':
+    case 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED':
       return `${ItemActionEnum[item.type as string]} by ${item.submitter}`;
 
     case 'UNDERLYING_AGREEMENT_APPLICATION_MIGRATED':
@@ -80,8 +84,10 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
       return 'Subsistence fees payment request received';
 
     case 'BUY_OUT_SURPLUS_RUN_COMPLETED':
+    case 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED':
       return 'Buy-out and surplus batch run completed';
     case 'BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES':
+    case 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES':
       return 'Buy-out and surplus batch run completed with failures';
     case 'TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED':
       return 'Buy-out fee calculated';

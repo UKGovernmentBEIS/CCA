@@ -64,7 +64,7 @@ export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
   }
 
   private getAbstractControlErrors(control: AbstractControl, path: string[] = []): NestedMessageValidationError[] {
-    let childControlErrors = [];
+    let childControlErrors: NestedMessageValidationError[] = [];
 
     if (control instanceof UntypedFormGroup) {
       childControlErrors = Object.entries(control.controls)

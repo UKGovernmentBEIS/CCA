@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { getByTestId, queryByText } from '@testing';
+import { assertInCellControlLabelsHidden, getByTestId, queryByText } from '@testing';
 import { Mocked } from 'vitest';
 
 import { OperatorAuthoritiesInfoDTO, OperatorAuthoritiesService } from 'cca-api';
@@ -26,7 +26,7 @@ describe('Target unit Users component', () => {
     await TestBed.configureTestingModule({
       imports: [UsersAndContactsTabComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
@@ -43,6 +43,11 @@ describe('Target unit Users component', () => {
     await setup(mockOperatorAuthorities);
     expect(getByTestId('target-unit-users-form')).toBeTruthy();
     expect(document.querySelectorAll('.govuk-table__row').length).toBe(mockOperatorAuthorities.authorities.length + 1);
+  });
+
+  it('should hide the labels of controls inside table cells, since the column header names them', async () => {
+    await setup(mockOperatorAuthorities);
+    assertInCellControlLabelsHidden(fixture.nativeElement);
   });
 
   it('should NOT show add operator button if NOT editable (only Regulator user allowed)', async () => {

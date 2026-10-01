@@ -1,5 +1,5 @@
-import { provideHttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { provideHttpClient, withXhr } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -17,7 +17,7 @@ import { TasksService } from 'cca-api';
 import { mockTrackCorrectiveActionsState } from '../../../testing/mock-data';
 import { TrackCorrectiveActionsDetailsComponent } from './track-corrective-actions-details.component';
 
-@Component({ template: '' })
+@Component({ changeDetection: ChangeDetectionStrategy.OnPush, template: '' })
 class DummyComponent {}
 
 describe('TrackCorrectiveActionsDetailsComponent', () => {
@@ -48,7 +48,7 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TrackCorrectiveActionsDetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideRouter([{ path: '**', component: DummyComponent }]),
         RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },

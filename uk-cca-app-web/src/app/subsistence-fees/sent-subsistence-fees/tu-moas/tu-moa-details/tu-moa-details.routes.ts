@@ -8,6 +8,7 @@ import { canActivateMarkFacilitiesGuard } from './mark-facilities/mark-facilitie
 export const TARGET_UNIT_MOA_DETAILS_ROUTES: Routes = [
   {
     path: '',
+    title: 'Target unit MoA',
     loadComponent: () => import('./tu-moa-details.component').then((c) => c.TuMoaDetailsComponent),
   },
   {

@@ -6,7 +6,7 @@
 
   @if (isEditable()) {
     <div class="govuk-grid-column-one-quarter" style="text-align: end">
-      <button [routerLink]="['add']" govukSecondaryButton type="button">Add facility</button>
+      <a [routerLink]="['add']" govukSecondaryButton>Add facility</a>
     </div>
   }
 </div>
@@ -96,7 +96,7 @@
 
           @if (manageFacilities()?.length >= filtersAndPaginationLimit) {
             <cca-pagination
-              [count]="filteredItems()?.length"
+              [count]="$safeNavigationMigration(filteredItems()?.length)"
               [currentPage]="currentPage()"
               [pageSize]="pageSize()"
               (pageChange)="onPageChange($event)"

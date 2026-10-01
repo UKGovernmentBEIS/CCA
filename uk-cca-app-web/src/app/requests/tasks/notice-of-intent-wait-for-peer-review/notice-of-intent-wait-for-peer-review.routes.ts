@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export const NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW_ROUTES: Routes = [
   {
     path: '',
+    title: 'Notice of intent sent for peer review',
     children: [
       {
         path: 'upload-notice-of-intent',

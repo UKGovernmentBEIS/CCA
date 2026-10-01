@@ -31,7 +31,7 @@ import uk.gov.netz.api.account.domain.dto.AccountInfoDTO;
 import uk.gov.netz.api.account.service.AccountQueryService;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -57,7 +57,7 @@ class SubsistenceFeesMoaQueryServiceTest {
     private SubsistenceFeesMoaRepository subsistenceFeesMoaRepository;
 
     @Mock
-    private FileDocumentService fileDocumentService;
+    private FileDocumentStorageService fileDocumentStorageService;
 
     @Mock
     private SectorAssociationQueryService sectorAssociationQueryService;
@@ -157,7 +157,7 @@ class SubsistenceFeesMoaQueryServiceTest {
 
         when(subsistenceFeesMoaRepository.getMoaDetailsById(moaId)).thenReturn(Optional.of(moaDetails));
         when(sectorAssociationQueryService.getSectorAssociationInfoNameDTO(1L)).thenReturn(sectorDTO);
-        when(fileDocumentService.getFileInfoDTO("uuid")).thenReturn(fileInfoDTO);
+        when(fileDocumentStorageService.getFileInfoDTO("uuid")).thenReturn(fileInfoDTO);
 
         // invoke
         SubsistenceFeesMoaDetailsDTO subsistenceFeesRunMoaDetailsDTO =
@@ -166,7 +166,7 @@ class SubsistenceFeesMoaQueryServiceTest {
         // verify
         verify(subsistenceFeesMoaRepository, times(1)).getMoaDetailsById(moaId);
         verify(sectorAssociationQueryService, times(1)).getSectorAssociationInfoNameDTO(1L);
-        verify(fileDocumentService, times(1)).getFileInfoDTO("uuid");
+        verify(fileDocumentStorageService, times(1)).getFileInfoDTO("uuid");
         verifyNoInteractions(accountQueryService);
         assertThat(subsistenceFeesRunMoaDetailsDTO).isEqualTo(expectedDTO);
     }
@@ -185,7 +185,7 @@ class SubsistenceFeesMoaQueryServiceTest {
 
         when(subsistenceFeesMoaRepository.getMoaDetailsById(moaId)).thenReturn(Optional.of(moaDetails));
         when(accountQueryService.getAccountInfoDTOById(1L)).thenReturn(accountDTO);
-        when(fileDocumentService.getFileInfoDTO("uuid")).thenReturn(fileInfoDTO);
+        when(fileDocumentStorageService.getFileInfoDTO("uuid")).thenReturn(fileInfoDTO);
 
         // invoke
         SubsistenceFeesMoaDetailsDTO subsistenceFeesRunMoaDetailsDTO =
@@ -194,7 +194,7 @@ class SubsistenceFeesMoaQueryServiceTest {
         // verify
         verify(subsistenceFeesMoaRepository, times(1)).getMoaDetailsById(moaId);
         verify(accountQueryService, times(1)).getAccountInfoDTOById(1L);
-        verify(fileDocumentService, times(1)).getFileInfoDTO("uuid");
+        verify(fileDocumentStorageService, times(1)).getFileInfoDTO("uuid");
         verifyNoInteractions(sectorAssociationQueryService);
         assertThat(subsistenceFeesRunMoaDetailsDTO).isEqualTo(expectedDTO);
     }

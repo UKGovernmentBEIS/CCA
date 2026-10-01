@@ -6,11 +6,12 @@
   data-testid="exclude-facility-form"
   submitText="Confirm and continue"
 >
-  <h2 class="govuk-heading-m govuk-!-margin-top-6">
-    Do you want to change the subsistence charge start date from the default?
-  </h2>
-
-  <div govuk-radio formControlName="hasChargeStartDate">
+  <div
+    govuk-radio
+    formControlName="hasChargeStartDate"
+    legend="Do you want to change the subsistence charge start date from the default?"
+    legendSize="medium"
+  >
     <govuk-radio-option label="Yes" [value]="true">
       <ng-container govukConditionalContent>
         <div

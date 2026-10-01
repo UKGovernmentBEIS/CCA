@@ -31,7 +31,9 @@ import { RequestTaskPayload } from 'cca-api';
     }
 
     @if (payload()?.reportType) {
-      <p class="govuk-body"><strong>Target period report type:</strong> {{ payload()?.reportType | titlecase }}</p>
+      <p class="govuk-body">
+        <strong>Target period report type:</strong> {{ $safeNavigationMigration(payload()?.reportType) | titlecase }}
+      </p>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

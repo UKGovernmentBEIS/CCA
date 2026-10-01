@@ -1,6 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { GovukSelectOption } from '@netz/govuk-components';
 
@@ -9,9 +9,10 @@ import { ComboboxComponent } from './combobox.component';
 @Component({
   template: `
     <form [formGroup]="form">
-      <cca-combobox formControlName="item" [options]="options()" />
+      <cca-combobox formControlName="item" [options]="options()" [label]="label()" [labelHidden]="labelHidden()" />
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, ComboboxComponent],
 })
 class TestHostComponent {
@@ -24,6 +25,9 @@ class TestHostComponent {
     { value: 'FAC-002', text: 'Beta facility' },
     { value: 'FAC-003', text: 'Gamma facility' },
   ]);
+
+  label = signal<string | undefined>(undefined);
+  labelHidden = signal(false);
 }
 
 describe('ComboboxComponent', () => {
@@ -73,6 +77,30 @@ describe('ComboboxComponent', () => {
 
   it('renders the combobox input', () => {
     expect(getInput()).toBeTruthy();
+  });
+
+  it('does not render a label when none is provided', () => {
+    expect(fixture.nativeElement.querySelector('label')).toBeNull();
+  });
+
+  it('renders the label visibly when one is provided', () => {
+    hostComponent.label.set('Item name');
+    fixture.detectChanges();
+
+    const label = fixture.nativeElement.querySelector('label') as HTMLLabelElement;
+    expect(label.textContent.trim()).toBe('Item name');
+    expect(label.classList.contains('govuk-visually-hidden')).toBe(false);
+  });
+
+  it('hides the label when labelHidden is set, keeping it associated with the input', () => {
+    hostComponent.label.set('Item name');
+    hostComponent.labelHidden.set(true);
+    fixture.detectChanges();
+
+    const label = fixture.nativeElement.querySelector('label') as HTMLLabelElement;
+    expect(label.textContent.trim()).toBe('Item name');
+    expect(label.classList.contains('govuk-visually-hidden')).toBe(true);
+    expect(getInput().id).toBe(label.getAttribute('for'));
   });
 
   it('opens dropdown on focus and shows all options', async () => {
@@ -307,5 +335,85 @@ describe('ComboboxComponent', () => {
 
     const optionTexts = getOptions().map((o) => o.textContent?.trim());
     expect(optionTexts).toEqual(['ADS_1-FAC000123', 'ADS_1-FAC000124', 'ADS_1-FAC000125']);
+  });
+});
+
+@Component({
+  template: `
+    <form [formGroup]="form">
+      <cca-combobox formControlName="item" [options]="options()" [label]="label()" />
+    </form>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, ComboboxComponent],
+})
+class LabelledTestHostComponent {
+  form = new FormGroup({
+    item: new FormControl<string | null>(null, Validators.required),
+  });
+
+  options = signal<GovukSelectOption<string | null>[]>([{ value: 'FAC-001', text: 'Alpha facility' }]);
+  label = signal('Choose a facility');
+}
+
+describe('ComboboxComponent accessibility wiring', () => {
+  let fixture: ComponentFixture<LabelledTestHostComponent>;
+  let hostComponent: LabelledTestHostComponent;
+
+  const getInput = () => fixture.nativeElement.querySelector('input[role="combobox"]') as HTMLInputElement;
+  const getLabel = () => fixture.nativeElement.querySelector('label') as HTMLLabelElement | null;
+  const getError = () => fixture.nativeElement.querySelector('.govuk-error-message') as HTMLElement | null;
+
+  const submitForm = () => {
+    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [LabelledTestHostComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(LabelledTestHostComponent);
+    hostComponent = fixture.componentInstance;
+
+    fixture.detectChanges();
+  });
+
+  it('renders a label whose for attribute matches the combobox input id', () => {
+    const input = getInput();
+    const label = getLabel();
+
+    expect(label).toBeTruthy();
+    expect(label.getAttribute('for')).toBe(input.id);
+    expect(label.getAttribute('for')).toBe('item');
+    expect(label.id).toBe(`l.${input.id}`);
+    expect(label.textContent?.trim()).toBe('Choose a facility');
+  });
+
+  it('does not set aria-describedby when no error message is rendered', () => {
+    expect(getInput().hasAttribute('aria-describedby')).toBe(false);
+    expect(getError()).toBeNull();
+  });
+
+  it('sets aria-describedby to the error message id once an invalid control is submitted', () => {
+    submitForm();
+
+    const input = getInput();
+    const error = getError();
+
+    expect(error).toBeTruthy();
+    expect(error.id).toBe(`${input.id}-error`);
+    expect(input.getAttribute('aria-describedby')).toBe(`${input.id}-error`);
+  });
+
+  it('removes aria-describedby when the error clears', () => {
+    submitForm();
+
+    hostComponent.form.controls.item.setValue('FAC-001');
+    fixture.detectChanges();
+
+    expect(getInput().hasAttribute('aria-describedby')).toBe(false);
+    expect(getError()).toBeNull();
   });
 });

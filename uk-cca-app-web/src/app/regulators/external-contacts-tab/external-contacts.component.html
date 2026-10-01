@@ -1,5 +1,5 @@
 @if (isEditable()) {
-  <button [routerLink]="['external-contacts', 'add']" govukButton type="button">Add an external contact</button>
+  <a [routerLink]="['external-contacts', 'add']" govukButton>Add an external contact</a>
 }
 <govuk-table
   (sort)="sorting.set($event)"

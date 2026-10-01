@@ -55,9 +55,9 @@ describe('NoticeOfIntentSummaryComponent', () => {
     fixture.detectChanges();
 
     expect(getByText('Summary', fixture.nativeElement)).toBeTruthy();
-    expect(getByText('existing-notice.pdf', fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/existing-notice\.pdf/, fixture.nativeElement)).toBeTruthy();
     expect(getByText('Existing comments', fixture.nativeElement)).toBeTruthy();
-    expect(getByText('Change', fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/^Change\s/, fixture.nativeElement)).toBeTruthy();
   });
 
   it('should render summary content without change links for read-only tasks', () => {

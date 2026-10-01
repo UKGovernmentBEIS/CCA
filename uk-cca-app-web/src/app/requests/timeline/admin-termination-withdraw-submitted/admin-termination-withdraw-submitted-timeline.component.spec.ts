@@ -37,14 +37,14 @@ describe('AdminTerminationWithdrawSubmittedTimelineComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Explain why you are withdrawing the admin termination', 'Uploaded files'],
-        ['erhserseresrg', 'METS Project Retro.xlsx'],
+        ['erhserseresrg', 'METS Project Retro.xlsx (opens in a new tab)'],
       ],
       [
         ['Users', 'Name and signature on the official notice', 'Official notice'],
         [
           'oper3 user, Responsible person, oper3@cca.uka-fname lname, Administrative contact, test-admin@test.comFred_1 William_1, Sector contact, fredwilliam_1@agindustries.org.uk',
           'Regulator England',
-          'Withdrawal of intent to terminate agreement.pdf',
+          'Withdrawal of intent to terminate agreement.pdf (opens in a new tab)',
         ],
       ],
     ]);

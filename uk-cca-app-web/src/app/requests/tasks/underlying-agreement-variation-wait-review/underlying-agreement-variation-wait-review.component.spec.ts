@@ -23,6 +23,6 @@ describe('UnderlyingAgreementVariationWaitReviewComponent', () => {
   });
 
   it('should show content', () => {
-    expect(getByText('Waiting for the regulator to complete the review', fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/Waiting for the regulator to complete the review/, fixture.nativeElement)).toBeTruthy();
   });
 });

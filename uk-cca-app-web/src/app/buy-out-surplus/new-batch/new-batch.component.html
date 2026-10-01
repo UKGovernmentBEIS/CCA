@@ -1,11 +1,81 @@
+@if (errorSummaryInfo(); as errorSummary) {
+  <div class="govuk-!-width-two-thirds">
+    <cca-error-summary [errorSummaryInfo]="errorSummary" />
+  </div>
+}
+
 <netz-page-heading caption="Buy-out and surplus">New buy-out and surplus batch</netz-page-heading>
 
 <div class="govuk-!-width-two-thirds">
-  <p>
-    You are about to calculate the buy-out and surplus and send buy-out notifications to all eligible target units for
-    <strong>TP6</strong>.
-  </p>
+  @if (hasTargetPeriodChoice()) {
+    <p>
+      You are about to calculate the buy-out and surplus and send buy-out notifications to all eligible target units.
+    </p>
 
+    <div [formGroup]="form">
+      <p class="govuk-hint govuk-!-margin-top-1">You must specify the target period for this batch</p>
+
+      <div
+        [options]="targetPeriodOptions()"
+        formControlName="targetPeriodType"
+        label="Target period"
+        widthClass="govuk-!-width-one-quarter"
+        govuk-select
+      ></div>
+    </div>
+  } @else if (isCca3Run()) {
+    <p>
+      By clicking the button below you will initiate a new batch that calculates the amount of buy-out or surplus for
+      <strong>{{ selectedTargetPeriod() }}</strong> for each eligible facility and automatically notifies the operator
+      of any buy-out fee. Where relevant, the batch process considers any corrections to reports in earlier target
+      periods that could affect the outcome for <strong>{{ selectedTargetPeriod() }}</strong
+      >.
+    </p>
+  } @else {
+    <p>
+      You are about to calculate the buy-out and surplus and send buy-out notifications to all eligible target units for
+      <strong>{{ selectedTargetPeriod() }}</strong
+      >.
+    </p>
+  }
+
+  @if (isCca3Run()) {
+    <h2 class="govuk-heading-m">Cost</h2>
+
+    <p>
+      The cost below will be used to calculate the amounts of any buy-out fees notified to operators for the target
+      period you selected. If you need to change the cost, you must do so from the Cost tab on the Buy-out and surplus
+      page before you initiate the batch. If the cost is "Not yet defined" or you need to change the cost shown below,
+      you must enter this on the Cost tab of the Buy-out and surplus page before you initiate the batch.
+    </p>
+  }
+</div>
+
+@if (isCca3Run()) {
+  <div class="govuk-!-width-two-thirds govuk-!-margin-bottom-6">
+    <govuk-table [columns]="buyOutCostsColumns" [data]="buyOutCosts()">
+      <ng-template let-column="column" let-row="row">
+        @switch (column.field) {
+          @case ('buyOutCost') {
+            <div class="govuk-!-text-align-right">
+              @if (row.buyOutCost === null || row.buyOutCost === undefined) {
+                Not yet defined
+              } @else {
+                £{{ row.buyOutCost | number }} / tCO2e
+              }
+            </div>
+          }
+
+          @default {
+            <span>{{ row[column.field] }}</span>
+          }
+        }
+      </ng-template>
+    </govuk-table>
+  </div>
+}
+
+<div class="govuk-!-width-two-thirds">
   <h2 class="govuk-heading-m">Target units on hold</h2>
 
   <p>
@@ -13,14 +83,14 @@
     the respective target unit account page on the "Buy-out and surplus" tab.
   </p>
 
-  <govuk-warning-text assistiveText="">
+  <govuk-warning-text>
     This list represents a current snapshot. Any immediate changes to the "On Hold" status before you click the "Send
     buy-out and surplus batch button" will not be automatically reflected in this list, but they will take effect during
     the batch processing.
   </govuk-warning-text>
 </div>
 
-@if (excludedAccounts()?.length) {
+@if (excludedAccounts().length) {
   <div class="overflow-auto overflow-auto-table">
     <govuk-table [columns]="excludedAccountsColumns" [data]="excludedAccounts()">
       <ng-template let-column="column" let-row="row">
@@ -41,4 +111,6 @@
   <p>There are no target units on hold.</p>
 }
 
-<button govukButton netzPendingButton (click)="onCreateNewBatch()">Send buy-out and surplus batch</button>
+@if (selectedTargetPeriod()) {
+  <button govukButton netzPendingButton (click)="onCreateNewBatch()">Send buy-out and surplus batch</button>
+}

@@ -118,6 +118,17 @@ describe('ErrorSummaryComponent', () => {
     expect(document.title).toContain('Error');
   });
 
+  it('should render the error summary heading as an h2', async () => {
+    hostComponent.form = reactiveForm;
+    hostComponent.form.markAllAsTouched();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
+
+    const heading = fixture.nativeElement.querySelector('.govuk-error-summary__title');
+    expect(heading.tagName).toBe('H2');
+    expect(heading.textContent.trim()).toBe('There is a problem');
+  });
+
   it('should focus on error container', () => {
     hostComponent.form = reactiveForm;
     hostComponent.form.markAllAsTouched();

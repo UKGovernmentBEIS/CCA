@@ -10,6 +10,13 @@ import {
   SummaryListRowValueDirective,
   TableComponent,
 } from '@netz/govuk-components';
+import { PaginationComponent } from '@shared/components';
+import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementTypeToUnitPipe } from '@shared/pipes';
+import { to7DecimalPlacesNumber } from '@shared/utils';
+import BigNumber from 'bignumber.js';
+
+import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
+
 import {
   calculateAdjustedImprovementTarget,
   calculateAdjustedThroughput,
@@ -18,13 +25,7 @@ import {
   calculateThroughputAdjustmentFactor,
   isCarbonMeasurementType,
   resolveProductEnergyCarbonIntensity,
-} from '@requests/common';
-import { PaginationComponent } from '@shared/components';
-import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementTypeToUnitPipe } from '@shared/pipes';
-import { to7DecimalPlacesNumber } from '@shared/utils';
-import BigNumber from 'bignumber.js';
-
-import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
+} from '../../utils';
 
 @Component({
   selector: 'cca-throughput-details-summary',
@@ -110,7 +111,7 @@ export class ThroughputDetailsSummaryComponent {
         const productBaseYear = product.baselineYear;
         let improvementTarget = facilityImprovementTarget;
 
-        if (facilityBaselineYear != null && productBaseYear !== facilityBaselineYear) {
+        if (facilityBaselineYear != null && productBaseYear > facilityBaselineYear) {
           improvementTarget = calculateAdjustedImprovementTarget(
             referenceData,
             this.reportType(),

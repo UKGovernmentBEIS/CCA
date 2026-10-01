@@ -37,7 +37,8 @@ describe('AccordionItemComponent', () => {
     fixture.detectChanges();
   });
 
-  const getButtons = () => fixture.nativeElement.querySelectorAll('.govuk-accordion__section-button');
+  const getButtons = () =>
+    (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.govuk-accordion__section-button');
 
   it('should create', () => {
     expect(fixture.componentInstance).toBeTruthy();
@@ -89,7 +90,7 @@ describe('AccordionItemComponent', () => {
   it('should toggle chevrons and text', () => {
     const buttons = getButtons();
 
-    const chevrons = Array.from(buttons).map((btn: HTMLElement) => btn.querySelector('.govuk-accordion-nav__chevron'));
+    const chevrons = Array.from(buttons).map((btn) => btn.querySelector('.govuk-accordion-nav__chevron'));
 
     expect(chevrons[0].classList).toContain('govuk-accordion-nav__chevron--down');
 

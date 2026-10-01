@@ -35,7 +35,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileUuidDTO;
 import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.token.FileToken;
 import uk.gov.netz.api.workflow.request.application.attachment.task.RequestTaskAttachmentActionProcessDTO;
-import uk.gov.netz.api.workflow.request.application.attachment.task.RequestTaskAttachmentService;
+import uk.gov.netz.api.workflow.request.application.attachment.task.RequestTaskFileAttachmentService;
 import uk.gov.netz.api.workflow.request.flow.common.service.RequestTaskAttachmentUploadService;
 
 @RestController
@@ -46,7 +46,7 @@ import uk.gov.netz.api.workflow.request.flow.common.service.RequestTaskAttachmen
 public class RequestTaskAttachmentController {
 
     private final RequestTaskAttachmentUploadService requestTaskAttachmentUploadService;
-    private final RequestTaskAttachmentService requestTaskAttachmentService;
+    private final RequestTaskFileAttachmentService requestTaskFileAttachmentService;
     private final FileDtoMapper fileDtoMapper = Mappers.getMapper(FileDtoMapper.class);
 
     @PostMapping(path = "/upload", consumes = {"multipart/form-data"})
@@ -68,7 +68,7 @@ public class RequestTaskAttachmentController {
                     RequestTaskAttachmentActionProcessDTO requestTaskAttachmentActionProcessDTO,
             @RequestPart("attachment") @Parameter(description = "The request task source file attachment", required = true)
                     MultipartFile file) throws IOException {
-        FileDTO attachment = fileDtoMapper.toFileDTO(file);
+        FileDTO attachment = fileDtoMapper.toFileDTO(file, authUser.getUserId());
         String requestTaskActionType = requestTaskAttachmentActionProcessDTO.getRequestTaskActionType();
 
         FileUuidDTO fileUuidDTO = requestTaskAttachmentUploadService
@@ -92,7 +92,7 @@ public class RequestTaskAttachmentController {
             @PathVariable("id") @Parameter(description = "The request task id") Long requestTaskId,
             @RequestParam("attachmentUuid") @Parameter(name = "attachmentUuid", description = "The attachment uuid") @NotNull UUID attachmentUuid) {
         FileToken getFileAttachmentToken =
-                requestTaskAttachmentService.generateGetFileAttachmentToken(requestTaskId, attachmentUuid);
+                requestTaskFileAttachmentService.generateGetFileAttachmentToken(requestTaskId, attachmentUuid);
         return new ResponseEntity<>(getFileAttachmentToken, HttpStatus.OK);
     }
 }

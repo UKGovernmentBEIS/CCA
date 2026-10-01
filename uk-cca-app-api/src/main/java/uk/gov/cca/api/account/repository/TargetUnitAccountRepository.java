@@ -29,6 +29,9 @@ public interface TargetUnitAccountRepository extends AccountBaseRepository<Targe
     @Query(name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_IDS_BY_SECTOR_ASSOCIATION)
     List<Long> findAllIdsBySectorAssociationId(Long sectorAssociationId);
 
+    @Query(name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_IDS_BY_SECTOR_ASSOCIATION_IN)
+    Set<Long> findAllIdsBySectorAssociationIdIn(Set<Long> sectorAssociationIds);
+
     List<TargetUnitAccount> findAllByBusinessIdInAndStatus(Set<String> businessIds, TargetUnitAccountStatus status);
 
     @Query(name = TargetUnitAccount.NAMED_QUERY_FIND_ACCOUNTS_BY_CONTACT_TYPE_AND_USER_ID_AND_SECTOR_ASSOCIATION)

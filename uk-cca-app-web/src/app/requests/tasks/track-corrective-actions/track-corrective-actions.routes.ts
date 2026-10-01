@@ -7,6 +7,7 @@ import { refreshDaysRemainingGuard } from './track-corrective-actions.guard';
 export const TRACK_CORRECTIVE_ACTIONS_ROUTES: Routes = [
   {
     path: '',
+    title: 'Track corrective actions',
     canDeactivate: [refreshDaysRemainingGuard],
     children: [
       {
@@ -16,6 +17,7 @@ export const TRACK_CORRECTIVE_ACTIONS_ROUTES: Routes = [
       },
       {
         path: 'file-download/:uuid',
+        title: 'Your download has started',
         component: FileDownloadComponent,
       },
       {

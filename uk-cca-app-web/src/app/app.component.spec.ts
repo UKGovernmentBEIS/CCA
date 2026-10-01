@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -60,6 +60,30 @@ describe('AppComponent', () => {
     get breadcrumbs() {
       return this.queryAll<HTMLLIElement>('.govuk-breadcrumbs__list-item');
     }
+
+    get taskInformationRegion() {
+      return this.query<HTMLElement>('section[aria-label="Task information"]');
+    }
+
+    get phaseBar() {
+      return this.query<HTMLElement>('cca-phase-bar');
+    }
+
+    get workflowTaskHeader() {
+      return this.query<HTMLElement>('cca-workflow-task-header');
+    }
+
+    get mainContent() {
+      return this.query<HTMLElement>('main');
+    }
+
+    get breadcrumbsElement() {
+      return this.query<HTMLElement>('netz-breadcrumbs');
+    }
+
+    get backLink() {
+      return this.query<HTMLElement>('netz-back-link');
+    }
   }
 
   beforeEach(async () => {
@@ -67,7 +91,7 @@ describe('AppComponent', () => {
       imports: [AppComponent],
       providers: [
         KeycloakService,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
@@ -140,6 +164,16 @@ describe('AppComponent', () => {
     authStore.setIsLoggedIn(false);
     setUser('SECTOR_USER', 'NO_AUTHORITY');
     expect(page.navList).toBeFalsy();
+  });
+
+  it('should place the phase and task header inside a named region, with breadcrumbs and back link outside main', () => {
+    expect(page.taskInformationRegion).toBeTruthy();
+    expect(page.taskInformationRegion.contains(page.phaseBar)).toBe(true);
+    expect(page.taskInformationRegion.contains(page.workflowTaskHeader)).toBe(true);
+
+    expect(page.mainContent).toBeTruthy();
+    expect(page.mainContent.contains(page.breadcrumbsElement)).toBe(false);
+    expect(page.mainContent.contains(page.backLink)).toBe(false);
   });
 
   it('should display breadcrumbs', () => {

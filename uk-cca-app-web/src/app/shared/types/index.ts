@@ -5,3 +5,4 @@ export * from './facility-targets-improvements.enum';
 export * from './form-types';
 export * from './history-category.enum';
 export * from './scheme-version.enum';
+export * from './target-period';

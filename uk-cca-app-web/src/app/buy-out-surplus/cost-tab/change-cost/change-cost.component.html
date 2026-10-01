@@ -3,20 +3,31 @@
     <cca-wizard-step
       [formGroup]="form"
       caption="Change"
-      heading="{{ targetPeriod() }} Buyout cost per tCO2e"
+      heading="{{ targetPeriod() }} Buy-out cost per tCO2e"
       submitText="Confirm"
       (formSubmit)="onSubmit()"
     >
-      <p>
-        Enter the cost of the buy-out for the selected target period.
-        <strong>You must only enter an amount that has been calculated in accordance with the regulations.</strong>
-        The buy-out and surplus process will use the value you enter after you click the Confirm button. Previous batch
-        runs will not be updated by any change you make.
-      </p>
+      @if (targetPeriodDetails().buyOutCost === null || targetPeriodDetails().buyOutCost === undefined) {
+        <p>
+          Enter the buy-out cost for the selected target period.
+          <strong>
+            The cost amount must have been calculated in accordance with the regulation 12(3) of the Climate Change
+            Agreements (Administration) Regulations 2012.
+          </strong>
+          The buy-out and surplus process will use the amount you enter after you select 'Confirm'. Any changes you make
+          will not be applied to previous batch runs.
+        </p>
+      } @else {
+        <p>
+          Configure the buy-out cost per tCO2e separately for this Target Period (TP) so that buy-out fees are
+          calculated correctly.
+        </p>
+      }
 
       <div
         class="govuk-!-margin-top-6 govuk-!-margin-bottom-6"
         formControlName="buyOutCost"
+        label="Buy-out cost per tCO2e"
         inputType="number"
         widthClass="govuk-input--width-5"
         prefix="£"

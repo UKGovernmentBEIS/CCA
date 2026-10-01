@@ -28,6 +28,7 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.transform.BuyOutSurplu
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodBuyOutDetailsDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.transform.TargetPeriodMapper;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataDetailsInfoDTO;
@@ -35,7 +36,7 @@ import uk.gov.cca.api.targetperiodreporting.performancedata.service.PerformanceD
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
@@ -57,7 +59,7 @@ public class BuyOutSurplusQueryService {
     private final BuyOutSurplusExclusionRepository buyOutSurplusExclusionRepository;
     private final PerformanceDataQueryService performanceDataQueryService;
     private final TargetPeriodService targetPeriodService;
-    private final FileDocumentService fileDocumentService;
+    private final FileDocumentStorageService fileDocumentStorageService;
     private final SchemeTerminationHelper schemeTerminationHelper;
     private static final BuyOutSurplusTransactionMapper BUY_OUT_SURPLUS_MAPPER = Mappers.getMapper(BuyOutSurplusTransactionMapper.class);
     private static final BuyOutSurplusTransactionDetailsMapper BUY_OUT_SURPLUS_DETAILS_MAPPER = Mappers.getMapper(BuyOutSurplusTransactionDetailsMapper.class);
@@ -119,7 +121,7 @@ public class BuyOutSurplusQueryService {
         PerformanceDataDetailsInfoDTO performanceDataDetailsInfoDTO =
                 performanceDataQueryService.getPerformanceDataBuyOutSurplusTransactionDetails(buyOutSurplusTransactionDTO.getPerformanceDataId());
 
-        FileInfoDTO fileInfoDTO = fileDocumentService.getFileInfoDTO(buyOutSurplusTransactionDTO.getFileDocumentUuid());
+        FileInfoDTO fileInfoDTO = fileDocumentStorageService.getFileInfoDTO(buyOutSurplusTransactionDTO.getFileDocumentUuid());
 
         return BUY_OUT_SURPLUS_DETAILS_MAPPER.toBuyOutSurplusTransactionDetailsDTO(buyOutSurplusTransactionDTO, performanceDataDetailsInfoDTO, fileInfoDTO);
     }
@@ -168,6 +170,16 @@ public class BuyOutSurplusQueryService {
                 .build();
 	}
     
+    public List<TargetPeriodInfoDTO> determineApplicableTargetPeriods(TargetPeriodType targetPeriodType) {
+		TargetPeriod targetPeriod = targetPeriodService.findByTargetPeriodType(targetPeriodType);
+		
+		return LocalDate.now().isBefore(targetPeriod.getSecondaryReportingStartDate()) 
+				? List.of(TARGET_PERIOD_MAPPER.toTargetPeriodInfoDTO(targetPeriod))
+						: targetPeriodService.getTargetPeriodsInfoForSchemeUpTo(
+								targetPeriod.getSchemeVersion(),
+								targetPeriod.getStartDate());
+	}
+    
     private void getAvailableBuyOutTargetPeriodsForCca3(List<TargetPeriod> periods, List<TargetPeriodBuyOutDetailsDTO> currentTps,
 			List<TargetPeriodBuyOutDetailsDTO> previousTps) {
 		List<TargetPeriod> cca3Periods = periods.stream()
@@ -207,18 +219,14 @@ public class BuyOutSurplusQueryService {
 	
 	private List<TargetUnitAccountBusinessInfoDTO> findEligibleAccountsForFacilityPerformanceData(
 			TargetPeriodType targetPeriodType) {
-		Set<TargetPeriodType> applicableTargetPeriods = determineApplicableTargetPeriods(targetPeriodType);
+		Set<TargetPeriodType> applicableTargetPeriods = getApplicableTargetPeriodTypes(targetPeriodType);
 		
 		return eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(applicableTargetPeriods);
 	}
 
-	private Set<TargetPeriodType> determineApplicableTargetPeriods(TargetPeriodType targetPeriodType) {
-		TargetPeriod targetPeriod = targetPeriodService.findByTargetPeriodType(targetPeriodType);
-		
-		return LocalDate.now().isBefore(targetPeriod.getSecondaryReportingStartDate()) 
-				? Set.of(targetPeriodType)
-						: targetPeriodService.getTargetPeriodsForSchemeUpTo(
-								targetPeriod.getSchemeVersion(),
-								targetPeriod.getStartDate());
+	private Set<TargetPeriodType> getApplicableTargetPeriodTypes(TargetPeriodType targetPeriodType) {
+		return determineApplicableTargetPeriods(targetPeriodType).stream()
+				.map(TargetPeriodInfoDTO::getBusinessId)
+				.collect(Collectors.toSet());
 	}
 }

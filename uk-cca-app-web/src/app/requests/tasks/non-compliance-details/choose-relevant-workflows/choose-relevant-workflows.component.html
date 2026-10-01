@@ -11,9 +11,9 @@
       <table class="govuk-table non-compliance-items-table">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
-            <th class="govuk-table__header"></th>
-            <th class="govuk-table__header">Item name</th>
-            <th class="govuk-table__header">Actions</th>
+            <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Row number</span></th>
+            <th scope="col" class="govuk-table__header">Item name</th>
+            <th scope="col" class="govuk-table__header">Actions</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body" formArrayName="workflows">
@@ -25,10 +25,12 @@
                   [formControlName]="i"
                   [options]="getOptionsForRow(i)"
                   [widthClass]="'govuk-!-width-full'"
+                  label="Item name"
+                  [labelHidden]="true"
                 />
               </td>
               <td class="govuk-table__cell non-compliance-items-table__action-cell">
-                <a class="govuk-link" href="#" (click)="onDeleteItem(wf.value, i); $event.preventDefault()">Delete</a>
+                <button type="button" class="govuk-link" (click)="onDeleteItem(wf.value, i)">Delete</button>
               </td>
             </tr>
           }

@@ -2,7 +2,9 @@ import { to7DecimalPlacesNumber } from '@shared/utils';
 import BigNumber from 'bignumber.js';
 
 import {
+  PerformanceDataFacilityBaselineAndTargets,
   PerformanceDataFacilityCalculatedResults,
+  PerformanceDataFacilityFuelEnergyConsumption,
   PerformanceDataFacilityInputData,
   PerformanceDataFacilityInputEnergyFuelDetails,
   PerformanceDataFacilityReferenceData,
@@ -22,6 +24,7 @@ import {
   calculateProductTargetEnergy,
   calculateThroughputAdjustmentFactor,
   calculateThroughputValues,
+  calculateTotalDeliveredEnergy,
   calculateWeightedConversionFactor,
   co2ConversionFactorForMeasurement,
   primaryCarbonDisplayUnit,
@@ -30,6 +33,7 @@ import {
   resolveMeasurementUnit,
   resolveProductEnergyCarbonIntensity,
   roundHalfUpTo7Decimals,
+  validateZeroEnergyForThroughput,
 } from './utils';
 
 const EMPTY_CALCULATED_RESULTS: PerformanceDataFacilityCalculatedResults = {
@@ -897,6 +901,21 @@ describe('calculateAdjustedImprovementTarget', () => {
     expect(result.toNumber()).toBeCloseTo(0.12, 7);
   });
 
+  it('should return unadjusted facility target when productBaseYear < facilityBaseYear', () => {
+    const result = calculateAdjustedImprovementTarget(
+      {
+        baselineAndTargets: {
+          improvements: { TP7: '8', TP8: '12', TP9: '16' },
+        },
+      } as PerformanceDataFacilityReferenceData,
+      'FINAL',
+      'TP8',
+      2023,
+      2022,
+    );
+    expect(result.toNumber()).toBeCloseTo(0.12, 7);
+  });
+
   it('should calculate adjusted product target based on spec example', () => {
     const result = calculateAdjustedImprovementTarget(
       {
@@ -1008,137 +1027,6 @@ describe('calculateAdjustedImprovementTarget', () => {
       2027,
     );
     expect(result.toNumber()).toBeCloseTo(0.076923077, 7);
-  });
-
-  it('should calculate adjusted target when productBaseYear < facilityBaseYear (negative progress)', () => {
-    // facilityBaseYear=2023, productBaseYear=2022, TP7=6%, TP8=9%, TP9=12%
-    // tp7Progress = (2022-2023) = -1, tp7Years = 3, progress = (-1/3)*0.06 = -0.02
-    // result = (0.06 - (-0.02)) / (1 - (-0.02)) = 0.08 / 1.02 ≈ 0.07843137
-    const result = calculateAdjustedImprovementTarget(
-      {
-        baselineAndTargets: {
-          improvements: { TP7: '6', TP8: '9', TP9: '12' },
-        },
-      } as PerformanceDataFacilityReferenceData,
-      'FINAL',
-      'TP7',
-      2023,
-      2022,
-    );
-    expect(result.toNumber()).toBeCloseTo(0.078431373, 7);
-  });
-
-  it('should match spreadsheet: 2022 product with 2023 facility → 8% sector target', () => {
-    // From bug report: facility base year 2023, product base year 2022
-    // facility TP7 = 6.122449%, spreadsheet expects 8.000%
-    // tp7Progress = (2022-2023)/3 * 0.06122449 = -0.0204081633
-    // result = (0.06122449 + 0.0204081633) / (1 + 0.0204081633) = 0.0816326533 / 1.0204081633 = 0.08
-    const result = calculateAdjustedImprovementTarget(
-      {
-        baselineAndTargets: {
-          improvements: { TP7: '6.122449', TP8: '10.2040816', TP9: '14.2857143' },
-        },
-      } as PerformanceDataFacilityReferenceData,
-      'FINAL',
-      'TP7',
-      2023,
-      2022,
-    );
-    expect(result.toNumber()).toBeCloseTo(0.08, 5);
-  });
-
-  it('should handle productBaseYear well below facilityBaseYear', () => {
-    // facilityBaseYear=2025, productBaseYear=2020, TP7=10%, TP8=14%, TP9=20%
-    // tp7Progress = (2020-2025) = -5, tp7Years = (2026-2025) = 1
-    // tp8Progress = max(min(2020,2028)-2026, 0) = max(2020-2026, 0) = 0
-    // progress = (-5/1)*0.10 = -0.50
-    // result = (0.10 - (-0.50)) / (1 - (-0.50)) = 0.60 / 1.50 = 0.40
-    const result = calculateAdjustedImprovementTarget(
-      {
-        baselineAndTargets: {
-          improvements: { TP7: '10', TP8: '14', TP9: '20' },
-        },
-      } as PerformanceDataFacilityReferenceData,
-      'FINAL',
-      'TP7',
-      2025,
-      2020,
-    );
-    expect(result.toNumber()).toBeCloseTo(0.4, 7);
-  });
-
-  it('should calculate adjusted TP8 FINAL target when productBaseYear < facilityBaseYear', () => {
-    // facilityBaseYear=2023, productBaseYear=2022, TP7=6%, TP8=9%, TP9=12%
-    // tp7Progress = (2022-2023)/3 * 0.06 = -0.02
-    // result = (0.09 - (-0.02)) / (1 - (-0.02)) = 0.11 / 1.02
-    const result = calculateAdjustedImprovementTarget(
-      {
-        baselineAndTargets: {
-          improvements: { TP7: '6', TP8: '9', TP9: '12' },
-        },
-      } as PerformanceDataFacilityReferenceData,
-      'FINAL',
-      'TP8',
-      2023,
-      2022,
-    );
-    expect(result.toNumber()).toBeCloseTo(0.107843137, 7);
-  });
-
-  it('should calculate adjusted TP9 FINAL target when productBaseYear < facilityBaseYear', () => {
-    // facilityBaseYear=2023, productBaseYear=2022, TP7=6%, TP8=9%, TP9=12%
-    // tp7Progress = (2022-2023)/3 * 0.06 = -0.02
-    // result = (0.12 - (-0.02)) / (1 - (-0.02)) = 0.14 / 1.02
-    const result = calculateAdjustedImprovementTarget(
-      {
-        baselineAndTargets: {
-          improvements: { TP7: '6', TP8: '9', TP9: '12' },
-        },
-      } as PerformanceDataFacilityReferenceData,
-      'FINAL',
-      'TP9',
-      2023,
-      2022,
-    );
-    expect(result.toNumber()).toBeCloseTo(0.137254902, 7);
-  });
-
-  it('should calculate adjusted TP8 INTERIM target when productBaseYear < facilityBaseYear', () => {
-    // facilityBaseYear=2023, productBaseYear=2022, TP7=6%, TP8=9%, TP9=12%
-    // interimTarget = (9+6)/2/100 = 0.075
-    // tp7Progress = (2022-2023)/3 * 0.06 = -0.02
-    // result = (0.075 - (-0.02)) / (1 - (-0.02)) = 0.095 / 1.02
-    const result = calculateAdjustedImprovementTarget(
-      {
-        baselineAndTargets: {
-          improvements: { TP7: '6', TP8: '9', TP9: '12' },
-        },
-      } as PerformanceDataFacilityReferenceData,
-      'INTERIM',
-      'TP8',
-      2023,
-      2022,
-    );
-    expect(result.toNumber()).toBeCloseTo(0.093137255, 7);
-  });
-
-  it('should calculate adjusted TP9 INTERIM target when productBaseYear < facilityBaseYear', () => {
-    // facilityBaseYear=2023, productBaseYear=2022, TP7=6%, TP8=9%, TP9=12%
-    // interimTarget = (12+9)/2/100 = 0.105
-    // tp7Progress = (2022-2023)/3 * 0.06 = -0.02
-    // result = (0.105 - (-0.02)) / (1 - (-0.02)) = 0.125 / 1.02
-    const result = calculateAdjustedImprovementTarget(
-      {
-        baselineAndTargets: {
-          improvements: { TP7: '6', TP8: '9', TP9: '12' },
-        },
-      } as PerformanceDataFacilityReferenceData,
-      'INTERIM',
-      'TP9',
-      2023,
-      2022,
-    );
-    expect(result.toNumber()).toBeCloseTo(0.12254902, 7);
   });
 });
 
@@ -1673,5 +1561,184 @@ describe('resolveFacilityBaselineYear', () => {
       makeProduct({ productName: 'B', baselineYear: 2022 }),
     ];
     expect(resolveFacilityBaselineYear(products)).toBe(2022);
+  });
+});
+
+describe('calculateTotalDeliveredEnergy', () => {
+  it('should return 0 for undefined energy fuel details', () => {
+    expect(calculateTotalDeliveredEnergy(undefined).toNumber()).toBe(0);
+  });
+
+  it('should return 0 when there are no fuels', () => {
+    expect(
+      calculateTotalDeliveredEnergy({
+        atLeastSeventyPercentEnergyUsed: false,
+        standardFuels: {},
+        nonStandardFuels: [],
+      }).toNumber(),
+    ).toBe(0);
+  });
+
+  it('should sum delivered energy from standard fuels', () => {
+    expect(
+      calculateTotalDeliveredEnergy({
+        atLeastSeventyPercentEnergyUsed: false,
+        standardFuels: {
+          GRID_ELECTRICITY: { deliveredEnergy: '100', primaryEnergy: '210' },
+          NATURAL_GAS: { deliveredEnergy: '200', primaryEnergy: '200' },
+        },
+        nonStandardFuels: [],
+      }).toNumber(),
+    ).toBe(300);
+  });
+
+  it('should sum delivered energy from non-standard fuels', () => {
+    expect(
+      calculateTotalDeliveredEnergy({
+        atLeastSeventyPercentEnergyUsed: false,
+        standardFuels: {},
+        nonStandardFuels: [
+          { name: 'Custom A', conversionFactor: '0.5', deliveredEnergy: '50', primaryEnergy: '0' },
+          { name: 'Custom B', conversionFactor: '0.3', deliveredEnergy: '75', primaryEnergy: '0' },
+        ],
+      }).toNumber(),
+    ).toBe(125);
+  });
+
+  it('should sum both standard and non-standard fuels together', () => {
+    expect(
+      calculateTotalDeliveredEnergy({
+        atLeastSeventyPercentEnergyUsed: false,
+        standardFuels: {
+          NATURAL_GAS: { deliveredEnergy: '300', primaryEnergy: '300' },
+        },
+        nonStandardFuels: [{ name: 'Wood chips', conversionFactor: '0.5', deliveredEnergy: '100', primaryEnergy: '0' }],
+      }).toNumber(),
+    ).toBe(400);
+  });
+
+  it('should treat null delivered energy as zero', () => {
+    expect(
+      calculateTotalDeliveredEnergy({
+        atLeastSeventyPercentEnergyUsed: false,
+        standardFuels: {
+          GRID_ELECTRICITY: { deliveredEnergy: null, primaryEnergy: '0' },
+          NATURAL_GAS: { deliveredEnergy: '100', primaryEnergy: '100' },
+        },
+        nonStandardFuels: [],
+      }).toNumber(),
+    ).toBe(100);
+  });
+
+  it('should treat missing delivered energy as zero', () => {
+    expect(
+      calculateTotalDeliveredEnergy({
+        atLeastSeventyPercentEnergyUsed: false,
+        standardFuels: {
+          GRID_ELECTRICITY: {} as PerformanceDataFacilityFuelEnergyConsumption,
+          NATURAL_GAS: { deliveredEnergy: '100', primaryEnergy: '100' },
+        },
+        nonStandardFuels: [],
+      }).toNumber(),
+    ).toBe(100);
+  });
+});
+
+describe('validateZeroEnergyForThroughput', () => {
+  const makeFuelDetails = (
+    overrides?: Partial<PerformanceDataFacilityInputEnergyFuelDetails>,
+  ): PerformanceDataFacilityInputEnergyFuelDetails => ({
+    atLeastSeventyPercentEnergyUsed: false,
+    standardFuels: {},
+    nonStandardFuels: [],
+    ...overrides,
+  });
+
+  const zeroEnergyFuelDetails = makeFuelDetails();
+
+  const makeBaseline = (
+    overrides: Partial<PerformanceDataFacilityBaselineAndTargets> = {},
+  ): PerformanceDataFacilityBaselineAndTargets =>
+    ({
+      totalFixedEnergy: '0',
+      baselineVariableEnergy: '0',
+      ...overrides,
+    }) as PerformanceDataFacilityBaselineAndTargets;
+
+  const ERROR_MESSAGE = 'Total energy/fuel amount consumed during the period must be greater than zero';
+
+  it('should return null when total delivered energy is greater than zero', () => {
+    const result = validateZeroEnergyForThroughput(
+      makeFuelDetails({
+        standardFuels: { NATURAL_GAS: { deliveredEnergy: '450', primaryEnergy: '450' } },
+      }),
+      makeBaseline({ variableEnergyType: 'BY_PRODUCT' }),
+    );
+    expect(result).toBeNull();
+  });
+
+  it('should return null for zero energy when facility has no variable energy and baseline total is zero', () => {
+    const result = validateZeroEnergyForThroughput(
+      zeroEnergyFuelDetails,
+      makeBaseline({ variableEnergyType: null, totalFixedEnergy: '0', baselineVariableEnergy: '0' }),
+    );
+    expect(result).toBeNull();
+  });
+
+  it('should return null for zero energy when facility uses totals-only and baseline total is zero', () => {
+    const result = validateZeroEnergyForThroughput(
+      zeroEnergyFuelDetails,
+      makeBaseline({ variableEnergyType: 'TOTALS', totalFixedEnergy: '0', baselineVariableEnergy: '0' }),
+    );
+    expect(result).toBeNull();
+  });
+
+  it('should return error message for zero energy when baseline fixed energy is non-zero', () => {
+    const result = validateZeroEnergyForThroughput(
+      zeroEnergyFuelDetails,
+      makeBaseline({ variableEnergyType: 'TOTALS', totalFixedEnergy: '750', baselineVariableEnergy: '0' }),
+    );
+    expect(result).toBe(ERROR_MESSAGE);
+  });
+
+  it('should return error message for zero energy when baseline variable energy is non-zero', () => {
+    const result = validateZeroEnergyForThroughput(
+      zeroEnergyFuelDetails,
+      makeBaseline({ variableEnergyType: null, totalFixedEnergy: '0', baselineVariableEnergy: '1200' }),
+    );
+    expect(result).toBe(ERROR_MESSAGE);
+  });
+
+  it('should return error message for zero energy when both baseline fixed and variable are non-zero', () => {
+    const result = validateZeroEnergyForThroughput(
+      zeroEnergyFuelDetails,
+      makeBaseline({ variableEnergyType: 'TOTALS', totalFixedEnergy: '300', baselineVariableEnergy: '200' }),
+    );
+    expect(result).toBe(ERROR_MESSAGE);
+  });
+
+  it('should return error message for zero energy when facility uses split-by-product (even with zero baseline)', () => {
+    const result = validateZeroEnergyForThroughput(
+      zeroEnergyFuelDetails,
+      makeBaseline({ variableEnergyType: 'BY_PRODUCT', totalFixedEnergy: '0', baselineVariableEnergy: '0' }),
+    );
+    expect(result).toBe(ERROR_MESSAGE);
+  });
+
+  it('should handle undefined baseline and targets gracefully (allows zero energy)', () => {
+    const result = validateZeroEnergyForThroughput(zeroEnergyFuelDetails, undefined);
+    // undefined baseline → isTotalsOnlyOrNoVariableEnergy = true, totalBaselineEnergy = 0
+    expect(result).toBeNull();
+  });
+
+  it('should detect the field name correctly — only baselineFixedEnergy matters, not a typo', () => {
+    // Verify that totalFixedEnergy (not a misspelled version) is read by the function.
+    // If the function read a typo, toBigNumber would get undefined → 0, and 500 would be silently ignored.
+    const result = validateZeroEnergyForThroughput(
+      zeroEnergyFuelDetails,
+      makeBaseline({ variableEnergyType: 'TOTALS', totalFixedEnergy: '500', baselineVariableEnergy: '0' }),
+    );
+    // 500 ≠ 0 → should block
+    expect(result).toBe(ERROR_MESSAGE);
   });
 });

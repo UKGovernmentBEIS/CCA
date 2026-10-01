@@ -120,7 +120,7 @@ export class TprCsvUploadProcessComponent implements OnInit {
         } as RequestTaskActionPayload,
       })
       .pipe(
-        catchNotFoundRequest(ErrorCode.NOTFOUND1001, () =>
+        catchNotFoundRequest<never>(ErrorCode.NOTFOUND1001, () =>
           this.businessErrorService.showErrorForceNavigation(taskNotFoundError),
         ),
         catchTaskReassignedBadRequest(() =>

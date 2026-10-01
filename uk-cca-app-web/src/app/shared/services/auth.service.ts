@@ -33,7 +33,7 @@ export class AuthService {
     return this.keycloakService.login(this.getLoginOptions(options));
   }
 
-  createLoginUrl(options?: KeycloakLoginOptions): string {
+  createLoginUrl(options?: KeycloakLoginOptions): Promise<string> {
     return this.keycloakService.createLoginUrl(this.getLoginOptions(options));
   }
 
@@ -71,7 +71,7 @@ export class AuthService {
           ? of(null)
           : combineLatest([this.loadUserState(), this.loadUserTerms(), this.loadUser(), this.loadUserProfile()]),
       ),
-      map(() => null),
+      map((): null => null),
     );
   }
 

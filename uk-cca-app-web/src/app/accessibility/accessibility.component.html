@@ -23,12 +23,9 @@
 <h2 class="govuk-heading-l">How accessible this website is</h2>
 <p>We know some parts of this website are not fully accessible:</p>
 <ul class="govuk-list govuk-list--bullet">
-  <li>the heading structure is not always correct, with missing or skipped headings</li>
-  <li>a clear focus indicator is not always present when tabbing to page elements</li>
-  <li>some page regions are not identified with ARIA landmarks</li>
+  <li>the Operations Manual PDF is not fully accessible to screen reader users</li>
   <li>there are multiple instances of identical link text which take users to different pages</li>
-  <li>the focus order is not always logical when navigating with a keyboard and/or screen reader</li>
-  <li>form inputs lack a correctly associated text label or descriptive title</li>
+  <li>the session ends after a period of inactivity with no option to extend it</li>
 </ul>
 
 <h3 class="govuk-heading-m">Feedback and contact information</h3>
@@ -78,139 +75,24 @@
 <p>The content listed below is non-accessible for the following reasons.</p>
 
 <h3 class="govuk-heading-m">Non-compliance with the accessibility regulations</h3>
-<p></p>
-<p>
-  Form input fields on the ‘Add facility details’, ‘Add target composition’, 'Add details of baseline data', and
-  ‘Provide evidence’ pages lack a correctly associated text label. Incorrectly associated labels do not provide
-  functionality or information about the form control to screen reader users. This fails WCAG 2.2 success criterion
-  1.1.1 (non-text content).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
 
 <p>
-  Some page content may not be contained within a landmark element, such as breadcrumbs and the ‘Beta’ banner. This may
-  impact users who navigate the page using landmarks. This fails WCAG 2.2 success criterion 1.3.1 (info and
-  relationships).
+  The Operations Manual PDF linked from the landing page is not fully accessible: its tables do not contain table
+  headers, its headings are not nested appropriately, and it has character encoding issues. Screen reader users may have
+  difficulty navigating this document. This fails WCAG 2.2 success criteria 1.3.1 (info and relationships), 2.4.6
+  (headings and labels) and 4.1.2 (name, role, value). The PDF is a third-party document; we are working to provide an
+  accessible version.
 </p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  A checkbox on the ‘Add facility details’ page is grouped using a fieldset and legend with an empty legend, rather than
-  having a correctly associated label. The checkbox may announce unexpectedly when navigated to with a screen reader.
-  This fails WCAG 2.2 success criterion 1.3.1 (info and relationships).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  On the ‘Add facility details’ and ‘Add details of baseline data’ pages, an aria-labelledby or aria-describedby
-  reference exists, but the target for the reference does not exist. ARIA labels and descriptions will not be presented
-  if the element referenced does not exist in the page. This fails WCAG 2.2 success criterion 1.3.1 (info and
-  relationships).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  Tables within the PDF on the landing page do not contain table headers. Users of assistive technologies may have
-  difficulty navigating these tables. This fails WCAG 2.2 success criterion 1.3.1 (info and relationships).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  Some related form elements are not grouped using fieldset and legend. Some radio buttons or checkboxes may lack
-  context without being grouped. This fails WCAG 2.2 success criterion 1.3.1 (info and relationships).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  Tables are not always correctly formed, with table header cells not marked up as such. Screen reader users may have
-  difficulty navigating these tables. This fails WCAG 2.2 success criterion 1.3.1 (info and relationships).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  For some input fields, such as ‘Job title’ and ‘County’, the autocomplete attribute is not used correctly. Screen
-  readers do not read identified autocomplete form fields if the appropriate autocomplete attribute values are missing.
-  This fails WCAG 2.2 success criterion 1.3.5 (identify input purpose).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
 
 <p>
   After a period of inactivity, the user is logged out with no options to turn off, adjust, or extend that time limit.
   This fails WCAG 2.2 success criterion 2.2.1 (timing adjustable).
 </p>
-<p>We plan to resolve this by: 28 February 2025</p>
 
 <p>
-  The ‘Skip to main content’ link does not always focus the user to the main page content upon interaction; instead
-  navigating the user to commonly seen navigational elements, such as breadcrumbs. This fails WCAG 2.2 success criterion
-  2.4.1 (bypass blocks).
+  Links with identical text are not always distinguished by their accessible labels. This could confuse screen reader
+  users. This fails WCAG 2.2 success criterion 2.4.4 (link purpose (in context)).
 </p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  A correctly formed heading structure is not present to facilitate navigation across the site, with skipped heading
-  levels and empty headings present. Skipped and empty headings will present no information and may introduce confusion
-  for screen reader and keyboard users. This fails WCAG 2.2 success criterion 2.4.1 (bypass blocks).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  Some page titles are repeated across multiple web pages or not reflective of the page content, which may cause
-  navigation issues between tabs. This fails WCAG 2.2 success criterion 2.4.2 (page titled).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  The focus order is not always logical when navigating with a keyboard, and with desktop and mobile screen readers
-  enabled. This may result in keyboard and/or screen reader users becoming disoriented. This fails WCAG 2.2 success
-  criterion 2.4.3 (focus order).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  Links with identical text are not distinguished by their accessible labels. This could confuse screen reader users.
-  This fails WCAG 2.2 success criterion 2.4.4 (link purpose (in context)).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  Empty links that contain no text are present on some ‘Check answers’ pages. The function or purpose of these links
-  will not be presented to screen reader users. This fails WCAG 2.2 success criterion 2.4.4 (link purpose (in context)).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  Headings within the PDF on the landing page are not nested appropriately. Screen reader users may miss content when
-  navigating via headings. This fails WCAG 2.2 success criterion 2.4.6 (headings and labels).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  A clear and consistent visual focus indicator is not always present on the ‘Provide evidence’ page. This can make it
-  difficult for keyboard-only users to track the elements in focus. This fails WCAG 2.2 success criterion 2.4.7 (focus
-  visible).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  Throughout the site, the ‘Choose file’ inputs all have labels that do not match or start with the visually displayed
-  text of “Choose file”. This may result in users of speech recognition software being unable to interact with these
-  inputs. This fails WCAG 2.2 success criterion 2.5.3 (label in name).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  On the ‘Manage facilities list’ page the table header buttons include both the up and down pointing triangles within
-  their accessible name. This results in the table headers being announced unexpectedly when navigated to with a screen
-  reader. This fails WCAG 2.2 success criterion 4.1.2 (name, role, value).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
-
-<p>
-  PDFs currently do not meet accessibility standards. This includes character encoding issues, which may not be
-  accessible to screen reader users. This fails WCAG 2.2 success criterion 4.1.2 (name, role, value).
-</p>
-<p>We plan to resolve this by: 28 February 2025</p>
 
 <h3 class="govuk-heading-m">Disproportionate burden</h3>
 <p>
@@ -235,8 +117,8 @@
 </p>
 
 <h2 class="govuk-heading-l">Preparation of this accessibility statement</h2>
-<p>This statement was prepared on 18/10/2024. It was last reviewed on 18/10/2024.</p>
-<p>This website was last tested on 17/10/2024. The test was carried out by Zoonou.</p>
+<p>This statement was prepared on 18/10/2024. It was last reviewed on 15/09/2026.</p>
+<p>This website was last tested on 17/10/2024 by Zoonou.</p>
 <p>
   Zoonou used <a class="govuk-link" rel="noreferrer noopener" href="https://www.w3.org/TR/WCAG-EM/">WCAG-EM</a> to
   define a representative selection of pages and test approach.

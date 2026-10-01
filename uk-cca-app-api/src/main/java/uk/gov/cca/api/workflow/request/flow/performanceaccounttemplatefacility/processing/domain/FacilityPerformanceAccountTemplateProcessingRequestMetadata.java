@@ -17,7 +17,6 @@ import java.time.Year;
 @SuperBuilder
 public class FacilityPerformanceAccountTemplateProcessingRequestMetadata extends RequestMetadata {
 
-    private Integer reportVersion;
     private Year targetYear;
     private LocalDate submittedDate;
     private String uploadRequestId;

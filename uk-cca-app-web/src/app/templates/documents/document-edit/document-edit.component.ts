@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormGroup, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError } from 'rxjs';
@@ -56,12 +56,12 @@ export class DocumentEditComponent {
   readonly form = computed(
     () =>
       new FormGroup({
-        documentTemplate: new UntypedFormControl(
+        documentTemplate: new FormControl<FileUploadEvent | null>(
           this.documentTemplate().fileUuid
-            ? ({
+            ? {
                 uuid: this.documentTemplate().fileUuid,
-                file: { name: this.documentTemplate().filename } as File,
-              } as Pick<FileUploadEvent, 'file' | 'uuid'>)
+                file: { name: this.documentTemplate().filename },
+              }
             : null,
           {
             validators: commonFileValidators.concat(
@@ -81,19 +81,29 @@ export class DocumentEditComponent {
   onSubmit() {
     if (this.form().invalid) return;
 
+    const file = this.form().controls.documentTemplate.value?.file;
+
+    // No new file picked — the stored template file stays unchanged.
+    if (!(file instanceof File)) {
+      this.navigateBack();
+      return;
+    }
+
     this.documentTemplatesService
-      .updateDocumentTemplate(this.documentTemplate().id, this.form().controls.documentTemplate.value.file)
+      .updateDocumentTemplate(this.documentTemplate().id, file)
       .pipe(
         catchError(() => {
           throw new BusinessError('Could not upload document template file');
         }),
       )
-      .subscribe(() =>
-        this.router.navigate(['..'], {
-          relativeTo: this.activatedRoute,
-          replaceUrl: true,
-          state: { notification: true },
-        }),
-      );
+      .subscribe(() => this.navigateBack());
+  }
+
+  private navigateBack(): void {
+    this.router.navigate(['..'], {
+      relativeTo: this.activatedRoute,
+      replaceUrl: true,
+      state: { notification: true },
+    });
   }
 }

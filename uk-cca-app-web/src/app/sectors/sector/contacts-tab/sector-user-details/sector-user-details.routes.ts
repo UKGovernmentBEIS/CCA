@@ -1,19 +1,23 @@
 import { Routes } from '@angular/router';
 
+import { SectorUserAuthorityDetailsDTO } from 'cca-api';
+
 import { CanEditSectorUserGuard } from './can-edit-sector-user.guard';
 
 export const SECTOR_USER_DETAILS_ROUTES: Routes = [
   {
     path: '',
+    title: 'Sector user details',
     data: {
-      pageTitle: 'Sector user details',
-      breadcrumb: ({ sectorUserDetails }) => `${sectorUserDetails.firstName} ${sectorUserDetails.lastName}`,
+      breadcrumb: ({ sectorUserDetails }: { sectorUserDetails: SectorUserAuthorityDetailsDTO }) =>
+        `${sectorUserDetails.firstName} ${sectorUserDetails.lastName}`,
     },
     canActivate: [CanEditSectorUserGuard],
     loadComponent: () => import('./sector-user-details.component').then((c) => c.SectorUserDetailsComponent),
   },
   {
     path: 'edit',
+    title: 'Change user details',
     canActivate: [CanEditSectorUserGuard],
     data: { backlink: '../', breadcrumb: false },
     loadComponent: () =>
@@ -21,8 +25,8 @@ export const SECTOR_USER_DETAILS_ROUTES: Routes = [
   },
   {
     path: 'delete',
+    title: 'Confirm that this sector user will be deleted',
     data: {
-      pageTitle: 'Confirm that this sector user will be deleted',
       breadcrumb: false,
       backlink: '../../../',
     },

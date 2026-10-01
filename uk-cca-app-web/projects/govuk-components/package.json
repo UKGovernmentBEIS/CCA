@@ -2,8 +2,8 @@
   "name": "@netz/govuk-components",
   "version": "4.7.0",
   "peerDependencies": {
-    "@angular/common": "^21.2.18",
-    "@angular/core": "^21.2.18",
+    "@angular/common": "^22.1.4",
+    "@angular/core": "^22.1.4",
     "govuk-frontend": "^5.14.0"
   },
   "dependencies": {

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { assertInCellControlLabelsHidden } from '@testing';
 
 import { SectorAssociationAuthoritiesService, SectorUsersAuthoritiesInfoDTO } from 'cca-api';
 
@@ -62,6 +63,10 @@ describe('SectorContactsTabComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should hide the labels of controls inside table cells, since the column header names them', () => {
+    assertInCellControlLabelsHidden(fixture.nativeElement);
   });
 
   it('should render authorities form', () => {

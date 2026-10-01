@@ -1,5 +1,7 @@
-<fieldset [id]="identifier" govukFieldset>
-  <legend govukLegend>{{ label() }}</legend>
+<fieldset [id]="identifier" govukFieldset [hasError]="shouldDisplayErrors">
+  @if (label()) {
+    <legend govukLegend>{{ label() }}</legend>
+  }
 
   @if (hint()) {
     <div govukFieldsetHint>{{ hint() }}</div>

@@ -13,7 +13,7 @@ import { MiReportsUserDefinedService, MiReportUserDefinedDTO } from 'cca-api';
       <netz-page-heading caption="Delete MI Report">
         Are you sure you want to delete the {{ query.reportName }} MI Report?
       </netz-page-heading>
-      <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+      <govuk-warning-text>You will not be able to undo this action.</govuk-warning-text>
       <p>Your MI Report and all its data will be deleted permanently.</p>
       <button (click)="onDelete()" class="govuk-button govuk-button--warning">Yes, delete the MI Report</button>
     </div>

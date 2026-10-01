@@ -229,9 +229,22 @@ export const createProposedUnderlyingAgreementVariationPayload = (
   Object.entries(reviewGroupDecisions)
     .filter(([reviewGroup]) => reviewGroup !== 'TARGET_UNIT_DETAILS' && reviewGroup !== 'VARIATION_DETAILS')
     .forEach(([reviewGroup, decision]) => {
-      if (decision.type === TaskItemStatus.REJECTED)
-        proposed[DECISION_TO_SUBTASK_MAP[reviewGroup]] =
-          originalUnderlyingAgreementContainer.underlyingAgreement[DECISION_TO_SUBTASK_MAP[reviewGroup]];
+      if (decision.type === TaskItemStatus.REJECTED) {
+        switch (DECISION_TO_SUBTASK_MAP[reviewGroup]) {
+          case 'targetPeriod5Details':
+            proposed.targetPeriod5Details =
+              originalUnderlyingAgreementContainer.underlyingAgreement.targetPeriod5Details;
+            break;
+          case 'targetPeriod6Details':
+            proposed.targetPeriod6Details =
+              originalUnderlyingAgreementContainer.underlyingAgreement.targetPeriod6Details;
+            break;
+          case 'authorisationAndAdditionalEvidence':
+            proposed.authorisationAndAdditionalEvidence =
+              originalUnderlyingAgreementContainer.underlyingAgreement.authorisationAndAdditionalEvidence;
+            break;
+        }
+      }
     });
 
   proposed.facilities = Object.keys(facilitiesReviewGroupDecisions)

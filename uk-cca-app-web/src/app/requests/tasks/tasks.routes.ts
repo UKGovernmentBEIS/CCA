@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
 import { TASK_RELATED_ACTIONS_MAP } from '@netz/common/components';
-import { ItemNamePipe, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
+import { getItemName, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
 import {
   getRequestTaskPageCanDeactivateGuard,
   getRequestTaskPageDefaultCanActivateGuard,
@@ -20,7 +20,7 @@ import { createIsEditableResolver, taskRelatedActionsMap } from './tasks.provide
 import { tasksContent } from './tasks-content';
 
 const taskTypeToReturnText = (type: RequestTaskDTO['type']): string => {
-  return new ItemNamePipe().transform(type as ItemDTO['taskType']) ?? 'Dashboard';
+  return getItemName(type as ItemDTO['taskType']) ?? 'Dashboard';
 };
 
 export const TASKS_ROUTES: Routes = [
@@ -37,6 +37,7 @@ export const TASKS_ROUTES: Routes = [
     children: [
       {
         path: '',
+        title: () => taskTypeToReturnText(inject(RequestTaskStore).state?.requestTaskItem?.requestTask?.type),
         providers: [
           { provide: REQUEST_TASK_PAGE_CONTENT, useValue: tasksContent },
           { provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap },
@@ -281,15 +282,24 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'pat-csv-upload',
+        loadChildren: () =>
+          import('./performance-account-template-csv-upload/performance-account-template-csv-upload.routes').then(
+            (r) => r.PERFORMANCE_ACCOUNT_TEMPLATE_CSV_UPLOAD_ROUTES,
+          ),
+      },
+      {
         path: 'appeal-outcome',
         loadChildren: () => import('./appeal-outcome/appeal-outcome.routes').then((r) => r.APPEAL_OUTCOME_ROUTES),
       },
       {
         path: 'file-download/:uuid',
+        title: 'Your download has started',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
       {
         path: 'file-download/:fileType/:uuid',
+        title: 'Your download has started',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
     ],

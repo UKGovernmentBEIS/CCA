@@ -6,8 +6,8 @@
   <p>Add a new user</p>
 
   <form [formGroup]="createUserForm" (ngSubmit)="onSelectUserType()" data-testid="sector-user-type-form">
-    <div style="display: flex">
-      <div [options]="createUserTypeOptions" formControlName="userType" govuk-select></div>
+    <div class="row-flex align-items-end">
+      <div [options]="createUserTypeOptions" formControlName="userType" govuk-select label="User type"></div>
 
       <button netzPendingButton govukButton type="submit" class="govuk-!-margin-left-3">Continue</button>
     </div>
@@ -54,7 +54,13 @@
 
           @case ('userType') {
             @if (isEditable() && authoritiesArray.at(index).controls.status.value === 'ACTIVE') {
-              <div [options]="createUserTypeOptions" formControlName="userType" govuk-select></div>
+              <div
+                [options]="createUserTypeOptions"
+                formControlName="userType"
+                govuk-select
+                label="User type"
+                [labelHidden]="true"
+              ></div>
             } @else {
               {{ row['roleName'] }}
             }
@@ -67,6 +73,8 @@
                   [options]="row[column.field] === 'ACCEPTED' ? authorityStatusesAccepted : authorityStatuses"
                   formControlName="status"
                   govuk-select
+                  label="Account status"
+                  [labelHidden]="true"
                   widthClass="govuk-!-width-full"
                 ></div>
               } @else {

@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
-import { filter, map } from 'rxjs';
+import { map } from 'rxjs';
 
 import { selectIsLoggedIn, selectUserRoleType, selectUserState } from '@netz/common/auth';
 import { AuthStore } from '@netz/common/auth';
@@ -18,6 +17,7 @@ import {
 } from '@netz/govuk-components';
 import { PhaseBarComponent, WorkflowTaskHeaderComponent } from '@shared/components';
 import { ConfigService } from '@shared/config';
+import { MainContentFocusDirective } from '@shared/directives';
 import { AnalyticsService, AuthService, CountryService, CountyService } from '@shared/services';
 
 import { CookiesService } from './cookies/cookies.service';
@@ -44,14 +44,11 @@ import { TimeoutBannerComponent } from './timeout/timeout-banner/timeout-banner.
     MetaInfoComponent,
     WorkflowTaskHeaderComponent,
     RouterLinkActive,
+    MainContentFocusDirective,
   ],
 })
 export class AppComponent implements OnInit {
-  private readonly destroyRef = inject(DestroyRef);
   private readonly authStore = inject(AuthStore);
-  private readonly titleService = inject(Title);
-  private readonly router = inject(Router);
-  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly cookiesService = inject(CookiesService);
   private readonly analyticsService = inject(AnalyticsService);
   private readonly configService = inject(ConfigService);
@@ -73,28 +70,6 @@ export class AppComponent implements OnInit {
   );
 
   ngOnInit() {
-    const appTitle = this.titleService.getTitle();
-
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map(() => {
-          let child = this.activatedRoute.firstChild;
-
-          while (child.firstChild) {
-            child = child.firstChild;
-          }
-
-          if (child.snapshot.data['pageTitle']) {
-            return child.snapshot.data['pageTitle'];
-          }
-
-          return appTitle;
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((title: string) => this.titleService.setTitle(`${title} - GOV.UK`));
-
     if (this.cookiesService.accepted$.getValue() && this.cookiesService.hasAnalyticsConsent()) {
       this.analyticsService.enableGoogleTagManager();
     }

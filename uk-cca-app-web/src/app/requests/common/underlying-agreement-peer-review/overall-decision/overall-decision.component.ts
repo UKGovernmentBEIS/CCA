@@ -3,9 +3,9 @@ import { RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
-import { toOverallDecisionSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 
+import { toOverallDecisionSummaryData } from '../../underlying-agreement/summaries/to-overall-decision-summary-data';
 import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer-review.selectors';
 
 @Component({

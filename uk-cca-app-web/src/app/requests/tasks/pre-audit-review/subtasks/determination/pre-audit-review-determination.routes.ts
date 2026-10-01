@@ -14,6 +14,7 @@ export const PRE_AUDIT_REVIEW_DETERMINATION_ROUTES: Routes = [
       },
       {
         path: 'review-determination',
+        title: 'Pre-audit review determination',
         data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./review-determination/pre-audit-review-determination.component').then(
@@ -22,6 +23,7 @@ export const PRE_AUDIT_REVIEW_DETERMINATION_ROUTES: Routes = [
       },
       {
         path: 'check-your-answers',
+        title: 'Check your answers',
         data: { breadcrumb: false, backlink: '../review-determination' },
         loadComponent: () =>
           import('./check-your-answers/pre-audit-review-determination-check-your-answers.component').then(
@@ -30,6 +32,7 @@ export const PRE_AUDIT_REVIEW_DETERMINATION_ROUTES: Routes = [
       },
       {
         path: 'summary',
+        title: 'Summary',
         data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./summary/pre-audit-review-determination-summary.component').then(

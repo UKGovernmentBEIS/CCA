@@ -43,12 +43,12 @@ export class ResetPasswordComponent implements OnInit {
         map((emailDTO) => {
           this.resetPasswordStore.setState({ ...this.resetPasswordStore.state, email: emailDTO.email });
         }),
-        map(() => ({ url: 'success' })),
+        map<unknown, { url: string; code?: string }>(() => ({ url: 'success', code: undefined })),
         catchBadRequest([ErrorCodes.EMAIL1001, ErrorCodes.TOKEN1001], (res) =>
           of({ url: 'invalid-link', code: res.error.code }),
         ),
       )
-      .subscribe(({ code, url }: { url: string; code: string }) => {
+      .subscribe(({ code, url }) => {
         if (url !== 'success') {
           code === ErrorCodes.TOKEN1001
             ? this.router.navigate(['error', '404'])

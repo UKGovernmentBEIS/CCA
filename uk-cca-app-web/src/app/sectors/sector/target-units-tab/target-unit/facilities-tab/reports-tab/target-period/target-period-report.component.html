@@ -14,4 +14,6 @@
     <cca-summary [data]="data.summary" />
     <a class="govuk-link" [routerLink]="['reports', data.targetPeriodYear]">View details</a>
   }
+} @else if (hasCriteria()) {
+  <p>There are no reports for the selected criteria.</p>
 }

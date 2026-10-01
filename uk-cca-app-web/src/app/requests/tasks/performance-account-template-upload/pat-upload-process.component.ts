@@ -85,7 +85,7 @@ export class PATUploadProcessComponent implements OnInit {
         } as RequestTaskActionPayload,
       })
       .pipe(
-        catchNotFoundRequest(ErrorCode.NOTFOUND1001, () =>
+        catchNotFoundRequest<never>(ErrorCode.NOTFOUND1001, () =>
           this.businessErrorService.showErrorForceNavigation(taskNotFoundError),
         ),
         catchTaskReassignedBadRequest(() =>
@@ -103,7 +103,7 @@ export class PATUploadProcessComponent implements OnInit {
       take(1),
       switchMap(() => this.tasksService.getTaskItemInfoById(this.taskId())),
       takeUntilDestroyed(this.destroyRef),
-      map((r) => r.requestTask.payload),
+      map((r): PATUploadPayload => r.requestTask.payload as PATUploadPayload),
       switchMap((payload: PATUploadPayload) => {
         if (payload.processingStatus === 'IN_PROGRESS') return this.fetchTaskItemInfo();
         this.requestTaskStore.setPayload(payload);

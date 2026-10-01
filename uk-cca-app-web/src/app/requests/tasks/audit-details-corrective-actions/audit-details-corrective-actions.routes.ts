@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export const AUDIT_DETAILS_CORRECTIVE_ACTIONS_ROUTES: Routes = [
   {
     path: '',
+    title: 'Audit details and corrective actions',
     children: [
       {
         path: 'audit-details',

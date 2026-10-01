@@ -2105,4 +2105,20 @@ This is an automatic email - please do not reply to this address.')
             <param name="fileDocumentName" value="CCA3 variation acknowledgement letter.docx"/>
         </customChange>
     </changeSet>
+
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_CCA3_signature_image" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_CCA3"/>
+            <param name="fileDocumentName" value="CCA3 agreement.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_VARIATION_COMPLETED_logo_image" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_COMPLETED"/>
+            <param name="fileDocumentName" value="CCA3 variation acknowledgement letter.docx"/>
+        </customChange>
+    </changeSet>
 </databaseChangeLog>

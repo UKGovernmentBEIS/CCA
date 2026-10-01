@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -16,7 +16,6 @@ import {
   underlyingAgreementQuery,
 } from '@requests/common';
 import { FileInputComponent, WizardStepComponent } from '@shared/components';
-import { fileUtils } from '@shared/utils';
 import { produce } from 'immer';
 
 import {
@@ -63,16 +62,22 @@ export class FacilityExtentComponent {
     },
   );
 
-  protected readonly isActivitiesDescriptionFileExist: Signal<boolean> = computed(() => {
-    if (this.activitiesClaimedExists()) {
-      this.form.get('activitiesDescriptionFile').enable();
-      return true;
-    }
+  protected readonly isActivitiesDescriptionFileExist: Signal<boolean> = computed(() =>
+    Boolean(this.activitiesClaimedExists()),
+  );
 
-    this.form.get('activitiesDescriptionFile').disable();
-    this.form.get('activitiesDescriptionFile').reset();
-    return false;
-  });
+  constructor() {
+    effect(() => {
+      const activitiesDescriptionFile = this.form.get('activitiesDescriptionFile');
+
+      if (this.isActivitiesDescriptionFileExist()) {
+        activitiesDescriptionFile.enable();
+      } else {
+        activitiesDescriptionFile.disable();
+        activitiesDescriptionFile.reset();
+      }
+    });
+  }
 
   getDownloadUrl(uuid: string) {
     return ['../../../../file-download', uuid];
@@ -116,40 +121,28 @@ function updateFacilityExtent(
     const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
     if (facilityIndex === -1) return;
 
+    // `form.value` leaves disabled controls out, so a control that the effect disabled and reset
+    // would keep its previously saved value. Read the raw value so the reset is saved as well.
+    const value = form.getRawValue();
+
     if (!draft.facilities[facilityIndex].facilityExtent) {
       draft.facilities[facilityIndex].facilityExtent = {
-        areActivitiesClaimed: form.value.areActivitiesClaimed,
-        manufacturingProcessFile: fileUtils.toUUIDs([form.value.manufacturingProcessFile])[0] || '',
-        processFlowFile: fileUtils.toUUIDs([form.value.processFlowFile])[0] || '',
-        annotatedSitePlansFile: fileUtils.toUUIDs([form.value.annotatedSitePlansFile])[0] || '',
-        eligibleProcessFile: fileUtils.toUUIDs([form.value.eligibleProcessFile])[0] || '',
-        activitiesDescriptionFile: form.value?.activitiesDescriptionFile
-          ? fileUtils.toUUIDs([form.value.activitiesDescriptionFile])[0] || ''
-          : '',
+        areActivitiesClaimed: value.areActivitiesClaimed,
+        manufacturingProcessFile: value.manufacturingProcessFile?.uuid ?? '',
+        processFlowFile: value.processFlowFile?.uuid ?? '',
+        annotatedSitePlansFile: value.annotatedSitePlansFile?.uuid ?? '',
+        eligibleProcessFile: value.eligibleProcessFile?.uuid ?? '',
+        activitiesDescriptionFile: value.activitiesDescriptionFile?.uuid ?? '',
       };
     } else {
       draft.facilities[facilityIndex].facilityExtent = {
         ...draft.facilities[facilityIndex].facilityExtent,
-        ...form.value,
-        manufacturingProcessFile:
-          fileUtils.toUUIDs([form.value.manufacturingProcessFile])[0] ||
-          draft.facilities[facilityIndex].facilityExtent.manufacturingProcessFile ||
-          '',
-        processFlowFile:
-          fileUtils.toUUIDs([form.value.processFlowFile])[0] ||
-          draft.facilities[facilityIndex].facilityExtent.processFlowFile ||
-          '',
-        annotatedSitePlansFile:
-          fileUtils.toUUIDs([form.value.annotatedSitePlansFile])[0] ||
-          draft.facilities[facilityIndex].facilityExtent.annotatedSitePlansFile ||
-          '',
-        eligibleProcessFile:
-          fileUtils.toUUIDs([form.value.eligibleProcessFile])[0] ||
-          draft.facilities[facilityIndex].facilityExtent.eligibleProcessFile ||
-          '',
-        activitiesDescriptionFile: form.value?.activitiesDescriptionFile
-          ? fileUtils.toUUIDs([form.value.activitiesDescriptionFile])[0] || ''
-          : draft.facilities[facilityIndex].facilityExtent.activitiesDescriptionFile || '',
+        ...value,
+        manufacturingProcessFile: value.manufacturingProcessFile?.uuid ?? '',
+        processFlowFile: value.processFlowFile?.uuid ?? '',
+        annotatedSitePlansFile: value.annotatedSitePlansFile?.uuid ?? '',
+        eligibleProcessFile: value.eligibleProcessFile?.uuid ?? '',
+        activitiesDescriptionFile: value.activitiesDescriptionFile?.uuid ?? '',
       };
     }
   });

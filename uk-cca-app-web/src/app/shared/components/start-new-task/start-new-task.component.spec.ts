@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -35,7 +35,7 @@ describe('StartNewTaskComponent', () => {
     TestBed.configureTestingModule({
       imports: [StartNewTaskComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
@@ -82,6 +82,7 @@ describe('StartNewTaskComponent', () => {
 
   it('should display workflows in correct order', () => {
     createComponentWithMock({
+      FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: { valid: true },
       PERFORMANCE_DATA_DOWNLOAD: { valid: true },
       PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: { valid: true },
       PERFORMANCE_DATA_UPLOAD: { valid: true },
@@ -90,10 +91,11 @@ describe('StartNewTaskComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const headings = compiled.querySelectorAll('h2.govuk-heading-m');
 
-    expect(headings.length).toBe(3);
-    expect(headings[0].textContent?.trim()).toBe('TP reporting (TP6) - Download spreadsheets');
-    expect(headings[1].textContent?.trim()).toBe('TP reporting (TP6) - Upload spreadsheets');
-    expect(headings[2].textContent?.trim()).toBe('Upload PAT spreadsheets');
+    expect(headings.length).toBe(4);
+    expect(headings[0].textContent?.trim()).toBe('PAT reporting - Upload CSV file');
+    expect(headings[1].textContent?.trim()).toBe('TP reporting (TP6) - Download spreadsheets');
+    expect(headings[2].textContent?.trim()).toBe('TP reporting (TP6) - Upload spreadsheets');
+    expect(headings[3].textContent?.trim()).toBe('Upload PAT spreadsheets');
   });
 
   it('should render non-compliance workflow copy for regulator', () => {

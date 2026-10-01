@@ -73,6 +73,11 @@ describe('TimeoutBannerComponent', () => {
     expect(component.isDialogOpen()).toBeFalsy();
   });
 
+  it('should associate the dialog title with the dialog', () => {
+    expect(dialogElement.getAttribute('aria-labelledby')).toBe('dialog-title');
+    expect(fixture.nativeElement.querySelector('#dialog-title')).toBeTruthy();
+  });
+
   it('should call extendSession when continue button clicked', () => {
     timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
@@ -94,14 +99,14 @@ describe('TimeoutBannerComponent', () => {
   });
 
   it('should show extend session message when timeExtensionAllowed is true', () => {
-    const textDiv = fixture.nativeElement.querySelector('[aria-relevant="additions"][aria-hidden="true"]');
+    const textDiv = fixture.nativeElement.querySelector('[aria-hidden="true"]');
     expect(textDiv.innerHTML).toContain('if you do not respond');
   });
 
   it('should show no-extension message when timeExtensionAllowed is false', () => {
     timeoutBannerServiceMock.timeExtensionAllowed.set(false);
     fixture.detectChanges();
-    const textDiv = fixture.nativeElement.querySelector('[aria-relevant="additions"][aria-hidden="true"]');
+    const textDiv = fixture.nativeElement.querySelector('[aria-hidden="true"]');
     expect(textDiv.innerHTML).toContain('automatically signed out');
   });
 

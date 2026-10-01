@@ -29,7 +29,7 @@ import { createSubmitActionDTO } from '../../transform';
 
     <netz-page-heading size="xl">Send variation application to regulator</netz-page-heading>
 
-    <govuk-warning-text assistiveText="">
+    <govuk-warning-text>
       You will not be able to make any changes until the regulator has completed the review.
     </govuk-warning-text>
 

@@ -14,7 +14,7 @@ import { AccountNotesService, RequestNotesService } from 'cca-api';
     <div>
       <netz-page-heading>Are you sure you want to delete this note?</netz-page-heading>
       <p>Your note will be deleted permanently.</p>
-      <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+      <govuk-warning-text>You will not be able to undo this action.</govuk-warning-text>
       <button (click)="onDelete()" class="govuk-button govuk-button--warning">Delete note</button>
     </div>
     <a routerLink="../../../" fragment="notes" class="govuk-link">Return to: Workflow notes</a>

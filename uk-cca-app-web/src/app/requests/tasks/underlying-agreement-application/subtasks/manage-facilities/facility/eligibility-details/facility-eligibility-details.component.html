@@ -2,7 +2,7 @@
   <cca-wizard-step
     (formSubmit)="onSubmit()"
     [formGroup]="form"
-    [caption]="facility?.facilityDetails?.name"
+    [caption]="$safeNavigationMigration(facility?.facilityDetails?.name)"
     heading="CCA eligibility details and authorisation"
     data-testid="add-facility-eligibility-details-form"
   >
@@ -26,19 +26,13 @@
       </div>
 
       <div class="govuk-!-width-three-quarters">
-        <label for="agreementType">
-          What is the legal basis for this facility being considered an eligible activity?
-        </label>
-        <p class="govuk-hint">
-          Activities carried out in facilities are considered to be eligible if they are or would be regulated under the
-          Environmental Permitting Regulations (EPR), or, they are part of a sector that has been identified as energy
-          intensive
-        </p>
         <div
           widthClass="govuk-!-width-full"
           [options]="agreementTypeOptions"
           formControlName="agreementType"
           govuk-select
+          label="What is the legal basis for this facility being considered an eligible activity?"
+          hint="Activities carried out in facilities are considered to be eligible if they are or would be regulated under the Environmental Permitting Regulations (EPR), or, they are part of a sector that has been identified as energy intensive"
         ></div>
       </div>
 

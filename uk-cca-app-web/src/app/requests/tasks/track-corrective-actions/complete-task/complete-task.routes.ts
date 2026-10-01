@@ -6,12 +6,14 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 export const TRACK_CORRECTIVE_ACTIONS_COMPLETE_TASK_ROUTES: Routes = [
   {
     path: '',
+    title: 'Complete task',
     canActivate: [() => inject(RequestTaskStore).select(requestTaskQuery.selectIsEditable)()],
     data: { breadcrumb: false, backlink: '../..' },
     loadComponent: () => import('./complete-task.component').then((c) => c.CompleteTaskComponent),
   },
   {
     path: 'confirmation',
+    title: 'Track corrective actions complete',
     canActivate: [() => inject(RequestTaskStore).select(requestTaskQuery.selectIsEditable)()],
     data: { breadcrumb: false },
     loadComponent: () =>

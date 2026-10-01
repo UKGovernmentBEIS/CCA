@@ -36,7 +36,9 @@ export enum VariationChangesEnum {
 @Pipe({ name: 'variationChanges' })
 export class VariationChangesTypePipe implements PipeTransform {
   transform(value: string): string {
-    const text = VariationChangesEnum[value];
+    const text = Object.hasOwn(VariationChangesEnum, value)
+      ? VariationChangesEnum[value as keyof typeof VariationChangesEnum]
+      : undefined;
     if (!text) throw new Error('invalid type for variation changes');
     return text;
   }

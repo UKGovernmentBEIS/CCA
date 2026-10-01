@@ -23,6 +23,9 @@ import { WorkflowHistoryTabState, workflowStatusesMap, workflowTypesMap } from '
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 
+type WorkflowMetadata = Record<string, string | undefined>;
+type TargetPeriodType = 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
+
 @Component({
   selector: 'cca-workflow-history-tab',
   templateUrl: './workflow-history-tab.component.html',
@@ -54,6 +57,20 @@ export class WorkflowHistoryTabComponent {
 
   protected readonly workflowTypesMap = workflowTypesMap;
   protected readonly workflowStatusesMap = workflowStatusesMap;
+
+  protected getWorkflowMetadata(workflow: RequestDetailsSearchResults['requestDetails'][number]): WorkflowMetadata {
+    return Object.fromEntries(
+      Object.entries(workflow.requestMetadata ?? {}).map(([key, value]) => [key, String(value)]),
+    );
+  }
+
+  protected getTargetPeriodType(workflow: RequestDetailsSearchResults['requestDetails'][number]): TargetPeriodType {
+    return this.getWorkflowMetadata(workflow)['targetPeriodType'] as TargetPeriodType;
+  }
+
+  protected getReportVersion(workflow: RequestDetailsSearchResults['requestDetails'][number]): number {
+    return Number(this.getWorkflowMetadata(workflow)['performanceDataReportVersion']);
+  }
 
   readonly state = signal<WorkflowHistoryTabState>({
     workflowsHistory: null,

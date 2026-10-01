@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
@@ -19,7 +19,7 @@ describe('TransactionsFiltersComponent', () => {
     const mockActivatedRoute = {
       snapshot: {
         queryParams: {
-          term: null,
+          term: null as string | null,
           targetPeriodType: 'TP6',
           buyOutSurplusPaymentStatus: 'PAID',
         },
@@ -48,7 +48,7 @@ describe('TransactionsFiltersComponent', () => {
       imports: [TransactionsFiltersComponent],
       providers: [
         FormBuilder,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         TransactionReportFormProvider,

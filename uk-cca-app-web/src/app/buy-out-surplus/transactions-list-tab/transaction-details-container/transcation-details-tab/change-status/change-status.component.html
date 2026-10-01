@@ -2,7 +2,7 @@
   <cca-wizard-step [formGroup]="form" heading="Status" caption="Change" (formSubmit)="onSubmit()">
     <cca-summary [data]="transactionSummary" />
 
-    <div govuk-radio formControlName="status">
+    <div govuk-radio formControlName="status" legend="Select a status">
       @if (transactionDetails.chargeType === 'FEE') {
         <govuk-radio-option label="Awaiting payment" value="AWAITING_PAYMENT">
           <ng-container govukConditionalContent>
@@ -52,7 +52,7 @@
                 <div
                   formControlName="paymentDate"
                   govuk-date-input
-                  text="Enter the date when the payment was received in the bank account"
+                  label="Enter the date when the payment was received in the bank account"
                 ></div>
               </div>
             </div>

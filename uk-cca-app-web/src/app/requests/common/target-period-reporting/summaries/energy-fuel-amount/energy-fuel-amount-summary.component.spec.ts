@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { roundHalfUpTo7Decimals } from '@requests/common';
-
 import { PerformanceDataFacilityInputEnergyFuelDetails } from 'cca-api';
 
+import { roundHalfUpTo7Decimals } from '../../utils';
 import { EnergyFuelAmountSummaryComponent } from '../energy-fuel-amount/energy-fuel-amount-summary.component';
 
 describe('EnergyFuelAmountSummaryComponent', () => {

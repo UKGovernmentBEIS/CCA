@@ -1,9 +1,24 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterContentChecked, AfterContentInit, Component, input, contentChildren } from '@angular/core';
+import {
+  AfterContentChecked,
+  AfterContentInit,
+  Component,
+  input,
+  contentChildren,
+  contentChild,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
-import { FieldsetDirective, FieldsetHintDirective, LegendDirective, LegendSizeType } from '../fieldset';
+import {
+  FieldsetDirective,
+  FieldsetHintDirective,
+  LegendContentDirective,
+  LegendDirective,
+  LegendSizeType,
+} from '../fieldset';
 import { FormInput } from '../form/form-input';
 import { RadioOptionComponent } from './radio-option/radio-option.component';
 
@@ -14,7 +29,15 @@ import { RadioOptionComponent } from './radio-option/radio-option.component';
 @Component({
   selector: 'div[govuk-radio]',
   templateUrl: './radio.component.html',
-  imports: [LegendDirective, FieldsetDirective, FieldsetHintDirective, ErrorMessageComponent, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    LegendContentDirective,
+    LegendDirective,
+    FieldsetDirective,
+    FieldsetHintDirective,
+    ErrorMessageComponent,
+    NgTemplateOutlet,
+  ],
 })
 export class RadioComponent<T>
   extends FormInput
@@ -27,6 +50,10 @@ export class RadioComponent<T>
   readonly legendSize = input<LegendSizeType>('normal');
 
   readonly options = contentChildren(RadioOptionComponent);
+
+  readonly projectedLegend = contentChild(LegendContentDirective);
+
+  protected readonly shouldDisplayLegend = computed(() => Boolean(this.legend()) || Boolean(this.projectedLegend()));
 
   private onChange: (_: T) => any;
   private onBlur: () => any;

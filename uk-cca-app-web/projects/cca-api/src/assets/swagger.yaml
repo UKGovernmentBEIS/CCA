@@ -331,8 +331,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: >-
-                #/components/schemas/CcaOperatorUserRegistrationWithCredentialsDTO
+              $ref: '#/components/schemas/CcaOperatorUserRegistrationWithCredentialsDTO'
         required: true
       responses:
         '200':
@@ -486,7 +485,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: The mi report user defined id
+          description: The MI report user defined id
           required: true
           schema:
             type: integer
@@ -495,7 +494,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MiReportUserDefinedDTO'
+              $ref: '#/components/schemas/CcaMiReportUserDefinedDTO'
         required: true
       responses:
         '204':
@@ -584,8 +583,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: >-
-                #/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO
+              $ref: '#/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO'
         required: true
       responses:
         '204':
@@ -593,8 +591,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: >-
-                  #/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO
+                $ref: '#/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO'
         '403':
           description: Forbidden
           content:
@@ -2093,8 +2090,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: >-
-                #/components/schemas/SectorFacilityPerformanceDataReportSearchCriteria
+              $ref: '#/components/schemas/SectorFacilityPerformanceDataReportSearchCriteria'
         required: true
       responses:
         '200':
@@ -2102,8 +2098,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: >-
-                  #/components/schemas/SectorFacilityPerformanceDataReportListDTO
+                $ref: '#/components/schemas/SectorFacilityPerformanceDataReportListDTO'
         '400':
           description: "Bad Request\t\n Error Code | Description \t\nTPRF1001 | Expected exactly one target year, but found multiple."
           content:
@@ -2140,8 +2135,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: >-
-                #/components/schemas/SectorAccountPerformanceDataReportSearchCriteria
+              $ref: '#/components/schemas/SectorAccountPerformanceDataReportSearchCriteria'
         required: true
       responses:
         '200':
@@ -2162,12 +2156,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/sector-association/{sectorAssociationId}/performance-account-template-data-report:
+  /v1.0/sector-association/{sectorAssociationId}/performance-account-template-data-report/facilities:
     post:
       tags:
         - Sector-Level Performance Account Template Data View Pages
-      summary: Populates the performance account template data of sector accounts
-      operationId: getSectorPerformanceAccountTemplateDataReportList
+      summary: Populates the performance account template data of sector facilities
+      operationId: getSectorFacilityPerformanceAccountTemplateDataReportList
       parameters:
         - name: sectorAssociationId
           in: path
@@ -2180,8 +2174,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: >-
-                #/components/schemas/SectorPerformanceAccountTemplateDataReportSearchCriteria
+              $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportSearchCriteria'
         required: true
       responses:
         '200':
@@ -2189,8 +2182,46 @@ paths:
           content:
             application/json:
               schema:
-                $ref: >-
-                  #/components/schemas/SectorPerformanceAccountTemplateDataReportListDTO
+                $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportListDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/sector-association/{sectorAssociationId}/performance-account-template-data-report/accounts:
+    post:
+      tags:
+        - Sector-Level Performance Account Template Data View Pages
+      summary: Populates the performance account template data of sector accounts
+      operationId: getSectorAccountPerformanceAccountTemplateDataReportList
+      parameters:
+        - name: sectorAssociationId
+          in: path
+          description: The sector association id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportSearchCriteria'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportListDTO'
         '403':
           description: Forbidden
           content:
@@ -3043,7 +3074,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MiReportUserDefinedDTO'
+              $ref: '#/components/schemas/CcaMiReportUserDefinedDTO'
         required: true
       responses:
         '204':
@@ -3395,6 +3426,12 @@ paths:
             minimum: 1
             type: integer
             format: int32
+        - name: searchCriteria
+          in: query
+          description: The site contacts search criteria
+          required: true
+          schema:
+            $ref: '#/components/schemas/SiteContactSearchCriteriaDTO'
       responses:
         '200':
           description: OK
@@ -3557,8 +3594,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: >-
-                #/components/schemas/BuyOutSurplusTransactionUpdatePaymentStatusDTO
+              $ref: '#/components/schemas/BuyOutSurplusTransactionUpdatePaymentStatusDTO'
         required: true
       responses:
         '204':
@@ -3949,8 +3985,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: >-
-                #/components/schemas/UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO
+              $ref: '#/components/schemas/UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO'
         required: true
       responses:
         '204':
@@ -5500,8 +5535,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: >-
-                  #/components/schemas/AccountPerformanceAccountTemplateDataReportInfoDTO
+                $ref: '#/components/schemas/AccountPerformanceAccountTemplateDataReportInfoDTO'
         '403':
           description: Forbidden
           content:
@@ -5546,8 +5580,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: >-
-                  #/components/schemas/AccountPerformanceAccountTemplateDataReportDetailsDTO
+                $ref: '#/components/schemas/AccountPerformanceAccountTemplateDataReportDetailsDTO'
         '403':
           description: Forbidden
           content:
@@ -5678,30 +5711,12 @@ paths:
       summary: Retrieves the current user associated accounts
       operationId: searchUserAccounts
       parameters:
-        - name: term
+        - name: searchCriteria
           in: query
-          description: The term to search
-          required: false
-          schema:
-            maxLength: 256
-            minLength: 3
-            type: string
-        - name: page
-          in: query
-          description: The page number starting from zero
+          description: The account search criteria
           required: true
           schema:
-            minimum: 0
-            type: integer
-            format: int32
-        - name: size
-          in: query
-          description: The page size
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int32
+            $ref: '#/components/schemas/TargetUnitAccountSearchCriteria'
       responses:
         '200':
           description: OK
@@ -6027,8 +6042,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: >-
-                  #/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO
+                $ref: '#/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO'
         '403':
           description: Forbidden
           content:
@@ -7508,6 +7522,92 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/facilities/{facilityId}/performance-account-template-data-report/info:
+    get:
+      tags:
+        - Target Period Performance Account Template Data Report of the Facility
+      summary: >-
+        Retrieves the facility performance account template data report info if
+        exist
+      operationId: getFacilityPerformanceAccountTemplateDataReportInfo
+      parameters:
+        - name: facilityId
+          in: path
+          description: The facility id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: targetPeriodYear
+          in: query
+          description: The reporting year
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataReportInfoDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/facilities/{facilityId}/performance-account-template-data-report/details:
+    get:
+      tags:
+        - Target Period Performance Account Template Data Report of the Facility
+      summary: Retrieves the facility performance account template data report details
+      operationId: getFacilityPerformanceAccountTemplateDataReportDetails
+      parameters:
+        - name: facilityId
+          in: path
+          description: The facility id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: targetPeriodYear
+          in: query
+          description: The reporting year
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataReportDetailsDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/facilities/account/{accountId}:
     get:
       tags:
@@ -8677,15 +8777,6 @@ components:
         contentLength:
           type: integer
           format: int64
-        connection:
-          type: array
-          items:
-            type: string
-        ifModifiedSince:
-          type: integer
-          format: int64
-        contentType:
-          $ref: '#/components/schemas/MediaType'
         origin:
           type: string
         contentLanguage:
@@ -8736,6 +8827,15 @@ components:
           writeOnly: true
         cacheControl:
           type: string
+        connection:
+          type: array
+          items:
+            type: string
+        ifModifiedSince:
+          type: integer
+          format: int64
+        contentType:
+          $ref: '#/components/schemas/MediaType'
       additionalProperties:
         type: array
         items:
@@ -8826,8 +8926,7 @@ components:
         payloadType:
           type: string
         underlyingAgreement:
-          $ref: >-
-            #/components/schemas/UnderlyingAgreementVariationRegulatorLedSavePayload
+          $ref: '#/components/schemas/UnderlyingAgreementVariationRegulatorLedSavePayload'
         determination:
           $ref: '#/components/schemas/VariationRegulatorLedDetermination'
         sectionsCompleted:
@@ -8856,8 +8955,7 @@ components:
         subsistenceFeesMoaTargetUnits:
           type: array
           items:
-            $ref: >-
-              #/components/schemas/SubsistenceFeesMoaTargetUnitSearchResultInfoDTO
+            $ref: '#/components/schemas/SubsistenceFeesMoaTargetUnitSearchResultInfoDTO'
         total:
           type: integer
           format: int64
@@ -8881,8 +8979,7 @@ components:
         variableEnergyConsumptionDataByProduct:
           type: array
           items:
-            $ref: >-
-              #/components/schemas/PerformanceDataFacilityProductVariableEnergyData
+            $ref: '#/components/schemas/PerformanceDataFacilityProductVariableEnergyData'
     HttpStatusCode:
       type: object
       properties:
@@ -8913,9 +9010,19 @@ components:
           minLength: 0
           type: string
         queryDefinition:
-          maxLength: 10000
+          maxLength: 50000
           minLength: 0
           type: string
+        categories:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/MiReportUserDefinedCategoryDTO'
+        lastUpdatedOn:
+          type: string
+          format: date-time
+        favourite:
+          type: boolean
     NonComplianceAppealDetailsSubmittedRequestActionPayload:
       required:
         - registrationDate
@@ -9239,6 +9346,9 @@ components:
         surplusGained:
           type: string
           format: decimal
+        buyOutRequired:
+          type: string
+          format: decimal
         actualEnergyCarbon:
           type: string
           format: decimal
@@ -9258,9 +9368,6 @@ components:
           type: string
           format: decimal
         actualImprovement:
-          type: string
-          format: decimal
-        buyOutRequired:
           type: string
           format: decimal
     HttpMethod:
@@ -10256,8 +10363,7 @@ components:
         determination:
           $ref: '#/components/schemas/VariationDetermination'
         decision:
-          $ref: >-
-            #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+          $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
         reviewSectionsCompleted:
           type: object
           additionalProperties:
@@ -10299,8 +10405,7 @@ components:
         items:
           type: array
           items:
-            $ref: >-
-              #/components/schemas/SectorPerformanceAccountTemplateDataReportItemDTO
+            $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportItemDTO'
         total:
           type: integer
           format: int64
@@ -10532,8 +10637,7 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
         reviewAttachments:
           type: object
           additionalProperties:
@@ -10630,8 +10734,7 @@ components:
         sendEmailNotification:
           type: boolean
         activationDetails:
-          $ref: >-
-            #/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails
+          $ref: '#/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails'
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -10718,6 +10821,25 @@ components:
         priBuyOutCost:
           type: string
           format: decimal
+    BuyOutSurplusFacilityRunRequestMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        totalAccounts:
+          type: integer
+          format: int64
+        failedAccounts:
+          type: integer
+          format: int64
     PerformanceDataFacilityDigitalFormRequestCreateActionPayload:
       required:
         - reportType
@@ -10754,6 +10876,27 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
+    TargetUnitAccountSearchCriteria:
+      required:
+        - page
+        - size
+      type: object
+      properties:
+        term:
+          maxLength: 255
+          minLength: 3
+          type: string
+          description: The term to search by account name
+        page:
+          minimum: 0
+          type: integer
+          description: The page number starting from zero
+          format: int32
+        size:
+          minimum: 1
+          type: integer
+          description: The page size
+          format: int32
     FacilityPerformanceDataStatusInfoDTO:
       type: object
       properties:
@@ -10774,6 +10917,16 @@ components:
           type: boolean
         locked:
           type: boolean
+        reportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
+        submissionType:
+          type: string
+          enum:
+            - PRIMARY
+            - SECONDARY
         reportVersion:
           type: integer
           format: int32
@@ -10949,8 +11102,7 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -10990,9 +11142,6 @@ components:
       properties:
         type:
           type: string
-        reportVersion:
-          type: integer
-          format: int32
         targetYear:
           type: integer
           format: int16
@@ -11191,6 +11340,17 @@ components:
           type: boolean
         errorMessage:
           type: string
+    FacilityPerformanceAccountTemplateDataReportDetailsDTO:
+      type: object
+      properties:
+        targetPeriodYear:
+          type: integer
+          format: int16
+        submissionDate:
+          type: string
+          format: date-time
+        data:
+          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataContainer'
     AccountPerformanceDataStatusInfoDTO:
       type: object
       properties:
@@ -11524,8 +11684,7 @@ components:
       type: object
       properties:
         underlyingAgreementTargetUnitDetails:
-          $ref: >-
-            #/components/schemas/UnderlyingAgreementVariationApplySaveTargetUnitDetails
+          $ref: '#/components/schemas/UnderlyingAgreementVariationApplySaveTargetUnitDetails'
         underlyingAgreementVariationDetails:
           $ref: '#/components/schemas/UnderlyingAgreementVariationDetails'
         facilities:
@@ -11645,6 +11804,21 @@ components:
           type: string
         swiftCode:
           type: string
+    BuyOutSurplusFacilityRunCreateActionPayload:
+      required:
+        - targetPeriodType
+      type: object
+      properties:
+        payloadType:
+          type: string
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
     AssigneeUserInfoDTO:
       type: object
       properties:
@@ -12163,8 +12337,7 @@ components:
         payloadType:
           type: string
         activationDetails:
-          $ref: >-
-            #/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails
+          $ref: '#/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails'
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -12479,8 +12652,7 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
     FileUuidDTO:
       type: object
       properties:
@@ -12667,8 +12839,7 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
         reviewAttachments:
           type: object
           additionalProperties:
@@ -12802,12 +12973,20 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
         reviewAttachments:
           type: object
           additionalProperties:
             type: string
+    FacilityPerformanceAccountTemplateDataContainer:
+      required:
+        - savingActions
+      type: object
+      properties:
+        savingActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityPerformanceAccountTemplateSavingAction'
     OperatorAuthoritiesInfoDTO:
       type: object
       properties:
@@ -12995,6 +13174,58 @@ components:
           type: integer
           format: int64
       description: The account note request
+    FacilityPerformanceAccountTemplateSavingAction:
+      required:
+        - actionCategoryType
+      type: object
+      properties:
+        actionCategoryType:
+          type: string
+          enum:
+            - ENERGY_MANAGEMENT
+            - PROCESS_OPTIMISATION
+            - NEW_TECHNOLOGY_UPTAKE
+            - INSULATION_IMPROVEMENT
+            - INFRASTRUCTURE_IMPROVEMENT
+            - SWITCHING_NON_RENEWABLE_FUELS
+            - HEAT_RECOVERY
+            - SWITCHING_TO_CHP
+            - SWITCHING_TO_BIOMASS_HEATING
+            - SWITCHING_TO_RENEWABLE_POWER
+            - OTHER_CONTRIBUTIONS
+            - NO_ACTION
+        supplyDemandSideMeasure:
+          type: string
+          enum:
+            - SUPPLY_SIDE
+            - DEMAND_SIDE
+        savingActionsImplemented:
+          type: string
+        reasonsForImplementation:
+          type: string
+        implementationDate:
+          type: string
+          format: date
+        fixedEnergyConsumptionOrCarbonEmissionsImpacted:
+          type: string
+          enum:
+            - FIXED
+            - VARIABLE
+            - FIXED_AND_VARIABLE
+        energyConsumptionOrCarbonEmissionsImpactedPercentage:
+          type: string
+          format: decimal
+        expectedExtentOfChangeImplementedPercentage:
+          type: string
+          format: decimal
+        expectedSavingsFromTheChangeImplementedPercentage:
+          type: string
+          format: decimal
+        estimatedChangeInEnergyConsumptionPercentage:
+          type: string
+          format: decimal
+        notes:
+          type: string
     RdeDecisionPayload:
       required:
         - decision
@@ -13437,6 +13668,25 @@ components:
           $ref: '#/components/schemas/SectorAssociationDetailsResponseDTO'
         editable:
           type: boolean
+    CcaMiReportUserDefinedDTO:
+      required:
+        - queryDefinition
+        - reportName
+      type: object
+      properties:
+        reportName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        queryDefinition:
+          maxLength: 50000
+          minLength: 0
+          type: string
+      description: The MI report user defined DTO
     BuyOutSurplusTransactionUpdatePaymentStatusDTO:
       required:
         - status
@@ -13547,6 +13797,10 @@ components:
         accountId:
           type: integer
           format: int64
+        savingActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityPerformanceAccountTemplateSavingAction'
         succeeded:
           type: boolean
         errors:
@@ -13746,37 +14000,24 @@ components:
     SectorPerformanceAccountTemplateDataReportItemDTO:
       type: object
       properties:
-        accountId:
+        id:
           type: integer
           format: int64
-        targetUnitAccountBusinessId:
+        parentId:
+          type: integer
+          format: int64
+        businessId:
           type: string
-        operatorName:
+        name:
           type: string
         submissionDate:
           type: string
           format: date-time
-        targetPeriodType:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
-        targetPeriodYear:
-          type: integer
-          format: int16
         status:
           type: string
           enum:
             - SUBMITTED
             - OUTSTANDING
-        submissionType:
-          type: string
-          enum:
-            - INTERIM
-            - FINAL
     SubsectorAssociationSchemesDTO:
       required:
         - name
@@ -14231,11 +14472,16 @@ components:
           enum:
             - SUBMISSION_RESULTS_CSV_FAILED
             - MESSAGE_PROCESSING_FAILED
+        results:
+          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataUploadResults'
         facilityReports:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/FacilityPerformanceAccountTemplateUploadReport
+            $ref: '#/components/schemas/FacilityPerformanceAccountTemplateUploadReport'
+        csvRowErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataCsvErrorEntry'
         uploadAttachments:
           type: object
           additionalProperties:
@@ -14531,6 +14777,18 @@ components:
             $ref: '#/components/schemas/DefaultNoticeRecipient'
         officialNotice:
           $ref: '#/components/schemas/FileInfoDTO'
+    FacilityPerformanceAccountTemplateDataReportInfoDTO:
+      type: object
+      properties:
+        targetPeriodYear:
+          type: integer
+          format: int16
+        reportVersion:
+          type: integer
+          format: int32
+        submissionDate:
+          type: string
+          format: date-time
     CcaOperatorInvitedUserInfoDTO:
       type: object
       properties:
@@ -14960,8 +15218,7 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
         reviewAttachments:
           type: object
           additionalProperties:
@@ -15290,8 +15547,7 @@ components:
         markingStatusHistoryList:
           type: array
           items:
-            $ref: >-
-              #/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO
+            $ref: '#/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO'
     PerformanceDataFacilityUploadCsvData:
       type: object
       properties:
@@ -15562,6 +15818,16 @@ components:
           enum:
             - BANK_TRANSFER
             - CREDIT_OR_DEBIT_CARD
+    MiReportUserDefinedCategoryDTO:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
     RdeSubmitRequestTaskActionPayload:
       required:
         - rdePayload
@@ -15935,31 +16201,21 @@ components:
       required:
         - pageNumber
         - pageSize
-        - targetPeriodType
+        - targetPeriodYear
       type: object
       properties:
-        targetUnitAccountBusinessId:
+        term:
           maxLength: 255
           minLength: 3
           type: string
-        targetPeriodType:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
+        targetPeriodYear:
+          type: integer
+          format: int16
         status:
           type: string
           enum:
             - SUBMITTED
             - OUTSTANDING
-        submissionType:
-          type: string
-          enum:
-            - INTERIM
-            - FINAL
         pageNumber:
           minimum: 0
           type: integer
@@ -16031,10 +16287,8 @@ components:
           format: date-time
         payload:
           oneOf:
-            - $ref: >-
-                #/components/schemas/BuyOutSurplusTransactionAmountChangedHistoryPayload
-            - $ref: >-
-                #/components/schemas/BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload
+            - $ref: '#/components/schemas/BuyOutSurplusTransactionAmountChangedHistoryPayload'
+            - $ref: '#/components/schemas/BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload'
     NonComplianceDetails:
       required:
         - isEnforcementResponseNoticeRequired
@@ -16142,6 +16396,15 @@ components:
             - TERMINATED
             - REJECTED
         siteContactUserId:
+          type: string
+    BuyOutSurplusFacilityAccountProcessingRequestMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        parentRequestId:
+          type: string
+        accountBusinessId:
           type: string
     PerformanceAccountTemplateProcessingSubmittedRequestActionPayload:
       type: object
@@ -16362,6 +16625,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CaExternalContactDTO'
+        editable:
+          type: boolean
         isEditable:
           type: boolean
     NoticeRecipientDTO:
@@ -16548,6 +16813,10 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/MiReportUserDefinedCategoryDTO'
         description:
           maxLength: 10000
           minLength: 0
@@ -16892,6 +17161,18 @@ components:
             type: string
             format: uuid
       description: The note request
+    FacilityPerformanceAccountTemplateDataCsvErrorEntry:
+      type: object
+      properties:
+        filename:
+          type: string
+        message:
+          type: string
+        facilityBusinessId:
+          type: string
+        rowNumber:
+          type: integer
+          format: int32
     AuditTrackCorrectiveActionsSubmittedRequestActionPayload:
       required:
         - auditTrackCorrectiveActions
@@ -17019,6 +17300,24 @@ components:
           type: object
           additionalProperties:
             type: string
+    FacilityPerformanceAccountTemplateDataUploadResults:
+      type: object
+      properties:
+        totalFilesUploaded:
+          type: integer
+          format: int32
+        facilitiesSucceeded:
+          type: integer
+          format: int32
+        facilitiesFailed:
+          type: integer
+          format: int32
+        uploadSummaryFile:
+          type: string
+          format: uuid
+        submittedDate:
+          type: string
+          format: date-time
     UnderlyingAgreementSaveReviewGroupDecisionRequestTaskActionPayload:
       required:
         - decision
@@ -17639,8 +17938,7 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
         reviewAttachments:
           type: object
           additionalProperties:
@@ -17844,8 +18142,7 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
         reviewSectionsCompleted:
           type: object
           additionalProperties:
@@ -18052,6 +18349,25 @@ components:
           type: object
           additionalProperties:
             type: string
+    FacilityPerformanceAccountTemplateDataUploadCompletedRequestActionPayload:
+      required:
+        - details
+        - results
+        - uploadAttachments
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        details:
+          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataUpload'
+        results:
+          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataUploadResults'
+        uploadAttachments:
+          type: object
+          additionalProperties:
+            type: string
     UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO:
       required:
         - financialIndependenceStatus
@@ -18150,6 +18466,7 @@ components:
             - SWITCHING_TO_BIOMASS_HEATING
             - SWITCHING_TO_RENEWABLE_POWER
             - OTHER_CONTRIBUTIONS
+            - NO_ACTION
         savingActionsImplemented:
           type: string
         reasonsForImplementation:
@@ -18502,10 +18819,16 @@ components:
         energyOrCarbonSavingActionsAndMeasuresImplementedItems:
           type: array
           items:
-            $ref: >-
-              #/components/schemas/EnergyOrCarbonSavingActionsAndMeasuresImplementedItem
+            $ref: '#/components/schemas/EnergyOrCarbonSavingActionsAndMeasuresImplementedItem'
         file:
           $ref: '#/components/schemas/FileInfoDTO'
+    SiteContactSearchCriteriaDTO:
+      type: object
+      properties:
+        businessId:
+          maxLength: 255
+          minLength: 0
+          type: string
     InvitedUserCredentialsDTO:
       required:
         - invitationToken
@@ -18543,8 +18866,7 @@ components:
         businessId:
           type: string
         activationDetails:
-          $ref: >-
-            #/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails
+          $ref: '#/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails'
         activationAttachments:
           type: object
           additionalProperties:
@@ -19508,6 +19830,21 @@ components:
               - NONE
               - VIEW_ONLY
               - EXECUTE
+    FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload:
+      required:
+        - performanceData
+        - targetPeriodYear
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        targetPeriodYear:
+          type: integer
+          format: int16
+        performanceData:
+          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataContainer'
     ItemAssigneeDTO:
       type: object
       properties:

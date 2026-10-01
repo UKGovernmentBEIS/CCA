@@ -17,7 +17,6 @@ export enum RequestWorkflowHistoryType {
   TargetUnitAccountCreation = 'Target unit account creation',
   UnderlyingAgreementApplication = 'Underlying agreement application',
   Variation = 'Variation',
-  VoluntaryTermination = 'Voluntary termination',
 }
 
 export enum RequestWorkflowHistoryStatus {
@@ -39,7 +38,6 @@ export const workflowTypesMap: Record<string, string> = {
   'Target unit account creation': 'TARGET_UNIT_ACCOUNT_CREATION',
   'Underlying agreement application': 'UNDERLYING_AGREEMENT',
   Variation: 'UNDERLYING_AGREEMENT_VARIATION',
-  'Voluntary termination': 'VOLUNTARY_TERMINATION',
   'Target period (TP) reporting': 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING',
   'Target period account reporting (PAT)': 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING',
   'CCA3 migration': 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING',

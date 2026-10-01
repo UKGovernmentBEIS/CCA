@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -14,10 +15,12 @@ import {
   ErrorSummaryComponent,
   FieldsetDirective,
   LegendDirective,
+  RadioComponent,
+  RadioOptionComponent as GovukRadioOptionComponent,
   TableComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { FileInputComponent, RadioOptionComponent, TwoFaLinkComponent, UuidFilePair } from '@shared/components';
+import { FileInputComponent, RadioOptionComponent, TwoFaLinkComponent } from '@shared/components';
 import { IncludesPipe, SubmitIfEmptyPipe } from '@shared/pipes';
 import { omit } from '@shared/utils';
 
@@ -44,6 +47,8 @@ import { tableColumns, tableRows } from './permissions-table-data';
     TwoFaLinkComponent,
     ButtonDirective,
     SubmitIfEmptyPipe,
+    RadioComponent,
+    GovukRadioOptionComponent,
     RadioOptionComponent,
     PendingButtonDirective,
   ],
@@ -73,18 +78,67 @@ export class DetailsComponent {
 
   protected readonly form = createForm(this.fb, this.isAdd, this.user, this.userPermissions);
 
-  protected basePermissionSelected = '';
+  // The radio group needs a control with a form path: a control that is bound on its own has none, so the
+  // options would end up with an empty name and would not be grouped. This group exists only to give the
+  // control a name; it is not part of the submitted form.
+  protected readonly basePermissionsForm = this.fb.group({ basePermission: '' });
   protected readonly userFullName = `${this.user?.firstName}' '${this.user?.lastName}`;
 
   protected readonly tableColumns = tableColumns;
   protected readonly tableRows = tableRows;
 
-  setBasePermissions(roleCode: string): void {
-    this.basePermissionSelected = roleCode;
-    const role = this.userRolePermissions.find((up) => up.code === roleCode);
-    const { rolePermissions } = role;
+  private readonly selectedBasePermission = toSignal(this.basePermissionsForm.controls.basePermission.valueChanges, {
+    initialValue: this.basePermissionsForm.controls.basePermission.value,
+  });
 
-    this.form.get('permissions').patchValue(rolePermissions);
+  private readonly permissions = toSignal(this.form.controls.permissions.valueChanges, {
+    initialValue: this.form.controls.permissions.value,
+  });
+
+  // The permissions the last applied base role wrote. Any other change to the permissions is an edit by
+  // hand, and it invalidates the role selection.
+  private readonly appliedPermissions = signal<Partial<Record<string, string>> | null>(null);
+
+  private readonly permissionsEditedByHand = computed(() => {
+    const appliedPermissions = this.appliedPermissions();
+
+    return appliedPermissions !== null && !samePermissions(appliedPermissions, this.permissions());
+  });
+
+  constructor() {
+    // Choosing a base role applies its permission defaults.
+    effect(() => {
+      const roleCode = this.selectedBasePermission();
+
+      if (roleCode) {
+        this.setBasePermissions(roleCode);
+      }
+    });
+
+    // Editing a permission means the selected role no longer describes the form, so the radio is cleared:
+    // choosing that role again is then a value change, and it re-applies its defaults. The clear has to
+    // emit, otherwise the selection signal keeps the role and re-choosing it would look unchanged.
+    effect(() => {
+      if (this.permissionsEditedByHand()) {
+        this.basePermissionsForm.controls.basePermission.setValue('');
+      }
+    });
+  }
+
+  private setBasePermissions(roleCode: string): void {
+    const role = this.userRolePermissions.find((up) => up.code === roleCode);
+
+    if (!role) {
+      // Role codes come from the API, the options are fixed: drop the selection rather than claim that a
+      // role the service does not know about was applied.
+      this.basePermissionsForm.controls.basePermission.setValue('');
+      return;
+    }
+
+    this.form.controls.permissions.patchValue(role.rolePermissions);
+    // The same projection as the value the changes are read from, so an untouched key cannot look edited.
+    this.appliedPermissions.set(this.form.controls.permissions.value);
+
     this.form.markAsDirty();
   }
 
@@ -93,7 +147,7 @@ export class DetailsComponent {
 
     if (this.form.valid) {
       const userEmail = this.form.get('user').get('email').value;
-      const signature = this.form.get('signature').value as UuidFilePair;
+      const signature = this.form.get('signature').value;
 
       if (!signature) {
         this.form.get('signature').setErrors({
@@ -104,7 +158,7 @@ export class DetailsComponent {
         return;
       }
 
-      const signatureBlob = signature.file?.size ? signature.file : null;
+      const signatureBlob = signature.file instanceof File ? signature.file : undefined;
 
       if (!this.isAdd) {
         const payload = { ...this.form.getRawValue() };
@@ -158,4 +212,10 @@ export class DetailsComponent {
   getDownloadUrl(uuid: string): string | string[] {
     return ['file-download', uuid];
   }
+}
+
+function samePermissions(left: Partial<Record<string, string>>, right: Partial<Record<string, string>>): boolean {
+  const keys = Object.keys(left);
+
+  return keys.length === Object.keys(right).length && keys.every((key) => left[key] === right[key]);
 }

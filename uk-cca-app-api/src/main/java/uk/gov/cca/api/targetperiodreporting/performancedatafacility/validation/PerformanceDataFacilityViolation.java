@@ -32,6 +32,7 @@ public class PerformanceDataFacilityViolation extends BusinessViolation {
         INVALID_PRIMARY_ENERGY_DATA("Invalid primary energy data"),
         SRM_DATA_DOES_NOT_MATCH_USE_SRM_SELECTION("The SRM related data provided does not match the selected use-SRM option"),
         INVALID_CHP_DATA("Input inconsistent with SRM rules"),
+        INVALID_ZERO_FUELS_DATA("Total energy/fuel amount consumed during the period must be greater than zero"),
         INVALID_FUELS_THROUGHPUT_ADJUSTMENT_FACTOR_DATA("Invalid fuels throughput adjustment factor data"),
         INVALID_VARIABLE_ENERGY_DATA("Invalid variable energy data"),
         VARIABLE_ENERGY_DATA_DOES_NOT_MATCH_TYPE("The variable energy data provided does not match the selected variable energy type"),

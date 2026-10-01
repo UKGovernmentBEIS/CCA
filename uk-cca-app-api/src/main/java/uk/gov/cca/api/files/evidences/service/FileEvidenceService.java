@@ -10,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import uk.gov.cca.api.files.evidences.domain.FileEvidence;
 import uk.gov.cca.api.files.evidences.repository.FileEvidenceRepository;
 import uk.gov.cca.api.files.evidences.transform.FileEvidenceMapper;
-import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.common.utils.DateService;
@@ -52,14 +51,13 @@ public class FileEvidenceService {
     }
 
     @Transactional
-    public String createFileEvidence(@Valid FileDTO fileDTO, AppUser appUser) throws IOException {
+    public String createFileEvidence(@Valid FileDTO fileDTO) throws IOException {
 
         fileValidators.forEach(validator -> validator.validate(fileDTO));
 
         FileEvidence evidence = fileEvidenceMapper.toFileEvidence(fileDTO);
         evidence.setUuid(UUID.randomUUID().toString());
         evidence.setStatus(FileStatus.PENDING);
-        evidence.setCreatedBy(appUser.getUserId());
 
         fileEvidenceRepository.save(evidence);
 

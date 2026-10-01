@@ -1,14 +1,17 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, MockType } from '@netz/common/testing';
 import { TasksApiService, underlyingAgreementQuery } from '@requests/common';
+
+import { UnderlyingAgreementSaveRequestTaskActionPayload } from 'cca-api';
 
 import { FacilityApplyRuleComponent } from './facility-apply-rule.component';
 
@@ -17,7 +20,8 @@ describe('FacilityApplyRuleComponent', () => {
   let store: RequestTaskStore;
   let tasksApiService: MockType<TasksApiService>;
 
-  const route = new ActivatedRouteStub(undefined, { facilityId: 'ADS_1-F00001' });
+  // `facilityId` is a route param: the component reads it from `snapshot.params`.
+  const route = new ActivatedRouteStub({ facilityId: 'ADS_1-F00001' });
 
   beforeEach(() => {
     tasksApiService = {
@@ -45,7 +49,7 @@ describe('FacilityApplyRuleComponent', () => {
     TestBed.configureTestingModule({
       imports: [FacilityApplyRuleComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
@@ -110,5 +114,38 @@ describe('FacilityApplyRuleComponent', () => {
 
   it('should show form values', () => {
     expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
+  });
+
+  // The form disables and resets the 3/7ths provision and its start date once the energy consumed
+  // reaches 70%, so `form.value` used to leave the previously saved values in the payload.
+  it('should save the cleared 3/7ths provision when the energy consumed reaches 70%', () => {
+    // Untyped: the form holds numbers and dates, while the api model types these fields as strings.
+    const form: FormGroup = fixture.componentInstance['form'];
+    form.patchValue({
+      energyConsumed: 50,
+      energyConsumedProvision: 40,
+      startDate: new Date('2020-01-01'),
+    });
+    fixture.detectChanges();
+
+    expect(form.get('energyConsumedProvision').enabled).toBe(true);
+
+    form.get('energyConsumed').setValue(80);
+    fixture.detectChanges();
+
+    expect(form.get('energyConsumedProvision').disabled).toBe(true);
+    expect(form.getRawValue().energyConsumedProvision).toBeNull();
+
+    // The submit callback navigates once the task is saved; the test only cares about the payload.
+    tasksApiService.saveRequestTaskAction.mockReturnValue(NEVER);
+    fixture.componentInstance.onSubmit();
+
+    const dto = tasksApiService.saveRequestTaskAction.mock.calls[0][0];
+    const apply70Rule = (dto.requestTaskActionPayload as UnderlyingAgreementSaveRequestTaskActionPayload)
+      .underlyingAgreement.facilities[0].apply70Rule;
+
+    expect(apply70Rule.energyConsumed).toBe(80);
+    expect(apply70Rule.energyConsumedProvision).toBeNull();
+    expect(apply70Rule.startDate).toBeNull();
   });
 });

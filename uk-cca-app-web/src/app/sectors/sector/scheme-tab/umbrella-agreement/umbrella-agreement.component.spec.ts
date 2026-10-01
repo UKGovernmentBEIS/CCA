@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { FileType, FileUploadEvent } from '@shared/components';
+import { FileType } from '@shared/components';
 import { Mocked } from 'vitest';
 
 import {
@@ -95,7 +95,7 @@ describe('UmbrellaAgreementComponent', () => {
 
     form.controls.file.setValue({
       file: new File(['text'], 'umbrella-agreement.txt', { type: 'text/plain' }),
-    } as FileUploadEvent);
+    });
     form.controls.file.updateValueAndValidity();
 
     expect(form.controls.file.errors).toEqual({

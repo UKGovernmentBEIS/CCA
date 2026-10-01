@@ -30,7 +30,7 @@ export class TimeoutBannerComponent {
   readonly modal = viewChild<ElementRef<HTMLDialogElement>>('modal');
 
   private overlayClass = 'govuk-timeout-warning-overlay';
-  private lastFocusedElement = null;
+  private lastFocusedElement: HTMLElement | null = null;
 
   constructor() {
     effect(() => {
@@ -65,8 +65,8 @@ export class TimeoutBannerComponent {
   saveLastFocusedElement() {
     this.lastFocusedElement =
       this.document.activeElement && this.document.activeElement !== this.document.body
-        ? this.document.activeElement
-        : this.document.querySelector(':focus');
+        ? (this.document.activeElement as HTMLElement)
+        : this.document.querySelector<HTMLElement>(':focus');
   }
 
   setFocusOnLastFocusedElement() {

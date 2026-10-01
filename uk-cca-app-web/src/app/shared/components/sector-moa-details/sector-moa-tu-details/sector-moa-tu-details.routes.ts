@@ -5,6 +5,7 @@ import { canActivateMarkFacilitiesGuard } from './mark-facilities/mark-facilitie
 export const SECTOR_MOA_TU_DETAILS_ROUTES: Routes = [
   {
     path: '',
+    title: 'Target unit',
     loadComponent: () => import('./sector-moa-tu-details.component').then((c) => c.SectorMoaTuDetailsComponent),
   },
   {

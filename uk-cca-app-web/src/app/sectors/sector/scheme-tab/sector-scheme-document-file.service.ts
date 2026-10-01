@@ -41,7 +41,7 @@ export class SectorSchemeDocumentFileService {
   private buildFileEvent(uuid: string, fileName: string): FileUploadEvent {
     return {
       uuid,
-      file: { name: fileName } as File,
+      file: { name: fileName },
     };
   }
 

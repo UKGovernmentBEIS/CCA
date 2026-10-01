@@ -54,6 +54,6 @@ describe('NonComplianceSummaryComponent', () => {
   it('should show change links when the task is editable', () => {
     createComponent(true);
 
-    expect(getByText('Change', fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/^Change\s/, fixture.nativeElement)).toBeTruthy();
   });
 });

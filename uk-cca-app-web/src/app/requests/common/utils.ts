@@ -178,8 +178,10 @@ export function regulatorLedManageFacilitiesStatus(
 export function filterFieldsWithFalsyValues(obj: unknown): unknown {
   if (obj === null || obj === undefined || typeof obj !== 'object') return obj;
 
-  return Object.keys(obj).reduce((acc, key) => {
-    const value = obj[key];
+  const record = obj as Record<string, unknown>;
+
+  return Object.keys(record).reduce<Record<string, unknown>>((acc, key) => {
+    const value = record[key];
 
     if (value) {
       acc[key] = typeof value === 'object' ? filterFieldsWithFalsyValues(value) : value;
@@ -197,9 +199,12 @@ export function areEntitiesIdentical(current: unknown, original: unknown): boole
   if (current == null || original == null) return false;
   if (typeof current !== 'object' || typeof original !== 'object') return false;
 
+  const currentRecord = current as Record<string, unknown>;
+  const originalRecord = original as Record<string, unknown>;
+
   // Get all keys from both objects
-  const keysCurrent = Object.keys(current);
-  const keysOriginal = Object.keys(original);
+  const keysCurrent = Object.keys(currentRecord);
+  const keysOriginal = Object.keys(originalRecord);
 
   // Check if they have the same number of keys
   if (keysCurrent.length !== keysOriginal.length) return false;
@@ -207,10 +212,10 @@ export function areEntitiesIdentical(current: unknown, original: unknown): boole
   // Check each key-value pair recursively
   for (const key of keysCurrent) {
     // Check if key exists in second object
-    if (!(key in original)) return false;
+    if (!(key in originalRecord)) return false;
 
     // Recursively check if values are identical
-    if (!areEntitiesIdentical(current[key], original[key])) return false;
+    if (!areEntitiesIdentical(currentRecord[key], originalRecord[key])) return false;
   }
 
   return true;

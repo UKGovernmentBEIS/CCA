@@ -33,7 +33,7 @@ describe('WarningTextComponent', () => {
 
   it('should contain a hidden warn text', () => {
     const element: HTMLElement = fixture.nativeElement;
-    expect(element.querySelector<HTMLSpanElement>('.govuk-warning-text__assistive').textContent).toEqual('Warn');
+    expect(element.querySelector<HTMLSpanElement>('.govuk-visually-hidden').textContent).toEqual('Warn');
   });
 
   it('should contain a text', () => {

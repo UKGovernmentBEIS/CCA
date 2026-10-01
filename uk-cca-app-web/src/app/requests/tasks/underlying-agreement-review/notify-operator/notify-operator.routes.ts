@@ -7,12 +7,14 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
 export const UNDERLYING_AGREEMENT_REVIEW_NOTIFY_OPERATOR_ROUTES: Routes = [
   {
     path: '',
+    title: 'Select who should receive the determination notification',
     canActivate: [canActivateNotifyOperator],
     data: { backlink: '../..', breadcrumb: false },
     loadComponent: () => import('./notify-operator.component').then((c) => c.NotifyOperatorComponent),
   },
   {
     path: 'confirmation',
+    title: 'Confirmation',
     canActivate: [canActivateNotifyOperator],
     data: { breadcrumb: false },
     loadComponent: () =>

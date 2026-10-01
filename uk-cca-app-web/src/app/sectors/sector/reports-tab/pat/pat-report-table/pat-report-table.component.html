@@ -1,12 +1,19 @@
-<govuk-table [columns]="tableColumns" [data]="state().patReportItems">
+<button govukSecondaryButton class="govuk-!-margin-top-5" type="button" (click)="exportToCsv()">
+  Download search results
+</button>
+
+<govuk-table [columns]="tableColumns()" [data]="state().patReportItems">
   <ng-template let-column="column" let-row="row">
     @switch (column.field) {
-      @case ('targetUnitAccountBusinessId') {
+      @case ('businessId') {
         <a
-          [routerLink]="['/target-unit-accounts', row.accountId]"
+          [routerLink]="
+            isFacilityReport()
+              ? ['/target-unit-accounts', row.parentId, 'facilities', row.id]
+              : ['/target-unit-accounts', row.id]
+          "
           [fragment]="'reports'"
           [queryParams]="{ section: 'pat' }"
-          [replaceUrl]="true"
           class="govuk-link"
         >
           {{ row[column.field] }}
@@ -19,14 +26,6 @@
 
       @case ('status') {
         <span>{{ row[column.field] | titlecase }}</span>
-      }
-
-      @case ('submissionType') {
-        <span>{{ row[column.field] | titlecase }}</span>
-      }
-
-      @case ('locked') {
-        <span>{{ row[column.field] ? 'Y' : 'N' }}</span>
       }
 
       @default {
@@ -43,5 +42,3 @@
   (pageChange)="onPageChange($event)"
   (pageSizeChange)="onPageSizeChange($event)"
 />
-
-<button govukButton type="button" (click)="exportToXlsx()">Download to spreadsheet</button>

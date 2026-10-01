@@ -1,4 +1,34 @@
+import { FacilityPATReportsState } from '../../facility-pat-report.store';
 import { FacilityTargetPeriodReportsState } from '../../facility-target-period-report.store';
+
+export const mockFacilityPATStore: FacilityPATReportsState = {
+  reportInfo: {
+    targetPeriodYear: 2026,
+    reportVersion: 2,
+    submissionDate: '2026-08-27T11:41:31.997642Z',
+  },
+  reportingYear: '2026',
+  details: {
+    submissionDate: '2026-06-05',
+    targetPeriodYear: 2026,
+    data: {
+      savingActions: [
+        {
+          actionCategoryType: 'ENERGY_MANAGEMENT',
+          supplyDemandSideMeasure: 'DEMAND_SIDE',
+          savingActionsImplemented: 'Created an energy management system',
+          reasonsForImplementation: 'It seemed like a good idea at the time',
+          implementationDate: '2026-01-01',
+          fixedEnergyConsumptionOrCarbonEmissionsImpacted: 'FIXED_AND_VARIABLE',
+          energyConsumptionOrCarbonEmissionsImpactedPercentage: '10.0000000',
+          expectedExtentOfChangeImplementedPercentage: '20.0000000',
+          expectedSavingsFromTheChangeImplementedPercentage: '-586.0000000',
+          estimatedChangeInEnergyConsumptionPercentage: '-11.7200000',
+        },
+      ],
+    },
+  },
+};
 
 export const mockFacilityTPRStore: FacilityTargetPeriodReportsState = {
   statusInfo: [
@@ -12,6 +42,8 @@ export const mockFacilityTPRStore: FacilityTargetPeriodReportsState = {
       submissionDate: '2026-06-05',
       lockEditable: false,
       variationIndicatorEditable: true,
+      reportType: 'FINAL',
+      submissionType: 'SECONDARY',
     },
   ],
   details: {

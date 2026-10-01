@@ -25,7 +25,7 @@ describe('DeleteComponent', () => {
 
   class Page extends BasePage<DeleteComponent> {
     get header() {
-      return this.query<HTMLHeadingElement>('h2');
+      return this.query<HTMLHeadingElement>('h1');
     }
 
     get cancelLink() {

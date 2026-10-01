@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ParamMap, provideRouter } from '@angular/router';
@@ -23,6 +23,7 @@ class ActivatedRouteTestStub {
   selector: 'cca-dashboard-task-list-host',
   template: `<cca-dashboard-task-list heading="Test" [fetchFn]="fetchFn" />`,
   imports: [DashboardTaskListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
 class DashboardTaskListHostComponent {

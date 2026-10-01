@@ -1,10 +1,10 @@
 import { Injectable, signal } from '@angular/core';
 
 import Keycloak, {
-  type KeycloakConfig,
   type KeycloakInitOptions,
   type KeycloakLoginOptions,
   type KeycloakProfile,
+  type KeycloakServerConfig,
   type KeycloakTokenParsed,
 } from 'keycloak-js';
 
@@ -54,10 +54,10 @@ export class KeycloakService {
     return this.keycloak?.refreshTokenParsed;
   }
 
-  init(config: KeycloakConfig & KeycloakInitOptions): Promise<boolean> {
+  init(config: KeycloakServerConfig & KeycloakInitOptions): Promise<boolean> {
     const { realm, clientId, url, ...initOptions } = config;
 
-    const keycloakConfig: KeycloakConfig = {
+    const keycloakConfig: KeycloakServerConfig = {
       url,
       realm,
       clientId,
@@ -125,9 +125,9 @@ export class KeycloakService {
     return this.keycloak.login(options);
   }
 
-  createLoginUrl(options?: KeycloakLoginOptions): string {
+  createLoginUrl(options?: KeycloakLoginOptions): Promise<string> {
     if (!this.keycloak) {
-      throw new Error('Keycloak not initialized');
+      return Promise.reject(new Error('Keycloak not initialized'));
     }
     return this.keycloak.createLoginUrl(options);
   }

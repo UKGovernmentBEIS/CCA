@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
@@ -14,7 +14,7 @@ import { ForgotPasswordService } from 'cca-api';
 import { ResetPasswordStore } from '../+store/reset-password.store';
 import { SubmitOtpComponent } from './submit-otp.component';
 
-@Component({ template: '' })
+@Component({ changeDetection: ChangeDetectionStrategy.OnPush, template: '' })
 class DummyComponent {}
 
 describe('SubmitOtpComponent', () => {
@@ -50,7 +50,7 @@ describe('SubmitOtpComponent', () => {
   }
 
   beforeEach(async () => {
-    authService.createLoginUrl.mockReturnValue('https://cca-sign-in.example');
+    authService.createLoginUrl.mockResolvedValue('https://cca-sign-in.example');
 
     await TestBed.configureTestingModule({
       imports: [SubmitOtpComponent, DummyComponent],
@@ -145,11 +145,13 @@ describe('SubmitOtpComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['error', '404']);
   });
 
-  it('should link directly to the sign-in page after resetting the password', () => {
+  it('should link directly to the sign-in page after resetting the password', async () => {
     forgotPasswordService.resetPassword.mockReturnValueOnce(of({}));
 
     page.passwordValue = '123456';
     page.submitButton.click();
+    fixture.detectChanges();
+    await Promise.resolve();
     fixture.detectChanges();
     expect(page.errorSummary).toBeFalsy();
 

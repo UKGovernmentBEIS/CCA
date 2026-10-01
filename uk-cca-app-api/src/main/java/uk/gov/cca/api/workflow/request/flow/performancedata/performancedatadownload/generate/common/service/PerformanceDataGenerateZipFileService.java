@@ -56,9 +56,9 @@ public class PerformanceDataGenerateZipFileService {
 			FileDTO zipFileDTO = FileDTO.builder()
 					.fileContent(zipFile).fileName(zipFileName).fileSize(zipFile.length)
 					.fileType(MimeTypeUtils.detect(zipFile, zipFileName))
+					.createdBy(requestPayload.getSectorUserAssignee())
 					.build();
-			final String uuid = ccaFileAttachmentService.createSystemFileAttachment(
-					zipFileDTO, FileStatus.SUBMITTED, requestPayload.getSectorUserAssignee());
+			final String uuid = ccaFileAttachmentService.createSystemFileAttachment(zipFileDTO, FileStatus.SUBMITTED);
 
 			return FileInfoDTO.builder().uuid(uuid).name(zipFileName).build();
 		} catch (Exception e) {
