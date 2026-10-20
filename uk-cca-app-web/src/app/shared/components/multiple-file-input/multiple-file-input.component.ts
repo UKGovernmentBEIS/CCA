@@ -47,6 +47,7 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
   protected readonly listTitle = input<string>();
   protected readonly label = input<string>('Upload a file');
   protected readonly hint = input<string>();
+  protected readonly showFilesizeHint = input<boolean>(true);
   protected readonly accepted = input<string>('*/*');
   protected readonly uploadStatusText = input<string>('Uploading files, please wait');
   protected readonly dropzoneHintText = input<string>('Drag and drop files here or');
@@ -81,15 +82,18 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
     return this.control?.invalid && (!this.form || this.form.submitted);
   }
 
-  get describedBy(): string {
-    const ids = [this.id + '-hint-file-size'];
+  get describedBy(): string | null {
+    const ids: string[] = [];
+    if (this.showFilesizeHint()) {
+      ids.push(this.id + '-hint-file-size');
+    }
     if (this.hint()) {
       ids.push(this.id + '-hint');
     }
     if (this.shouldDisplayErrors) {
       ids.push(this.id + '-error');
     }
-    return ids.join(' ');
+    return ids.join(' ') || null;
   }
 
   private get form(): FormGroupDirective | NgForm | null {

@@ -46,7 +46,9 @@ class FacilityPerformanceAccountTemplateDataEntityRepositoryIT extends AbstractC
 
     @BeforeEach
     void setUp() {
-        createFacilityPerformanceAccountTemplateDataEntity(1L, 2026, 1);
+        final BigDecimal maxValue100 = BigDecimal.valueOf(100);
+
+        createFacilityPerformanceAccountTemplateDataEntity(1L, 2026, 1, maxValue100, maxValue100);
         createFacilityPerformanceAccountTemplateDataEntity(1L, 2027, 2);
         createFacilityPerformanceAccountTemplateDataEntity(2L, 2026, 1);
         createFacilityPerformanceAccountTemplateDataEntity(3L, 2026, 2);
@@ -64,6 +66,10 @@ class FacilityPerformanceAccountTemplateDataEntityRepositoryIT extends AbstractC
         FacilityPerformanceAccountTemplateDataEntity entity = result.get();
         assertThat(entity.getTargetPeriodYear()).isEqualTo(Year.of(2026));
         assertThat(entity.getFacilityId()).isEqualTo(1L);
+        assertThat(entity.getData().getSavingActions().getFirst().getEnergyConsumptionOrCarbonEmissionsImpactedPercentage())
+                .isEqualTo(BigDecimal.valueOf(100));
+        assertThat(entity.getData().getSavingActions().getFirst().getExpectedExtentOfChangeImplementedPercentage())
+                .isEqualTo(BigDecimal.valueOf(100));
     }
 
     private void flushAndClear() {
@@ -72,6 +78,12 @@ class FacilityPerformanceAccountTemplateDataEntityRepositoryIT extends AbstractC
     }
 
     private void createFacilityPerformanceAccountTemplateDataEntity(final Long facilityId, final int targetPeriodYear, final int reportVersion) {
+        createFacilityPerformanceAccountTemplateDataEntity(facilityId, targetPeriodYear, reportVersion, BigDecimal.valueOf(12.6), BigDecimal.valueOf(20.6));
+    }
+
+    private void createFacilityPerformanceAccountTemplateDataEntity(final Long facilityId, final int targetPeriodYear, final int reportVersion,
+                                                                    final BigDecimal energyConsumptionOrCarbonEmissionsImpactedPercentage,
+                                                                    final BigDecimal expectedExtentOfChangeImplementedPercentage) {
         final List<FacilityPerformanceAccountTemplateSavingAction> savingActions = List.of(FacilityPerformanceAccountTemplateSavingAction.builder()
                 .actionCategoryType(ActionCategoryType.ENERGY_MANAGEMENT)
                 .supplyDemandSideMeasure(SupplyDemandSideMeasure.DEMAND_SIDE)
@@ -79,8 +91,8 @@ class FacilityPerformanceAccountTemplateDataEntityRepositoryIT extends AbstractC
                 .implementationDate(LocalDate.of(targetPeriodYear, Month.APRIL, 1))
                 .reasonsForImplementation("Reasons")
                 .fixedEnergyConsumptionOrCarbonEmissionsImpacted(EnergyConsumptionOrCarbonEmissionsImpactedType.FIXED_AND_VARIABLE)
-                .energyConsumptionOrCarbonEmissionsImpactedPercentage(BigDecimal.valueOf(12.6))
-                .expectedExtentOfChangeImplementedPercentage(BigDecimal.valueOf(20.6))
+                .energyConsumptionOrCarbonEmissionsImpactedPercentage(energyConsumptionOrCarbonEmissionsImpactedPercentage)
+                .expectedExtentOfChangeImplementedPercentage(expectedExtentOfChangeImplementedPercentage)
                 .expectedSavingsFromTheChangeImplementedPercentage(BigDecimal.valueOf(20.6))
                 .estimatedChangeInEnergyConsumptionPercentage(BigDecimal.valueOf(20.6))
                 .notes("notes")

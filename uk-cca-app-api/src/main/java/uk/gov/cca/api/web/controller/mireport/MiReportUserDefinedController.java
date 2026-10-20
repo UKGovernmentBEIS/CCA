@@ -3,6 +3,7 @@ package uk.gov.cca.api.web.controller.mireport;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,8 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedDTO;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedResult;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedResults;
+import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedSearchCriteriaDTO;
+import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedSearchCriteriaDTO.SortBy;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedService;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedUpdateDTO;
 import uk.gov.netz.api.mireport.userdefined.custom.CustomMiReportQuery;
@@ -68,7 +71,11 @@ public class MiReportUserDefinedController {
             @RequestParam("size") @Parameter(name = "size", description = "The page size")
             @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")
             @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize) {
-        return new ResponseEntity<>(miReportUserDefinedService.findAllByCA(appUser.getCompetentAuthority(), page, pageSize), HttpStatus.OK);
+        MiReportUserDefinedSearchCriteriaDTO searchCriteriaDTO = MiReportUserDefinedSearchCriteriaDTO.builder()
+                .sortBy(SortBy.REPORT_NAME)
+                .direction(Direction.ASC)
+                .build();
+        return new ResponseEntity<>(miReportUserDefinedService.findAllByCA(appUser, page, pageSize, searchCriteriaDTO), HttpStatus.OK);
     }
     
     @GetMapping(path = "/{id}")

@@ -12,6 +12,8 @@ import {
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
+import { StaleChunkRecoveryService } from '../../services/stale-chunk-recovery.service';
+
 @Component({
   selector: 'cca-highlight-diff',
   templateUrl: './highlight-diff.component.html',
@@ -23,6 +25,7 @@ export class HighlightDiffComponent implements AfterViewInit {
   private readonly domSanitizer = inject(DomSanitizer);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
+  private readonly staleChunkRecoveryService = inject(StaleChunkRecoveryService);
 
   private readonly previous = viewChild<ElementRef<HTMLDivElement>>('previous');
   private readonly current = viewChild<ElementRef<HTMLDivElement>>('current');
@@ -94,7 +97,9 @@ export class HighlightDiffComponent implements AfterViewInit {
     try {
       const { default: diff } = await import('html-diff-ts');
       return diff(previous, current);
-    } catch {
+    } catch (error) {
+      // The diff chunk can be stale after a deployment. The current version is shown if the page does not reload.
+      this.staleChunkRecoveryService.recover(error);
       return current;
     }
   }

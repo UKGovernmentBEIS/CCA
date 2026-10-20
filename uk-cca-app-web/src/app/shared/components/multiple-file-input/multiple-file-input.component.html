@@ -2,10 +2,12 @@
   <div class="govuk-form-group" [class.govuk-form-group--error]="shouldDisplayErrors">
     <label [for]="id" [id]="'l.' + id" [class]="'govuk-label govuk-label--' + headerSize()">{{ label() }}</label>
 
-    <span [id]="id + '-hint-file-size'" class="govuk-hint">
-      Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV
-      file, no more than 20MB.
-    </span>
+    @if (showFilesizeHint()) {
+      <span [id]="id + '-hint-file-size'" class="govuk-hint">
+        Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or
+        CSV file, no more than 20MB.
+      </span>
+    }
 
     @if (hint()) {
       <span [id]="id + '-hint'" class="govuk-hint">{{ hint() }}</span>

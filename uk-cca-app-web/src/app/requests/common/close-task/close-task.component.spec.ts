@@ -84,6 +84,16 @@ describe('CloseTaskComponent', () => {
     requestTaskFileService.buildFormControl.mockClear();
   });
 
+  it('should show the shared upload constraints only once', () => {
+    const upload = fixture.nativeElement.querySelector('cca-multiple-file-input');
+    const hints = upload.querySelectorAll('.govuk-hint');
+    expect(hints).toHaveLength(1);
+    expect(hints[0].textContent).toContain('DIB');
+    expect(hints[0].textContent).not.toContain('DXF');
+    expect(hints[0].textContent).toContain('20MB');
+    expect(upload.querySelector('input[type="file"]').getAttribute('aria-describedby')).toBe(hints[0].id);
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });

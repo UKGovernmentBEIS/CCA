@@ -105,6 +105,13 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE, validationFacilityProductsResult.getViolations());
         }
 
+        // Check facility products with base year before facility base year
+        BusinessValidationResult validationExistenceFacilityProductsWithEarlierYearResult = performanceDataFacilityValidator
+                .validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriod, submissionDate);
+        if(!validationExistenceFacilityProductsWithEarlierYearResult.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCT_EXIST_BEFORE_FACILITY_BASE_YEAR, validationExistenceFacilityProductsWithEarlierYearResult.getViolations());
+        }
+
         return RequestCreateValidationResult.builder().valid(true).available(true).build();
     }
 

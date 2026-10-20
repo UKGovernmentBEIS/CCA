@@ -61,9 +61,21 @@ describe('PerformanceDataUploadProcessComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render the file upload component', () => {
-    const fileInput = fixture.debugElement.query(By.css('cca-multiple-file-input'));
-    expect(fileInput).not.toBeNull();
+  it('should show only the ZIP constraints and describe both upload controls with them', () => {
+    const upload = fixture.nativeElement.querySelector('cca-multiple-file-input');
+    expect(upload).not.toBeNull();
+    expect(upload.querySelector('[id="uploadedFiles-hint-file-size"]')).toBeNull();
+
+    const hint = upload.querySelector('[id="uploadedFiles-hint"]');
+    expect(hint.textContent).toContain('ZIP');
+    expect(hint.textContent).toContain('20MB');
+    expect(upload.querySelector('input[type="file"]').getAttribute('accept')).toBe('.zip');
+
+    const uploadControls = upload.querySelector('.cca-multi-file-upload__dropzone').querySelectorAll('input, button');
+    expect(uploadControls).toHaveLength(2);
+    for (const control of uploadControls) {
+      expect(control.getAttribute('aria-describedby')).toBe(hint.id);
+    }
   });
 
   it('should render a warning message', () => {

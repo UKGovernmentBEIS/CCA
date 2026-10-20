@@ -261,15 +261,15 @@ This reflects that the calculation is only up to the end of the first year of a 
 
 ## ⚠️ Product Base Year ≠ Facility Base Year
 
-> **Status: unresolved — pre-facility products silently receive the facility target; long-term resolution under investigation by the analysis team**
+> **Status: resolved by blocking — the backend rejects TPR task creation, baseline refresh and submit with `TPRDF1010` when any product has a base year earlier than the facility base year**
 >
 > **References:** CCA-3245, `product-base-year-below-facility-gap.md`, `../open-findings.md`
 
-The original spec stated that products should not have a base year earlier than the facility base year. In practice, such products exist in real data.
+The original spec stated that products should not have a base year earlier than the facility base year. In practice, such products exist in real data. The backend now enforces the rule for TPR with `TPRDF1010`; the frontend shows *"Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report"*. The user must correct the product base year via a variation.
 
-**Current behaviour:** `calculateAdjustedImprovementTarget` returns the facility's own improvement target when `productBaseYear <= facilityBaseYear`, and all three call sites skip the adjusted calculation for `product.baselineYear <= facilityBaseYear`. A pre-facility product therefore reports the facility target (6.122% in the example below) where the spreadsheet expects the sector-level value (8.000%) — silently, with no validation error.
+**Current behaviour:** `calculateAdjustedImprovementTarget` returns the facility's own improvement target when `productBaseYear <= facilityBaseYear`, and all three call sites skip the adjusted calculation for `product.baselineYear <= facilityBaseYear`. The code is unchanged: the `<=` guard is still correct for `productBaseYear === facilityBaseYear`. A pre-facility product still renders the facility target (6.122% in the example below, where the spreadsheet expects 8.000%), but only on tasks created before `TPRDF1010` shipped, and such a task cannot be refreshed or submitted.
 
-**Long-term direction:** the analysis team is investigating whether `productBaseYear < facilityBaseYear` should be blocked at the product-addition / facility level, before the TPR process begins — which would stop the scenario reaching the TPR form at all. The alternative, analysed in `product-base-year-below-facility-gap.md`, is to let the rebasing formula run with negative progress, which reproduces the spreadsheet's 8.000%; it is **not** implemented.
+**Alternative not taken:** `product-base-year-below-facility-gap.md` analyses letting the rebasing formula run with negative progress, which reproduces the spreadsheet's 8.000%. It is **not** implemented and is kept only in case the business later allows pre-facility products.
 
 **Known pre-existing limitation:** The formula silently degrades to `BigNumber(0)` when improvement keys are missing from `referenceData.baselineAndTargets.improvements` (e.g., no `TP9` key). This is not specific to the `productBaseYear < facilityBaseYear` case but affects all adjusted-target calculations.
 

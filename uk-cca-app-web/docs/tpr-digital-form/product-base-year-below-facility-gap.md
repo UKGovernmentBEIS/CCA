@@ -1,6 +1,7 @@
 # Product Base Year < Facility Base Year — Gap Analysis
 
-> **Date:** 2026-07-31
+> **Date:** 2026-07-31 (updated 2026-10-14)
+> **Status:** resolved by blocking — the backend rejects TPR create, refresh and submit with `TPRDF1010`. Sections 1–3 are kept as the record of the calculation analysis.
 > **References:** CCA-3245, `data-model.md` § "Known Gap", `utils.ts:286-337`
 > **Code:** `src/app/requests/common/target-period-reporting/utils.ts` — `calculateAdjustedImprovementTarget()`
 
@@ -138,14 +139,21 @@ The original assumption — that negative progress would produce "garbled result
 
 ---
 
-## 4. Long-term direction (open)
+## 4. Decision
 
-**Option A — reject pre-facility products at validation time.** Block any product with
-`baselineYear < facilityBaseYear` at product-addition or facility level. This is the spec's stated long-term
-direction and is under investigation by the analysis team; it is not implemented. If validated there, products
-with a base year below the facility baseline never reach the TPR form and the calculation path becomes
-unreachable in normal operation. Until one of the two options lands, pre-facility products keep reporting the
-facility target instead of the sector-level value.
+**Block at TPR level (implemented).** The backend rejects TPR task creation, baseline refresh and submit with
+`TPRDF1010` when any product has a base year earlier than the facility base year. The frontend maps it to
+*"Product base year for one or more products is less than facility base year. Correct via variation before
+proceeding with target period report"*: a form error on create, and an error summary with no link on refresh
+and submit. The user must correct the product base year via a variation.
+
+**Frontend calculation unchanged.** The `<=` guard in `utils.ts:297` stays: it is correct for
+`productBaseYear === facilityBaseYear`, and pre-facility products can no longer reach a submitted report. They
+can still render the facility target on a task created before `TPRDF1010` shipped, but that task cannot be
+refreshed or submitted.
+
+**Option D (negative progress, section 3) — not implemented.** Kept for reference in case the business later
+allows pre-facility products.
 
 Two alternatives were considered and rejected: extending the formula with sector targets (unnecessary — the
 current formula already matches the spreadsheet) and capping at the facility base year (produced 6.122% where
@@ -159,7 +167,7 @@ the spreadsheet expects 8%).
   `new BigNumber(tp7ProgressYears).div(tp7Years)` has no guard. The frontend guards this (`if (tp7Years > 0)`);
   the backend does not (see the backend BH2 item in [../open-findings.md](../open-findings.md)).
 - **Extreme cases can exceed 100% of the facility target** (e.g. 40% when a product's base year is five years
-  before the facility's) — business stakeholders still need to validate those outputs.
+  before the facility's). Only relevant if Option D is ever implemented; `TPRDF1010` blocks these products today.
 - **Missing improvement keys silently become 0%.** If `referenceData.baselineAndTargets.improvements` has no key
   for a period (e.g. no `TP9`), `toBigNumber(undefined)` returns 0, so that period reads as 0% improvement.
   This affects all adjusted-target calculations, not just pre-facility products.

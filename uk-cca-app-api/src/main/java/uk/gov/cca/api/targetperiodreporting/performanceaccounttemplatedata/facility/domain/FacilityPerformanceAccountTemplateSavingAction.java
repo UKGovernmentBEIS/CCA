@@ -49,12 +49,12 @@ public class FacilityPerformanceAccountTemplateSavingAction implements Serializa
 
     @DecimalMax(value = "100")
     @DecimalMin(value = "0")
-    @Digits(integer = 2, fraction = 7)
+    @Digits(integer = 3, fraction = 7)
     private BigDecimal energyConsumptionOrCarbonEmissionsImpactedPercentage;
 
     @DecimalMax(value = "100")
     @DecimalMin(value = "0")
-    @Digits(integer = 2, fraction = 7)
+    @Digits(integer = 3, fraction = 7)
     private BigDecimal expectedExtentOfChangeImplementedPercentage;
 
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)

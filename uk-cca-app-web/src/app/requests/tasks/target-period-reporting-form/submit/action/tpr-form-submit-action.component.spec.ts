@@ -150,4 +150,23 @@ describe('TprFormSubmitActionComponent', () => {
     const nativeElement = fixture.nativeElement as HTMLElement;
     expect(nativeElement.textContent).toContain('Confirm and submit TPR');
   });
+
+  it('should show product base year error summary and keep submit button for TPRDF1010', () => {
+    tasksApiService.saveRequestTaskAction.mockReturnValueOnce(throwError(() => ({ error: { code: 'TPRDF1010' } })));
+
+    component.onSubmit();
+    fixture.detectChanges();
+
+    expect(component.isErrorSummaryDisplayed()).toBe(true);
+    expect(component.isCancelError()).toBe(false);
+    expect(component.errorSummaryInfo().linkText).toBe(
+      'Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report',
+    );
+
+    const nativeElement = fixture.nativeElement as HTMLElement;
+    expect(nativeElement.textContent).toContain(
+      'Product base year for one or more products is less than facility base year',
+    );
+    expect(nativeElement.textContent).toContain('Confirm and submit TPR');
+  });
 });

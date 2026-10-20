@@ -70,7 +70,6 @@ export const FACILITIES_LIST_ROUTES: Routes = [
       },
       {
         path: 'reports',
-        data: { backlink: '../../', breadcrumb: false },
         children: FACILITY_REPORTS_TAB_ROUTES,
       },
       {

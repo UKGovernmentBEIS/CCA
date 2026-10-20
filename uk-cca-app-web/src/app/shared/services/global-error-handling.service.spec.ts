@@ -10,6 +10,7 @@ import { mockClass } from '@netz/common/testing';
 
 import { AuthService } from '../services/auth.service';
 import { GlobalErrorHandlingService } from './global-error-handling.service';
+import { StaleChunkRecoveryService } from './stale-chunk-recovery.service';
 
 describe('GlobalErrorHandlingService', () => {
   let service: GlobalErrorHandlingService;
@@ -52,6 +53,31 @@ describe('GlobalErrorHandlingService', () => {
       skipLocationChange: true,
     });
     expect(consoleErrorSpy).toHaveBeenCalledWith('ERROR', error);
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('should load a fresh copy of the page instead of the error page when a chunk is stale', () => {
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+    const recoverSpy = vi.spyOn(TestBed.inject(StaleChunkRecoveryService), 'recover').mockReturnValueOnce(true);
+    const error = new TypeError('Failed to fetch dynamically imported module: http://localhost/chunk-ABCD1234.js');
+
+    service.handleError(error);
+
+    expect(recoverSpy).toHaveBeenCalledWith(error);
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
+  it('should show the error page when a stale chunk cannot be recovered', () => {
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+    vi.spyOn(TestBed.inject(StaleChunkRecoveryService), 'recover').mockReturnValueOnce(false);
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    service.handleError(new TypeError('Importing a module script failed.'));
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/error', '500'], {
+      state: { forceNavigation: true },
+      skipLocationChange: true,
+    });
     consoleErrorSpy.mockRestore();
   });
 

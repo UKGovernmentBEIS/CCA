@@ -52,7 +52,7 @@ If a facility uses the **"Split by product"** method to account for variable ene
 
 > **Example:** A product with a 2028 base year will be excluded from TP7 (final) reporting and TP8 interim reporting, but included in TP8 (final) reporting and TP9 reporting (interim & final).
 
-> **⚠️ GAP / Future CR:** Products with a base year **less than** the facility base year are not currently handled. See [CCA-3245](https://jira.example.com/browse/CCA-3245): "CCA3 TP Reporting if ProductBY is earlier than the FacilityBY year." The spec states *"NO products are allowed to have a product base year < facility base year"* — this is currently a **Future CR** and is not implemented.
+> **Product base year < facility base year:** the backend blocks task creation, refresh and submit with `TPRDF1010` when any product has a base year earlier than the facility base year (CCA-3245). The user must correct the product base year via a variation.
 
 **Additional rule:** AT LEAST ONE product MUST have a base year **equal to** the facility base year.
 
@@ -136,6 +136,7 @@ A **"Start TP reporting task"** button initiates the step to select the target p
 | `TPRDF1004` | Locked indicator is **Yes** (secondary report check) | *"The reporting for this target period must be unlocked before submitting reports or corrections. Contact your regulator to make an unlocking request."* |
 | `TPRDF1005` | Split by product: no product with base year = facility base year | *"The baseline data for this facility must contain at least one product with a base year equal to the facility base year, and at least one product with a base year less than or equal to the year the report data relates to."* |
 | `TPRDF1009` | Baseline start date after facility's first activation date and after start of reporting period | *"There is an error in the facility's baseline data. Please contact your regulator."* |
+| `TPRDF1010` | One or more products have a base year earlier than the facility base year | *"Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report"* |
 
 ---
 
@@ -281,6 +282,7 @@ When the user chooses **Confirm and submit**, the following error checking is pe
 | `TPRDF1002` | Facility was excluded during recent variation (exclusion backdated to before reporting period start) | *"This facility is not eligible to report for this target period - the workflow must be cancelled."* → Link to cancel task confirmation page |
 | `TPRDF1004` | Facility is locked (buy-out run completed after form initiation) | *"The reporting for this target period must be unlocked before submitting reports or corrections. Contact your regulator to make an unlocking request."* User cannot submit until data has been refreshed AND relevant tasks resubmitted. |
 | `TPRDF1005` | Split by product: products not eligible | Product eligibility error → Link to cancel task |
+| `TPRDF1010` | One or more products have a base year earlier than the facility base year | *"Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report"* No link. |
 
 If the reporting period has **expired** for an Interim report, the workflow is automatically terminated as **Expired** and a dedicated expired page is displayed.
 
@@ -327,6 +329,7 @@ The refresh of baseline data may be triggered:
 | `TPRDF1005` | Variation for Split by product resulted in no eligible products | *"An error occurred during the baseline refresh. Please contact your regulator."* |
 | `TPRDF1008` | Generic refresh error | *"An error occurred during the baseline refresh. Please contact your regulator."* |
 | `TPRDF1009` | Baseline start date changed to after start of reporting period | *"An error occurred during the baseline refresh. Please contact your regulator."* |
+| `TPRDF1010` | One or more products have a base year earlier than the facility base year | *"Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report"* No link. |
 
 > For errors `TPRDF1005`, `TPRDF1008`, and `TPRDF1009`: the baseline data is **NOT** refreshed (previous values retained). The sector user must contact the regulator and complete a new variation to correct the error.
 
@@ -336,6 +339,6 @@ The refresh of baseline data may be triggered:
 
 1. **[CCA-3224](https://jira.example.com/browse/CCA-3224)** — TPR using Digital Forms - Reset Throughput subtask status if SRM used and Fuels page changed. Prevents a Submit error for facilities with SRM when fuels change.
 
-2. **[CCA-3245](https://jira.example.com/browse/CCA-3245)** — CCA3 TP Reporting if ProductBY is earlier than FacilityBY year. The spec states *"NO products are allowed to have a product base year < facility base year"* but this validation and error handling is not yet implemented. Products with `base year < facility base year` are **not explicitly handled** in the current improvement target calculation logic.
+2. **[CCA-3245](https://jira.example.com/browse/CCA-3245)** — CCA3 TP Reporting if ProductBY is earlier than FacilityBY year. **Resolved:** the backend blocks create, refresh and submit with `TPRDF1010`, and the frontend shows the error on all three. See [product-base-year-below-facility-gap.md](product-base-year-below-facility-gap.md).
 
 3. **[CCA-3226](https://jira.example.com/browse/CCA-3226)** — TPR using Digital forms - Clear CO₂ factor for non-standard fuels on refresh. Ready for Dev (migrated).

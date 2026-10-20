@@ -1,7 +1,13 @@
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { type ApplicationConfig, ErrorHandler, inject, provideAppInitializer } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { provideRouter, TitleStrategy, withInMemoryScrolling, withRouterConfig } from '@angular/router';
+import {
+  provideRouter,
+  TitleStrategy,
+  withInMemoryScrolling,
+  withNavigationErrorHandler,
+  withRouterConfig,
+} from '@angular/router';
 
 import { firstValueFrom } from 'rxjs';
 
@@ -13,6 +19,7 @@ import {
   GlobalErrorHandlingService,
   KeycloakService,
   LatestTermsService,
+  recoverFromStaleChunkNavigation,
 } from '@shared/services';
 import { logger } from '@shared/utils';
 import type { KeycloakServerConfig } from 'keycloak-js';
@@ -57,6 +64,8 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'enabled',
         anchorScrolling: 'enabled',
       }),
+      // A lazy route whose chunk is gone after a deployment reloads the page.
+      withNavigationErrorHandler(recoverFromStaleChunkNavigation),
     ),
     { provide: TitleStrategy, useClass: CcaTitleStrategy },
   ],

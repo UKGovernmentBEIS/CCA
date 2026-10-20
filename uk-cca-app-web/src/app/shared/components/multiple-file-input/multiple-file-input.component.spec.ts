@@ -1,5 +1,5 @@
 import { HttpEvent, HttpEventType, HttpResponse, HttpStatusCode } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -31,7 +31,8 @@ describe('MultipleFileInputComponent', () => {
         <cca-multiple-file-input
           formControlName="file"
           [baseDownloadUrl]="getDownloadUrl()"
-          hint="Custom hint"
+          [hint]="hint()"
+          [showFilesizeHint]="showFilesizeHint()"
         ></cca-multiple-file-input>
       </form>
     `,
@@ -40,10 +41,23 @@ describe('MultipleFileInputComponent', () => {
   })
   class TestComponent {
     form = new FormGroup({ file: new FormControl(null) });
+    hint = signal<string | undefined>('Custom hint');
+    showFilesizeHint = signal(true);
     getDownloadUrl() {
       return `/download/`;
     }
   }
+
+  @Component({
+    template: `
+      <form [formGroup]="form">
+        <cca-multiple-file-input formControlName="file" [baseDownloadUrl]="getDownloadUrl()" hint="Custom hint" />
+      </form>
+    `,
+    imports: [MultipleFileInputComponent, ReactiveFormsModule],
+    providers: [{ provide: ActivatedRoute, useValue: activatedRoute }],
+  })
+  class DefaultHintTestComponent extends TestComponent {}
 
   class Page extends BasePage<TestComponent> {
     get filesText() {
@@ -85,7 +99,7 @@ describe('MultipleFileInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestComponent],
+      imports: [TestComponent, DefaultHintTestComponent],
     }).compileComponents();
   });
 
@@ -103,11 +117,80 @@ describe('MultipleFileInputComponent', () => {
     expect(page.dropzoneHint.classList.contains('govuk-body')).toBeTruthy();
   });
 
-  it('should show the file-size hint together with the custom hint', () => {
+  it('should show the file-size hint together with the custom hint when enabled', () => {
     expect(page.fileSizeHint.textContent).toContain('no more than 20MB');
     expect(page.customHint.textContent).toEqual('Custom hint');
-    expect(page.input.getAttribute('aria-describedby')).toContain('file-hint-file-size');
-    expect(page.input.getAttribute('aria-describedby')).toContain('file-hint');
+    expect(page.input.getAttribute('aria-describedby')).toBe('file-hint-file-size file-hint');
+    expect(page.filePickerButton.getAttribute('aria-describedby')).toBe('file-hint-file-size file-hint');
+  });
+
+  it('should preserve both hints when showFilesizeHint is omitted', () => {
+    const defaultFixture = TestBed.createComponent(DefaultHintTestComponent);
+    defaultFixture.detectChanges();
+
+    const upload = defaultFixture.nativeElement.querySelector('cca-multiple-file-input');
+    expect(upload.querySelector('[id="file-hint-file-size"]').textContent).toContain('20MB');
+    expect(upload.querySelector('[id="file-hint"]').textContent).toBe('Custom hint');
+    for (const control of upload.querySelectorAll('input[type="file"], button[type="button"]')) {
+      expect(control.getAttribute('aria-describedby').split(/\s+/)).toEqual(['file-hint-file-size', 'file-hint']);
+    }
+  });
+
+  it('should describe the default hint and error when no custom hint is provided', () => {
+    hostComponent.hint.set(undefined);
+    control.setErrors({ required: 'Upload a file' });
+    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit', { cancelable: true }));
+    fixture.detectChanges();
+
+    expect(page.fileSizeHint.textContent).toContain('20MB');
+    expect(page.customHint).toBeNull();
+    expect(fixture.nativeElement.querySelector('[id="file-error"]').textContent).toContain('Upload a file');
+    for (const control of [page.input, page.filePickerButton]) {
+      expect(control.getAttribute('aria-describedby').split(/\s+/)).toEqual(['file-hint-file-size', 'file-error']);
+    }
+  });
+
+  it('should suppress only the file-size hint when explicitly disabled', () => {
+    hostComponent.showFilesizeHint.set(false);
+    fixture.detectChanges();
+
+    expect(page.fileSizeHint).toBeNull();
+    expect(page.customHint.textContent).toEqual('Custom hint');
+    expect(page.input.getAttribute('aria-describedby')).toBe('file-hint');
+    expect(page.filePickerButton.getAttribute('aria-describedby')).toBe('file-hint');
+  });
+
+  it('should show the file-size hint when no custom hint is provided', () => {
+    hostComponent.hint.set(undefined);
+    fixture.detectChanges();
+
+    expect(page.fileSizeHint.textContent).toContain('no more than 20MB');
+    expect(page.customHint).toBeNull();
+    expect(page.input.getAttribute('aria-describedby')).toBe('file-hint-file-size');
+    expect(page.filePickerButton.getAttribute('aria-describedby')).toBe('file-hint-file-size');
+  });
+
+  it('should omit aria-describedby when both hints are absent', () => {
+    hostComponent.showFilesizeHint.set(false);
+    hostComponent.hint.set(undefined);
+    fixture.detectChanges();
+
+    expect(page.fileSizeHint).toBeNull();
+    expect(page.customHint).toBeNull();
+    expect(page.input.hasAttribute('aria-describedby')).toBe(false);
+    expect(page.filePickerButton.hasAttribute('aria-describedby')).toBe(false);
+  });
+
+  it('should retain the error description when the file-size hint is disabled', () => {
+    hostComponent.showFilesizeHint.set(false);
+    control.setErrors({ required: 'Upload a file' });
+    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit', { cancelable: true }));
+    fixture.detectChanges();
+
+    expect(page.fileSizeHint).toBeNull();
+    expect(fixture.nativeElement.querySelector('[id="file-error"]')).not.toBeNull();
+    expect(page.input.getAttribute('aria-describedby')).toBe('file-hint file-error');
+    expect(page.filePickerButton.getAttribute('aria-describedby')).toBe('file-hint file-error');
   });
 
   it('should keep the hidden input out of the tab order and open the picker from the button', () => {

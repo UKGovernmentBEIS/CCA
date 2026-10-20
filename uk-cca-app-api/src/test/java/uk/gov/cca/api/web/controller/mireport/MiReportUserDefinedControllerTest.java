@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.framework.DefaultAopProxyFactory;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -54,8 +55,10 @@ import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedGeneratorDelegato
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedInfoDTO;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedResult;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedResults;
+import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedSearchCriteriaDTO;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedService;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedUpdateDTO;
+import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedSearchCriteriaDTO.SortBy;
 import uk.gov.netz.api.mireport.userdefined.custom.CustomMiReportQuery;
 import uk.gov.netz.api.mireport.userdefined.custom.ValidSqlQueryValidator;
 import uk.gov.netz.api.security.AppSecurityComponent;
@@ -270,47 +273,51 @@ class MiReportUserDefinedControllerTest {
     @Test
     void findAll() throws Exception {
         final AppUser user = buildMockAuthenticatedUser();
-        final Long queryId = 1L;
-        final String reportName = "test report name";
-        final String description = "test description";
-
-        final Long queryId2 = 2L;
-        final String reportName2 = "test report name 2";
-        final String description2 = "test description 2";
 
         final int pageNumber = 1;
         final int pageSize = 10;
-
-        final MiReportUserDefinedInfoDTO miReportQueryInfoDTO1 = MiReportUserDefinedInfoDTO.builder()
-                .id(queryId)
-                .reportName(reportName)
-                .description(description)
+        
+        final MiReportUserDefinedSearchCriteriaDTO searchCriteriaDTO = MiReportUserDefinedSearchCriteriaDTO.builder()
+                .sortBy(SortBy.REPORT_NAME)
+                .direction(Direction.ASC)
                 .build();
 
-        final MiReportUserDefinedInfoDTO miReportQueryInfoDTO2 = MiReportUserDefinedInfoDTO.builder()
-                .id(queryId2)
-                .reportName(reportName2)
-                .description(description2)
+        final MiReportUserDefinedInfoDTO miReportQuery1 = MiReportUserDefinedInfoDTO.builder()
+                .id(1L)
+                .reportName("By account")
+                .description("Test by account")
                 .build();
 
-        final List<MiReportUserDefinedInfoDTO> queries = List.of(miReportQueryInfoDTO1, miReportQueryInfoDTO2);
+        final MiReportUserDefinedInfoDTO miReportQuery2 = MiReportUserDefinedInfoDTO.builder()
+                .id(3L)
+                .reportName("By facility")
+                .description("Test by facility")
+                .build();
+
+        final MiReportUserDefinedInfoDTO miReportQuery3 = MiReportUserDefinedInfoDTO.builder()
+                .id(2L)
+                .reportName("By sector")
+                .description("Test by sector")
+                .build();
+        
+        final List<MiReportUserDefinedInfoDTO> queries = List.of(miReportQuery1, miReportQuery3, miReportQuery2);
 
         MiReportUserDefinedResults expectedResults = MiReportUserDefinedResults.builder()
                 .queries(queries)
-                .total(2L)
+                .total(3L)
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(miReportQueryService.findAllByCA(user.getCompetentAuthority(), pageNumber, pageSize)).thenReturn(expectedResults);
+        when(miReportQueryService.findAllByCA(user, pageNumber, pageSize, searchCriteriaDTO)).thenReturn(expectedResults);
 
         mockMvc.perform(MockMvcRequestBuilders.get(MI_REPORT_QUERY_BASE_CONTROLLER_PATH)
                         .param("page", String.valueOf(pageNumber))
                         .param("size", String.valueOf(pageSize)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").value(2));
+                .andExpect(jsonPath("$.total").value(3));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(miReportQueryService, times(1)).findAllByCA(user.getCompetentAuthority(), pageNumber, pageSize);
+        verify(miReportQueryService, times(1)).findAllByCA(user, pageNumber, pageSize, searchCriteriaDTO);
     }
     
     @Test

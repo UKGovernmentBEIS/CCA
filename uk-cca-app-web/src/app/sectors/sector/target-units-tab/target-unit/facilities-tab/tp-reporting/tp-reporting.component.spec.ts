@@ -187,4 +187,21 @@ describe('TpReportingComponent', () => {
 
     expect(component.hasFormErrors()).toBe(true);
   });
+
+  it('should handle TPRDF1010 error', () => {
+    component.form.controls.targetPeriodType.setValue('TP7');
+
+    mockRequestsService.processRequestCreateAction.mockReturnValue(
+      throwError(() => ({ error: { code: 'TPRDF1010' } })),
+    );
+
+    component.onSubmit();
+
+    expect(component.form.controls.targetPeriodType.errors).toEqual({
+      responseError:
+        'Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report',
+    });
+
+    expect(component.hasFormErrors()).toBe(true);
+  });
 });

@@ -99,6 +99,7 @@ public enum CcaErrorCode implements NetzErrorCode {
     INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CALCULATED_RESULTS("TPRDF1007", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility Digital Form calculated results data"),
     INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_ORIGINAL_BASELINE_AND_TARGETS_IS_OUTDATED("TPRDF1008", HttpStatus.BAD_REQUEST, "Original baseline and targets is outdated for Performance Data Facility Digital Form Submit"),
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE("TPRDF1009", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form facility baseline date is not eligible for target period year"),
+    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCT_EXIST_BEFORE_FACILITY_BASE_YEAR("TPRDF1010", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form has one or more products with a base year earlier than the facility base year"),
     /** Codes for Performance Data Facility CSV Form. */
     INVALID_PERFORMANCE_DATA_FACILITY_UPLOAD_DATA("TPRUF1001", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility CSV Form data"),
     INVALID_PERFORMANCE_DATA_FACILITY_UPLOAD_PROCESS_STATUS("TPRUF1002", HttpStatus.BAD_REQUEST, "Performance Data Facility CSV is under process or process completed"),

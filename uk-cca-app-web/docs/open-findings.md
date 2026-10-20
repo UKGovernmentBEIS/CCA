@@ -27,6 +27,17 @@ the history lives in git (`git log -- docs/`). Work in progress and the branch/b
   `Feedback`, `Legislation`, `PrivacyNotice`, `TermsAndConditions`, `TimedOut`, `Version`, `LandingPage` and
   `DashboardPage` are imported directly, so they and their dependencies ship in the initial bundle. *Why:*
   larger first-load payload for every user. *Where:* `src/app/app.routes.ts:12-24`.
+- 🟡 **Medium — Two timeline routes render a breadcrumb and a back link together.** The root
+  `underlying-agreement-variation-reviewed` and `underlying-agreement-variation-regulator-led-submitted` timeline
+  routes set `data: { backlink: '../' }`, overriding the `:actionId` parent's backlink function. Their inherited
+  breadcrumb function returns the action crumb on account-level timelines (it returns `false` only on task
+  timelines, which now hides the crumb), so those task-list pages render both — against the convention in
+  `projects/common/navigation/README.md` (GDS: never combine). Sibling timeline route tables set `backlink: false`
+  on their root route for exactly this case. *Why:* duplicate navigation chrome and inconsistent behaviour between
+  task and account timeline flavours. *Where:*
+  `src/app/requests/timeline/timeline.routes.ts:29-39`,
+  `src/app/requests/timeline/underlying-agreement-variation-reviewed/underlying-agreement-variation-reviewed.routes.ts:1-9`,
+  `src/app/requests/timeline/underlying-agreement-variation-regulator-led-submitted/underlying-agreement-variation-regulator-led-submitted.routes.ts:1-9`.
 
 ### Signals and state
 
@@ -179,6 +190,8 @@ recorded here instead of being fixed in the branch.
   (the error summary) is revealed only when the form is invalid *at submit*. Affects the 2FA invalid code
   (`change-2fa`), invalid OTP (`submit-otp`) and a failed CSV upload (`tpr-csv-upload-process` /
   `pat-csv-upload-process`).
+  CCA-3423 changes the upload hints and their description references on these pages; it does not change
+  server-error announcements. This finding remains open independently of hint suppression.
   A fix was prototyped in 2026-09 and rejected: `cca-wizard-step` watching `statusChanges` for the first
   invalid transition after a submit reacted to editing rather than to the request (inputs stay enabled while a
   request is in flight — `PendingButtonDirective` disables the button only, and only 4 files call
@@ -424,15 +437,12 @@ the workflow and data model in [tpr-digital-form/](tpr-digital-form/).
   the plain facility target instead of its adjusted per-product target. *Requirement:* CCA-3248 must ship to
   each environment before or with the web build. *Where:* `tpr-throughput-details-check-your-answers.component.ts:85`,
   `tpr-throughput-split-by-product.component.ts:139`, `throughput-details-summary.component.ts:88`.
-- 🟡 **Medium — Spec gap: product base year below the facility base year (CCA-3245) is not rejected.** Nothing
-  rejects an invalid product: the frontend's `calculateAdjustedImprovementTarget` still returns the plain
-  facility target for `productBaseYear <= facilityBaseYear`
-  (`common/target-period-reporting/utils.ts:297`), and the backend clamps the numerator with
-  `.max(BigDecimal.ZERO)`, which produces the same collapse; `0/0` is possible when `facilityBaseYear == 2026`.
-  Current risk recorded as Low. The same analysis carries four more open items: the product decision on blocking
-  pre-facility products at validation time (long-term direction), extreme cases exceeding 100% of the facility
-  target (needs business validation), missing `baselineAndTargets.improvements` keys reading as 0% improvement,
-  and `totalProgress ≥ 1` from corrupt data silently returning 0 — see
+- ✅ **Resolved — Spec gap: product base year below the facility base year (CCA-3245).** The backend now rejects
+  TPR create, refresh and submit with `TPRDF1010`, mapped in `tp-reporting-errors.ts`. The frontend
+  calculation (`common/target-period-reporting/utils.ts:297`) is unchanged by decision. Pre-facility products
+  still render the facility target on tasks created before `TPRDF1010`, but those tasks cannot be refreshed or
+  submitted. Still open from the same analysis: `0/0` when `facilityBaseYear == 2026` (backend BH2), missing
+  `baselineAndTargets.improvements` keys reading as 0% improvement, and `totalProgress ≥ 1` from corrupt data silently returning 0 — see
   [tpr-digital-form/product-base-year-below-facility-gap.md](tpr-digital-form/product-base-year-below-facility-gap.md).
 
 ### Backend
@@ -442,14 +452,12 @@ the workflow and data model in [tpr-digital-form/](tpr-digital-form/).
   `CcaErrorCode.java:98-101`; frontend `tp-reporting-errors.ts`. Rule: do not map error codes on the frontend
   speculatively. Also verify TPRDF1007: the calculation step's validation is claimed but not confirmed to return
   a frontend-visible error.
-- 🔴 **High — BH2: `productBaseYear < facilityBaseYear` is not rejected, and the TP7 term can divide by
-  zero.** The validator rejects an empty product list, products after the target year and products with no
-  matching facility base year, but not a base year below the facility's. When `facilityBaseYear == 2026`,
+- 🔴 **High — BH2: the TP7 term can divide by zero.** `productBaseYear < facilityBaseYear` is now rejected with
+  `TPRDF1010` (CCA-3245). When `facilityBaseYear == 2026`,
   `lastYearOfTP7 - facilityBaseYear` is 0 with no guard, giving an `ArithmeticException` and a 500 on
   `CALCULATE_RESULTS`/submit — reachable because a 2026 baseline passes the facility date-eligibility check for
   TP8/TP9. *Where:* `PerformanceDataFacilityValidator.java:160-184`,
-  `PerformanceDataFacilityCalculationCommonFunctionUtil.java`, `CommonFunctionUtil:136-138`. Tagged as future
-  change request CCA-3245.
+  `PerformanceDataFacilityCalculationCommonFunctionUtil.java`, `CommonFunctionUtil:136-138`.
 - 🔴 **High — BH3: `WEIGHTED_CONVERSION_FACTOR` double-counts CO₂ in the carbon branch.**
   `PRIMARY_ENERGY_STANDARD_FUEL` (already CO₂-inclusive for `CARBON_KG`/`CARBON_TONNE`) is multiplied by the CO₂
   factor again and divided by `actualEnergyCarbon`, yielding `Σ(d·p·CF²) / Σ(d·p·CF)` instead of the spec's

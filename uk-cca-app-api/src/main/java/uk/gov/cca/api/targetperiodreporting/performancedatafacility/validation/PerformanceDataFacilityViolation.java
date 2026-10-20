@@ -46,6 +46,7 @@ public class PerformanceDataFacilityViolation extends BusinessViolation {
         FACILITY_NOT_ELIGIBLE("Facility is not eligible"),
         FACILITY_NOT_ELIGIBLE_PRODUCTS("Facility has no eligible products"),
         FACILITY_PRODUCT_WITH_FACILITY_BASE_YEAR_DOES_NOT_EXIST("None of the facility products have a product year that matches the facility base year"),
+        FACILITY_PRODUCT_EXIST_BEFORE_FACILITY_BASE_YEAR("At least one facility product has a product year earlier than the facility base year"),
         FACILITY_IS_LOCKED("Facility is locked for secondary reporting period"),
         FACILITY_BASELINE_DATE_NOT_ELIGIBLE("Facility baseline date is not eligible for target period year"),
         ATTACHMENT_NOT_FOUND("Attachment not found"),

@@ -67,6 +67,7 @@ public class PerformanceDataFacilityProcessingService {
             results.add(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear));
             results.add(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(targetPeriodYear, baselineAndTargets));
             results.add(performanceDataFacilityValidator.validateFacilityProductsEligibility(targetPeriodYear, baselineAndTargets));
+            results.add(performanceDataFacilityValidator.validateFacilityProductsBeforeFacilityBaseYear(baselineAndTargets));
             results.add(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear));
             
             boolean isValid = results.stream().allMatch(BusinessValidationResult::isValid);

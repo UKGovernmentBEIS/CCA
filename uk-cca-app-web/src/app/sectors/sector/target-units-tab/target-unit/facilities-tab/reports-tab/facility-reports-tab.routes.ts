@@ -1,6 +1,25 @@
+import { BreadcrumbData } from '@netz/common/navigation';
+
+import { FacilityInfoDTO } from 'cca-api';
+
+import { FacilityDetailsResolver } from '../facility-details.resolver';
 import { toggleLockGuard } from './target-period/toggle-lock/toggle-lock.guard';
 import { TPRDetailsResolver } from './target-period/tpr-details/tpr-details.resolver';
 import { variationSubmissionGuard } from './target-period/variation-submission/variation-submission.guard';
+
+const facilityReportBreadcrumbResolve = {
+  facilityDetails: FacilityDetailsResolver,
+};
+
+const facilityReportBreadcrumb: BreadcrumbData<{ facilityDetails: FacilityInfoDTO }> = ({ facilityDetails }) => ({
+  text: `${facilityDetails.facilityBusinessId}`,
+  from: ':facilityId',
+  fragment: 'reports',
+});
+
+const facilityReportBreadcrumbData = {
+  breadcrumb: facilityReportBreadcrumb,
+};
 
 export const FACILITY_REPORTS_TAB_ROUTES = [
   {
@@ -9,14 +28,16 @@ export const FACILITY_REPORTS_TAB_ROUTES = [
       {
         path: '',
         title: 'TP report results',
-        resolve: { tprDetails: TPRDetailsResolver },
+        resolve: { tprDetails: TPRDetailsResolver, ...facilityReportBreadcrumbResolve },
+        data: facilityReportBreadcrumbData,
         loadComponent: () =>
           import('./target-period/tpr-details/tpr-details.component').then((c) => c.TprDetailsComponent),
       },
       {
         path: 'pat-details',
         title: 'PAT report details',
-        data: { breadcrumb: false, backlink: '../../../' },
+        resolve: facilityReportBreadcrumbResolve,
+        data: facilityReportBreadcrumbData,
         loadComponent: () => import('./pat/pat-details/pat-details.component').then((c) => c.PatDetailsComponent),
       },
       {
