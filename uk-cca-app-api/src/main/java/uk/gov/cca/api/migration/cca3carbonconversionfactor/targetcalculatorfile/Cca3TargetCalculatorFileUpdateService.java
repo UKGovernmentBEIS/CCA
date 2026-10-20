@@ -1,5 +1,6 @@
 package uk.gov.cca.api.migration.cca3carbonconversionfactor.targetcalculatorfile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,9 +14,10 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import lombok.RequiredArgsConstructor;
 
+import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.files.attachments.service.CcaFileAttachmentService;
+import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.migration.ftp.FtpFileService;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
@@ -59,10 +61,14 @@ public class Cca3TargetCalculatorFileUpdateService {
                 errors.add(String.format(ERROR_FORMAT, ftpFileDTOResult.getFileDTO().getFileName(), "Not allowed file type"));
             }
             else {
-				FileAttachment attachment = createFileAttachment(ftpFileDTOResult.getFileDTO(), errors);
-				if (attachment != null) {
-					attachments.add(attachment);
-				}
+                try {
+                	FileAttachment attachment = createFileAttachment(ftpFileDTOResult.getFileDTO(), errors);
+                	if (attachment != null) {
+                	    attachments.add(attachment);
+                	}
+                } catch (IOException e) {
+                    errors.add(String.format(ERROR_FORMAT, ftpFileDTOResult.getFileDTO().getFileName(), e.getMessage()));
+                }
             }
         });
 
@@ -98,7 +104,7 @@ public class Cca3TargetCalculatorFileUpdateService {
         }	
 	}
 
-	private FileAttachment createFileAttachment(FileDTO fileDTO, List<String> errors) {
+	private FileAttachment createFileAttachment(FileDTO fileDTO, List<String> errors) throws IOException {
 		List<String> validationErrors = new ArrayList<>();
 
 		this.fileValidators.forEach(validator -> {
@@ -117,6 +123,7 @@ public class Cca3TargetCalculatorFileUpdateService {
 		FileAttachment attachment = FILE_ATTACHMENT_MAPPER.toFileAttachment(fileDTO);
 		attachment.setUuid(UUID.randomUUID().toString());
 		attachment.setStatus(FileStatus.PENDING_MIGRATION);
+		attachment.setCreatedBy(MigrationConstants.MIGRATION_PROCESS_USER);
 		return attachment;
 	}
 }

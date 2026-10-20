@@ -67,11 +67,11 @@ public class BuyOutSurplusRunService {
         if(!buyOutSurplusAccountStates.isEmpty()) {
             try {
                 // Write CSV
-                final FileDTO csvFileDTO = BuyOutSurplusRunUtil
-                        .createCsvFileContent(requestId, buyOutSurplusAccountStates, requestPayload.getSubmitterId());
+                final FileDTO csvFileDTO = BuyOutSurplusRunUtil.createCsvFileContent(requestId, buyOutSurplusAccountStates);
 
                 // Save to DB
-                final String uuid = ccaFileAttachmentService.createSystemFileAttachment(csvFileDTO, FileStatus.SUBMITTED);
+                final String uuid = ccaFileAttachmentService.createSystemFileAttachment(
+                        csvFileDTO, FileStatus.SUBMITTED, requestPayload.getSubmitterId());
 
                 FileInfoDTO csvFile = FileInfoDTO.builder().uuid(uuid).name(csvFileDTO.getFileName()).build();
                 requestPayload.setCsvFile(csvFile);

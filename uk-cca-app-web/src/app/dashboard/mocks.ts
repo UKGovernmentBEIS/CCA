@@ -24,7 +24,6 @@ export const assignedItems: CcaItemDTO[] = [
     sectorAcronym: 'FBS',
     daysRemaining: 10,
     isNew: true,
-    taskAssignee: { firstName: 'John', lastName: 'Doe' },
   },
   {
     taskType: 'PERFORMANCE_DATA_UPLOAD_SUBMIT',
@@ -37,6 +36,7 @@ export const assignedItems: CcaItemDTO[] = [
     siteName: 'Cardiff Site',
     sectorAcronym: 'CHEM',
     isNew: false,
-    taskAssignee: { firstName: 'John', lastName: 'Doe' },
   },
 ];
+
+export const unassignedItems = assignedItems.map((item) => ({ ...item, taskAssignee: undefined }));

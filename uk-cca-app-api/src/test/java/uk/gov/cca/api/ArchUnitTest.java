@@ -402,8 +402,7 @@ public class ArchUnitTest {
                             REFERENCE_DATA_PACKAGE,
                             CA_PACKAGE,
                             FILES_PACKAGE,
-                            TOKEN_PACKAGE,
-							CCA_FACILITY_PACKAGE
+                            TOKEN_PACKAGE
                             ));
     
     @ArchTest
@@ -424,8 +423,7 @@ public class ArchUnitTest {
                             FILES_PACKAGE,
                             TOKEN_PACKAGE,
 		                    CCA_TARGET_PERIOD_PACKAGE,
-		                    CCA_PERFORMANCE_DATA_PACKAGE,
-		                    CCA_PERFORMANCE_DATA_FACILITY_PACKAGE
+		                    CCA_PERFORMANCE_DATA_PACKAGE
                             ));
     
     @ArchTest

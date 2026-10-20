@@ -1,9 +1,0 @@
-*.sh
-*.md
-
-**/git_push.sh
-**/.gitignore
-**/.openapi-generator-ignore
-**/README.md
-**/api.module.ts
-**/api.base.service.ts

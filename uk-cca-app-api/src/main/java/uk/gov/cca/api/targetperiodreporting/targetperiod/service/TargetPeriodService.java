@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -103,10 +104,10 @@ public class TargetPeriodService {
         return repository.findByBuyOutStartDateLessThanEqualOrderByBuyOutStartDateDesc(date);
     }
     
-    public List<TargetPeriodInfoDTO> getTargetPeriodsInfoForSchemeUpTo(SchemeVersion schemeVersion, LocalDate date) {
-		return repository.findBySchemeVersionAndStartDateLessThanEqualOrderByStartDateAsc(schemeVersion, date).stream()
-	            .map(MAPPER::toTargetPeriodInfoDTO)
-	            .toList();
+    public Set<TargetPeriodType> getTargetPeriodsForSchemeUpTo(SchemeVersion schemeVersion, LocalDate date) {
+		return repository.findBySchemeVersionAndStartDateLessThanEqual(schemeVersion, date).stream()
+	            .map(TargetPeriod::getBusinessId)
+	            .collect(Collectors.toSet());
 	}
 	
     private TargetPeriod getByTargetPeriodType(TargetPeriodType targetPeriodType) {

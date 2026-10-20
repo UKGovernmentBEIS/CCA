@@ -44,7 +44,6 @@ export const PROVIDE_APPEAL_DETAILS_ROUTES: Routes = [
       },
       {
         path: 'confirmation',
-        title: 'Appeal registration details submitted',
         data: { backlink: false, breadcrumb: false },
         loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
       },

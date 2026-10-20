@@ -1,12 +1,15 @@
 package uk.gov.cca.api.common.converters;
 
 import com.opencsv.bean.AbstractBeanField;
-import uk.gov.cca.api.common.utils.ConversionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class CsvStringTrimConverter extends AbstractBeanField<String, String> {
 
     @Override
     protected String convert(String value) {
-        return ConversionUtils.toStringTrim(value);
+        if(StringUtils.isBlank(value)) {
+            return null;
+        }
+        return value.trim();
     }
 }

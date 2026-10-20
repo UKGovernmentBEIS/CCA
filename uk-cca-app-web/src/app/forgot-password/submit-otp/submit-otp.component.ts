@@ -66,7 +66,7 @@ export class SubmitOtpComponent {
         }),
       )
       .subscribe(() => {
-        void this.authService.createLoginUrl({ redirectUri: location.origin }).then((url) => this.signInUrl.set(url));
+        this.signInUrl.set(this.authService.createLoginUrl({ redirectUri: location.origin }));
         this.isPasswordReset.set(true);
       });
   }

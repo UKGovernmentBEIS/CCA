@@ -1,6 +1,6 @@
 import { DownloadableFile } from '@shared/utils';
 
-import { LinkList, SummaryData, SummarySection, SummarySectionOpts } from './type';
+import { LinkList, SummaryData, SummarySection } from './type';
 
 export class SummaryFactory {
   private readonly _data: SummaryData = [];
@@ -38,27 +38,37 @@ export class SummaryFactory {
    * @param opts
    * @returns
    */
-  addRow(key: SummarySection['key'], value: string | string[], opts: SummarySectionOpts = {}) {
+  addRow(key: SummarySection['key'], value: SummarySection['value'], opts: Omit<SummarySection, 'key' | 'value'> = {}) {
     value = value instanceof Array ? value : [value];
     this._data[this._data.length - 1].data.push({ key, value, ...opts });
     return this;
   }
 
-  addChangeRow(key: SummarySection['key'], value: string | string[], opts: Omit<SummarySectionOpts, 'change'> = {}) {
+  addChangeRow(
+    key: SummarySection['key'],
+    value: SummarySection['value'],
+    opts: Omit<SummarySection, 'key' | 'value' | 'change'> = {},
+  ) {
     return this.addRow(key, value, { change: true, ...opts });
   }
 
-  addFileListRow(key: SummarySection['key'], value: DownloadableFile[], opts: SummarySectionOpts = {}) {
-    this._data[this._data.length - 1].data.push({ key, value, isFileList: true, ...opts });
-    return this;
+  addFileListRow(
+    key: SummarySection['key'],
+    value: DownloadableFile[],
+    opts: Omit<SummarySection, 'key' | 'value'> = {},
+  ) {
+    return this.addRow(key, value, { isFileList: true, ...opts });
   }
 
-  addLinkListRow(key: SummarySection['key'], value: LinkList, opts: SummarySectionOpts = {}) {
-    this._data[this._data.length - 1].data.push({ key, value, isLinkList: true, ...opts });
-    return this;
+  addLinkListRow(key: SummarySection['key'], value: LinkList, opts: Omit<SummarySection, 'key' | 'value'> = {}) {
+    return this.addRow(key, value, { isLinkList: true, ...opts });
   }
 
-  addTextAreaRow(key: SummarySection['key'], value: string | string[], opts: SummarySectionOpts = {}) {
+  addTextAreaRow(
+    key: SummarySection['key'],
+    value: SummarySection['value'],
+    opts: Omit<SummarySection, 'key' | 'value'> = {},
+  ) {
     return this.addRow(key, value, { preline: true, ...opts });
   }
 

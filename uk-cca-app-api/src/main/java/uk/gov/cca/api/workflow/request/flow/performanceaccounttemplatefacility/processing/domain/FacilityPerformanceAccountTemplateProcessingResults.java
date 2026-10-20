@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facility.domain.FacilityPerformanceAccountTemplateDataContainer;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +12,4 @@ import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facil
 public class FacilityPerformanceAccountTemplateProcessingResults {
 
     private int reportVersion;
-    private FacilityPerformanceAccountTemplateDataContainer container;
 }

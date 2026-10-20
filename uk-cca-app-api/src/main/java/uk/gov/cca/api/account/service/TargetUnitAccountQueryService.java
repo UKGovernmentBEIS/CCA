@@ -78,10 +78,6 @@ public class TargetUnitAccountQueryService implements TargetUnitAuthorityInfoPro
         return repository.findAllIdsBySectorAssociationId(sectorAssociationId);
     }
 
-    public Set<Long> getAllTargetUnitAccountIdsBySectorAssociationIds(Set<Long> sectorAssociationIds) {
-        return repository.findAllIdsBySectorAssociationIdIn(sectorAssociationIds);
-    }
-
     public TargetUnitAccountBusinessInfoDTO getTargetUnitAccountBusinessInfoDTO(Long accountId) {
         return targetUnitAccountMapper.toTargetUnitAccountBusinessInfoDTO(getAccountById(accountId));
     }

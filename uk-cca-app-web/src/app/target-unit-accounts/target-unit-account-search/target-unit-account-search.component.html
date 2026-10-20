@@ -12,6 +12,7 @@
             govuk-text-input
             label="Enter target unit name, target unit ID, facility ID or postcode"
             inputType="search"
+            aria-description="search results will appear below"
           ></div>
         </div>
 
@@ -23,26 +24,22 @@
   </div>
 
   <div class="govuk-grid-column-full">
-    <p
-      [class.govuk-visually-hidden]="hasAccounts()"
-      aria-live="polite"
-      role="status"
-      tabindex="-1"
-      data-testid="search-status"
-    >
-      {{ resultsStatus() }}
-    </p>
+    @if (accounts().length) {
+      <ng-container aria-live="polite" role="region" aria-atomic="true">
+        <cca-target-unit-accounts-list data-testid="target-unit-accounts-component" [accounts]="accounts()" />
 
-    @if (hasAccounts()) {
-      <cca-target-unit-accounts-list data-testid="target-unit-accounts-component" [accounts]="accounts()" />
-
-      <cca-pagination
-        [count]="count()"
-        [currentPage]="currentPage()"
-        [pageSize]="pageSize()"
-        (pageChange)="onPageChange($event)"
-        (pageSizeChange)="onPageSizeChange($event)"
-      />
+        <cca-pagination
+          [count]="count()"
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        />
+      </ng-container>
+    } @else {
+      <div class="govuk-grid-row">
+        <p tabindex="-1" role="status">There are no results to show</p>
+      </div>
     }
   </div>
 </div>

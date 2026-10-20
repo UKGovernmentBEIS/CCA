@@ -16,21 +16,18 @@ export const PEER_REVIEW_DECISION_ROUTES: Routes = [
     children: [
       {
         path: '',
-        title: 'Peer review decision',
-        data: { backlink: '../../', breadcrumb: false },
+        data: { pageTitle: 'Peer review decision', backlink: '../../', breadcrumb: false },
         loadComponent: () => import('./peer-review-decision.component').then((m) => m.PeerReviewDecisionComponent),
       },
       {
         path: 'check-your-answers',
-        title: 'Check your answers',
-        data: { backlink: '../', breadcrumb: false },
+        data: { pageTitle: 'Check your answers', backlink: '../', breadcrumb: false },
         loadComponent: () =>
           import('../check-your-answers/check-your-answers.component').then((m) => m.CheckYourAnswersComponent),
       },
       {
         path: 'confirmation',
-        title: 'Confirmation',
-        data: { breadcrumb: false },
+        data: { pageTitle: 'Confirmation', breadcrumb: false },
         loadComponent: () => import('../confirmation/confirmation.component').then((m) => m.ConfirmationComponent),
       },
     ],

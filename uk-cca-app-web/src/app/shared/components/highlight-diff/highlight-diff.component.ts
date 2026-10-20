@@ -63,12 +63,6 @@ export class HighlightDiffComponent implements AfterViewInit {
   }
 
   onClickDiff(event: MouseEvent | KeyboardEvent) {
-    // Links inside the diffed HTML are real anchors: Enter activates them natively.
-    // Handle Enter here so navigation stays SPA-only and the browser does not also fire click.
-    if (event.type === 'keydown' && (event as KeyboardEvent).key !== 'Enter') {
-      return;
-    }
-
     let eventTarget: HTMLElement;
 
     if (event.target instanceof HTMLAnchorElement) {
@@ -77,7 +71,12 @@ export class HighlightDiffComponent implements AfterViewInit {
       eventTarget = (event.target as Node).parentElement;
     }
 
-    if (eventTarget && eventTarget instanceof HTMLAnchorElement && eventTarget.getAttribute('target') !== '_blank') {
+    if (
+      eventTarget &&
+      eventTarget instanceof HTMLAnchorElement &&
+      eventTarget.getAttribute('target') !== '_blank' &&
+      event.type === 'click'
+    ) {
       event.preventDefault();
       const link = eventTarget.href.replace(eventTarget.baseURI, '');
       this.router.navigateByUrl(this.router.serializeUrl(this.router.parseUrl(link)));

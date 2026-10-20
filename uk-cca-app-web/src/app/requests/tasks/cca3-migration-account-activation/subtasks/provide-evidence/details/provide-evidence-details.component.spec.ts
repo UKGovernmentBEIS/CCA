@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -37,7 +37,7 @@ describe('ProvideEvidenceDetailsComponent', () => {
     TestBed.configureTestingModule({
       imports: [ProvideEvidenceDetailsComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -60,6 +60,6 @@ describe('ProvideEvidenceDetailsComponent', () => {
 
   it('should show form values', () => {
     expect(page.comments).toEqual('My comments');
-    expect(page.filesText.map((row) => row.textContent.trim())).toEqual(['sample_profile1.png (opens in a new tab)']);
+    expect(page.filesText.map((row) => row.textContent.trim())).toEqual(['sample_profile1.png']);
   });
 });

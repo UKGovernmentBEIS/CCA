@@ -39,21 +39,17 @@
 
   <div class="govuk-grid-row govuk-!-margin-bottom-6">
     <div class="govuk-grid-column-two-thirds">
-      <div
-        formControlName="certificationStatus"
-        govuk-radio
-        legend="Select certification status"
-        legendSize="medium"
-        [hint]="hint"
-      >
+      <span class="govuk-label govuk-label--s">Select certification status</span>
+      <span class="govuk-hint">{{ hint }}</span>
+      <div formControlName="certificationStatus" legendSize="medium" govuk-radio>
         <govuk-radio-option value="CERTIFIED" label="Certified">
           <ng-container govukConditionalContent>
-            <div
-              formControlName="startDate"
-              govuk-date-input
-              label="Select start date"
-              hint="The start date must be today or a past date within the certification period."
-            ></div>
+            <span class="govuk-label">Select start date</span>
+            <span class="govuk-hint"
+              >The start date must be today or a past date within the certification period.
+            </span>
+
+            <div formControlName="startDate" govuk-date-input></div>
           </ng-container>
         </govuk-radio-option>
         <govuk-radio-option value="DECERTIFIED" label="Decertified" />

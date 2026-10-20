@@ -204,14 +204,14 @@ export const duplicateEmailResponse = {
   code: 'AUTHORITY1005',
   message: 'User status cannot be updated',
   security: true,
-  data: [] as unknown[],
+  data: [],
 };
 
 export const userAlreadyExists = {
   code: 'USER1001',
   message: 'User is already registered',
   security: true,
-  data: [] as unknown[],
+  data: [],
 };
 
 export const mockPhoneCodeCoutries = {
@@ -371,7 +371,7 @@ export const mockUnderlyingAgreementDetails: UnderlyingAgreementDetailsDTO = {
   },
 };
 
-export const mockTargetUnitAccount = (sectorAssociationId: number) => ({
+export const mockTargetUnitAccount = (sectorAssociationId) => ({
   targetUnitAccountDetails: {
     id: 4,
     businessId: 'ADS_1-T00004',

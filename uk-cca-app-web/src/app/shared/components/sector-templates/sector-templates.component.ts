@@ -45,14 +45,8 @@ const SECTOR_TEMPLATES: SectorTemplate[] = [
         @if (column.field === 'process') {
           {{ row[column.field] }}
         } @else {
-          <a
-            [href]="$safeNavigationMigration(row[column.field]?.downloadUrl)"
-            class="govuk-link"
-            target="_blank"
-            rel="noreferrer noopener"
-            download
-          >
-            {{ row[column.field]?.fileName }}<span class="govuk-visually-hidden"> (opens in a new tab)</span>
+          <a [href]="row[column.field]?.downloadUrl" class="govuk-link" target="_blank" download>
+            {{ row[column.field]?.fileName }}
           </a>
         }
       </ng-template>

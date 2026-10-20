@@ -49,8 +49,7 @@ function constructTrackCorrectiveActionsTasks(
     const daysRemaining = daysRemainingPipe.calcRemainingDays(r.deadline);
     const days = daysRemaining >= 0 ? daysRemaining.toString() : 'Overdue';
     const finalDate = daysRemaining >= 0 ? `(until ${datePipe.transform(r.deadline, 'longDate')})` : '';
-    const hint = `Days remaining: ${days} ${finalDate}\n${r.details}`;
-
+    const hint = `<p>Days remaining: ${days} ${finalDate}</p><p>${r.details}</p>`;
     const status = sectionsCompleted
       ? (sectionsCompleted[`${TRACK_CORRECTIVE_ACTION_SUBTASK}${r.title}`] ?? TaskItemStatus.NOT_STARTED)
       : '';

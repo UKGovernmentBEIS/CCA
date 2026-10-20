@@ -3,9 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-
-import { SplitByProductTableComponent } from '../../underlying-agreement/split-by-product-table/split-by-product-table.component';
-import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-agreement.selectors';
+import { underlyingAgreementRequestActionQuery } from '@requests/common';
+import { SplitByProductTableComponent } from '@requests/common';
 
 @Component({
   selector: 'cca-products-timeline-table',

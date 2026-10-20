@@ -97,7 +97,7 @@ export class PerformanceDataDownloadGenerateComponent implements OnInit {
         } as RequestTaskActionPayload,
       })
       .pipe(
-        catchNotFoundRequest<never>(ErrorCode.NOTFOUND1001, () =>
+        catchNotFoundRequest(ErrorCode.NOTFOUND1001, () =>
           this.businessErrorService.showErrorForceNavigation(taskNotFoundError),
         ),
         catchTaskReassignedBadRequest(() =>

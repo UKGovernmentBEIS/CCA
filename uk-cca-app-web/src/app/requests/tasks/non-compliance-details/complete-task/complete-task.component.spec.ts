@@ -1,5 +1,5 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
@@ -12,7 +12,7 @@ import { TasksApiService } from '@requests/common';
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
 import { NonComplianceCompleteTaskComponent } from './complete-task.component';
 
-@Component({ changeDetection: ChangeDetectionStrategy.OnPush, template: '' })
+@Component({ template: '' })
 class DummyComponent {}
 
 describe('NonComplianceCompleteTaskComponent', () => {
@@ -31,7 +31,7 @@ describe('NonComplianceCompleteTaskComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NonComplianceCompleteTaskComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideRouter([{ path: '**', component: DummyComponent }]),
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },

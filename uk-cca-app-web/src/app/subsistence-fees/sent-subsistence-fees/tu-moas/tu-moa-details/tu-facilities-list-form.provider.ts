@@ -13,10 +13,7 @@ export type TargetUnitFacilitiesListFormModel = FormGroup<{
   markFacilitiesStatus: FormControl<SubsistenceFeesMoaSearchCriteria['markFacilitiesStatus']>;
 }>;
 
-export const INITIAL_FORM_VALUES: {
-  term: SubsistenceFeesMoaSearchCriteria['term'];
-  markFacilitiesStatus: SubsistenceFeesMoaSearchCriteria['markFacilitiesStatus'];
-} = {
+export const INITIAL_FORM_VALUES = {
   term: null,
   markFacilitiesStatus: null,
 };

@@ -27,9 +27,7 @@
             }
 
             @case ('actions') {
-              <a class="govuk-link" [routerLink]="[detailsLink()]">
-                Change<span class="govuk-visually-hidden"> {{ row.fuelType }} energy/fuel amount</span>
-              </a>
+              <a class="govuk-link" [routerLink]="[detailsLink()]">Change</a>
               @if (row.isCustom) {
                 | <a class="govuk-link govuk-!-margin-left-1" [routerLink]="[detailsLink()]">Delete</a>
               }
@@ -51,9 +49,7 @@
 
       @if (isEditable()) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="[detailsLink()]">
-            Change<span class="govuk-visually-hidden"> energy/fuel amount consumed</span>
-          </a>
+          <a class="govuk-link" [routerLink]="[detailsLink()]">Change</a>
         </dd>
       }
     </div>
@@ -70,9 +66,7 @@
 
     @if (isEditable()) {
       <dd govukSummaryListRowActions>
-        <a class="govuk-link" [routerLink]="[detailsLink()]">
-          Change<span class="govuk-visually-hidden"> 70% rule</span>
-        </a>
+        <a class="govuk-link" [routerLink]="[detailsLink()]">Change</a>
       </dd>
     }
   </div>
@@ -93,13 +87,7 @@
 
       @if (isEditable()) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="[detailsLink()]">
-            Change<span class="govuk-visually-hidden">
-              electricity supplied from combined heat and power plant and dedicated generator electricity ({{
-                resolvedMeasurementUnit()
-              }})
-            </span>
-          </a>
+          <a class="govuk-link" [routerLink]="[detailsLink()]">Change</a>
         </dd>
       }
     </div>

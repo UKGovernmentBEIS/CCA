@@ -12,12 +12,6 @@ import { RequestDetailsDTO, RequestSearchCriteria, RequestsService } from 'cca-a
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_PAGE = 1;
 
-/**
- * A batch run of either scheme blocks a new one, so both types are polled together and both are listed
- * in the workflow history.
- */
-export const BUY_OUT_SURPLUS_REQUEST_TYPES = ['BUY_OUT_SURPLUS_RUN', 'BUY_OUT_SURPLUS_FACILITY_RUN'];
-
 export type BuyoutSurplusState = {
   currentPage: number;
   runInProgress: boolean;
@@ -85,7 +79,7 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
     const requestSearchCriteria: RequestSearchCriteria = {
       resourceType: 'CA',
       resourceId: 'ENGLAND',
-      requestTypes: BUY_OUT_SURPLUS_REQUEST_TYPES,
+      requestTypes: ['BUY_OUT_SURPLUS_RUN'],
       requestStatuses: ['IN_PROGRESS'],
       historyCategory: HistoryCategory.CA,
       pageNumber: 0,
@@ -127,7 +121,7 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
     const requestSearchCriteria: RequestSearchCriteria = {
       resourceType: 'CA',
       resourceId: 'ENGLAND',
-      requestTypes: BUY_OUT_SURPLUS_REQUEST_TYPES,
+      requestTypes: ['BUY_OUT_SURPLUS_RUN'],
       historyCategory: HistoryCategory.CA,
       pageNumber: this.state.currentPage - 1,
       pageSize: this.state.pageSize || 10,

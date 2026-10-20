@@ -14,33 +14,22 @@
       </p>
     </div>
 
-    <div
-      formControlName="requireOperatorAssent"
-      govuk-checkboxes
-      legend="Changes that usually require the operator to provide their assent"
-      legendSize="medium"
-    >
+    <h2 class="govuk-heading-m">Changes that usually require the operator to provide their assent</h2>
+    <div formControlName="requireOperatorAssent" govuk-checkboxes>
       @for (option of requireOperatorAssent; track option) {
-        <govuk-checkbox
-          [value]="option.value"
-          [label]="option.value | variationChanges"
-          [hint]="$safeNavigationMigration(option?.hint)"
-        />
+        <govuk-checkbox [value]="option.value" [label]="option.value | variationChanges" [hint]="option?.hint" />
       }
     </div>
 
-    <div
-      formControlName="dontRequireOperatorAssent"
-      govuk-checkboxes
-      legend="Changes that don't usually require the operator to provide their assent"
-      legendSize="medium"
-    >
+    <h2 class="govuk-heading-m">Changes that don't usually require the operator to provide their assent</h2>
+    <div formControlName="dontRequireOperatorAssent" govuk-checkboxes>
       @for (option of dontRequireOperatorAssent; track option) {
         <govuk-checkbox [value]="option" [label]="option | variationChanges" />
       }
     </div>
 
-    <div formControlName="otherChanges" govuk-checkboxes legend="Other" legendSize="medium">
+    <h2 class="govuk-heading-m">Other</h2>
+    <div formControlName="otherChanges" govuk-checkboxes>
       @for (option of otherChanges; track option) {
         <govuk-checkbox [value]="option" [label]="option | variationChanges" />
       }

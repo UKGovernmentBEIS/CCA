@@ -7,7 +7,6 @@ import { GovukValidators } from '@netz/govuk-components';
 import {
   BASELINE_AND_TARGETS_SUBTASK,
   BaselineAndTargetPeriodsSubtasks,
-  getAttachmentType,
   measurementTypeValidator,
   normaliseNumber,
   targetCompositionConditionallyRequiredFieldsValidator,
@@ -62,7 +61,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.calculatorFile,
       attachments,
-      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
+      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
       true,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -75,7 +74,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.conversionEvidences || [],
       attachments,
-      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
+      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
       false,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

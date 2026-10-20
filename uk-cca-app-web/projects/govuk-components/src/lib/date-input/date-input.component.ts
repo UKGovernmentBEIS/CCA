@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, DoCheck, OnDestroy, OnInit, input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DoCheck, OnDestroy, OnInit, input, inject } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { BehaviorSubject, combineLatest, filter, takeUntil } from 'rxjs';
@@ -16,10 +16,9 @@ import { DateInputValidators } from './date-input.validators';
  */
 @Component({
   selector: 'div[govuk-date-input]',
-  templateUrl: './date-input.component.html',
   imports: [ErrorMessageComponent, ReactiveFormsModule, FieldsetHintDirective, LegendDirective, FieldsetDirective],
+  templateUrl: './date-input.component.html',
   providers: [DatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateInputComponent extends FormInput implements ControlValueAccessor, OnInit, DoCheck, OnDestroy {
   private readonly datePipe = inject(DatePipe);
@@ -179,7 +178,7 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
     return {
       ...GovukValidators.builder(
         errorMessage,
-        DateInputValidators.combinedRulesValidator(this.isRequired()),
+        DateInputValidators.combinedRulesValidator(this.formGroup, this.isRequired()),
       )(this.formGroup),
     };
   }

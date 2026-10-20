@@ -14,13 +14,11 @@ export const AUDIT_DETAILS_ROUTES: Routes = [
       },
       {
         path: 'details',
-        title: 'Details of the audit',
         data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () => import('./details/audit-details.component').then((c) => c.AuditDetailsComponent),
       },
       {
         path: 'check-your-answers',
-        title: 'Check your answers',
         data: { breadcrumb: false, backlink: '../details' },
         loadComponent: () =>
           import('./check-your-answers/audit-details-check-your-answers.component').then(
@@ -29,7 +27,6 @@ export const AUDIT_DETAILS_ROUTES: Routes = [
       },
       {
         path: 'summary',
-        title: 'Summary',
         data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./summary/audit-details-summary.component').then((c) => c.AuditDetailsSummaryComponent),

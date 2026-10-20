@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -44,7 +44,7 @@ describe('UploadNoticeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [UploadNoticeComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         provideZonelessChangeDetection(),
         { provide: ActivatedRoute, useValue: route },
@@ -103,7 +103,7 @@ describe('UploadNoticeComponent', () => {
 
   it('should save the updated notice and navigate to check your answers', () => {
     component['form'].setValue({
-      file: { uuid: 'uuid-2', file: { name: 'updated-notice.pdf' } },
+      file: { uuid: 'uuid-2', file: { name: 'updated-notice.pdf' } as File },
       comments: 'Updated comments',
     });
 

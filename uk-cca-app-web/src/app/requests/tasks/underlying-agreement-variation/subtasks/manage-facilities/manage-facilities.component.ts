@@ -169,8 +169,7 @@ export class ManageFacilitiesComponent {
 
   onSort(sortEvent: SortEvent): (fa: FacilityItemViewModel, fb: FacilityItemViewModel) => number {
     return (fa, fb) => {
-      const column = sortEvent.column as keyof FacilityItemViewModel;
-      const diff: number = String(fa[column] ?? '').localeCompare(String(fb[column] ?? ''), 'en-GB', {
+      const diff: number = fa[sortEvent.column].localeCompare(fb[sortEvent.column], 'en-GB', {
         numeric: true,
         sensitivity: 'base',
       });

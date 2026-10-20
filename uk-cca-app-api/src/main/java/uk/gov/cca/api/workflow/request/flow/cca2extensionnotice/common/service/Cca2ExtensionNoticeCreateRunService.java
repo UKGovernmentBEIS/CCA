@@ -103,7 +103,7 @@ public class Cca2ExtensionNoticeCreateRunService {
         // Validate account
         List<String> errors = new ArrayList<>();
         RequestCreateValidationResult result = cca2ExtensionNoticeAccountProcessingCreateValidator
-                .checkAvailability(account.getAccountId());
+                .validateAction(account.getAccountId());
         if(!result.isValid()) {
             errors.add(Cca2ExtensionNoticeViolation.Cca2ExtensionNoticeViolationMessage.ACCOUNT_NOT_ELIGIBLE.getMessage() +
                     ": " + result.getReportedRequestTypes());

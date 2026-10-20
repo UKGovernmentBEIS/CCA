@@ -29,7 +29,7 @@ export class ExternalContactsComponent {
     { field: 'name', header: 'Displayed name', isSortable: true, isHeader: true },
     { field: 'email', header: 'Email address', isSortable: true },
     { field: 'description', header: 'Description' },
-    { field: null, header: 'Actions' },
+    { field: null, header: null },
   ];
 
   protected readonly nonEditableColumns = this.editableColumns.slice(0, 3);

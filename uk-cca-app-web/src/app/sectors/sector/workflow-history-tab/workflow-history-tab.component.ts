@@ -11,14 +11,9 @@ import { PaginationComponent } from '@shared/components';
 import { StatusColorPipe, StatusPipe, WorkflowTypePipe } from '@shared/pipes';
 import { HistoryCategory } from '@shared/types';
 
-import { RequestDetailsDTO, RequestDetailsSearchResults, RequestSearchCriteria, RequestsService } from 'cca-api';
+import { RequestDetailsSearchResults, RequestSearchCriteria, RequestsService } from 'cca-api';
 
-import {
-  type WorkflowHistoryTabState,
-  type WorkflowRequestMetadata,
-  workflowStatusesMap,
-  workflowTypesMap,
-} from './workflow-history-tab.types';
+import { type WorkflowHistoryTabState, workflowStatusesMap, workflowTypesMap } from './workflow-history-tab.types';
 import {
   WORKFLOW_HISTORY_TAB_FORM_PROVIDER,
   type WorkflowHistoryTabFormModel,
@@ -59,9 +54,6 @@ export class WorkflowHistoryTabComponent {
 
   protected readonly workflowTypesMap = workflowTypesMap;
   protected readonly workflowStatusesMap = workflowStatusesMap;
-
-  protected readonly requestMetadata = (workflow: RequestDetailsDTO): WorkflowRequestMetadata =>
-    (workflow.requestMetadata ?? {}) as WorkflowRequestMetadata;
 
   readonly state = signal<WorkflowHistoryTabState>({
     workflowsHistory: null,

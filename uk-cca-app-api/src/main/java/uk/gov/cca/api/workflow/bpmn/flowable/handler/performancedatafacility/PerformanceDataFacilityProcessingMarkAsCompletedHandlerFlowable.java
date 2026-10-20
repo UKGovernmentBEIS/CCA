@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.common.domain.FacilityUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.service.PerformanceDataFacilityProcessingService;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.service.TerminateOpenFacilityWorkflowsService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
 @Service
@@ -16,7 +15,6 @@ import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstan
 public class PerformanceDataFacilityProcessingMarkAsCompletedHandlerFlowable implements JavaDelegate {
 
     private final PerformanceDataFacilityProcessingService performanceDataFacilityProcessingService;
-    private final TerminateOpenFacilityWorkflowsService terminateOpenFacilityWorkflowsService;
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -29,9 +27,6 @@ public class PerformanceDataFacilityProcessingMarkAsCompletedHandlerFlowable imp
         // Close request if facility process failed
         if(!facilityUploadReport.getErrors().isEmpty()) {
             execution.setVariable(BpmnProcessConstants.REQUEST_DELETE_UPON_TERMINATE, true);
-        } else {
-            // cancel any in progress Digital Form workflow for the same facility and same target period
-            terminateOpenFacilityWorkflowsService.terminateOpenWorkflows(requestId);
         }
     }
 }

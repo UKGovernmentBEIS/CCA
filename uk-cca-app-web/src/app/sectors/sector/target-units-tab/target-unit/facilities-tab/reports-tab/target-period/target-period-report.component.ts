@@ -11,7 +11,7 @@ import { SummaryComponent } from '@shared/components';
 import { TargetPeriodPerformanceDataReportOfTheFacilityService } from 'cca-api';
 
 import { FacilityTargetPeriodReportStore } from '../../facility-target-period-report.store';
-import { toFacilityTPReportsSummaryData } from '../facility-reports-summary-data';
+import { toFacilityReportsSummaryData } from '../facility-reports-summary-data';
 import {
   FACILITY_TARGET_PERIOD_REPORT_FORM,
   FacilityTargetPeriodReportFormModel,
@@ -58,11 +58,9 @@ export class TargetPeriodReportComponent {
     initialValue: this.form.controls.reportType.value,
   });
 
-  protected readonly hasCriteria = computed(() => this.targetPeriodValue() !== null && this.reportTypeValue() !== null);
-
   protected readonly summaryData = computed(() =>
     this.state().statusInfo.map((info) => ({
-      summary: toFacilityTPReportsSummaryData(info, this.reportTypeValue()),
+      summary: toFacilityReportsSummaryData(info, this.reportTypeValue()),
       targetPeriodYear: info.targetPeriodYear,
     })),
   );
@@ -88,11 +86,7 @@ export class TargetPeriodReportComponent {
       .pipe(
         take(1),
         tap((statusInfo) =>
-          this.facilityTargetPeriodReportStore.updateState({
-            statusInfo: statusInfo ?? [],
-            reportType,
-            targetPeriodType: targetPeriod,
-          }),
+          this.facilityTargetPeriodReportStore.updateState({ statusInfo, reportType, targetPeriodType: targetPeriod }),
         ),
       )
       .subscribe();

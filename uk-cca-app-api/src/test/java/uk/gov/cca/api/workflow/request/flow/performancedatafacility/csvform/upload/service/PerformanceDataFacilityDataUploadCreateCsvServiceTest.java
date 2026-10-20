@@ -15,6 +15,7 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.uplo
 import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -36,21 +37,22 @@ class PerformanceDataFacilityDataUploadCreateCsvServiceTest {
     private CcaFileAttachmentService ccaFileAttachmentService;
 
     @Test
-    void createCsvFile() {
+    void createCsvFile() throws IOException {
+        final String assignee = "assignee";
         PerformanceDataFacilityDataUploadSubmitRequestTaskPayload payload = PerformanceDataFacilityDataUploadSubmitRequestTaskPayload.builder()
                 .csvRowErrors(List.of(PerformanceDataFacilityCsvErrorEntry.builder().filename("test.csv").message("error1 | error2").build()))
                 .results(PerformanceDataFacilityUploadResults.builder().build())
                 .build();
         final RequestTask requestTask = RequestTask.builder()
                 .id(1L)
-                .assignee("assignee")
+                .assignee(assignee)
                 .payload(payload)
                 .build();
         final Map<Long, FacilityUploadReport> facilityReports = Map.of(1L, new FacilityUploadReport());
 
         final String fileCsv = UUID.randomUUID().toString();
 
-        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.PENDING)))
+        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.PENDING), eq(assignee)))
                 .thenReturn(fileCsv);
 
         // Invoke
@@ -61,24 +63,25 @@ class PerformanceDataFacilityDataUploadCreateCsvServiceTest {
         assertThat(payload.getAttachments()).isNotEmpty();
         assertThat(payload.getErrorMessage()).isNull();
         verify(ccaFileAttachmentService, times(1))
-                .createSystemFileAttachment(any(), eq(FileStatus.PENDING));
+                .createSystemFileAttachment(any(), eq(FileStatus.PENDING), eq(assignee));
     }
 
     @Test
-    void createCsvFile_throw_exception() {
+    void createCsvFile_throw_exception() throws IOException {
+        final String assignee = "assignee";
         PerformanceDataFacilityDataUploadSubmitRequestTaskPayload payload = PerformanceDataFacilityDataUploadSubmitRequestTaskPayload.builder()
                 .csvRowErrors(List.of(PerformanceDataFacilityCsvErrorEntry.builder().filename("test.csv").message("error1 | error2").build()))
                 .results(PerformanceDataFacilityUploadResults.builder().build())
                 .build();
         final RequestTask requestTask = RequestTask.builder()
                 .id(1L)
-                .assignee("assignee")
+                .assignee(assignee)
                 .payload(payload)
                 .build();
         final Map<Long, FacilityUploadReport > facilityReports = Map.of(1L, new FacilityUploadReport());
 
-        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.PENDING)))
-                .thenThrow(new NullPointerException("test"));
+        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.PENDING), eq(assignee)))
+                .thenThrow(new IOException("test"));
 
         // Invoke
         performanceDataFacilityDataUploadCreateCsvService.createCsvFile(requestTask, facilityReports);
@@ -88,6 +91,6 @@ class PerformanceDataFacilityDataUploadCreateCsvServiceTest {
         assertThat(payload.getAttachments()).isEmpty();
         assertThat(payload.getErrorMessage()).isEqualTo(PerformanceDataFacilityUploadErrorType.SUBMISSION_RESULTS_CSV_FAILED);
         verify(ccaFileAttachmentService, times(1))
-                .createSystemFileAttachment(any(), eq(FileStatus.PENDING));
+                .createSystemFileAttachment(any(), eq(FileStatus.PENDING), eq(assignee));
     }
 }

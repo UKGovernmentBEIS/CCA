@@ -27,12 +27,8 @@
       [max]="today"
     ></div>
 
-    <div
-      formControlName="comment"
-      govuk-textarea
-      label="Your comments (optional)"
-      hint="Provide more details of the breach in the comments below"
-    ></div>
+    <h2 class="govuk-heading-s">Your comments (optional)</h2>
+    <p>Provide more details of the breach in the comments below</p>
 
     <govuk-details summary="Breach details examples">
       <ul class="govuk-list govuk-list--bullet">
@@ -41,6 +37,8 @@
         <li>"Why you have chosen the non-compliance type"</li>
       </ul>
     </govuk-details>
+
+    <div formControlName="comment" govuk-textarea></div>
   </cca-wizard-step>
 </div>
 <netz-return-to-task-or-action-page />

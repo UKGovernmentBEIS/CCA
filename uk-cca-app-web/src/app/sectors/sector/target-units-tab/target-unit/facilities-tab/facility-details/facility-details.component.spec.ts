@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -17,7 +17,7 @@ describe('FacilityDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FacilityDetailsComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
@@ -45,7 +45,7 @@ describe('FacilityDetailsComponent', () => {
   it('should render "Facility details" section', () => {
     const list = document.querySelectorAll("[data-testid='facility-details'] div");
 
-    const elements: (string | null)[][] = [];
+    const elements = [];
 
     list.forEach((div) => {
       elements.push([div.querySelector('dt').textContent, div.querySelector('dd').textContent]);
@@ -60,7 +60,7 @@ describe('FacilityDetailsComponent', () => {
   it('should render "Subsistence fees" section', () => {
     const list = document.querySelectorAll("[data-testid='subsistence-fees'] div");
 
-    const elements: (string | null)[][] = [];
+    const elements = [];
 
     list.forEach((div) => {
       elements.push([div.querySelector('dt').textContent, div.querySelector('dd').textContent]);

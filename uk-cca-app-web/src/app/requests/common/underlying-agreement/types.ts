@@ -49,13 +49,6 @@ export const UPLOAD_DECISION_ATTACHMENT_TYPE = {
     'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT',
 };
 
-export function getAttachmentType(
-  attachmentTypes: Record<string, string>,
-  requestTaskType: string,
-): string | undefined {
-  return Object.hasOwn(attachmentTypes, requestTaskType) ? attachmentTypes[requestTaskType] : undefined;
-}
-
 export type AuthorisationAndAdditionalEvidenceUserInput = {
   authorisationAttachmentIds: UuidFilePair[];
   additionalEvidenceAttachmentIds: UuidFilePair[];
@@ -117,7 +110,7 @@ export const staticGroupDecisions = [
   'TARGET_UNIT_DETAILS',
 ] as const;
 
-export const SUBTASK_TO_DECISION_MAP: Record<string, string> = {
+export const SUBTASK_TO_DECISION_MAP = {
   [VARIATION_DETAILS_SUBTASK]: 'VARIATION_DETAILS',
   [REVIEW_TARGET_UNIT_DETAILS_SUBTASK]: 'TARGET_UNIT_DETAILS',
   [BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS]: 'TARGET_PERIOD5_DETAILS',

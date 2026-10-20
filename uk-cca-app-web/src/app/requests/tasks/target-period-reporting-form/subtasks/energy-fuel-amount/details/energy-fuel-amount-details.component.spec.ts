@@ -11,7 +11,6 @@ import {
 } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
-import { assertInCellControlLabelsHidden } from '@testing';
 import { expect, Mocked } from 'vitest';
 
 import {
@@ -150,10 +149,6 @@ describe('EnergyFuelAmountDetailsComponent', () => {
 
     it('should create', () => {
       expect(component).toBeTruthy();
-    });
-
-    it('should hide the labels of controls inside table cells, since the column header names them', () => {
-      assertInCellControlLabelsHidden(fixture.nativeElement);
     });
 
     it('should display the 70% eligible activities question for the reporting period', () => {

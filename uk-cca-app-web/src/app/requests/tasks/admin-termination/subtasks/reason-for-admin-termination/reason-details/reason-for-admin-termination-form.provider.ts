@@ -39,10 +39,7 @@ export const ReasonForAdminTerminationFormProvider: Provider = {
       ),
       relevantFiles: requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        // The field is a list, so an absent value must still build a list: a scalar value gets the
-        // single-file upload validator, which uploads only the first pending file, so every later file
-        // would fail to upload and be dropped from the payload.
-        adminTerminationReasonDetails?.relevantFiles || [],
+        adminTerminationReasonDetails.relevantFiles,
         adminTerminationSubmitAttachments,
         'ADMIN_TERMINATION_UPLOAD_ATTACHMENT',
         false,

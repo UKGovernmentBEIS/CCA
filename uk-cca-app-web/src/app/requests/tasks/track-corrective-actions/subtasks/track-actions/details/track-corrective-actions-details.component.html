@@ -13,9 +13,7 @@
 
       <div govukSummaryListRow>
         <dt govukSummaryListRowKey>Corrective action deadline</dt>
-        <dd govukSummaryListRowValue>
-          {{ $safeNavigationMigration(correctiveActionResponse?.deadline) | date: 'dd MMM yyyy' }}
-        </dd>
+        <dd govukSummaryListRowValue>{{ correctiveActionResponse?.deadline | date: 'dd MMM yyyy' }}</dd>
       </div>
     </dl>
 

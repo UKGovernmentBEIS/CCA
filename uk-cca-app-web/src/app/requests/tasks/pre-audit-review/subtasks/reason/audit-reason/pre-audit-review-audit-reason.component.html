@@ -8,7 +8,8 @@
   >
     <p class="govuk-!-padding-bottom-4">Select at least one reason to explain why you are auditing this facility</p>
 
-    <div formControlName="reasonsForAudit" govuk-checkboxes legend="Audit reasons" legendSize="medium">
+    <h2 class="govuk-heading-m">Audit reasons</h2>
+    <div formControlName="reasonsForAudit" govuk-checkboxes>
       @for (option of reasonOptions; track option) {
         <govuk-checkbox
           [value]="option"

@@ -24,8 +24,6 @@ import { workflowStatusesMap, workflowTypesMap } from './workflow-history-tab.ty
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 
-type WorkflowMetadata = Record<string, string | undefined>;
-
 @Component({
   selector: 'cca-workflow-history-tab',
   templateUrl: './workflow-history-tab.component.html',
@@ -57,12 +55,6 @@ export class WorkflowHistoryTabComponent {
 
   protected readonly workflowTypesMap = workflowTypesMap;
   protected readonly workflowStatusesMap = workflowStatusesMap;
-
-  protected getWorkflowMetadata(workflow: RequestDetailsSearchResults['requestDetails'][number]): WorkflowMetadata {
-    return Object.fromEntries(
-      Object.entries(workflow.requestMetadata ?? {}).map(([key, value]) => [key, String(value)]),
-    );
-  }
 
   readonly state = signal<WorkflowHistoryTabState>({
     workflowsHistory: null,

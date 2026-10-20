@@ -2,11 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-import {
-  BaselineAndTargetsSummaryMetadata,
-  toBaselineAndTargetsSummaryDataWithDecision,
-  underlyingAgreementRequestActionQuery,
-} from '@requests/common';
+import { toBaselineAndTargetsSummaryDataWithDecision, underlyingAgreementRequestActionQuery } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 
@@ -26,7 +22,7 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
 export class TargetPeriod5Component {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  private readonly summaryMetadata: BaselineAndTargetsSummaryMetadata = {
+  private readonly summaryMetadata = {
     isTp5Period: true,
     baselineExists: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectTargetPeriod5Details)()
       .exist,
@@ -38,6 +34,7 @@ export class TargetPeriod5Component {
         underlyingAgreementVariationReviewedRequestActionQuery.selectReviewAttachments,
       )(),
     },
+    areIdentical: null,
   };
 
   protected readonly summaryData = computed(() =>

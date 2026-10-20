@@ -1,6 +1,7 @@
 package uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain;
 
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;

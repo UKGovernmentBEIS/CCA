@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   contentChild,
@@ -41,7 +40,6 @@ import { existingControlContainer } from '../../providers/control-container.fact
   `,
   imports: [RadioComponent, FormsModule, ReactiveFormsModule, RadioOptionComponent, AsyncPipe],
   providers: [existingControlContainer],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [existingControlContainer],
 })
 export class BooleanRadioGroupComponent implements AfterContentInit, AfterViewInit, OnInit {

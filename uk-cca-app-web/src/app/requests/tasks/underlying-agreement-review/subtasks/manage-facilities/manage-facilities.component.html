@@ -77,7 +77,7 @@
 
           @if (manageFacilities()?.length >= filtersAndPaginationLimit) {
             <cca-pagination
-              [count]="$safeNavigationMigration(filteredItems()?.length)"
+              [count]="filteredItems()?.length"
               [currentPage]="currentPage()"
               [pageSize]="pageSize()"
               (pageChange)="onPageChange($event)"

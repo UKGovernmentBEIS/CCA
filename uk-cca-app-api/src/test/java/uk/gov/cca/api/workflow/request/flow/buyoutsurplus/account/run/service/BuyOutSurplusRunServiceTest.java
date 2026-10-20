@@ -21,6 +21,7 @@ import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,11 +97,12 @@ class BuyOutSurplusRunServiceTest {
     }
 
     @Test
-    void createCsvFile() {
+    void createCsvFile() throws IOException {
         final String requestId = "requestId";
+        final String submitterId = "regulator";
 
         BuyOutSurplusRunRequestPayload requestPayload = BuyOutSurplusRunRequestPayload.builder()
-                .submitterId("regulator")
+                .submitterId(submitterId)
                 .buyOutSurplusAccountStates(Map.of(
                         1L, BuyOutSurplusAccountState.builder().businessId("account1").succeeded(true).build()
                 ))
@@ -112,7 +114,7 @@ class BuyOutSurplusRunServiceTest {
         final String fileCsv = "fileCsv";
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED)))
+        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(submitterId)))
                 .thenReturn(fileCsv);
 
         // Invoke
@@ -123,15 +125,16 @@ class BuyOutSurplusRunServiceTest {
         assertThat(requestPayload.getCsvFile()).isNotNull();
         verify(requestService, times(1)).findRequestById(requestId);
         verify(ccaFileAttachmentService, times(1))
-                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED));
+                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(submitterId));
     }
 
     @Test
     void createCsvFile_no_accounts() {
         final String requestId = "requestId";
+        final String submitterId = "regulator";
 
         BuyOutSurplusRunRequestPayload requestPayload = BuyOutSurplusRunRequestPayload.builder()
-                .submitterId("regulator")
+                .submitterId(submitterId)
                 .buyOutSurplusAccountStates(Map.of())
                 .build();
         Request request = Request.builder()
@@ -152,11 +155,12 @@ class BuyOutSurplusRunServiceTest {
     }
 
     @Test
-    void createCsvFile_throw_exception() {
+    void createCsvFile_throw_exception() throws IOException {
         final String requestId = "requestId";
+        final String submitterId = "regulator";
 
         BuyOutSurplusRunRequestPayload requestPayload = BuyOutSurplusRunRequestPayload.builder()
-                .submitterId("regulator")
+                .submitterId(submitterId)
                 .buyOutSurplusAccountStates(Map.of(
                         1L, BuyOutSurplusAccountState.builder().businessId("account1").succeeded(true).build()
                 ))
@@ -167,8 +171,8 @@ class BuyOutSurplusRunServiceTest {
                 .build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED)))
-                .thenThrow(new NullPointerException("test"));
+        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(submitterId)))
+                .thenThrow(new IOException("test"));
 
         // Invoke
         buyOutSurplusRunService.createCsvFile(requestId);
@@ -178,7 +182,7 @@ class BuyOutSurplusRunServiceTest {
         assertThat(requestPayload.getCsvFile()).isNull();
         verify(requestService, times(1)).findRequestById(requestId);
         verify(ccaFileAttachmentService, times(1))
-                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED));
+                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(submitterId));
     }
 
     @Test

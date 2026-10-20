@@ -18,7 +18,6 @@ export const CREATE_TARGET_UNIT_ROUTES: Routes = [
     children: [
       {
         path: 'company-registration-number',
-        title: 'Does the operator have a company number?',
         data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./company-registration-number/company-registration-number.component').then(
@@ -27,13 +26,11 @@ export const CREATE_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: 'target-unit-details',
-        title: 'Target unit details',
         data: { backlink: '../company-registration-number', breadcrumb: false },
         loadComponent: () => import('./create-target-unit.component').then((c) => c.CreateTargetUnitComponent),
       },
       {
         path: 'operator-address',
-        title: 'Operator address',
         data: { backlink: '../target-unit-details', breadcrumb: false },
         canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
@@ -41,7 +38,6 @@ export const CREATE_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: 'responsible-person',
-        title: 'Responsible person',
         data: { backlink: '../operator-address', breadcrumb: false },
         canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
@@ -49,7 +45,6 @@ export const CREATE_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: 'administrative-contact',
-        title: 'Administrative contact details',
         data: { backlink: '../responsible-person', breadcrumb: false },
         canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
@@ -59,7 +54,6 @@ export const CREATE_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: 'summary',
-        title: 'Check your answers',
         data: { breadcrumb: false },
         canActivate: [CanActivateTargetUnitCreationSummary],
         loadComponent: () =>
@@ -67,7 +61,6 @@ export const CREATE_TARGET_UNIT_ROUTES: Routes = [
       },
       {
         path: 'confirmation',
-        title: 'Target unit created',
         data: { breadcrumb: false },
         loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
       },

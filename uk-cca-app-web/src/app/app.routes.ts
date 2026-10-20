@@ -25,8 +25,7 @@ import { VersionComponent } from './version/version.component';
 export const APP_ROUTES: Routes = [
   {
     path: 'landing',
-    title: 'Manage your Climate Change Agreement (CCA)',
-    data: { titleFullServiceName: true, breadcrumb: 'Home' },
+    data: { pageTitle: 'CCA', breadcrumb: 'Home' },
     component: LandingPageComponent,
     canActivate: [LandingPageGuard],
   },
@@ -41,32 +40,32 @@ export const APP_ROUTES: Routes = [
     children: [
       {
         path: 'about',
-        title: 'About',
+        data: { pageTitle: 'About' },
         component: VersionComponent,
       },
       {
         path: 'privacy-notice',
-        title: 'Privacy notice',
+        data: { pageTitle: 'Privacy notice' },
         component: PrivacyNoticeComponent,
       },
       {
         path: 'accessibility',
-        title: 'Accessibility Statement',
+        data: { pageTitle: 'Accessibility Statement' },
         component: AccessibilityComponent,
       },
       {
         path: 'contact-us',
-        title: 'Contact us',
+        data: { pageTitle: 'Contact us' },
         component: ContactUsComponent,
       },
       {
         path: 'legislation',
-        title: 'CCA legislation',
+        data: { pageTitle: 'CCA legislation' },
         component: LegislationComponent,
       },
       {
         path: 'feedback',
-        title: 'Feedback',
+        data: { pageTitle: 'Feedback' },
         component: FeedbackComponent,
         canDeactivate: [PendingRequestGuard],
       },
@@ -100,7 +99,7 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: 'timed-out',
-    title: 'Session Timeout',
+    data: { pageTitle: 'Session Timeout' },
     canActivate: [NonAuthGuard],
     component: TimedOutComponent,
   },
@@ -112,7 +111,7 @@ export const APP_ROUTES: Routes = [
     children: [
       {
         path: 'dashboard',
-        title: 'Climate Change Agreement dashboard',
+        data: { pageTitle: 'Climate Change Agreement dashboard' },
         canActivate: [AuthorizeGuard, dashboardRequestTypeGuard],
         runGuardsAndResolvers: 'paramsOrQueryParamsChange',
         component: DashboardPageComponent,
@@ -166,14 +165,13 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: 'sector-templates',
-        title: 'Templates',
         canActivate: [AuthorizeGuard],
         loadComponent: () =>
           import('./templates/sector-templates-container.component').then((c) => c.SectorTemplatesContainerComponent),
       },
       {
         path: 'terms',
-        title: 'Accept terms and conditions',
+        data: { pageTitle: 'Accept terms and conditions' },
         component: TermsAndConditionsComponent,
         canActivate: [TermsAndConditionsGuard],
         canDeactivate: [PendingRequestGuard],

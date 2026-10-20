@@ -1,23 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  AfterContentInit,
-  Component,
-  input,
-  contentChildren,
-  contentChild,
-  computed,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { AfterContentInit, Component, input, contentChildren } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
-import {
-  FieldsetDirective,
-  FieldsetHintDirective,
-  LegendContentDirective,
-  LegendDirective,
-  LegendSizeType,
-} from '../fieldset';
+import { FieldsetDirective, FieldsetHintDirective, LegendDirective, LegendSizeType } from '../fieldset';
 import { FormInput } from '../form/form-input';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 
@@ -28,15 +14,7 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
 @Component({
   selector: 'div[govuk-checkboxes]',
   templateUrl: './checkboxes.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ErrorMessageComponent,
-    NgTemplateOutlet,
-    LegendContentDirective,
-    LegendDirective,
-    FieldsetHintDirective,
-    FieldsetDirective,
-  ],
+  imports: [ErrorMessageComponent, NgTemplateOutlet, LegendDirective, FieldsetHintDirective, FieldsetDirective],
 })
 export class CheckboxesComponent<T> extends FormInput implements AfterContentInit, ControlValueAccessor {
   readonly legend = input<string>();
@@ -45,10 +23,6 @@ export class CheckboxesComponent<T> extends FormInput implements AfterContentIni
   readonly size = input<'small'>();
 
   readonly options = contentChildren(CheckboxComponent);
-
-  readonly projectedLegend = contentChild(LegendContentDirective);
-
-  protected readonly shouldDisplayLegend = computed(() => Boolean(this.legend()) || Boolean(this.projectedLegend()));
 
   private onBlur: () => any;
   private onChange: (value: T[]) => void;

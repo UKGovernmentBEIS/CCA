@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.migration.files.FileValidatorMigrationService;
 import uk.gov.cca.api.migration.ftp.FtpFileDTOResult;
@@ -64,7 +65,7 @@ public class SectorAssociationSchemeDocumentCreateMigrationService {
                 return results;
         	}
             
-            SectorAssociationSchemeDocument schemeDocument = schemes.getFirst().getUmbrellaAgreement();
+            SectorAssociationSchemeDocument schemeDocument = schemes.get(0).getUmbrellaAgreement();
 
             //Download document
             final String filePath = ftpProperties.getServerSectorUmbrellaAgreementsDirectory() + FORWARD_SLASH + schemeDocument.getFileName();
@@ -105,7 +106,7 @@ public class SectorAssociationSchemeDocumentCreateMigrationService {
                 .fileSize(fileDTO.getFileContent().length)
                 .uuid(uuid)
                 .status(SUBMITTED)
-                .createdBy(fileDTO.getCreatedBy())
+                .createdBy(MigrationConstants.MIGRATION_PROCESS_USER)
                 .id(id)
                 .build();
 

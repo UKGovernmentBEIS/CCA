@@ -50,7 +50,7 @@ export class PasswordStrengthMeterComponent {
       return this.passwordStrengthMeterService.scoreWithFeedback(password);
     }
 
-    const feedbackResult: FeedbackResult = {
+    const feedbackResult = {
       score: this.passwordStrengthMeterService.score(password),
       feedback: null,
     };

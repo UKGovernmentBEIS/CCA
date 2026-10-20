@@ -10,6 +10,7 @@ import { ButtonDirective, ErrorSummaryComponent, GovukValidators, TextareaCompon
 
 import { CustomMiReportQuery, MiReportsUserDefinedService } from 'cca-api';
 
+import { ExtendedMiReportResult } from '../core/mi-interfaces';
 import { MiReportsExportService } from '../core/mi-reports-export.service';
 
 @Component({
@@ -51,7 +52,7 @@ export class CustomReportComponent {
           this.isErrorSummaryDisplayed.set(true);
           return EMPTY;
         }),
-        map((results) => {
+        map((results: ExtendedMiReportResult) => {
           this.miReportsExportService.exportToExcel(results, 'Custom sql report');
         }),
       )

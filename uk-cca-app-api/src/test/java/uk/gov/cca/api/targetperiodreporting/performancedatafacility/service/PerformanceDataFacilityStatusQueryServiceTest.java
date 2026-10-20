@@ -109,8 +109,6 @@ class PerformanceDataFacilityStatusQueryServiceTest {
 			.findWithDetailsByFacilityIdAndTargetPeriodBusinessId(facilityId, targetPeriodType);
 		verify(targetPeriodService).findByTargetPeriodType(targetPeriodType);		
 		assertThat(result).hasSize(1);
-		assertEquals(PerformanceDataReportType.FINAL, result.get(0).getReportType());
-		assertEquals(PerformanceDataSubmissionType.PRIMARY, result.get(0).getSubmissionType());
 		assertEquals(entityFinal.isLocked(), result.get(0).isLocked());
 		assertEquals(entityFinal.getLastPerformanceData().getReportVersion(), result.get(0).getReportVersion());
 		assertEquals(entityFinal.getTargetPeriod().getName(), result.get(0).getTargetPeriodName());

@@ -1,10 +1,12 @@
 package uk.gov.cca.api.workflow.request.flow.common.actionhandler;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -75,7 +77,7 @@ class RequestCreateActionSectorResourceTypeHandlerTest {
         		new RequestCreateActionSectorResourceTypeHandler<>(validators, handlers, sectorAssociationQueryService);
         String requestId = requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser);
 
-        assertThat(requestId).isEqualTo("requestId");
+        assertEquals(requestId, "requestId");
 
         verify(sectorAssociationQueryService, times(1)).exclusiveLockSectorAssociation(1L);
     }
@@ -123,7 +125,7 @@ class RequestCreateActionSectorResourceTypeHandlerTest {
         		new RequestCreateActionSectorResourceTypeHandler<>(validators, handlers, sectorAssociationQueryService);
         String requestId = requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser);
 
-        assertThat(requestId).isEqualTo("requestId");
+        assertEquals(requestId, "requestId");
 
         verify(sectorAssociationQueryService, times(1)).exclusiveLockSectorAssociation(1L);
     }
@@ -159,8 +161,10 @@ class RequestCreateActionSectorResourceTypeHandlerTest {
 
         BusinessException businessException = assertThrows(BusinessException.class, () -> requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
 
-        assertThat(businessException.getErrorCode()).isEqualTo(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED);
-        assertThat(businessException.getData()).contains(RequestCreateValidationResult.builder().valid(false).build());
+        assertEquals(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED, businessException.getErrorCode());
+        assertTrue(Arrays.asList(businessException.getData()).contains(RequestCreateValidationResult.builder()
+                .valid(false)
+                .build()));
         verify(sectorAssociationQueryService, times(1)).exclusiveLockSectorAssociation(1L);
     }
 
@@ -177,7 +181,7 @@ class RequestCreateActionSectorResourceTypeHandlerTest {
             public RequestCreateValidationResult validateAction(Long sectorId) {
                 return RequestCreateValidationResult.builder()
                         .valid(true)
-                        .available(false)
+                        .isAvailable(false)
                         .build();
             }
         };
@@ -196,8 +200,11 @@ class RequestCreateActionSectorResourceTypeHandlerTest {
 
         BusinessException businessException = assertThrows(BusinessException.class, () -> requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
 
-        assertThat(businessException.getErrorCode()).isEqualTo(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED);
-        assertThat(businessException.getData()).contains(RequestCreateValidationResult.builder().valid(true).available(false).build());
+        assertEquals(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED, businessException.getErrorCode());
+        assertTrue(Arrays.asList(businessException.getData()).contains(RequestCreateValidationResult.builder()
+                .valid(true)
+                .isAvailable(false)
+                .build()));
         verify(sectorAssociationQueryService, times(1)).exclusiveLockSectorAssociation(1L);
     }
 
@@ -244,8 +251,8 @@ class RequestCreateActionSectorResourceTypeHandlerTest {
         		new RequestCreateActionSectorResourceTypeHandler<>(validators, handlers, sectorAssociationQueryService);
         BusinessException businessException = assertThrows(BusinessException.class, () -> requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
 
-        assertThat(businessException.getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
-        assertThat(businessException.getData()).contains("requestType1");
+        assertEquals(ErrorCode.RESOURCE_NOT_FOUND, businessException.getErrorCode());
+        assertTrue(Arrays.asList(businessException.getData()).contains("requestType1"));
 
         verify(sectorAssociationQueryService, times(1)).exclusiveLockSectorAssociation(1L);
     }

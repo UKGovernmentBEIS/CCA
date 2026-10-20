@@ -16,7 +16,6 @@ export const SENT_SUBSISTENCE_FEES_ROUTES: Routes = [
     children: [
       {
         path: '',
-        title: 'Payment request details',
         loadComponent: () => import('./sent-subsistence-fees.component').then((c) => c.SentSubsistenceFeesComponent),
       },
       {

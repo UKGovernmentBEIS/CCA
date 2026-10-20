@@ -16,14 +16,12 @@ export const OPERATOR_INVITATION_USER_ROUTES: Routes = [
     children: [
       {
         path: '',
-        title: 'Enter your details',
         loadComponent: () =>
           import('./details/operator-user-invitation-details.component').then((c) => c.OperatorUserInvitationComponent),
         canActivate: [OperatorUserInvitationGuard],
       },
       {
         path: 'create-password',
-        title: 'Create a password',
         data: { backlink: '../' },
         canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
@@ -33,14 +31,12 @@ export const OPERATOR_INVITATION_USER_ROUTES: Routes = [
       },
       {
         path: 'set-password-only',
-        title: 'Create a password',
         canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
           import('./set-password-only/set-password-only.component').then((c) => c.SetPasswordOnlyComponent),
       },
       {
         path: 'summary',
-        title: 'Check your answers',
         data: { backlink: '../create-password' },
         canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
@@ -50,7 +46,7 @@ export const OPERATOR_INVITATION_USER_ROUTES: Routes = [
       },
       {
         path: 'confirmed',
-        title: "You've successfully activated your user account",
+        data: { pageTitle: "You've successfully activated your user account" },
         canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
           import('../invitation-confirmation/invitation-confirmation.component').then(
@@ -59,7 +55,7 @@ export const OPERATOR_INVITATION_USER_ROUTES: Routes = [
       },
       {
         path: 'confirmed-existing',
-        title: 'You are successfully added to a target unit account',
+        data: { pageTitle: 'You are successfully added to a target unit account' },
         canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
           import('./invitation-existing-confirmation/invitation-existing-confirmation.component').then(
@@ -68,7 +64,7 @@ export const OPERATOR_INVITATION_USER_ROUTES: Routes = [
       },
       {
         path: 'invalid-link',
-        title: 'This link is invalid/expired',
+        data: { pageTitle: 'This link is invalid/expired' },
         loadComponent: () => import('../invalid-link/invalid-link.component').then((c) => c.InvalidLinkComponent),
       },
     ],

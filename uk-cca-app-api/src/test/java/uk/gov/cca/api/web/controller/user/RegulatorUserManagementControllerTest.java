@@ -206,7 +206,6 @@ class RegulatorUserManagementControllerTest {
                 .fileType(contentType)
                 .fileContent(fileContent)
                 .fileSize(fileContent.length)
-				.createdBy("currentuser")
                 .build();
 
 		verify(regulatorUserAuthorityUpdateOrchestrator, times(1))
@@ -275,7 +274,6 @@ class RegulatorUserManagementControllerTest {
                 .fileType(contentType)
                 .fileContent(fileContent)
                 .fileSize(fileContent.length)
-				.createdBy("currentuser")
                 .build();
 		verify(regulatorUserAuthorityUpdateOrchestrator, times(1))
 			.updateRegulatorUserByUserId(currentUser, currentUser.getUserId(), regulatorUserUpdateDTO, expectedSignatureDTO);

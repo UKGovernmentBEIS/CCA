@@ -20,19 +20,17 @@ import { SiteContactsComponent } from './site-contacts-tab/site-contacts.compone
 export const REGULATOR_ROUTES: Routes = [
   {
     path: '',
-    title: 'Regulator users',
+    data: { pageTitle: 'Regulator users' },
     component: RegulatorsComponent,
     canDeactivate: [PendingRequestGuard],
   },
   {
     path: 'add-confirmation',
-    title: 'Account confirmation email sent',
     component: AddConfirmationComponent,
   },
   {
     path: 'add',
-    title: 'Add a new user',
-    data: { breadcrumb: false, backlink: '../' },
+    data: { pageTitle: 'Add a new user', breadcrumb: false, backlink: '../' },
     providers: [DetailsStore],
     component: DetailsComponent,
     canActivate: [CanAddUsers],
@@ -47,10 +45,10 @@ export const REGULATOR_ROUTES: Routes = [
     children: [
       {
         path: '',
-        title: 'User details',
         data: {
           breadcrumb: false,
           backlink: '../',
+          pageTitle: 'User details',
         },
         pathMatch: 'full',
         component: DetailsComponent,
@@ -58,8 +56,8 @@ export const REGULATOR_ROUTES: Routes = [
       },
       {
         path: 'delete',
-        title: 'Confirm that this user account will be deleted',
         data: {
+          pageTitle: 'Confirm that this user account will be deleted',
           backlink: '../..',
           breadcrumb: false,
         },
@@ -72,14 +70,12 @@ export const REGULATOR_ROUTES: Routes = [
       },
       {
         path: 'file-download/:uuid',
-        title: 'Your download has started',
         component: SignatureFileDownloadComponent,
       },
     ],
   },
   {
     path: 'file-download/:uuid',
-    title: 'Your download has started',
     component: SignatureFileDownloadComponent,
   },
   {
@@ -88,8 +84,7 @@ export const REGULATOR_ROUTES: Routes = [
     children: [
       {
         path: 'add',
-        title: 'Add an external contact',
-        data: { breadcrumb: false, backlink: '../..' },
+        data: { pageTitle: 'Add an external contact', breadcrumb: false, backlink: '../..' },
         component: ExternalContactsDetailsComponent,
         canDeactivate: [PendingRequestGuard],
       },
@@ -100,9 +95,9 @@ export const REGULATOR_ROUTES: Routes = [
         children: [
           {
             path: '',
-            title: 'External contact details',
             pathMatch: 'full',
             data: {
+              pageTitle: 'External contact details',
               breadcrumb: false,
               backlink: '../..',
             },
@@ -111,8 +106,8 @@ export const REGULATOR_ROUTES: Routes = [
           },
           {
             path: 'delete',
-            title: 'Confirm that this external contact will be deleted',
             data: {
+              pageTitle: 'Confirm that this external contact will be deleted',
               breadcrumb: false,
               backlink: '../../..',
             },
@@ -125,7 +120,6 @@ export const REGULATOR_ROUTES: Routes = [
   },
   {
     path: 'site-contacts',
-    title: 'Site contacts',
     component: SiteContactsComponent,
   },
 ];

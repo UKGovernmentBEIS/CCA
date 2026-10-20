@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { getAttachmentType } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 
@@ -37,7 +36,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       auditDetails?.auditDocuments || [],
       attachments || {},
-      getAttachmentType(AUDIT_DETAILS_CORRECTIVE_ACTIONS_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
+      AUDIT_DETAILS_CORRECTIVE_ACTIONS_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
       true,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );

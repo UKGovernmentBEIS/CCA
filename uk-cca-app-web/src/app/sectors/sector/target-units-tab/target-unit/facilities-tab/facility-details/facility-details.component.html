@@ -13,7 +13,9 @@
     </div>
 
     <div class="govuk-grid-column-one-quarter" style="text-align: end">
-      <a class="govuk-!-margin-top-6" govukButton routerLink="./process-actions">Start a facility task</a>
+      <button class="govuk-!-margin-top-6" govukButton type="button" routerLink="./process-actions">
+        Start a facility task
+      </button>
     </div>
   </div>
 
@@ -29,12 +31,12 @@
         </ng-template>
       }
 
-      <ng-template govukTabLazy id="reports" label="Reports">
-        <cca-facility-reports-tab-component />
-      </ng-template>
-
       <ng-template govukTabLazy id="workflow-history" label="Workflow history">
         <cca-workflow-history-tab />
+      </ng-template>
+
+      <ng-template govukTabLazy id="reports" label="Reports">
+        <cca-facility-reports-tab-component />
       </ng-template>
     </govuk-tabs>
   </section>

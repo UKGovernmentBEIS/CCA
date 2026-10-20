@@ -21,7 +21,7 @@ import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementDocument
 import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementRepository;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
+import uk.gov.netz.api.files.documents.service.FileDocumentService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,7 +55,7 @@ class UnderlyingAgreementQueryServiceTest {
     private UnderlyingAgreementDocumentRepository underlyingAgreementDocumentRepository;
 
     @Mock
-    private FileDocumentStorageService fileDocumentStorageService;
+    private FileDocumentService fileDocumentService;
 
     @Test
     void getUnderlyingAgreementContainersByAccounts() {
@@ -221,7 +221,7 @@ class UnderlyingAgreementQueryServiceTest {
                 .build();
 
         when(underlyingAgreementRepository.findByAccountId(accountId)).thenReturn(Optional.of(entity));
-        when(fileDocumentStorageService.getFileInfoDTO(fileDocumentUuid)).thenReturn(fileDocument);
+        when(fileDocumentService.getFileInfoDTO(fileDocumentUuid)).thenReturn(fileDocument);
 
         UnderlyingAgreementDetailsDTO result = underlyingAgreementQueryService.getUnderlyingAgreementDetailsByAccountId(accountId);
 
@@ -238,7 +238,7 @@ class UnderlyingAgreementQueryServiceTest {
                 .build());
 
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
-        verify(fileDocumentStorageService, times(1)).getFileInfoDTO(fileDocumentUuid);
+        verify(fileDocumentService, times(1)).getFileInfoDTO(fileDocumentUuid);
     }
 
     @Test
@@ -275,7 +275,7 @@ class UnderlyingAgreementQueryServiceTest {
                 .build());
 
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
-        verifyNoInteractions(fileDocumentStorageService);
+        verifyNoInteractions(fileDocumentService);
     }
 
     @Test

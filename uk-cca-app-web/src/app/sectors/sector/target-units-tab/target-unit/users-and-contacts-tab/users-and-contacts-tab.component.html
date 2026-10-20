@@ -1,5 +1,5 @@
 @if (isEditable() && roleType() === 'REGULATOR') {
-  <a govukButton [routerLink]="['users', 'add']">Add a new operator</a>
+  <button type="button" govukButton [routerLink]="['users', 'add']">Add a new operator</button>
 }
 
 @if (isEditable()) {
@@ -38,8 +38,6 @@
                   [options]="row[column.field] === 'ACCEPTED' ? authorityStatusesAccepted : authorityStatuses"
                   formControlName="status"
                   govuk-select
-                  label="Account status"
-                  [labelHidden]="true"
                 ></div>
               } @else {
                 {{ row[column.field] | titlecase }}

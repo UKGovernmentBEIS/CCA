@@ -1,9 +1,15 @@
 package uk.gov.cca.api.web.controller.mireport;
 
-import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
-
-import org.mapstruct.factory.Mappers;
-import org.springframework.data.domain.Sort.Direction;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,32 +23,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.mireport.dto.CcaMiReportUserDefinedDTO;
-import uk.gov.cca.api.web.orchestrator.mireport.transform.CcaMiReportUserDefinedMapper;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedDTO;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedResult;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedResults;
-import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedSearchCriteriaDTO;
-import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedSearchCriteriaDTO.SortBy;
 import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedService;
-import uk.gov.netz.api.mireport.userdefined.MiReportUserDefinedUpdateDTO;
 import uk.gov.netz.api.mireport.userdefined.custom.CustomMiReportQuery;
 import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.security.AuthorizedRole;
+
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @RestController
 @RequestMapping(path = "/v1.0/mireports/user-defined")
@@ -52,7 +44,6 @@ import uk.gov.netz.api.security.AuthorizedRole;
 public class MiReportUserDefinedController {
 
     private final MiReportUserDefinedService miReportUserDefinedService;
-    private static final CcaMiReportUserDefinedMapper MAPPER = Mappers.getMapper(CcaMiReportUserDefinedMapper.class);
     
     @GetMapping
     @Operation(summary = "Retrieves the MI User defined Reports")
@@ -71,11 +62,7 @@ public class MiReportUserDefinedController {
             @RequestParam("size") @Parameter(name = "size", description = "The page size")
             @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")
             @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize) {
-        MiReportUserDefinedSearchCriteriaDTO searchCriteriaDTO = MiReportUserDefinedSearchCriteriaDTO.builder()
-                .sortBy(SortBy.REPORT_NAME)
-                .direction(Direction.ASC)
-                .build();
-        return new ResponseEntity<>(miReportUserDefinedService.findAllByCA(appUser, page, pageSize, searchCriteriaDTO), HttpStatus.OK);
+        return new ResponseEntity<>(miReportUserDefinedService.findAllByCA(appUser.getCompetentAuthority(), page, pageSize), HttpStatus.OK);
     }
     
     @GetMapping(path = "/{id}")
@@ -89,10 +76,8 @@ public class MiReportUserDefinedController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#id")
-    public ResponseEntity<MiReportUserDefinedDTO> getMiReportUserDefinedById(
-            @Parameter(hidden = true) AppUser appUser,
-            @PathVariable @Parameter(description = "The mi Report User Defined Id") Long id) {
-        return new ResponseEntity<>(miReportUserDefinedService.findById(appUser, id), HttpStatus.OK);
+    public ResponseEntity<MiReportUserDefinedDTO> getMiReportUserDefinedById(@PathVariable @Parameter(description = "The mi Report User Defined Id") Long id) {
+        return new ResponseEntity<>(miReportUserDefinedService.findById(id), HttpStatus.OK);
     }
 
     @PostMapping
@@ -107,13 +92,11 @@ public class MiReportUserDefinedController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized
-    public ResponseEntity<Void> createMiReportUserDefined(
-            @Parameter(hidden = true) AppUser appUser,
-            @RequestBody @Valid @Parameter(description = "The MI report user defined DTO", required = true) CcaMiReportUserDefinedDTO ccaMiReportUserDefinedDTO) {
-
-        MiReportUserDefinedDTO miReportUserDefinedDTO = MAPPER.toMiReportUserDefinedDTO(ccaMiReportUserDefinedDTO);
-    	miReportUserDefinedService.create(appUser, miReportUserDefinedDTO);
-
+    public ResponseEntity<Void> createMiReportUserDefined(@Parameter(hidden = true) AppUser appUser,
+                                                 @RequestBody
+                                                 @Valid
+                                                 @Parameter(description = "The MI report user defined DTO", required = true) MiReportUserDefinedDTO miReportUserDefinedDTO) {
+    	miReportUserDefinedService.create(appUser.getUserId(), appUser.getCompetentAuthority(), miReportUserDefinedDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -131,14 +114,11 @@ public class MiReportUserDefinedController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#id")
-    public ResponseEntity<Void> updateMiReportUserDefined(
-            @Parameter(hidden = true) AppUser appUser,
-            @PathVariable @Parameter(description = "The MI report user defined id") Long id,
-            @RequestBody @Valid @Parameter(description = "The MI report user defined DTO", required = true) CcaMiReportUserDefinedDTO ccaMiReportUserDefinedDTO) {
-
-        MiReportUserDefinedUpdateDTO miReportUserDefinedUpdateDTO = MAPPER.toMiReportUserDefinedUpdateDTO(ccaMiReportUserDefinedDTO);
-        miReportUserDefinedService.update(id, appUser, miReportUserDefinedUpdateDTO);
-
+    public ResponseEntity<Void> updateMiReportUserDefined(@PathVariable @Parameter(description = "The mi report user defined id") Long id,
+                                                  @RequestBody
+                                                  @Valid
+                                                  @Parameter(description = "The MI report user defined DTO", required = true) MiReportUserDefinedDTO reportUserDefined) {
+    	miReportUserDefinedService.update(id, reportUserDefined);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

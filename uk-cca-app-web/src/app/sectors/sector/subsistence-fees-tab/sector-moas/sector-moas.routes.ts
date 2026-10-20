@@ -3,8 +3,6 @@ import { Routes } from '@angular/router';
 
 import { SectorMoaDetailsStore } from '@shared/components';
 
-import { SubsistenceFeesMoaDetailsDTO } from 'cca-api';
-
 import { SectorMoasDetailsResolver } from './sector-moas.resolver';
 
 export const SECTOR_MOAS_ROUTES: Routes = [
@@ -28,14 +26,12 @@ export const SECTOR_MOAS_ROUTES: Routes = [
         ],
         resolve: { sectorMoaDetails: SectorMoasDetailsResolver },
         data: {
-          breadcrumb: ({ sectorMoaDetails }: { sectorMoaDetails: SubsistenceFeesMoaDetailsDTO }) =>
-            `${sectorMoaDetails.transactionId}`,
+          breadcrumb: ({ sectorMoaDetails }) => `${sectorMoaDetails.transactionId}`,
         },
         loadChildren: () => import('@shared/components').then((r) => r.SECTOR_MOA_DETAILS_ROUTES),
       },
       {
         path: 'file-download/:fileType/:uuid',
-        title: 'Your download has started',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
     ],

@@ -1,14 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-  input,
-  OnInit,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, ElementRef, inject, input, OnInit, viewChild } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 
 import {
@@ -33,7 +24,6 @@ import { FileUploadListComponent } from '../file-upload-list/file-upload-list.co
 @Component({
   selector: 'cca-multiple-file-input[baseDownloadUrl]',
   templateUrl: './multiple-file-input.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FileUploadListComponent, AsyncPipe, ErrorMessageComponent],
 })
 export class MultipleFileInputComponent implements ControlValueAccessor, OnInit {
@@ -47,7 +37,6 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
   protected readonly listTitle = input<string>();
   protected readonly label = input<string>('Upload a file');
   protected readonly hint = input<string>();
-  protected readonly showFilesizeHint = input<boolean>(true);
   protected readonly accepted = input<string>('*/*');
   protected readonly uploadStatusText = input<string>('Uploading files, please wait');
   protected readonly dropzoneHintText = input<string>('Drag and drop files here or');
@@ -55,12 +44,12 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
   protected readonly baseDownloadUrl = input<string>();
 
   protected readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('input');
-  protected readonly filePickerButton = viewChild<ElementRef<HTMLButtonElement>>('filePickerButton');
 
   protected readonly uploadStatusText$ = new Subject<string>();
   protected uploadedFiles$: Observable<FileUploadEvent[]>;
-  protected readonly isDraggedOver = signal(false);
-  protected readonly isDisabled = signal(false);
+  protected isFocused = false;
+  protected isDraggedOver = false;
+  protected isDisabled: boolean;
 
   private onChange: (value: FileUpload[]) => void;
   private onBlur: () => void;
@@ -82,20 +71,6 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
     return this.control?.invalid && (!this.form || this.form.submitted);
   }
 
-  get describedBy(): string | null {
-    const ids: string[] = [];
-    if (this.showFilesizeHint()) {
-      ids.push(this.id + '-hint-file-size');
-    }
-    if (this.hint()) {
-      ids.push(this.id + '-hint');
-    }
-    if (this.shouldDisplayErrors) {
-      ids.push(this.id + '-error');
-    }
-    return ids.join(' ') || null;
-  }
-
   private get form(): FormGroupDirective | NgForm | null {
     return this.root ?? this.rootNgForm;
   }
@@ -112,12 +87,15 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
       ),
       this.fileUploadService.uploadProgress$.pipe(
         withLatestFrom(this.value$),
-        filter(([uploadEvent, value]) => value?.some((item) => item?.file && item.file === uploadEvent?.file)),
+        filter(([uploadEvent, value]) => value?.some(({ file }) => file === uploadEvent.file)),
         tap(([uploadEvent, value]) => {
-          if (!uploadEvent.uuid) return;
-
-          const index = value.findIndex((upload) => upload?.file === uploadEvent.file);
-          if (index >= 0) value.splice(index, 1, uploadEvent);
+          if (uploadEvent.uuid) {
+            value.splice(
+              value.findIndex((upload) => upload.file === uploadEvent.file),
+              1,
+              uploadEvent,
+            );
+          }
         }),
         map(([uploadEvent]) => uploadEvent),
         startWith(undefined),
@@ -126,16 +104,11 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
       scan(
         (acc, [existing, errors, uploadEvent]) =>
           (existing ?? []).map((existingFile, index) => {
-            const file = existingFile?.file;
-
             return {
               ...existingFile,
-              ...acc.find(
-                ({ file: previousFile, uuid }) =>
-                  (uuid && uuid === existingFile?.uuid) || (file && previousFile === file),
-              ),
-              ...(file && uploadEvent?.file === file ? uploadEvent : {}),
-              ...(existingFile?.uuid && { downloadUrl: this.baseDownloadUrl() + `${existingFile.uuid}` }),
+              ...acc.find(({ file, uuid }) => (uuid && uuid === existingFile.uuid) || file === existingFile.file),
+              ...(uploadEvent?.file === existingFile.file ? uploadEvent : {}),
+              ...(existingFile.uuid && { downloadUrl: this.baseDownloadUrl() + `${existingFile.uuid}` }),
               errors: this.applyRowErrors(errors, index),
             };
           }),
@@ -156,47 +129,46 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
   }
 
   writeValue(value: FileUploadEvent[]): void {
-    // A multi-file field can be hydrated with a single file reference instead of a list, which the
-    // template below cannot iterate.
-    this.value$.next(Array.isArray(value) ? value : value ? [value as FileUploadEvent] : []);
+    this.value$.next(value ?? []);
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.isDisabled.set(isDisabled);
-  }
-
-  onFilePickerButtonClick(): void {
-    this.fileInput().nativeElement.click();
+    this.isDisabled = isDisabled;
   }
 
   onFileChange(event: Event): void {
     const files = (event?.target as HTMLInputElement)?.files;
     this.uploadFiles(files);
     this.fileInput().nativeElement.value = null;
-    this.filePickerButton().nativeElement.focus();
+    this.fileInput().nativeElement.focus();
+  }
+
+  onFileFocus(): void {
+    this.isFocused = true;
   }
 
   onFileBlur(): void {
+    this.isFocused = false;
     this.onBlur();
   }
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
 
-    if (!this.isDisabled()) {
-      this.isDraggedOver.set(true);
+    if (!this.isDisabled) {
+      this.isDraggedOver = true;
     }
   }
 
   onDragLeave(): void {
-    this.isDraggedOver.set(false);
+    this.isDraggedOver = false;
   }
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
-    this.isDraggedOver.set(false);
+    this.isDraggedOver = false;
 
-    if (!this.isDisabled()) {
+    if (!this.isDisabled) {
       this.uploadStatusText$.next(this.uploadStatusText());
       this.uploadFiles(event.dataTransfer.files);
     }
@@ -204,7 +176,6 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
 
   onFileDeleteClick(deletedIndex: number): void {
     this.onChange(this.value$.getValue().filter((_, index) => index !== deletedIndex));
-    this.filePickerButton().nativeElement.focus();
   }
 
   private uploadFiles(files: FileList): void {

@@ -35,7 +35,7 @@ export class TableComponent<T> {
   sortedColumn: GovukTableColumn<T>['header'];
   sortingDirection: 'ascending' | 'descending';
 
-  getTypeof(value: unknown): string {
+  getTypeof(value): string {
     return typeof value;
   }
 

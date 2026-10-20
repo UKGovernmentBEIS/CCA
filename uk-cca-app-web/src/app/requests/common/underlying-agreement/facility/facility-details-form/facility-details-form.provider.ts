@@ -7,6 +7,14 @@ import { catchError, debounceTime, filter, map, Observable, of, switchMap, tap }
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
+import {
+  facilityExistenceValidator,
+  hasBothCCASchemes,
+  isCCA2Scheme,
+  isCCA3Scheme,
+  isCreationDateAfterCutOffDate,
+  underlyingAgreementQuery,
+} from '@requests/common';
 import { AccountAddressFormModel, createAccountAddressForm } from '@shared/components';
 import { ConfigService } from '@shared/config';
 import { UK_COUNTRY_CODES } from '@shared/services';
@@ -14,10 +22,6 @@ import { SchemeVersion, SchemeVersions } from '@shared/types';
 import { facilityIDValidators, textFieldValidators } from '@shared/validators';
 
 import { FacilityDetails, FacilityService } from 'cca-api';
-
-import { hasBothCCASchemes, isCCA2Scheme, isCCA3Scheme, isCreationDateAfterCutOffDate } from '../../../utils';
-import { underlyingAgreementQuery } from '../../+state/underlying-agreement.selectors';
-import { facilityExistenceValidator } from '../validators';
 
 export type FacilityDetailsFormModel = {
   name: FormControl<string>;

@@ -1,6 +1,6 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { provideRouter } from '@angular/router';
@@ -25,7 +25,6 @@ import { PASSWORD_FORM, passwordFormFactory } from './password-form.factory';
     </form>
   `,
   imports: [PasswordComponent, ReactiveFormsModule, ErrorSummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [passwordFormFactory],
 })
 export class TestComponent {
@@ -48,7 +47,7 @@ describe('PasswordComponent', () => {
       imports: [TestComponent],
       providers: [
         provideRouter([]),
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
       ],

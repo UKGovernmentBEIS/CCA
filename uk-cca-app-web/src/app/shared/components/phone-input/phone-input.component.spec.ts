@@ -3,26 +3,27 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
+import { map, of } from 'rxjs';
+
 import { BasePage } from '@netz/common/testing';
 import { GovukValidators } from '@netz/govuk-components';
-import { CountryCallingCodeService } from '@shared/services';
 import { CountryService } from '@shared/services';
+import { CountryCallingCodeService, UK_COUNTRY_CODES } from '@shared/services';
+import { Country } from '@shared/types';
 
 import { PhoneInputComponent } from './phone-input.component';
 
-const mockCountries = [
-  { code: 'GB-ENG', name: 'England', officialName: 'England' },
-  { code: 'AF', name: 'Afghanistan', officialName: 'Islamic Republic of Afghanistan' },
-  { code: 'GR', name: 'Greece', officialName: 'Greece' },
-];
-
 const mockCountryService = {
-  countries: signal(mockCountries),
+  countries: signal([
+    { code: 'GB-ENG', name: 'England', officialName: 'England' },
+    { code: 'AF', name: 'Afghanistan', officialName: 'Islamic Republic of Afghanistan' },
+    { code: 'GR', name: 'Greece', officialName: 'Greece' },
+  ]),
 };
 
 const mockCountryCallingCodeService = {
   getCountryCallingCode: (code: string) => {
-    const codes: Record<string, number> = {
+    const codes = {
       'GB-ENG': 44,
       AF: 93,
       GR: 30,
@@ -105,8 +106,6 @@ describe('PhoneInputComponent', () => {
   }
 
   beforeEach(async () => {
-    mockCountryService.countries.set(mockCountries);
-
     await TestBed.configureTestingModule({
       imports: [TestComponent],
       providers: [
@@ -184,7 +183,8 @@ describe('PhoneInputComponent', () => {
   });
 
   it('should apply a supplied value', () => {
-    mockCountryService.countries.set([
+    const countries: Country[] = [];
+    countries.push(
       {
         code: 'GR',
         name: 'Greece',
@@ -200,8 +200,36 @@ describe('PhoneInputComponent', () => {
         name: 'Scotland',
         officialName: 'Scotland',
       },
-    ]);
-    fixture.detectChanges();
+    );
+
+    // Force a refresh of the options
+    component.phoneCodes$ = of(countries).pipe(
+      map((countries) => {
+        const emptyOption: { text: string; value: string }[] = [{ text: '--', value: '' }];
+        const ukCountries: { text: string; value: string }[] = [];
+        const otherCountries: { text: string; value: string }[] = [];
+
+        countries.forEach((country) => {
+          const callingCode = mockCountryCallingCodeService.getCountryCallingCode(country.code);
+          const option = {
+            text: `${country.code} (${callingCode})`,
+            value: String(callingCode),
+          };
+
+          if ([...UK_COUNTRY_CODES, 'GB'].includes(country.code)) {
+            ukCountries.push(option);
+          } else {
+            otherCountries.push(option);
+          }
+        });
+
+        return [
+          ...component.sortByProp(ukCountries, 'text'),
+          ...emptyOption,
+          ...component.sortByProp(otherCountries, 'text'),
+        ];
+      }),
+    );
 
     hostComponent.form.get('firstPhone').setValue({ countryCode: '30', number: '1234567890' });
     fixture.detectChanges();

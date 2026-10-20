@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  booleanAttribute,
-  Component,
-  input,
-  computed,
-  ChangeDetectionStrategy,
-  OnInit,
-} from '@angular/core';
+import { AfterViewInit, Component, input, computed } from '@angular/core';
 import { ControlValueAccessor, ReactiveFormsModule } from '@angular/forms';
 
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs';
@@ -23,20 +15,16 @@ import { LabelSizeType } from './label-size.type';
 @Component({
   selector: 'div[govuk-textarea]',
   templateUrl: './textarea.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, ErrorMessageComponent],
 })
-export class TextareaComponent extends FormInput implements ControlValueAccessor, AfterViewInit, OnInit {
+export class TextareaComponent extends FormInput implements ControlValueAccessor, AfterViewInit {
   private static readonly WARNING_PERCENTAGE = 0.99;
 
   readonly label = input<string>();
-  readonly labelHidden = input(false, { transform: booleanAttribute });
   readonly labelSize = input<LabelSizeType>();
   readonly hint = input<string>();
   readonly rows = input('5');
   readonly maxLength = input<number>();
-
-  readonly isLabelHidden = computed(() => this.labelHidden() || !this.label());
 
   onBlur: (_: any) => any;
 

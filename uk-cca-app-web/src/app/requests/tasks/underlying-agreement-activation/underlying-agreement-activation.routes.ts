@@ -5,7 +5,6 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 export const UNDERLYING_AGREEMENT_ACTIVATION_ROUTES: Routes = [
   {
     path: '',
-    title: 'Upload target unit assent',
     children: [
       {
         path: 'provide-evidence',

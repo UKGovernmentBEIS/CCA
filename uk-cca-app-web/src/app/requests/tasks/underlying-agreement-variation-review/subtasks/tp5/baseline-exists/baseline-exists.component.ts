@@ -4,12 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import {
-  LegendContentDirective,
-  NotificationBannerComponent,
-  RadioComponent,
-  RadioOptionComponent,
-} from '@netz/govuk-components';
+import { NotificationBannerComponent, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
 import {
   applyTp5ExistSideEffect,
   BaselineAndTargetPeriodsSubtasks,
@@ -39,7 +34,6 @@ import {
     ReactiveFormsModule,
     RadioOptionComponent,
     RadioComponent,
-    LegendContentDirective,
     ReturnToTaskOrActionPageComponent,
     NotificationBannerComponent,
   ],

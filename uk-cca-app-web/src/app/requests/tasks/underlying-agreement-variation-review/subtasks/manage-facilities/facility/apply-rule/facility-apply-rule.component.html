@@ -1,7 +1,7 @@
 <cca-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  [caption]="$safeNavigationMigration(facility().facilityDetails?.name)"
+  [caption]="facility().facilityDetails?.name"
   heading="Apply the 70% rule"
   data-testid="facility-extend-form"
 >

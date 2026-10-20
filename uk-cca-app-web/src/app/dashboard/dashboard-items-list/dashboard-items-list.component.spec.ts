@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -14,7 +14,6 @@ import { DashboardItemsListComponent } from './dashboard-items-list.component';
 @Component({
   selector: '',
   template: ` <cca-dashboard-items-list [items]="items" [tableColumns]="tableColumns" /> `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DashboardItemsListComponent],
 })
 class TestParentComponent {

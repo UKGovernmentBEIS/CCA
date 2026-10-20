@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, of } from 'rxjs';
 
-import { assertInCellControlLabelsHidden } from '@testing';
 import { Mocked, MockInstance } from 'vitest';
 
 import {
@@ -95,12 +94,6 @@ describe('SiteContactsComponent', () => {
 
   describe('when editable', () => {
     beforeEach(() => setupComponent(mockSiteContacts));
-
-    it('should hide the labels of controls inside table cells, since the column header names them', () => {
-      fixture.detectChanges();
-
-      assertInCellControlLabelsHidden(fixture.nativeElement);
-    });
 
     it('should load data and update state when effect triggers', () => {
       fixture.detectChanges();

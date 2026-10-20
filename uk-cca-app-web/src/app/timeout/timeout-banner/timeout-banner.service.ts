@@ -33,8 +33,8 @@ export class TimeoutBannerService implements OnDestroy {
   readonly timeExtensionAllowed = signal(true);
   readonly isVisible = signal(false);
 
-  private countdownTimeout: ReturnType<typeof setTimeout> | null = null;
-  private bannerTimeout: ReturnType<typeof setTimeout> | null = null;
+  private countdownTimeout = null;
+  private bannerTimeout = null;
   private scheduledExpiryTime: number | null = null;
 
   constructor() {

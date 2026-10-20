@@ -1,6 +1,4 @@
-import { PatReportState } from '../../../pat-report-store';
-
-export const mockPatReportState: PatReportState = {
+export const mockPatReportState = {
   reportInfo: {
     targetPeriodType: 'TP6' as const,
     targetPeriodName: 'TP6 (2024)',

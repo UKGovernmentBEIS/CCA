@@ -5,7 +5,6 @@ import { nonComplianceDetailsEditableGuard, nonComplianceDetailsRedirectGuard } 
 export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
   {
     path: '',
-    title: 'Provide non-compliance details',
     children: [
       {
         path: '',

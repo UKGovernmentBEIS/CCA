@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.migration.files.FileValidatorMigrationService;
 import uk.gov.cca.api.migration.ftp.FtpFileDTOResult;
@@ -61,7 +62,7 @@ public class Cca3SectorAssociationSchemeDocumentUpdateMigrationService {
 			schemeDocument.setFileContent(fileDTO.getFileContent());
 			schemeDocument.setFileSize(fileDTO.getFileContent().length);
 			schemeDocument.setFileType(fileDTO.getFileType());
-			schemeDocument.setCreatedBy(fileDTO.getCreatedBy());
+			schemeDocument.setCreatedBy(MigrationConstants.MIGRATION_PROCESS_USER);
 
 		} catch (Exception e) {
 			failedCounter.incrementAndGet();

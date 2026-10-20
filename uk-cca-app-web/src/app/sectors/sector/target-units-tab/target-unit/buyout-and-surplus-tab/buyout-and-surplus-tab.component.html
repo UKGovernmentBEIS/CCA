@@ -8,9 +8,7 @@
 
         @if (userIsRegulator) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="['buyout-surplus', 'edit-on-hold']">
-              Change<span class="govuk-visually-hidden"> on hold</span>
-            </a>
+            <a class="govuk-link" [routerLink]="['buyout-surplus', 'edit-on-hold']">Change</a>
           </dd>
         }
       </div>
@@ -38,9 +36,7 @@
             }
 
             @if (userIsRegulator) {
-              <a class="govuk-link" [routerLink]="['buyout-surplus', bsi.targetPeriod, 'edit-surplus']">
-                Change<span class="govuk-visually-hidden"> {{ bsi.targetPeriod }} surplus gained (tCO2e)</span>
-              </a>
+              <a class="govuk-link" [routerLink]="['buyout-surplus', bsi.targetPeriod, 'edit-surplus']"> Change </a>
             }
           </dd>
         </div>

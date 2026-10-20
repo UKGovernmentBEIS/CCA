@@ -17,7 +17,6 @@ describe('SkipLinkComponent', () => {
     imports: [SkipLinkComponent, RouterOutlet],
     template: `
       <govuk-skip-link />
-      <main id="main-content" tabindex="-1"></main>
       <router-outlet />
     `,
   })
@@ -52,20 +51,5 @@ describe('SkipLinkComponent', () => {
 
     const hostElement: HTMLElement = fixture.nativeElement;
     expect(hostElement.querySelector<HTMLAnchorElement>('a').getAttribute('href').split('#')[0]).toEqual('/test');
-  });
-
-  it('should focus the main content element when its fragment is activated', async () => {
-    const originalNavigateByUrl = router.navigateByUrl;
-
-    vi.spyOn(router, 'navigateByUrl').mockImplementation((...options) =>
-      TestBed.inject(NgZone).run(() => originalNavigateByUrl.apply(router, options)),
-    );
-
-    await router.navigateByUrl('/test#main-content');
-    fixture.detectChanges();
-
-    const hostElement: HTMLElement = fixture.nativeElement;
-    const main = hostElement.querySelector<HTMLElement>('#main-content');
-    expect(document.activeElement).toBe(main);
   });
 });

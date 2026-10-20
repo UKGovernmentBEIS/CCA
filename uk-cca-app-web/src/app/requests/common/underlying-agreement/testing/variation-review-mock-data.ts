@@ -1,4 +1,5 @@
 import { RequestTaskState } from '@netz/common/store';
+import { UNAVariationReviewRequestTaskPayload } from '@requests/common';
 
 import {
   Facility,
@@ -7,8 +8,6 @@ import {
   TargetUnitAccountDetails,
   UnderlyingAgreementVariationPayload,
 } from 'cca-api';
-
-import { UNAVariationReviewRequestTaskPayload } from '../types';
 
 const facilities: Facility[] = [
   {

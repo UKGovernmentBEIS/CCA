@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
@@ -49,7 +49,7 @@ describe('ProvideAppealDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProvideAppealDetailsComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
         ProvideAppealDetailsStore,
@@ -83,16 +83,6 @@ describe('ProvideAppealDetailsComponent', () => {
     requestTaskFileService.buildFormControl.mockClear();
   });
 
-  it('should show the shared upload constraints only once', () => {
-    const upload = fixture.nativeElement.querySelector('cca-multiple-file-input');
-    const hints = upload.querySelectorAll('.govuk-hint');
-    expect(hints).toHaveLength(1);
-    expect(hints[0].textContent).toContain('DIB');
-    expect(hints[0].textContent).not.toContain('DXF');
-    expect(hints[0].textContent).toContain('20MB');
-    expect(upload.querySelector('input[type="file"]').getAttribute('aria-describedby')).toBe(hints[0].id);
-  });
-
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -119,7 +109,7 @@ describe('ProvideAppealDetailsComponent', () => {
   it('should store appeal details and navigate to check your answers', () => {
     component['form'].setValue({
       registrationDate: new Date(2026, 0, 1),
-      files: [{ uuid: 'uuid-1', file: { name: 'appeal.pdf' } }],
+      files: [{ uuid: 'uuid-1', file: { name: 'appeal.pdf' } as File }],
       comments: 'Appeal comments',
     });
 

@@ -5,7 +5,6 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 export const TARGET_PERIOD_REPORTING_FORM_ROUTES: Routes = [
   {
     path: '',
-    title: 'TP reporting (TP7, TP8, TP9) - Submit form',
     children: [
       {
         path: 'energy-fuel-amount',
@@ -26,7 +25,6 @@ export const TARGET_PERIOD_REPORTING_FORM_ROUTES: Routes = [
       },
       {
         path: 'refresh-baseline-data',
-        title: 'Refresh baseline data',
         canActivate: [isEditableGuard],
         data: { breadcrumb: false, backlink: '../../' },
         loadComponent: () =>

@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
-  BaselineAndTargetsSummaryMetadata,
   toBaselineAndTargetsSummaryDataWithDecision,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
@@ -61,7 +60,7 @@ export class TP6SummaryComponent {
     underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_PERIOD6_DETAILS'),
   )();
 
-  private readonly summaryOriginalMetadata: BaselineAndTargetsSummaryMetadata = {
+  private readonly summaryOriginalMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: generateDownloadUrl(this.taskId),
@@ -69,7 +68,7 @@ export class TP6SummaryComponent {
     attachments: { submit: this.originalSubmitAttachments, review: this.reviewAttachments },
   };
 
-  private readonly summaryCurrentMetadata: BaselineAndTargetsSummaryMetadata = {
+  private readonly summaryCurrentMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: generateDownloadUrl(this.taskId),

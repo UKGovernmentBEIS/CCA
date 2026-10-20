@@ -4,9 +4,7 @@
     <ul class="govuk-list govuk-error-summary__list">
       <li>
         <p class="govuk-!-margin-bottom-3">{{ errorSummaryInfo().message }}</p>
-        @if (errorSummaryInfo().linkText) {
-          <a [routerLink]="errorSummaryInfo().link">{{ errorSummaryInfo().linkText }}</a>
-        }
+        <a [routerLink]="errorSummaryInfo().link">{{ errorSummaryInfo().linkText }}</a>
       </li>
     </ul>
   </div>

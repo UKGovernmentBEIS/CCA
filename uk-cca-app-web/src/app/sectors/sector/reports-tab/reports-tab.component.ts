@@ -14,7 +14,6 @@ import {
 import { FacilityPerformanceDataReportTableComponent } from './facility-performance-data/facility-performance-data-report-table/facility-performance-data-report-table.component';
 import { FacilityPerformanceReportFiltersComponent } from './facility-performance-data/facility-performance-report-filters/facility-performance-report-filters.component';
 import { PatReportFiltersComponent } from './pat/pat-report-filters/pat-report-filters.component';
-import { PAT_YEARS, toPatTargetPeriodYear } from './pat/pat-report-form.provider';
 import { PatReportTableComponent } from './pat/pat-report-table/pat-report-table.component';
 import { PerformanceDataReportTableComponent } from './performance-data/performance-data-report-table/performance-data-report-table.component';
 import { PerformanceReportFiltersComponent } from './performance-data/performance-report-filters/performance-report-filters.component';
@@ -58,15 +57,11 @@ export class ReportsTabComponent {
         this.activatedRoute.snapshot.queryParams.targetPeriodReportType,
       ),
     ),
-    targetPeriodYear: this.fb.control<number | null>(
-      toPatTargetPeriodYear(this.activatedRoute.snapshot.queryParams.targetPeriodYear),
-    ),
   });
 
   private readonly reportTypeControl = this.reportTypeForm.controls.reportType;
   private readonly targetPeriodTypeControl = this.reportTypeForm.controls.targetPeriodType;
   private readonly targetPeriodReportTypeControl = this.reportTypeForm.controls.targetPeriodReportType;
-  private readonly targetPeriodYearControl = this.reportTypeForm.controls.targetPeriodYear;
 
   private suppressNavigation = false;
 
@@ -82,11 +77,6 @@ export class ReportsTabComponent {
     { value: 'TP7', text: 'TP7' },
     { value: 'TP8', text: 'TP8' },
     { value: 'TP9', text: 'TP9' },
-  ];
-
-  protected readonly targetPeriodYearOptions: GovukSelectOption<number | null>[] = [
-    { value: null, text: null },
-    ...PAT_YEARS.map((year) => ({ value: year, text: `${year}` })),
   ];
 
   protected readonly targetPeriodReportTypeOptions = computed<GovukSelectOption<TargetPeriodReportType>[]>(() => {
@@ -114,10 +104,6 @@ export class ReportsTabComponent {
     initialValue: this.targetPeriodTypeControl.value,
   });
 
-  protected readonly targetPeriodYearValue = toSignal(this.targetPeriodYearControl.valueChanges, {
-    initialValue: this.targetPeriodYearControl.value,
-  });
-
   protected readonly showAccountPerformanceReport = computed(
     () => this.reportTypeValue() === 'Performance' && this.targetPeriodTypeValue() === 'TP6',
   );
@@ -133,21 +119,11 @@ export class ReportsTabComponent {
     () => this.showFacilityPerformanceReport() && this.targetPeriodReportTypeOptions().length > 1,
   );
 
-  /**
-   * Both the category and the year have to be picked before any PAT filter or result is offered.
-   */
-  protected readonly showPatReport = computed(
-    () => this.reportTypeValue() === 'PAT' && this.targetPeriodYearValue() !== null,
-  );
-
   constructor() {
     this.reportTypeControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((reportType) => {
-      if (this.suppressNavigation) return;
-
       this.runWithoutNavigation(() => {
         this.targetPeriodTypeControl.setValue(null);
         this.targetPeriodReportTypeControl.setValue(null);
-        this.targetPeriodYearControl.setValue(null);
       });
 
       this.navigate({ reportType, page: 1 });
@@ -191,26 +167,6 @@ export class ReportsTabComponent {
         page: 1,
       });
     });
-
-    this.targetPeriodYearControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((targetPeriodYear) => {
-      if (this.suppressNavigation) return;
-
-      this.navigate({ reportType: 'PAT', targetPeriodYear, page: 1 });
-    });
-
-    this.activatedRoute.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
-      this.runWithoutNavigation(() => {
-        this.reportTypeForm.setValue({
-          reportType: toReportCategory(params.get('reportType')),
-          targetPeriodType: toTargetPeriodType(params.get('targetPeriodType')),
-          targetPeriodReportType: toTargetPeriodReportType(
-            params.get('targetPeriodType'),
-            params.get('targetPeriodReportType'),
-          ),
-          targetPeriodYear: toPatTargetPeriodYear(params.get('targetPeriodYear')),
-        });
-      });
-    });
   }
 
   private runWithoutNavigation(callback: () => void) {
@@ -223,7 +179,6 @@ export class ReportsTabComponent {
     reportType?: ReportCategory | null;
     targetPeriodType?: TargetPeriodType | null;
     targetPeriodReportType?: TargetPeriodReportType | null;
-    targetPeriodYear?: number | null;
     page: number;
   }) {
     this.router.navigate([], {
@@ -235,17 +190,17 @@ export class ReportsTabComponent {
   }
 }
 
-function toReportCategory(value: string | null | undefined): ReportCategory | null {
+function toReportCategory(value: string): ReportCategory | null {
   return value === 'Performance' || value === 'PAT' ? value : null;
 }
 
-function toTargetPeriodType(value: string | null | undefined): TargetPeriodType | null {
+function toTargetPeriodType(value: string): TargetPeriodType | null {
   return value === 'TP6' || value === 'TP7' || value === 'TP8' || value === 'TP9' ? value : null;
 }
 
 function toTargetPeriodReportType(
-  targetPeriodType: string | null | undefined,
-  targetPeriodReportType: string | null | undefined,
+  targetPeriodType: string,
+  targetPeriodReportType: string,
 ): TargetPeriodReportType | null {
   const resolvedTargetPeriodType = toTargetPeriodType(targetPeriodType);
 

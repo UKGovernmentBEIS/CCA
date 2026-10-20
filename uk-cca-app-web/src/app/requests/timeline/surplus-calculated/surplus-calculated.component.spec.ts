@@ -41,7 +41,7 @@ describe('SurplusCalculatedComponent', () => {
           'TP6-V4 (Target met)',
           'Secondary',
           'CCA060006',
-          'CCA060006 Secondary buy-out MoA.pdf (opens in a new tab)',
+          'CCA060006 Secondary buy-out MoA.pdf',
           '11 May 2025',
           'BOS-TP6012',
         ],

@@ -5,7 +5,6 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
   {
     path: '',
-    title: 'Review application for underlying agreement',
     providers: [],
     children: [
       {

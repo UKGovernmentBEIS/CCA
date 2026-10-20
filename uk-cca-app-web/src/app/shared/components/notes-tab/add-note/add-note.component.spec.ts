@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { FileUploadEvent } from '@shared/components';
 import { Mocked } from 'vitest';
 
 import { RequestNotesService } from 'cca-api';
@@ -34,7 +35,7 @@ describe('WorkflowAddNoteComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WorkflowAddNoteComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
@@ -77,7 +78,7 @@ describe('WorkflowAddNoteComponent', () => {
 
     component['form'].patchValue({
       note: mockNote,
-      files: mockFiles,
+      files: mockFiles as FileUploadEvent[],
     });
 
     component.onSubmit();

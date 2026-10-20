@@ -91,7 +91,7 @@ export const FACILITY_ROUTES: Routes = [
         title: 'View Products',
         data: {
           breadcrumb: false,
-          backlink: ({ sectionStatus }: { sectionStatus: TaskItemStatus }) =>
+          backlink: ({ sectionStatus }) =>
             sectionStatus === TaskItemStatus.COMPLETED ? '../summary' : '../check-your-answers',
         },
         resolve: {

@@ -9,7 +9,6 @@ import {
   UnderlyingAgreementPayload,
   UnderlyingAgreementTargetUnitDetails,
   UnderlyingAgreementVariationPayload,
-  UnderlyingAgreementVariationReviewRequestTaskPayload,
 } from 'cca-api';
 
 import { TaskItemStatus } from '../../task-item-status';
@@ -18,14 +17,6 @@ import { FacilityItemViewModel, UNARequestTaskPayload } from '../types';
 const selectPayload: StateSelector<RequestTaskState, UNARequestTaskPayload> = createDescendingSelector(
   requestTaskQuery.selectRequestTaskPayload,
   (payload) => payload as UNARequestTaskPayload,
-);
-
-const selectVariationReviewPayload: StateSelector<
-  RequestTaskState,
-  UnderlyingAgreementVariationReviewRequestTaskPayload
-> = createDescendingSelector(
-  requestTaskQuery.selectRequestTaskPayload,
-  (payload) => payload as UnderlyingAgreementVariationReviewRequestTaskPayload,
 );
 
 const selectAccountReferenceData: StateSelector<RequestTaskState, AccountReferenceData> = createDescendingSelector(
@@ -159,7 +150,6 @@ const selectFacilityTargets = (facilityIndex: number) =>
 
 export const underlyingAgreementQuery = {
   selectPayload,
-  selectVariationReviewPayload,
   selectSectionsCompleted,
   selectUnderlyingAgreementSubmitAttachments,
   selectAccountReferenceData,

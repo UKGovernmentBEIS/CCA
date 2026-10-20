@@ -28,14 +28,13 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.transform.BuyOutSurplu
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodBuyOutDetailsDTO;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataDetailsInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.PerformanceDataQueryService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
+import uk.gov.netz.api.files.documents.service.FileDocumentService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -77,7 +76,7 @@ class BuyOutSurplusQueryServiceTest {
     private PerformanceDataQueryService performanceDataQueryService;
     
     @Mock
-    private FileDocumentStorageService fileDocumentStorageService;
+    private FileDocumentService fileDocumentService;
     
     @Mock
     private BuyOutSurplusTransactionHistoryMapper buyOutSurplusHistoryMapper;
@@ -272,12 +271,17 @@ class BuyOutSurplusQueryServiceTest {
         final long accountId = 999L;
         final String accountBusinessId = "businessId";
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP8;
+
         final TargetPeriod targetPeriod = TargetPeriod.builder()
                 .businessId(targetPeriodType)
                 .schemeVersion(SchemeVersion.CCA_3)
                 .startDate(LocalDate.of(2026, 1, 1))
                 .secondaryReportingStartDate(LocalDate.of(2025, 1, 1))
                 .build();
+
+        final Set<TargetPeriodType> applicableTargetPeriods =
+                Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8);
+
         final TargetUnitAccountBusinessInfoDTO eligibleAccount =
                 TargetUnitAccountBusinessInfoDTO.builder()
                         .accountId(accountId)
@@ -285,25 +289,11 @@ class BuyOutSurplusQueryServiceTest {
                         .name("name")
                         .build();
 
-        final List<TargetPeriodInfoDTO> applicableTargetPeriodsInfo = List.of(
-                TargetPeriodInfoDTO.builder()
-                        .businessId(TargetPeriodType.TP7)
-                        .build(),
-                TargetPeriodInfoDTO.builder()
-                        .businessId(TargetPeriodType.TP8)
-                        .build());
-
-        final Set<TargetPeriodType> applicableTargetPeriods =
-                Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8);
-
-        when(targetPeriodService.findByTargetPeriodType(targetPeriodType))
-                .thenReturn(targetPeriod);
-
-        when(targetPeriodService.getTargetPeriodsInfoForSchemeUpTo(
+        when(targetPeriodService.findByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(targetPeriodService.getTargetPeriodsForSchemeUpTo(
                 SchemeVersion.CCA_3,
                 LocalDate.of(2026, 1, 1)))
-                .thenReturn(applicableTargetPeriodsInfo);
-
+                .thenReturn(applicableTargetPeriods);
         when(eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(
                 applicableTargetPeriods))
                 .thenReturn(List.of(eligibleAccount));
@@ -313,9 +303,8 @@ class BuyOutSurplusQueryServiceTest {
                 buyOutSurplusQueryService.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
 
         verify(targetPeriodService).findByTargetPeriodType(targetPeriodType);
-        verify(targetPeriodService).getTargetPeriodsInfoForSchemeUpTo(
-                SchemeVersion.CCA_3,
-                LocalDate.of(2026, 1, 1));
+        verify(targetPeriodService).getTargetPeriodsForSchemeUpTo(
+        		SchemeVersion.CCA_3, LocalDate.of(2026, 1, 1));
         verify(eligibleAccountsCustomRepository)
                 .findAccountsWithFacilityPerformanceDataPendingBuyOut(applicableTargetPeriods);
         verify(buyOutSurplusExclusionRepository).findAllAccountIds();
@@ -369,7 +358,7 @@ class BuyOutSurplusQueryServiceTest {
         
         FileInfoDTO fileInfoDTO = FileInfoDTO.builder().build();
         
-        when(fileDocumentStorageService.getFileInfoDTO("uuid")).thenReturn(fileInfoDTO);
+        when(fileDocumentService.getFileInfoDTO("uuid")).thenReturn(fileInfoDTO);
         when(buyOutSurplusTransactionRepository.findBuyOutSurplusTransactionById(1L)).thenReturn(Optional.of(entity));
         when(performanceDataQueryService.getPerformanceDataBuyOutSurplusTransactionDetails(1L)).thenReturn(performanceDataDetailsInfoDTO);
         

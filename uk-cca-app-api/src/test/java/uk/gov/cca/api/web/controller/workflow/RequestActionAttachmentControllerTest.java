@@ -35,7 +35,7 @@ import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.token.FileToken;
-import uk.gov.netz.api.workflow.request.application.attachment.requestaction.RequestActionFileAttachmentService;
+import uk.gov.netz.api.workflow.request.application.attachment.requestaction.RequestActionAttachmentService;
 
 @ExtendWith(MockitoExtension.class)
 class RequestActionAttachmentControllerTest {
@@ -48,7 +48,7 @@ class RequestActionAttachmentControllerTest {
     private RequestActionAttachmentController controller;
 
     @Mock
-    private RequestActionFileAttachmentService requestActionFileAttachmentService;
+    private RequestActionAttachmentService requestActionAttachmentService;
 
     @Mock
     private AppSecurityComponent appSecurityComponent;
@@ -85,7 +85,7 @@ class RequestActionAttachmentControllerTest {
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(requestActionFileAttachmentService.generateGetFileAttachmentToken(requestActionId, attachmentUuid)).thenReturn(expectedToken);
+        when(requestActionAttachmentService.generateGetFileAttachmentToken(requestActionId, attachmentUuid)).thenReturn(expectedToken);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get(BASE_PATH + "/" + requestActionId)
@@ -94,7 +94,7 @@ class RequestActionAttachmentControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.token").value(expectedToken.getToken()));
 
-        verify(requestActionFileAttachmentService, times(1)).generateGetFileAttachmentToken(requestActionId, attachmentUuid);
+        verify(requestActionAttachmentService, times(1)).generateGetFileAttachmentToken(requestActionId, attachmentUuid);
     }
 
     @Test
@@ -113,6 +113,6 @@ class RequestActionAttachmentControllerTest {
             .param("attachmentUuid", attachmentUuid.toString()))
             .andExpect(status().isForbidden());
 
-        verifyNoInteractions(requestActionFileAttachmentService);
+        verifyNoInteractions(requestActionAttachmentService);
     }
 }

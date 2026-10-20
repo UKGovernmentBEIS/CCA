@@ -238,7 +238,7 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
             public RequestCreateValidationResult validateAction(Long sectorId) {
                 return RequestCreateValidationResult.builder()
                         .valid(true)
-                        .available(false)
+                        .isAvailable(false)
                         .build();
             }
         };
@@ -280,7 +280,7 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
                 .extracting(List::getFirst)
                 .contains(RequestCreateValidationResult.builder()
                         .valid(true)
-                        .available(false)
+                        .isAvailable(false)
                         .build());
         verify(facilityDataQueryService, times(1)).exclusiveLockFacility(1L);
     }

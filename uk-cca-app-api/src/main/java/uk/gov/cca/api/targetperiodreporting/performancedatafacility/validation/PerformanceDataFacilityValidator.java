@@ -162,36 +162,4 @@ public class PerformanceDataFacilityValidator {
                 .violations(violations)
                 .build();
     }
-
-    public BusinessValidationResult validateFacilityProductsBeforeFacilityBaseYear(FacilityDTO facility, TargetPeriodDetailsDTO targetPeriod, LocalDate submissionDate) {
-        final TargetPeriodYear targetPeriodYear = PerformanceDataFacilityUtil.getTargetPeriodYearBySubmissionDate(targetPeriod, submissionDate)
-                .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
-
-        return validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear);
-    }
-
-    public BusinessValidationResult validateFacilityProductsBeforeFacilityBaseYear(FacilityDTO facility, TargetPeriodYear  targetPeriodYear) {
-        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = performanceDataFacilityReferenceDataService
-                .getFacilityOriginalBaselineAndTargets(facility.getAccountId(), facility.getFacilityBusinessId(), targetPeriodYear.getTargetYear());
-
-        return validateFacilityProductsBeforeFacilityBaseYear(baselineAndTargets);
-    }
-
-    public BusinessValidationResult validateFacilityProductsBeforeFacilityBaseYear(PerformanceDataFacilityBaselineAndTargets baselineAndTargets) {
-        final List<ProductVariableEnergyConsumptionData> products = baselineAndTargets.getVariableEnergyConsumptionDataByProduct();
-        final VariableEnergyDepictionType energyType = baselineAndTargets.getVariableEnergyType();
-        final Year facilityBaselineYear = baselineAndTargets.getBaselineYear();
-
-        List<PerformanceDataFacilityViolation> violations = new ArrayList<>();
-
-        if(VariableEnergyDepictionType.BY_PRODUCT == energyType
-                && products.stream().anyMatch(p -> p.getBaselineYear().getValue() < facilityBaselineYear.getValue())) {
-                violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_PRODUCT_EXIST_BEFORE_FACILITY_BASE_YEAR));
-        }
-
-        return BusinessValidationResult.builder()
-                .valid(violations.isEmpty())
-                .violations(violations)
-                .build();
-    }
 }

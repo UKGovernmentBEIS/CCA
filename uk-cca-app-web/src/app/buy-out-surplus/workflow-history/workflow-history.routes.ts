@@ -2,14 +2,14 @@ import { Routes } from '@angular/router';
 
 import { NOTES_ROUTES } from '@shared/components';
 
-import { WorkflowHistoryDetailsResolver, WorkflowHistoryDetailsResponse } from './workflow-history.resolver';
+import { WorkflowHistoryDetailsResolver } from './workflow-history.resolver';
 
 export const BUY_OUT_SURPLUS_WORKFLOW_HISTORY_ROUTES: Routes = [
   {
     path: ':workflowId',
     resolve: { details: WorkflowHistoryDetailsResolver },
     data: {
-      breadcrumb: ({ details }: { details: WorkflowHistoryDetailsResponse }) => ({
+      breadcrumb: ({ details }) => ({
         text: `${details.workflowDetails.id}`,
         link: `/buyout-surplus/workflow-history/${details.workflowDetails.id}`,
       }),
@@ -17,7 +17,6 @@ export const BUY_OUT_SURPLUS_WORKFLOW_HISTORY_ROUTES: Routes = [
     children: [
       {
         path: '',
-        title: 'Workflow history',
         loadComponent: () => import('./workflow-history.component').then((c) => c.WorkflowHistoryComponent),
       },
       {

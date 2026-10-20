@@ -2,6 +2,8 @@ import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors, Validat
 
 import { catchError, map, Observable, of } from 'rxjs';
 
+import { SchemeVersions } from '@shared/types';
+
 import { Facility, FacilityService, FacilityTargetComposition } from 'cca-api';
 
 import { FacilityBaselineDataFormModel, FacilityBaselineEnergyConsumptionFormModel } from './types';
@@ -14,7 +16,7 @@ export function facilityExistenceValidator(facilityService: FacilityService): As
     if (!facilityId || control.errors) return of(null);
 
     return facilityService.getActiveFacilityParticipatingSchemeVersions(facilityId).pipe(
-      map((schemeVersions) => {
+      map((schemeVersions: SchemeVersions) => {
         if (schemeVersions && schemeVersions.length > 0) return null;
         return { facilityIdNotExists: 'Enter the facility ID of an existing facility' };
       }),
@@ -62,8 +64,7 @@ export function facilityBaselineDataConditionallyRequiredFieldsValidator(
   agreementCompositionType: FacilityTargetComposition['agreementCompositionType'],
   isCCA3: boolean,
 ): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const group = control as FacilityBaselineDataFormModel;
+  return (group: FacilityBaselineDataFormModel): ValidationErrors | null => {
     if (!group || !(group instanceof FormGroup)) return null;
 
     const isTwelveMonths = group.controls.isTwelveMonths.value;
@@ -78,10 +79,7 @@ export function facilityBaselineDataConditionallyRequiredFieldsValidator(
 }
 
 export function facilityBaselineEnergyProductsValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const group = control as FacilityBaselineEnergyConsumptionFormModel;
-    if (!group || !(group instanceof FormGroup)) return null;
-
+  return (group: FacilityBaselineEnergyConsumptionFormModel): ValidationErrors | null => {
     const requiresProducts =
       group.controls.hasVariableEnergy.value === true && group.controls.variableEnergyType.value === 'BY_PRODUCT';
 

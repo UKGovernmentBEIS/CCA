@@ -5,7 +5,6 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 export const ADMIN_TERMINATION_FINAL_DECISION_ROUTES: Routes = [
   {
     path: '',
-    title: 'Admin termination final decision',
     children: [
       {
         path: 'final-decision-reason',

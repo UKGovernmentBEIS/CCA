@@ -5,7 +5,6 @@ import { CLOSE_TASK_ROUTES, isEditableGuard } from '@requests/common';
 export const NOTICE_OF_INTENT_ROUTES: Routes = [
   {
     path: '',
-    title: 'Upload notice of intent',
     children: [
       {
         path: 'upload-notice-of-intent',

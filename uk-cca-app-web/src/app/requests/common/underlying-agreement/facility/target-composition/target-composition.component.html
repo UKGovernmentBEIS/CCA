@@ -2,7 +2,7 @@
   <cca-wizard-step
     (formSubmit)="onSubmit()"
     [formGroup]="form"
-    [caption]="$safeNavigationMigration(facility?.facilityDetails?.name)"
+    [caption]="facility?.facilityDetails?.name"
     heading="Target composition"
     data-testid="target-composition-form"
   >

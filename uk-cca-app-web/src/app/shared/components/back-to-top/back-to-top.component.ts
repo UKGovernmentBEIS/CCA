@@ -1,7 +1,5 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
-import { focusMainContent } from '@shared/utils';
 
 @Component({
   selector: 'cca-back-to-top',
@@ -25,14 +23,8 @@ import { focusMainContent } from '@shared/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackToTopComponent {
-  private readonly document = inject(DOCUMENT);
-
   scrollToTop() {
-    // Move keyboard focus first: with `preventScroll` the focus cannot disturb
-    // the smooth scroll, and the focused link no longer scrolls out of view
-    // (ARIA 1.2 section 4.3.1).
-    focusMainContent(this.document);
-    this.document.defaultView?.scroll({
+    window.scroll({
       top: 0,
       left: 0,
       behavior: 'smooth',

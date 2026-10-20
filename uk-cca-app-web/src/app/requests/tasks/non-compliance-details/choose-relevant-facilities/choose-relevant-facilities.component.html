@@ -18,9 +18,9 @@
       <table class="govuk-table non-compliance-items-table">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Row number</span></th>
-            <th scope="col" class="govuk-table__header">Facilities</th>
-            <th scope="col" class="govuk-table__header">Actions</th>
+            <th class="govuk-table__header"></th>
+            <th class="govuk-table__header">Facilities</th>
+            <th class="govuk-table__header">Actions</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body" formArrayName="facilities">
@@ -29,31 +29,25 @@
               <td class="govuk-table__cell non-compliance-items-table__index-cell">{{ i + 1 }}.</td>
               <td class="govuk-table__cell">
                 @if (fac.value.isHistorical) {
-                  <div
-                    formControlName="facilityBusinessId"
-                    govuk-text-input
-                    label="Facility name or ID"
-                    [labelHidden]="true"
-                    [widthClass]="'govuk-!-width-full'"
-                  ></div>
+                  <div formControlName="facilityBusinessId" govuk-text-input [widthClass]="'govuk-!-width-full'"></div>
                 } @else {
                   <cca-combobox
                     formControlName="facilityBusinessId"
                     [options]="getOptionsForRow(i)"
                     [widthClass]="'govuk-!-width-full'"
-                    label="Facility name or ID"
-                    [labelHidden]="true"
                   />
                 }
               </td>
               <td class="govuk-table__cell non-compliance-items-table__action-cell">
-                <button
-                  type="button"
+                <a
                   class="govuk-link"
-                  (click)="onDeleteItem(fac.controls.facilityBusinessId.value, fac.controls.isHistorical.value, i)"
+                  href="#"
+                  (click)="
+                    onDeleteItem(fac.controls.facilityBusinessId.value, fac.controls.isHistorical.value, i);
+                    $event.preventDefault()
+                  "
+                  >Delete</a
                 >
-                  Delete
-                </button>
               </td>
             </tr>
           }

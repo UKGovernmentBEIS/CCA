@@ -5,7 +5,6 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 export const WITHDRAW_ADMIN_TERMINATION_ROUTES: Routes = [
   {
     path: '',
-    title: 'Withdraw admin termination',
     children: [
       {
         path: 'reason-for-withdraw-admin-termination',

@@ -13,7 +13,6 @@ import {
   CheckboxComponent,
   CheckboxesComponent,
   GovukValidators,
-  LegendContentDirective,
 } from '@netz/govuk-components';
 import { AuthService, LatestTermsStore } from '@shared/services';
 
@@ -27,7 +26,6 @@ import { TermsAndConditionsService } from 'cca-api';
     ReactiveFormsModule,
     CheckboxComponent,
     CheckboxesComponent,
-    LegendContentDirective,
     PendingButtonDirective,
     ButtonDirective,
     AccordionComponent,

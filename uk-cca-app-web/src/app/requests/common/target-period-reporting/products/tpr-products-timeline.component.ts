@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-
-import { SplitByProductTableComponent } from '../../underlying-agreement/split-by-product-table/split-by-product-table.component';
-import { tprFormActionQuery } from '../+state/tpr-form-timeline.selectors';
+import { SplitByProductTableComponent, tprFormActionQuery } from '@requests/common';
 
 @Component({
   selector: 'cca-tpr-products-timeline',

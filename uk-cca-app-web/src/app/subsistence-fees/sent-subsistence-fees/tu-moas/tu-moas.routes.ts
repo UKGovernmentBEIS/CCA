@@ -1,15 +1,13 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { SubsistenceFeesRunDetailsDTO } from 'cca-api';
-
 import { TuMoaDetailsStore } from './tu-moa-details/tu-moa-details.store';
 
 export const TU_MOAS_ROUTES: Routes = [
   {
     path: ':moaId',
     data: {
-      breadcrumb: ({ subFeesDetails }: { subFeesDetails: SubsistenceFeesRunDetailsDTO }) => ({
+      breadcrumb: ({ subFeesDetails }) => ({
         text: `${subFeesDetails.paymentRequestId}: Target unit MoAs`,
         link: `/subsistence-fees/sent-subsistence-fees/${subFeesDetails.runId}`,
         fragment: 'tu-moas',
@@ -36,7 +34,6 @@ export const TU_MOAS_ROUTES: Routes = [
       },
       {
         path: 'file-download/:fileType/:uuid',
-        title: 'Your download has started',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
     ],

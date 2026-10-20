@@ -4,15 +4,13 @@
       <dl govuk-summary-list [attr.data-testid]="'companies-house-target-unit-details'">
         <div govukSummaryListRow>
           <dd govukSummaryListRowValue>
-            <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.name))">{{
-              companiesHouseState().details?.name
-            }}</span>
+            <span [class]="getDiffClass(fieldDiffs()?.name)">{{ companiesHouseState().details?.name }}</span>
           </dd>
         </div>
 
         <div govukSummaryListRow>
           <dd govukSummaryListRowValue>
-            <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.operatorType))">{{
+            <span [class]="getDiffClass(fieldDiffs()?.operatorType)">{{
               companiesHouseState().details?.operatorType
             }}</span>
           </dd>
@@ -20,7 +18,7 @@
 
         <div govukSummaryListRow>
           <dd govukSummaryListRowValue>
-            <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.companyRegistrationNumber))">{{
+            <span [class]="getDiffClass(fieldDiffs()?.companyRegistrationNumber)">{{
               companiesHouseState().details?.registrationNumber
             }}</span>
           </dd>
@@ -40,11 +38,7 @@
     <cca-utility-panel heading="Companies House details" [isFullBackground]="true">
       <dl govuk-summary-list [attr.data-testid]="'companies-house-operator-address'">
         <div govukSummaryListRow>
-          <dd
-            govukSummaryListRowValue
-            class="pre-line"
-            [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.address))"
-          >
+          <dd govukSummaryListRowValue class="pre-line" [class]="getDiffClass(fieldDiffs()?.address)">
             {{ companiesHouseState().address }}
           </dd>
         </div>

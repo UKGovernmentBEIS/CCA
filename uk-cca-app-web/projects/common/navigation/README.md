@@ -48,13 +48,8 @@ The url of the link is determined by the route tree. This can also be ovewritten
 The `breadcrumb` property found in each route can be one of the following:
 
 - `string`: This is for when the route's breadcrumb is a static string e.g. In this case, the breadcrumb link is generated from code.
-- `object`: This is for when you need additional properties. The object has a `text` property, plus optional `link`, `from` and `fragment`.
-  - `link`: explicit link target. Takes precedence over `from`.
-  - `from`: the route config `path` of an ancestor (e.g. `:facilityId`). Use it instead of `link` when the crumb
-    should point at a parent route: the link resolves to that ancestor's URL, so the same route can be mounted under
-    different URL trees (e.g. `/target-unit-accounts/…` and `/sectors/…/target-units/…`) and still link to its parent.
-  - `fragment`: fragment appended to the resolved link.
-- `function`: This is for when the breacrumb properties are dynamic. The function takes as input the route resolve data and can return either a string or an object with `text`, `link` or `from`, and possibly `fragment`. Returning `false` or `null` hides the breadcrumb.
+- `object`: This is for when you need additional properties like a fragment, a custom link, or query params.
+- `function`: This is for when the breacrumb properties are dynamic. The function takes as input the route resolve data and can return either a string or an object with `text`, `link`, and possibly `fragment` and `queryParams` properties.
 - `false`: You can hide a breadcrumb by passing false as a value.
 
 ### Examples
@@ -79,15 +74,7 @@ export const ROUTES: Routes = [
               {
                 path: '',
                 component: HeroComponent,
-              },
-              {
-                path: 'reports/:reportId',
-                component: ReportDetailsComponent,
-                data: {
-                  // links to the nearest `:id` ancestor route, whatever tree this route was entered through
-                  breadcrumb: { text: 'Report details', from: ':id', fragment: 'reports' }
-                },
-              },
+              }
             ]
           },
         ]

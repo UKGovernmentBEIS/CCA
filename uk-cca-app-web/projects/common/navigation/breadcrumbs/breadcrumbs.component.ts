@@ -5,7 +5,6 @@ import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink } from '@angu
 import { filter } from 'rxjs';
 
 import { BreadcrumbService, Link } from './breadcrumb.service';
-import { createLink } from './breadcrumb-link';
 
 @Component({
   selector: 'netz-breadcrumbs',
@@ -76,11 +75,6 @@ export class BreadcrumbsComponent {
 
       const breadcrumb = createLink(snapshot);
 
-      if (breadcrumb === null) {
-        snapshot = snapshot.firstChild;
-        continue;
-      }
-
       // Angular router transfers the data route property from the parent route to the child route.
       // That's why we need to determine if a breadcrumb with the same text already exists
       if (!hasText(routeData, breadcrumb.text)) {
@@ -111,6 +105,38 @@ function removeSameRouteBreadcrumb(breadcrumbData: Link[], path: string): Link[]
 
   const isDashboardPage = path === '/dashboard' && bd.length === 1 && bd[0].link === '/';
   return isDashboardPage ? [] : bd;
+}
+
+/**
+ * Creates a breadcrumb link from the current route snapshot
+ * @param snapshot
+ * @returns
+ */
+function createLink(snapshot: ActivatedRouteSnapshot): Link {
+  let breadcrumbRouteData = snapshot.data.breadcrumb;
+  let text = '';
+  let fragment: string | undefined;
+  let link = snapshot.pathFromRoot
+    .map((u) => u.url.join('/'))
+    .filter((u) => !!u)
+    .join('/');
+
+  link = `/${link}`;
+
+  // if the breadcrumb data is a function, we need to call it to get the breadcrumb data
+  // before reconciliating the text, link and fragment
+  if (typeof breadcrumbRouteData === 'function') breadcrumbRouteData = breadcrumbRouteData(snapshot.data);
+
+  if (typeof breadcrumbRouteData === 'string') {
+    text = breadcrumbRouteData;
+  } else if (breadcrumbRouteData && typeof breadcrumbRouteData === 'object' && 'text' in breadcrumbRouteData) {
+    text = breadcrumbRouteData.text;
+    fragment = breadcrumbRouteData.fragment;
+
+    if (breadcrumbRouteData.link) link = breadcrumbRouteData.link;
+  }
+
+  return { text, link, fragment };
 }
 
 /**

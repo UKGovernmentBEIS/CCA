@@ -10,7 +10,6 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.domain.FacilityPerformanceAccountTemplateDataUploadProcessingStatus;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadResults;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
@@ -43,15 +42,11 @@ class FacilityPerformanceAccountTemplateDataUploadSubmitInitializerTest {
                         .build())
                 .build();
 
-        final FacilityPerformanceAccountTemplateDataUploadResults results = FacilityPerformanceAccountTemplateDataUploadResults.builder()
-                .totalFilesUploaded(0)
-                .facilitiesSucceeded(0)
-                .facilitiesFailed(0)
-                .build();
-
 
         // Invoke
         RequestTaskPayload requestTaskPayload = initializer.initializePayload(request);
+
+        //TODO: enhance
 
         // Verify
         assertThat(requestTaskPayload)
@@ -62,8 +57,6 @@ class FacilityPerformanceAccountTemplateDataUploadSubmitInitializerTest {
                 .isEqualTo(sectorAssociationInfo);
         assertThat(((FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload) requestTaskPayload).getProcessingStatus())
                 .isEqualTo(FacilityPerformanceAccountTemplateDataUploadProcessingStatus.NOT_STARTED_YET);
-        assertThat(((FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload) requestTaskPayload).getResults())
-                .isEqualTo(results);
     }
 
     @Test

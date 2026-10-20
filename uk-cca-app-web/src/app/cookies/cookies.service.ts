@@ -70,15 +70,14 @@ export class CookiesService {
     return navigator.cookieEnabled;
   }
 
-  setCookie(name: string, value: string, options: Record<string, unknown> = {}) {
-    const cookieOptions: Record<string, unknown> = {
+  setCookie(name, value, options) {
+    const cookieOptions = {
       path: '/',
       ...options,
     };
 
-    const expires = cookieOptions.expires;
-    if (expires instanceof Date) {
-      cookieOptions.expires = expires.toUTCString();
+    if (cookieOptions.expires instanceof Date) {
+      cookieOptions.expires = cookieOptions.expires.toUTCString();
     }
 
     let updatedCookie = name + '=' + value;
@@ -87,7 +86,7 @@ export class CookiesService {
       updatedCookie += '; ' + option;
       const optionValue = cookieOptions[option];
 
-      if (optionValue !== true) updatedCookie += '=' + String(optionValue);
+      if (optionValue !== true) updatedCookie += '=' + optionValue;
     });
 
     document.cookie = updatedCookie;

@@ -238,17 +238,16 @@ class AccountNoteControllerTest {
         final MockMultipartFile
             noteFile = new MockMultipartFile(noteName, noteOriginalFileName, noteContentType, noteContent);
         final FileDTO fileDTO = FileDTO.builder()
-                .fileName(noteOriginalFileName)
-                .fileType(noteContentType)
-                .fileContent(noteContent)
-                .fileSize(noteFile.getSize())
-                .createdBy("id")
-                .build();
+            .fileName(noteOriginalFileName)
+            .fileType(noteContentType)
+            .fileContent(noteContent)
+            .fileSize(noteFile.getSize())
+            .build();
         final UUID noteUuid = UUID.randomUUID();
         final Long accountId = 1L;
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
-        when(fileNoteService.uploadAccountFile(fileDTO, accountId))
+        when(fileNoteService.uploadAccountFile(authUser.getUserId(), fileDTO, accountId))
             .thenReturn(FileUuidDTO.builder().uuid(noteUuid.toString()).build());
 
         mockMvc.perform(

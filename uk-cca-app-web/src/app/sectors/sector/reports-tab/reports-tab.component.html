@@ -23,18 +23,6 @@
       </div>
     }
 
-    @if (reportTypeValue() === 'PAT') {
-      <div class="govuk-grid-column-one-quarter">
-        <div
-          govuk-select
-          widthClass="govuk-!-width-full"
-          [options]="targetPeriodYearOptions"
-          formControlName="targetPeriodYear"
-          label="Year"
-        ></div>
-      </div>
-    }
-
     @if (showTargetPeriodReportType()) {
       <div class="govuk-grid-column-one-quarter">
         <div
@@ -59,7 +47,7 @@
   <cca-facility-performance-data-report-table />
 }
 
-@if (showPatReport()) {
+@if (reportTypeValue() === 'PAT') {
   <cca-pat-report-filters />
   <cca-pat-report-table />
 }

@@ -3,7 +3,6 @@ package uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.com
 import lombok.experimental.UtilityClass;
 
 import uk.gov.netz.api.common.domain.ResourceFile;
-import uk.gov.netz.api.files.common.FileConstants;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.utils.ResourceFileUtils;
 
@@ -26,7 +25,6 @@ public class Cca3ExistingFacilitiesMigrationUtil {
                 .fileType(placeHolderFile.getFileType())
                 .fileContent(placeHolderFile.getFileContent())
                 .fileSize(placeHolderFile.getFileSize())
-                .createdBy(FileConstants.SYSTEM_USER)
                 .build();
     }
 }

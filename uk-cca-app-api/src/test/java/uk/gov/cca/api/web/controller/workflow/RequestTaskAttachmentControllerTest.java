@@ -1,6 +1,6 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,7 +44,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileUuidDTO;
 import uk.gov.netz.api.token.FileToken;
 import uk.gov.netz.api.workflow.request.application.attachment.task.RequestTaskAttachmentActionProcessDTO;
-import uk.gov.netz.api.workflow.request.application.attachment.task.RequestTaskFileAttachmentService;
+import uk.gov.netz.api.workflow.request.application.attachment.task.RequestTaskAttachmentService;
 import uk.gov.netz.api.workflow.request.core.domain.constants.RequestTaskActionTypes;
 import uk.gov.netz.api.workflow.request.flow.common.service.RequestTaskAttachmentUploadService;
 
@@ -68,7 +68,7 @@ class RequestTaskAttachmentControllerTest {
     private RequestTaskAttachmentUploadService requestTaskAttachmentUploadService;
 
     @Mock
-    private RequestTaskFileAttachmentService requestTaskFileAttachmentService;
+    private RequestTaskAttachmentService requestTaskAttachmentService;
 
     private ObjectMapper mapper;
 
@@ -111,12 +111,11 @@ class RequestTaskAttachmentControllerTest {
         MockMultipartFile requestTaskActionDetails = new MockMultipartFile("requestTaskActionDetails", "", "application/json",
                 mapper.writeValueAsString(requestTaskAttachmentActionProcessDTO).getBytes());
         FileDTO fileDTO = FileDTO.builder()
-                .fileName(attachmentOriginalFileName)
-                .fileType(attachmentContentType)
-                .fileContent(attachmentContent)
-                .fileSize(attachmentFile.getSize())
-                .createdBy("id")
-                .build();
+            .fileName(attachmentOriginalFileName)
+            .fileType(attachmentContentType)
+            .fileContent(attachmentContent)
+            .fileSize(attachmentFile.getSize())
+            .build();
 
         UUID attachmentUuid = UUID.randomUUID();
 
@@ -176,7 +175,7 @@ class RequestTaskAttachmentControllerTest {
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(requestTaskFileAttachmentService.generateGetFileAttachmentToken(requestTaskId, attachmentUuid)).thenReturn(expectedToken);
+        when(requestTaskAttachmentService.generateGetFileAttachmentToken(requestTaskId, attachmentUuid)).thenReturn(expectedToken);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get(BASE_PATH + "/" + requestTaskId)
@@ -185,7 +184,7 @@ class RequestTaskAttachmentControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.token").value(expectedToken.getToken()));
 
-        verify(requestTaskFileAttachmentService, times(1)).generateGetFileAttachmentToken(requestTaskId, attachmentUuid);
+        verify(requestTaskAttachmentService, times(1)).generateGetFileAttachmentToken(requestTaskId, attachmentUuid);
     }
 
     @Test
@@ -204,7 +203,7 @@ class RequestTaskAttachmentControllerTest {
             .param("attachmentUuid", attachmentUuid.toString()))
             .andExpect(status().isForbidden());
 
-        verifyNoInteractions(requestTaskFileAttachmentService);
+        verifyNoInteractions(requestTaskAttachmentService);
     }
 
     @Test
@@ -218,7 +217,7 @@ class RequestTaskAttachmentControllerTest {
                 MockMvcRequestBuilders.multipart(BASE_PATH + "/upload")
             )
             .andExpect(
-                result -> assertInstanceOf(MissingServletRequestPartException.class, result.getResolvedException()))
+                result -> assertTrue(result.getResolvedException() instanceof MissingServletRequestPartException))
             .andExpect(status().isBadRequest());
     }
 

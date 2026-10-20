@@ -9,7 +9,6 @@ import { ButtonDirective } from '@netz/govuk-components';
 import {
   areEntitiesIdentical,
   BaselineAndTargetPeriodsSubtasks,
-  BaselineAndTargetsSummaryMetadata,
   TaskItemStatus,
   TasksApiService,
   toBaselineAndTargetsSummaryDataWithDecision,
@@ -80,7 +79,7 @@ export class TP6CheckYourAnswersComponent {
     underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_PERIOD6_DETAILS'),
   )();
 
-  private readonly summaryOriginalMetadata: BaselineAndTargetsSummaryMetadata = {
+  private readonly summaryOriginalMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: generateDownloadUrl(this.taskId),
@@ -88,7 +87,7 @@ export class TP6CheckYourAnswersComponent {
     attachments: { submit: this.originalSubmitAttachments, review: this.reviewAttachments },
   };
 
-  private readonly summaryCurrentMetadata: BaselineAndTargetsSummaryMetadata = {
+  private readonly summaryCurrentMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: generateDownloadUrl(this.taskId),
