@@ -43,10 +43,43 @@ describe('TableComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it.each([false, true])('aligns declared numeric strings and their header, including row headers (%s)', (isHeader) => {
+    componentRef.setInput('columns', [
+      { header: 'ID', field: 'id', primary: true },
+      { header: 'Amount', field: 'amount', isNumeric: true, isHeader },
+    ]);
+    const amounts = ['0.00', '120.50', '999,999,999,999,999,999.99', '', undefined];
+    componentRef.setInput(
+      'data',
+      amounts.map((amount) => ({ id: '00123', amount, isSelectable: true })),
+    );
+    fixture.detectChanges();
+
+    const root: HTMLElement = fixture.nativeElement;
+    expect(root.querySelector('thead th:last-child').classList).toContain('govuk-table__header--numeric');
+    const cells = Array.from(root.querySelectorAll('tbody tr > :last-child'));
+    expect(cells.map((cell) => cell.textContent.trim())).toEqual(amounts.map((amount) => amount ?? ''));
+    for (const cell of cells) {
+      expect(cell.classList).toContain(isHeader ? 'govuk-table__header--numeric' : 'govuk-table__cell--numeric');
+    }
+    expect(root.querySelector('tbody td:nth-child(2)').classList).not.toContain('govuk-table__cell--numeric');
+  });
+
   describe('Checkbox visibility', () => {
     it('should display checkboxes in selectable rows', () => {
       const checkboxes = fixture.debugElement.queryAll(By.css('tbody input[type="checkbox"]'));
       expect(checkboxes.length).toBe(2); // Only selectable rows should have checkboxes
+    });
+
+    it('should not check the select all checkbox when the page has no selectable rows', () => {
+      componentRef.setInput(
+        'data',
+        testData.map((row) => ({ ...row, isSelectable: false })),
+      );
+      fixture.detectChanges();
+
+      const selectAll = fixture.debugElement.query(By.css('thead input[type="checkbox"]'));
+      expect(selectAll.nativeElement.checked).toBe(false);
     });
 
     it('should not display checkbox for row with isSelectable=false', () => {

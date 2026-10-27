@@ -3,8 +3,6 @@ import { Routes } from '@angular/router';
 import { AuthorisationAdditionalEvidenceWizardStep } from '@requests/common';
 
 import { authorisationAdditionalEvidenceRedirectGuard } from './authorisation-additional-evidence.guard';
-import { AuthorizationAdditionalEvidenceDecisionComponent } from './decision/authorization-additional-evidence-decision.component';
-import { ProvideEvidenceComponent } from './provide-evidence/provide-evidence.component';
 
 export const AUTHORISATION_ADDITIONAL_EVIDENCE_ROUTES: Routes = [
   {
@@ -17,29 +15,33 @@ export const AUTHORISATION_ADDITIONAL_EVIDENCE_ROUTES: Routes = [
         children: [],
       },
       {
-        path: 'decision',
         title: 'Authorisation and additional evidence',
+        path: 'decision',
+        loadComponent: () =>
+          import('./decision/authorization-additional-evidence-decision.component').then(
+            (c) => c.AuthorizationAdditionalEvidenceDecisionComponent,
+          ),
         data: { backlink: '../../../', breadcrumb: false },
-        component: AuthorizationAdditionalEvidenceDecisionComponent,
       },
       {
-        path: 'summary',
         title: 'Summary',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'summary',
         loadComponent: () => import('./summary/authorisation-additional-evidence-summary.component'),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: 'check-your-answers',
         title: 'Check your answers',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'check-your-answers',
         loadComponent: () =>
           import('./check-your-answers/authorisation-additional-evidence-check-your-answers.component'),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: AuthorisationAdditionalEvidenceWizardStep.PROVIDE_EVIDENCE,
         title: 'Provide additional evidence',
+        path: AuthorisationAdditionalEvidenceWizardStep.PROVIDE_EVIDENCE,
+        loadComponent: () =>
+          import('./provide-evidence/provide-evidence.component').then((c) => c.ProvideEvidenceComponent),
         data: { backlink: '../../../', breadcrumb: false },
-        component: ProvideEvidenceComponent,
       },
       {
         path: '**',

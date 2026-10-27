@@ -7,15 +7,16 @@ import uk.gov.cca.api.common.validation.FunctionalValidation;
 import uk.gov.cca.api.common.validation.FunctionalValidator;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityThroughputDetails;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.VariableEnergyDepictionType;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @UtilityClass
 public class PerformanceDataFacilityValidationHelper {
-
-    public final String FACILITY_ERROR_MESSAGE = "%s [facility: %s] %s";
 
     public FunctionalValidator<PerformanceDataFacilityThroughputDetails> validate(Predicate<PerformanceDataFacilityThroughputDetails> predicate, String errorMessage) {
         return FunctionalValidation.from(predicate, errorMessage);
@@ -40,6 +41,14 @@ public class PerformanceDataFacilityValidationHelper {
     public FunctionalValidator<PerformanceDataFacilityInputEnergyFuelDetails> validateNotSRM(String errorMessage) {
         return FunctionalValidation.from(fuels ->
                         ObjectUtils.isEmpty(fuels.getElectricitySuppliedFromCHP()) && ObjectUtils.isEmpty(fuels.getThroughputAdjustmentFactor()),
+                errorMessage);
+    }
+
+    public FunctionalValidator<PerformanceDataFacilityCalculationParameters> validateZeroFuels(String errorMessage) {
+        return FunctionalValidation.from(params ->
+                        params.getVariableEnergyType() != VariableEnergyDepictionType.BY_PRODUCT
+                        && params.getTotalFixedEnergy().compareTo(BigDecimal.ZERO) == 0
+                        && Optional.ofNullable(params.getBaselineVariableEnergy()).orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) == 0,
                 errorMessage);
     }
 }

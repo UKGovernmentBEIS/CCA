@@ -1,0 +1,48 @@
+<h2 class="govuk-heading-m">Facilities</h2>
+
+<cca-utility-panel heading="Filters">
+  <form [formGroup]="form" (ngSubmit)="onApplyFilters()">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div govuk-text-input label="Facility ID or site name" formControlName="search"></div>
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        <div govuk-select label="Target period" [options]="targetPeriodOptions()" formControlName="targetPeriod"></div>
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        <div govuk-select label="TPR Result" [options]="resultOptions" formControlName="result"></div>
+      </div>
+    </div>
+    <div class="govuk-button-group">
+      <button govukButton type="submit">Apply</button>
+      <button govukSecondaryButton type="button" (click)="onClearFilters()">Clear</button>
+    </div>
+  </form>
+</cca-utility-panel>
+
+<govuk-table [columns]="columns" [data]="rows()">
+  <ng-template let-column="column" let-row="row">
+    @if (column.field === 'siteName' && facilityDetailsAvailable() && row.detailsAvailable) {
+      <a
+        class="govuk-link"
+        [routerLink]="['./cca3-buyout-surplus/facility', row.facilityBusinessId, row.targetPeriodId]"
+        queryParamsHandling="preserve"
+        >{{ row.siteName }}</a
+      >
+    } @else {
+      {{ row[column.field] }}
+    }
+  </ng-template>
+</govuk-table>
+
+@if (page().totalItems) {
+  <cca-pagination
+    [count]="page().totalItems"
+    [currentPage]="page().currentPage"
+    [pageSize]="page().pageSize"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  />
+} @else {
+  <p class="govuk-body" role="status">No results match the filter criteria.</p>
+}

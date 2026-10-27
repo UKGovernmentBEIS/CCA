@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { GovukTableColumn, TableComponent, TagComponent } from '@netz/govuk-components';
@@ -26,7 +26,6 @@ import { AccountSearchResultInfoDTO } from 'cca-api';
     </div>
   `,
   imports: [TagComponent, TableComponent, StatusPipe, RouterLink, StatusColorPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitAccountsListComponent {
   protected readonly accounts = input<AccountSearchResultInfoDTO[]>();

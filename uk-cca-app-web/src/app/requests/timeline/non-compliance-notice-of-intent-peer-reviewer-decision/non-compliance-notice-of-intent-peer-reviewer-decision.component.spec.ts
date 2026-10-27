@@ -48,7 +48,7 @@ describe('NonComplianceNoticeOfIntentPeerReviewerDecisionComponent', () => {
     expect(getSummaryListData(fixture.nativeElement)).toEqual([
       [
         ['Peer review decision', 'Supporting notes', 'Uploaded files'],
-        ['I agree with the determination', 'Detailed supporting notes', 'peer-review-file.pdf'],
+        ['I agree with the determination', 'Detailed supporting notes', 'peer-review-file.pdf (opens in a new tab)'],
       ],
     ]);
   });

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { NotificationBannerComponent } from '@netz/govuk-components';
 
@@ -11,6 +11,5 @@ import { NotificationBannerComponent } from '@netz/govuk-components';
     </govuk-notification-banner>
   `,
   imports: [NotificationBannerComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadProcessingComponent {}

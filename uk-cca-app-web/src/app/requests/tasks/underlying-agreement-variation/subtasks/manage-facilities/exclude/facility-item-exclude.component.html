@@ -1,7 +1,7 @@
 <cca-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
-  [caption]="'Exclude ' + facility()?.facilityDetails?.name + ' facility'"
+  [caption]="'Exclude ' + $safeNavigationMigration(facility()?.facilityDetails?.name) + ' facility'"
   heading="Set exclusion date"
   data-testid="exclude-facility-form"
   submitText="Save and continue"
@@ -9,6 +9,7 @@
   <div
     formControlName="excludedDate"
     govuk-date-input
+    label="Exclusion date"
     hint="Enter the date that the facility was excluded from your agreement"
   ></div>
 </cca-wizard-step>

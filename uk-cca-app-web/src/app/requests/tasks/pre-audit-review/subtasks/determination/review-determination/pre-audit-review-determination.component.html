@@ -15,12 +15,13 @@
       class="govuk-!-margin-bottom-9 govuk-!-margin-top-9"
     ></div>
 
-    <p class="govuk-label govuk-label--m">Is a more detailed audit of this facility needed?</p>
     <div
       class="govuk-!-margin-bottom-9"
       formControlName="furtherAuditNeeded"
       govuk-radio
       [isInline]="true"
+      legend="Is a more detailed audit of this facility needed?"
+      legendSize="medium"
       hint="Further audit indicates that additional investigation is required. This may involve scheduling an interview or an on-site visit."
     >
       <govuk-radio-option [value]="true" [label]="'Yes'" />

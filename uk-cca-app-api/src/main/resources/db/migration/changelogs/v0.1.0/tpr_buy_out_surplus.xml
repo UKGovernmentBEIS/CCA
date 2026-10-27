@@ -12,4 +12,96 @@
             INSERT INTO tpr_buy_out_surplus_transaction_identifier (id, target_period_type, transaction_id) VALUES (1, 'TP6', 0);
         </sql>
     </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_CCA_3_TPR_BUY_OUT_TRANSACTION_IDENTIFIER_TABLE" author="P70383">
+        <sql>
+            INSERT INTO tpr_buy_out_surplus_transaction_identifier (id, target_period_type, transaction_id)
+            VALUES (2, 'TP7', 0), (3, 'TP8', 0), (4, 'TP9', 0);
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_Data_from_bak_to_new_tpr_buy_out_surplus_transaction_TABLE" author="P70383">
+        <sql>
+            INSERT INTO tpr_buy_out_surplus_transaction (
+                id,
+                transaction_code,
+                account_id,
+                target_period_id,
+                charge_type,
+                invoiced_buy_out_fee,
+                invoiced_payment_deadline,
+                file_document_uuid,
+                performance_data_resource_type,
+                creation_date
+            )
+            SELECT
+                bk.id,
+                bk.transaction_code,
+                pd.account_id,
+                tp.id AS target_period_id,
+                bk.data ->> 'chargeType' AS chargeType,
+                (bk.data ->> 'invoicedBuyOutFee')::numeric AS invoicedBuyOutFee,
+                (bk.data ->> 'invoicedPaymentDeadline')::timestamp AS invoicedPaymentDeadline,
+                bk.file_document_uuid,
+                'ACCOUNT' AS performance_data_resource_type,
+                bk.creation_date
+            FROM tpr_buy_out_surplus_transaction_bak bk
+            JOIN tpr_performance_data pd ON pd.id = bk.performance_data_id
+            JOIN tpr_target_period tp ON tp.id = pd.target_period_id WHERE tp.business_id = 'TP6';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_Data_from_bak_to_tpr_buy_out_surplus_transaction_detail_TABLE" author="P70383">
+        <sql>
+            INSERT INTO tpr_buy_out_surplus_transaction_detail (
+                id,
+                buy_out_surplus_transaction_id,
+                performance_data_id,
+                buy_out_fee,
+                payment_status,
+                data,
+                payment_date
+            )
+            SELECT
+                nextval('tpr_buy_out_surplus_transaction_detail_seq'),
+                t.id,
+                bk.performance_data_id,
+                bk.buy_out_fee,
+                bk.payment_status,
+                bk.data - 'invoicedPaymentDeadline' - 'chargeType',
+                bk.payment_date
+            FROM tpr_buy_out_surplus_transaction_bak bk
+            JOIN tpr_buy_out_surplus_transaction t ON t.transaction_code = bk.transaction_code;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_Data_from_bak_to_tpr_buy_out_surplus_transaction_detail_history_TABLE" author="P70383">
+        <sql>
+            INSERT INTO tpr_buy_out_surplus_transaction_detail_history (
+                id,
+                buy_out_surplus_transaction_detail_id,
+                payload,
+                submitter_id,
+                submitter,
+                submission_date
+            )
+            SELECT
+                bk.id,
+                td.id,
+                bk.payload,
+                bk.submitter_id,
+                bk.submitter,
+                bk.submission_date
+            FROM tpr_buy_out_surplus_transaction_history_bak bk
+            JOIN tpr_buy_out_surplus_transaction_detail td ON td.buy_out_surplus_transaction_id = bk.buy_out_surplus_transaction_id;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_tpr_surplus_fix_scheme_version" author="P70383">
+        <sql>
+            UPDATE tpr_surplus
+            SET scheme_version = 'CCA_2'
+            WHERE scheme_version = 'CCA2';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

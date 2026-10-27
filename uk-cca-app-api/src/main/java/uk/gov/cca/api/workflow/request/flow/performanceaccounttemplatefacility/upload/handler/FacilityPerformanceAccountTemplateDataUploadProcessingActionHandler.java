@@ -9,6 +9,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaRequestParams;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.config.PerformanceAccountTemplateConfig;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.domain.FacilityPerformanceAccountTemplateDataProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.domain.FacilityPerformanceAccountTemplateUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
@@ -25,11 +26,13 @@ import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -39,33 +42,27 @@ public class FacilityPerformanceAccountTemplateDataUploadProcessingActionHandler
     private final WorkflowService workflowService;
     private final StartProcessRequestService startProcessRequestService;
     private final FacilityPerformanceAccountTemplateDataUploadService performanceAccountTemplateDataUploadService;
+    private final PerformanceAccountTemplateConfig performanceAccountTemplateConfig;
 
     @Override
     public RequestTaskPayload process(Long requestTaskId, String requestTaskActionType, AppUser appUser, FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload taskActionPayload) {
-        //TODO:  enhance logic
 
-        final LocalDateTime submissionDate = LocalDateTime.now();
+        final Optional<LocalDate> submissionDateOptional = Optional.ofNullable(performanceAccountTemplateConfig.getSubmissionDate());
+        final LocalDateTime submissionDateTime = submissionDateOptional.map(LocalDate::atStartOfDay).orElse(LocalDateTime.now());
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
         final Request request = requestTask.getRequest();
         final FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload requestTaskPayload =
                 (FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload) requestTask.getPayload();
 
         // Process data and validate
-        performanceAccountTemplateDataUploadService.process(requestTask, taskActionPayload, submissionDate);
+        performanceAccountTemplateDataUploadService.process(requestTask, taskActionPayload, submissionDateTime);
 
         // Create processing workflow
         final SectorAssociationInfo sectorAssociation = requestTaskPayload.getSectorAssociationInfo();
         final Year targetYear = requestTaskPayload.getPerformanceAccountTemplateDataUpload().getTargetYear();
-        Map<Long, FacilityPerformanceAccountTemplateUploadReport> facilityReports = requestTaskPayload.getFacilityReports();
+        final Map<Long, FacilityPerformanceAccountTemplateUploadReport> facilityReports = requestTaskPayload.getFacilityReports();
         final String uploadRequestBusinessKey = (String) workflowService
                 .getVariable(request.getProcessInstanceId(), BpmnProcessConstants.BUSINESS_KEY);
-
-        //TODO: remove after testing
-//        facilityReports.put(3L, FacilityPerformanceAccountTemplateUploadReport.builder()
-//                .facilityId(3L)
-//                .facilityBusinessId("ADS_1-F00007")
-//                .accountId(5L)
-//                .build());
 
         final CcaRequestParams requestParams = CcaRequestParams.builder()
                 .type(CcaRequestType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING)
@@ -79,7 +76,7 @@ public class FacilityPerformanceAccountTemplateDataUploadProcessingActionHandler
                         .sectorAssociationInfo(sectorAssociation)
                         .sectorUserAssignee(appUser.getUserId())
                         .targetYear(targetYear)
-                        .submissionDate(submissionDate)
+                        .submissionDate(submissionDateTime)
                         .build())
                 .processVars(Map.of(
                         // Wrap to hashset to be serializable (HashMap.Keyset is not serializable)

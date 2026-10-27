@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -12,13 +12,13 @@ import { TextInputComponent } from '@shared/components';
 
 import { CustomMiReportQuery, MiReportsUserDefinedService, MiReportUserDefinedDTO } from 'cca-api';
 
-import { ExtendedMiReportResult } from '../core/mi-interfaces';
 import { MiReportsExportService } from '../core/mi-reports-export.service';
 import { MI_REPORT_FORM, MiReportFormModel, MiReportFormProvider } from './mi-report-form.provider';
 
 @Component({
   selector: 'cca-mi-report-form',
   templateUrl: './mi-report-form.component.html',
+  providers: [MiReportFormProvider],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -29,8 +29,6 @@ import { MI_REPORT_FORM, MiReportFormModel, MiReportFormProvider } from './mi-re
     TextInputComponent,
     PendingButtonDirective,
   ],
-  providers: [MiReportFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiReportFormComponent {
   private readonly miReportsUserDefinedService = inject(MiReportsUserDefinedService);
@@ -59,7 +57,7 @@ export class MiReportFormComponent {
           return EMPTY;
         }),
       )
-      .subscribe((results: ExtendedMiReportResult) => {
+      .subscribe((results) => {
         this.form.controls.queryDefinition.setErrors(null);
         this.isErrorSummaryDisplayed.set(false);
         this.miReportsExportService.exportToExcel(results, 'Preview query report');
@@ -84,6 +82,13 @@ export class MiReportFormComponent {
 
     request$
       .pipe(
+        catchBadRequest(ErrorCodes.FORM1001, () => {
+          this.form.controls.queryDefinition.setErrors({
+            apiError: 'Form validation failed. Please review the form fields and ensure the query definition is valid.',
+          });
+          this.isErrorSummaryDisplayed.set(true);
+          return EMPTY;
+        }),
         catchErrorCode(ErrorCodes.MIREPORT1001, (err) => {
           this.form.controls.reportName.setErrors({ apiError: err.error.message });
           this.isErrorSummaryDisplayed.set(true);

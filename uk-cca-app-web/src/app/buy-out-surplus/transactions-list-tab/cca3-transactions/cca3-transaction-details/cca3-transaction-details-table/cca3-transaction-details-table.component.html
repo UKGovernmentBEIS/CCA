@@ -1,0 +1,104 @@
+<div aria-atomic="true" aria-live="polite" class="govuk-visually-hidden" role="status">
+  {{ selectionAnnouncement() }}
+</div>
+
+<div aria-atomic="true" aria-live="polite" class="govuk-visually-hidden" role="status">
+  {{ resultsAnnouncement() }}
+</div>
+
+@if (loaded()) {
+  @if (isRegulator()) {
+    <div class="govuk-grid-row govuk-!-margin-top-6">
+      <div class="govuk-grid-column-one-half selection-text">
+        <p id="selected-facilities-count">{{ selectedFacilities().size }} facilities currently selected.</p>
+      </div>
+
+      <div class="govuk-grid-column-one-half selection-actions">
+        <button
+          govukSecondaryButton
+          type="button"
+          aria-describedby="selected-facilities-count"
+          [disabled]="selectedFacilities().size === 0"
+          (click)="onChangeStatus()"
+        >
+          Change status
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (!totalFacilities()) {
+    <p class="govuk-body govuk-!-margin-top-6">No results match the filter criteria.</p>
+  } @else {
+    <div class="x-scroll govuk-!-margin-top-6">
+      <div class="max-content-width">
+        <div class="overflow-auto overflow-auto-table">
+          <cca-table
+            ariaLabel="Facilities in this transaction"
+            [columns]="tableColumns"
+            [data]="tableData()"
+            [selectedRows]="selectedFacilities()"
+            [showSelectAllCheckbox]="isRegulator()"
+            (rowSelectionChange)="onSelectChange($event)"
+            (allRowsSelectionChange)="onSelectWholePageChange($event)"
+          >
+            <ng-template let-column="column" let-row="row">
+              @switch (column.field) {
+                @case ('facilityBusinessId') {
+                  <span>{{ row[column.field] }}</span>
+                }
+
+                @case ('siteName') {
+                  <span>{{ row[column.field] }}</span>
+                }
+
+                @case ('paymentStatus') {
+                  <div class="govuk-!-width-full">
+                    <span class="govuk-tag govuk-tag--{{ row.paymentStatus | statusColor }}">{{
+                      row.paymentStatus | status
+                    }}</span>
+                  </div>
+                }
+
+                @case ('buyOutFee') {
+                  {{ row[column.field] | formatGbp }}
+                }
+
+                @case ('actions') {
+                  <div class="govuk-!-text-align-right link-separator">
+                    @if (isRegulator() && row['paymentStatus'] !== 'TERMINATED') {
+                      <a
+                        [routerLink]="['facilities', row.facilityBusinessId, 'change-amount']"
+                        [relativeTo]="activatedRoute"
+                        class="govuk-link"
+                      >
+                        Change amount<span class="govuk-visually-hidden"> for {{ row['facilityBusinessId'] }}</span>
+                      </a>
+                    }
+                    @if (isRegulator() && row['hasHistory']) {
+                      <a
+                        [routerLink]="['facilities', row.facilityBusinessId, 'change-history']"
+                        [relativeTo]="activatedRoute"
+                        class="govuk-!-padding-left-1 govuk-link"
+                      >
+                        View history<span class="govuk-visually-hidden"> for {{ row['facilityBusinessId'] }}</span>
+                      </a>
+                    }
+                  </div>
+                }
+              }
+            </ng-template>
+          </cca-table>
+
+          <cca-pagination
+            [count]="totalFacilities()"
+            [currentPage]="currentPage()"
+            [pageSize]="pageSize()"
+            (pageChange)="onPageChange($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+          />
+        </div>
+      </div>
+    </div>
+  }
+}

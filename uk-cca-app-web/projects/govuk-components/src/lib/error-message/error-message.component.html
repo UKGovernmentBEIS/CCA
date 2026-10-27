@@ -1,5 +1,5 @@
 <span [id]="identifier() + '-error'" class="govuk-error-message">
-  @for (error of errors() | keyvalue; track error) {
+  @for (error of errors() | keyvalue; track error.key) {
     <span class="govuk-!-display-block"> <span class="govuk-visually-hidden">Error:</span> {{ error.value }} </span>
   }
 </span>

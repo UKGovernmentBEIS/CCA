@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 
@@ -12,6 +12,5 @@ import { PageHeadingComponent } from '@netz/common/components';
     </ul>
   `,
   imports: [PageHeadingComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactUsComponent {}

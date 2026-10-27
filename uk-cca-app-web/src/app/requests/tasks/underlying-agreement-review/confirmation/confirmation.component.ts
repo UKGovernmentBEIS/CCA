@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -11,7 +11,6 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
     <govuk-panel>Application {{ determinationType === 'ACCEPTED' ? 'accepted' : 'rejected' }}</govuk-panel>
     <a class="govuk-link" [routerLink]="['/dashboard']"> Return to: Dashboard </a>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PanelComponent, RouterLink],
 })
 export class NotifyOperatorConfirmationComponent {

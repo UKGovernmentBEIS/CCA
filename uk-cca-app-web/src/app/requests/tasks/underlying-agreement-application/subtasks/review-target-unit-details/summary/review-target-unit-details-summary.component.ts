@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -29,7 +29,6 @@ import { CompaniesInformationService, CompanyProfileDTO } from 'cca-api';
     ReturnToTaskOrActionPageComponent,
     CompaniesHouseDetailsComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);

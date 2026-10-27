@@ -1,3 +1,5 @@
+@use 'govuk-frontend/dist/govuk/index' as govuk;
+
 .gem-c-cookie-banner {
   font-size: 1rem;
   line-height: 1.25;
@@ -5,7 +7,7 @@
   -webkit-font-smoothing: antialiased;
   font-weight: 400;
   padding: 10px 0;
-  background-color: govuk-colour('light-grey');
+  background-color: govuk.govuk-colour('black', $variant: 'tint-95');
   display: block;
 }
 
@@ -20,7 +22,7 @@
   border: 0;
   background: none;
   text-decoration: underline;
-  color: govuk-colour('blue');
+  color: govuk.govuk-colour('blue');
   padding: 0;
   cursor: pointer;
 }

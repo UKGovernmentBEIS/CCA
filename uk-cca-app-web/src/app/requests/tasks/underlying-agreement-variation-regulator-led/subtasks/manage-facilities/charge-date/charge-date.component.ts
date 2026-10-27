@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -26,6 +26,7 @@ import { CHARGE_DATE_FORM, ChargeDateFormModel, ChargeDateFormProvider } from '.
 @Component({
   selector: 'cca-charge-date',
   templateUrl: './charge-date.component.html',
+  providers: [ChargeDateFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -36,8 +37,6 @@ import { CHARGE_DATE_FORM, ChargeDateFormModel, ChargeDateFormProvider } from '.
     DetailsComponent,
     ConditionalContentDirective,
   ],
-  providers: [ChargeDateFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChargeDateComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

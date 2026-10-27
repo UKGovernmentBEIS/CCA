@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { GovukTableColumn, SortEvent, TableComponent } from '@netz/govuk-components';
 import { SummaryComponent } from '@shared/components';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 
 import { SectorAssociationSchemeService, SubsectorAssociationInfoDTO } from 'cca-api';
 
@@ -14,7 +14,6 @@ import { toSectorSchemeSummaryData } from './scheme-summary-data';
   selector: 'cca-sector-scheme-tab',
   templateUrl: './sector-scheme-tab.component.html',
   imports: [SummaryComponent, TableComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorSchemeTabComponent {
   private readonly sectorAssociationSchemeService = inject(SectorAssociationSchemeService);
@@ -36,12 +35,12 @@ export class SectorSchemeTabComponent {
   protected readonly subsectorsColumns: GovukTableColumn[] = [{ field: 'name', header: 'Name', isSortable: true }];
 
   protected readonly sectorSchemeCCA2 = computed(
-    () => this.sectorScheme()?.sectorAssociationSchemeMap?.[SchemeVersion.CCA_2],
+    () => this.sectorScheme()?.sectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_2],
   );
   protected readonly sectorCommitmentCCA2 = computed(() => this.sectorSchemeCCA2()?.targetSet?.targetCommitments);
 
   protected readonly sectorSchemeCCA3 = computed(
-    () => this.sectorScheme()?.sectorAssociationSchemeMap?.[SchemeVersion.CCA_3],
+    () => this.sectorScheme()?.sectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_3],
   );
   protected readonly sectorCommitmentCCA3 = computed(() => this.sectorSchemeCCA3()?.targetSet?.targetCommitments);
 

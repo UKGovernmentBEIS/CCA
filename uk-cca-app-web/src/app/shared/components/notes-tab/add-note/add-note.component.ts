@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -14,10 +14,9 @@ import { ADD_NOTE_FORM, AddNoteFormModel, AddNoteFormProvider } from './add-note
 
 @Component({
   selector: 'cca-workflow-add-note',
-  imports: [ReactiveFormsModule, TextareaComponent, MultipleFileInputComponent, ButtonDirective, RouterLink],
   templateUrl: './add-note.component.html',
   providers: [AddNoteFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, TextareaComponent, MultipleFileInputComponent, ButtonDirective, RouterLink],
 })
 export class WorkflowAddNoteComponent {
   private readonly requestNotesService = inject(RequestNotesService);

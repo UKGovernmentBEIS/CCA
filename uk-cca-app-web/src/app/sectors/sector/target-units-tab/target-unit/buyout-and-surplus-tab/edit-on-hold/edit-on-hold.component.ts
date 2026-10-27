@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -15,7 +15,6 @@ import { BuyoutAndSurplusTabStore } from '../buyout-and-surplus-tab.store';
   selector: 'cca-edit-surplus-on-hold',
   templateUrl: './edit-on-hold.component.html',
   imports: [ButtonDirective, FormsModule, RadioComponent, RadioOptionComponent, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditOnHoldComponent {
   private readonly router = inject(Router);

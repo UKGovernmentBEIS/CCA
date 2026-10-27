@@ -1,5 +1,7 @@
 import { ParamMap } from '@angular/router';
 
+import { SchemeVersion, SchemeVersionEnum } from '@shared/types';
+
 import { BuyOutSurplusTransactionsListSearchCriteria } from 'cca-api';
 
 export const DEFAULT_PAGE = 1;
@@ -15,19 +17,24 @@ export const TransactionStatuses = [
   'TERMINATED',
 ] as const;
 
-export type TransactionsCriteria = BuyOutSurplusTransactionsListSearchCriteria;
+export const TargetPeriodTypesBySchemeVersion: Record<
+  SchemeVersion,
+  readonly BuyOutSurplusTransactionsListSearchCriteria['targetPeriodType'][]
+> = {
+  [SchemeVersionEnum.CCA_2]: ['TP6'],
+  [SchemeVersionEnum.CCA_3]: ['TP7', 'TP8', 'TP9'],
+};
 
-export function extractTargetPeriodType(queryParamMap: ParamMap) {
+export function extractTargetPeriodType(
+  queryParamMap: ParamMap,
+): BuyOutSurplusTransactionsListSearchCriteria['targetPeriodType'] | null {
   const targetPeriodType = queryParamMap.get('targetPeriodType');
+  const schemeTargetPeriodTypes: readonly string[] =
+    TargetPeriodTypesBySchemeVersion[extractSchemeVersion(queryParamMap)];
 
-  switch (targetPeriodType) {
-    case 'TP5':
-      return 'TP5';
-    case 'TP6':
-      return 'TP6';
-    default:
-      return 'TP6';
-  }
+  return targetPeriodType !== null && schemeTargetPeriodTypes.includes(targetPeriodType)
+    ? (targetPeriodType as BuyOutSurplusTransactionsListSearchCriteria['targetPeriodType'])
+    : null;
 }
 
 export function extractTerm(queryParamMap: ParamMap): string | null {
@@ -36,26 +43,44 @@ export function extractTerm(queryParamMap: ParamMap): string | null {
   return null;
 }
 
+export function extractSchemeVersion(queryParamMap: ParamMap): SchemeVersion {
+  return queryParamMap.get('schemeVersion') === SchemeVersionEnum.CCA_2
+    ? SchemeVersionEnum.CCA_2
+    : SchemeVersionEnum.CCA_3;
+}
+
 export function extractBuyOutSurplusPaymentStatus(
   queryParamMap: ParamMap,
-): TransactionsCriteria['buyOutSurplusPaymentStatus'] | null {
-  const paymentStatus = queryParamMap.get('buyOutSurplusPaymentStatus');
+): BuyOutSurplusTransactionsListSearchCriteria['paymentStatus'] | null {
+  const paymentStatus = queryParamMap.get('paymentStatus');
   if (!isPaymentStatus(paymentStatus)) return null;
   return paymentStatus;
 }
 
 export function isPaymentStatus(
   paymentStatus: string | null,
-): paymentStatus is TransactionsCriteria['buyOutSurplusPaymentStatus'] {
+): paymentStatus is BuyOutSurplusTransactionsListSearchCriteria['paymentStatus'] {
   return paymentStatus !== null && (TransactionStatuses as readonly string[]).includes(paymentStatus);
 }
 
-export function extractCriteria(queryParamMap: ParamMap): TransactionsCriteria {
+export function extractPagination(
+  queryParamMap: ParamMap,
+): Pick<BuyOutSurplusTransactionsListSearchCriteria, 'pageNumber' | 'pageSize'> {
+  const page = Number(queryParamMap.get('page'));
+  const pageSize = Number(queryParamMap.get('pageSize'));
+
+  return {
+    pageNumber: Number.isInteger(page) && page >= 1 ? page - 1 : DEFAULT_PAGE - 1,
+    pageSize: Number.isInteger(pageSize) && pageSize >= 1 ? pageSize : DEFAULT_PAGE_SIZE,
+  };
+}
+
+export function extractCriteria(queryParamMap: ParamMap): BuyOutSurplusTransactionsListSearchCriteria {
   return {
     term: extractTerm(queryParamMap),
     targetPeriodType: extractTargetPeriodType(queryParamMap),
-    buyOutSurplusPaymentStatus: extractBuyOutSurplusPaymentStatus(queryParamMap),
-    pageNumber: (+queryParamMap.get('page') || DEFAULT_PAGE) - 1,
-    pageSize: +queryParamMap.get('pageSize') || DEFAULT_PAGE_SIZE,
+    paymentStatus: extractBuyOutSurplusPaymentStatus(queryParamMap),
+    schemeVersion: extractSchemeVersion(queryParamMap),
+    ...extractPagination(queryParamMap),
   };
 }

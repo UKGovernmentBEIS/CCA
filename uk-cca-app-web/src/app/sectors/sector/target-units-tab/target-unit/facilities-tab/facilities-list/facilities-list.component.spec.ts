@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -8,14 +8,14 @@ import { BehaviorSubject, of } from 'rxjs';
 
 import { Mocked, MockInstance } from 'vitest';
 
-import { FacilityInfoViewService, FacilitySearchResults } from 'cca-api';
+import { FacilitiesSearchInfoViewService, FacilitySearchResults } from 'cca-api';
 
 import { FacilitiesListComponent } from './facilities-list.component';
 
 describe('FacilitiesListComponent', () => {
   let component: FacilitiesListComponent;
   let fixture: ComponentFixture<FacilitiesListComponent>;
-  let facilityInfoViewService: Mocked<FacilityInfoViewService>;
+  let facilitiesSearchInfoViewService: Mocked<FacilitiesSearchInfoViewService>;
   let routerNavigateSpy: MockInstance;
 
   const mockFacilities: FacilitySearchResults = {
@@ -69,9 +69,9 @@ describe('FacilitiesListComponent', () => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, FacilitiesListComponent],
       providers: [
-        { provide: FacilityInfoViewService, useValue: facilityServiceMock },
+        { provide: FacilitiesSearchInfoViewService, useValue: facilityServiceMock },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
       ],
     });
@@ -80,7 +80,9 @@ describe('FacilitiesListComponent', () => {
     component = fixture.componentInstance;
 
     routerNavigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    facilityInfoViewService = TestBed.inject(FacilityInfoViewService) as Mocked<FacilityInfoViewService>;
+    facilitiesSearchInfoViewService = TestBed.inject(
+      FacilitiesSearchInfoViewService,
+    ) as Mocked<FacilitiesSearchInfoViewService>;
 
     return { queryParamSubject, queryParamMock };
   };
@@ -102,7 +104,7 @@ describe('FacilitiesListComponent', () => {
       await fixture.whenStable();
       fixture.detectChanges();
 
-      expect(facilityInfoViewService.searchFacilities).toHaveBeenCalledWith(123, 0, 50, null);
+      expect(facilitiesSearchInfoViewService.searchFacilities).toHaveBeenCalledWith(123, 0, 50, null);
       expect(component.state().facilities.length).toBe(2);
       expect(component.state().totalItems).toBe(2);
     });
@@ -222,13 +224,13 @@ describe('FacilitiesListComponent', () => {
 
       fixture.detectChanges();
 
-      facilityInfoViewService.searchFacilities.mockClear();
+      facilitiesSearchInfoViewService.searchFacilities.mockClear();
 
       // Update query params
       const newQueryParams = createQueryParamMock('2', '25', 'test');
       queryParamSubject.next(newQueryParams);
 
-      expect(facilityInfoViewService.searchFacilities).toHaveBeenCalledWith(123, 1, 25, 'test');
+      expect(facilitiesSearchInfoViewService.searchFacilities).toHaveBeenCalledWith(123, 1, 25, 'test');
     });
   });
 });

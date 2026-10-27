@@ -101,9 +101,9 @@ class Cca2ExtensionNoticeCreateRunServiceTest {
                         TargetUnitAccountBusinessInfoDTO.builder().accountId(1L).businessId("account1").build(),
                         TargetUnitAccountBusinessInfoDTO.builder().accountId(2L).businessId("account2").build()
                 ));
-        when(cca2ExtensionNoticeAccountProcessingCreateValidator.validateAction(1L))
+        when(cca2ExtensionNoticeAccountProcessingCreateValidator.checkAvailability(1L))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
-        when(cca2ExtensionNoticeAccountProcessingCreateValidator.validateAction(2L))
+        when(cca2ExtensionNoticeAccountProcessingCreateValidator.checkAvailability(2L))
                 .thenReturn(RequestCreateValidationResult.builder().valid(false).reportedRequestTypes(Set.of("request")).build());
         when(regulatorAuthorityResourceService.findUsersByCompetentAuthority(CompetentAuthorityEnum.ENGLAND))
                 .thenReturn(List.of("regulator1", "regulator2"));
@@ -117,7 +117,7 @@ class Cca2ExtensionNoticeCreateRunServiceTest {
         verify(cca2ExtensionNoticeCreateValidator, times(1))
                 .validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload);
         verify(targetUnitAccountQueryService, times(1)).getActiveAccounts();
-        verify(cca2ExtensionNoticeAccountProcessingCreateValidator, times(2)).validateAction(anyLong());
+        verify(cca2ExtensionNoticeAccountProcessingCreateValidator, times(2)).checkAvailability(anyLong());
         verify(regulatorAuthorityResourceService, times(1))
                 .findUsersByCompetentAuthority(CompetentAuthorityEnum.ENGLAND);
         verify(startProcessRequestService, times(1)).startProcess(requestParams);
@@ -152,9 +152,9 @@ class Cca2ExtensionNoticeCreateRunServiceTest {
 
         when(cca2ExtensionNoticeCreateValidator.validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
-        when(cca2ExtensionNoticeAccountProcessingCreateValidator.validateAction(1L))
+        when(cca2ExtensionNoticeAccountProcessingCreateValidator.checkAvailability(1L))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
-        when(cca2ExtensionNoticeAccountProcessingCreateValidator.validateAction(2L))
+        when(cca2ExtensionNoticeAccountProcessingCreateValidator.checkAvailability(2L))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
         when(targetUnitAccountQueryService.getActiveAccountsByBusinessIds(providedAccounts))
                 .thenReturn(List.of(
@@ -173,7 +173,7 @@ class Cca2ExtensionNoticeCreateRunServiceTest {
         verify(cca2ExtensionNoticeCreateValidator, times(1))
                 .validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload);
         verify(targetUnitAccountQueryService, times(1)).getActiveAccountsByBusinessIds(providedAccounts);
-        verify(cca2ExtensionNoticeAccountProcessingCreateValidator, times(2)).validateAction(anyLong());
+        verify(cca2ExtensionNoticeAccountProcessingCreateValidator, times(2)).checkAvailability(anyLong());
         verify(startProcessRequestService, times(1)).startProcess(requestParams);
         verify(regulatorAuthorityResourceService, times(1))
                 .findUsersByCompetentAuthority(CompetentAuthorityEnum.ENGLAND);

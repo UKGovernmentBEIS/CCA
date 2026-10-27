@@ -1,14 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  Injector,
-  runInInjectionContext,
-  Signal,
-  Type,
-} from '@angular/core';
+import { Component, computed, inject, Injector, runInInjectionContext, Signal, Type } from '@angular/core';
 
 import { PageHeadingComponent, TaskListComponent } from '@netz/common/components';
 import { TaskSection } from '@netz/common/model';
@@ -29,9 +20,8 @@ type ViewModel = {
 
 @Component({
   selector: 'netz-request-action-page',
-  imports: [NgComponentOutlet, PageHeadingComponent, TaskListComponent, GovukDatePipe],
   templateUrl: './request-action-page.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgComponentOutlet, PageHeadingComponent, TaskListComponent, GovukDatePipe],
 })
 export class RequestActionPageComponent {
   private readonly contentFactoryMap = inject<RequestActionPageContentFactoryMap>(REQUEST_ACTION_PAGE_CONTENT);

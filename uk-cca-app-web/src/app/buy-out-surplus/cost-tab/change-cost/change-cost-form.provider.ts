@@ -6,8 +6,10 @@ import { GovukValidators } from '@netz/govuk-components';
 
 import { TargetPeriodBuyOutDetailsDTO } from 'cca-api';
 
+const BUY_OUT_COST_ERROR_MESSAGE = 'Enter a number greater than 0 with up to 2 decimal places';
+
 export type ChangeCostFormModel = FormGroup<{
-  buyOutCost: FormControl<number | null>;
+  buyOutCost: FormControl<string | null>;
 }>;
 
 export const CHANGE_COST_FORM = new InjectionToken<ChangeCostFormModel>('Change cost form');
@@ -17,11 +19,13 @@ export const ChangeCostFormProvider: Provider = {
   deps: [FormBuilder, ActivatedRoute],
   useFactory: (fb: FormBuilder, route: ActivatedRoute) => {
     const targetPeriodDetails = route.snapshot.data.targetPeriodDetails as TargetPeriodBuyOutDetailsDTO;
+    const buyOutCost = targetPeriodDetails?.buyOutCost;
 
     return fb.group({
-      buyOutCost: fb.control(targetPeriodDetails?.buyOutCost ?? null, [
+      buyOutCost: fb.control<string | null>(buyOutCost ?? null, [
         GovukValidators.required('Enter a buy-out cost'),
-        GovukValidators.naturalNumber('Enter a positive integer value'),
+        GovukValidators.builder(BUY_OUT_COST_ERROR_MESSAGE, GovukValidators.maxIntegerAndDecimalsValidator(18, 2)),
+        GovukValidators.positiveNumber(BUY_OUT_COST_ERROR_MESSAGE),
       ]),
     });
   },

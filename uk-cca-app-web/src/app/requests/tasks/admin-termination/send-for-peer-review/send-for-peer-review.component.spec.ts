@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
@@ -48,7 +48,7 @@ describe('AdminTerminationSendForPeerReviewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AdminTerminationSendForPeerReviewComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: TasksService, useValue: tasksService },
@@ -105,7 +105,7 @@ describe('AdminTerminationSendForPeerReviewComponent', () => {
     selectElement.dispatchEvent(new Event('change', { bubbles: true }));
     fixture.detectChanges();
 
-    const submitButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find(
+    const submitButton = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
       (button: HTMLButtonElement) => button.textContent?.trim() === 'Confirm and complete',
     ) as HTMLButtonElement;
     submitButton.click();

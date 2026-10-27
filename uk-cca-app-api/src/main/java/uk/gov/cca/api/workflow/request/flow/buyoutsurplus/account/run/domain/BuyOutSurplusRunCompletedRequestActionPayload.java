@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusErrorType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusRunSummary;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusErrorType;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
 import java.util.HashMap;

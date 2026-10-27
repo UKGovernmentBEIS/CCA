@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestActionStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { PeerReviewSubmittedComponent } from '@requests/common';
 
+import { PeerReviewSubmittedComponent } from './peer-review-submitted.component';
 import { mockPeerReviewActionState } from './testing/mock-data';
 
 describe('AdminTerminationPeerReviewSubmittedComponent', () => {

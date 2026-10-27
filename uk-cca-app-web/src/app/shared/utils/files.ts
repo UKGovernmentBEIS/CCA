@@ -1,4 +1,4 @@
-import { UuidFilePair } from '@shared/components';
+import { storedFileName, UuidFilePair } from '@shared/components';
 
 import { FileInfoDTO } from 'cca-api';
 
@@ -12,21 +12,24 @@ const toFiles = (fileUUIDs: string[], attachments: Record<string, string>): Uuid
 
   return fileUUIDs.filter(Boolean).map((uuid) => ({
     uuid,
-    file: { name: attachments[uuid] } as File,
+    file: { name: storedFileName(uuid, attachments) },
   }));
 };
 
 const toUUIDs = (files: UuidFilePair[]): string[] => {
   if (!Array.isArray(files)) return [];
 
-  return files.filter(Boolean).map(({ uuid }) => uuid);
+  return files
+    .filter(Boolean)
+    .filter(({ uuid, file }) => uuid && file?.name)
+    .map(({ uuid }) => uuid);
 };
 
 const toAttachments = (files: UuidFilePair[]): Record<string, string> => {
   if (!Array.isArray(files)) return {};
 
   return files.filter(Boolean).reduce<Record<string, string>>((map, { uuid, file }) => {
-    map[uuid] = file.name;
+    if (uuid && file?.name) map[uuid] = file.name;
     return map;
   }, {});
 };

@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, Signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -15,6 +15,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, GovukSelectOption, SelectComponent } from '@netz/govuk-components';
 import { LoadingSpinnerComponent, MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { requestTaskReassignedError, taskNotFoundError } from '@shared/errors';
+import { SchemeVersionEnum } from '@shared/types';
 import { fileUtils, generateDownloadUrl } from '@shared/utils';
 
 import {
@@ -35,6 +36,7 @@ import {
 @Component({
   selector: 'cca-tpr-csv-upload-process',
   templateUrl: './tpr-csv-upload-process.component.html',
+  providers: [PerformanceDataUploadProcessFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -46,8 +48,6 @@ import {
     RouterLink,
     PageHeadingComponent,
   ],
-  providers: [PerformanceDataUploadProcessFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprCsvUploadProcessComponent implements OnInit {
   private readonly router = inject(Router);
@@ -66,7 +66,9 @@ export class TprCsvUploadProcessComponent implements OnInit {
   protected readonly downloadUrl = computed(() => generateDownloadUrl(this.taskId().toString()));
 
   private readonly availableTargetPeriods = toSignal(
-    this.performanceDataReportingViewInfoService.getAvailableTargetPeriodsForPerformanceDataReporting('CCA_3'),
+    this.performanceDataReportingViewInfoService.getAvailableTargetPeriodsForPerformanceDataReporting(
+      SchemeVersionEnum.CCA_3,
+    ),
     { initialValue: [] },
   );
 
@@ -120,7 +122,7 @@ export class TprCsvUploadProcessComponent implements OnInit {
         } as RequestTaskActionPayload,
       })
       .pipe(
-        catchNotFoundRequest(ErrorCode.NOTFOUND1001, () =>
+        catchNotFoundRequest<never>(ErrorCode.NOTFOUND1001, () =>
           this.businessErrorService.showErrorForceNavigation(taskNotFoundError),
         ),
         catchTaskReassignedBadRequest(() =>

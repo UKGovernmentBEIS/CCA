@@ -4,11 +4,12 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 
 export const ADMIN_TERMINATION_FINAL_DECISION_ROUTES: Routes = [
   {
+    title: 'Admin termination final decision',
     path: '',
     children: [
       {
-        path: 'final-decision-reason',
         title: 'Admin termination final decision',
+        path: 'final-decision-reason',
         canActivate: [isEditableSummaryRedirectGuard],
         loadChildren: () =>
           import('./subtasks/final-decision-reason/final-decision-reason.routes').then(
@@ -16,8 +17,8 @@ export const ADMIN_TERMINATION_FINAL_DECISION_ROUTES: Routes = [
           ),
       },
       {
-        path: 'final-decision-notify-operator',
         title: 'Notify operator of decision',
+        path: 'final-decision-notify-operator',
         canActivate: [isEditableGuard],
         loadChildren: () =>
           import('./notify-operator/final-decision-notify-operator.routes').then(

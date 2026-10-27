@@ -1,10 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-import { toBaselineAndTargetsSummaryDataWithDecision, underlyingAgreementRequestActionQuery } from '@requests/common';
+import {
+  BaselineAndTargetsSummaryMetadata,
+  toBaselineAndTargetsSummaryDataWithDecision,
+  underlyingAgreementRequestActionQuery,
+} from '@requests/common';
 import { SummaryComponent } from '@shared/components';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 
 import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+state/underlying-agreement-variation-reviewed-request-action.selectors';
 
@@ -17,12 +21,11 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
     </div>
   `,
   imports: [PageHeadingComponent, SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetPeriod6Component {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  private readonly summaryMetadata = {
+  private readonly summaryMetadata: BaselineAndTargetsSummaryMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: '../../file-download',
@@ -33,13 +36,12 @@ export class TargetPeriod6Component {
         underlyingAgreementVariationReviewedRequestActionQuery.selectReviewAttachments,
       )(),
     },
-    areIdentical: null,
   };
 
   protected readonly summaryData = computed(() =>
     toBaselineAndTargetsSummaryDataWithDecision({
       sectorSchemeData: this.requestActionStore.select(
-        underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
+        underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
       )(),
       targetPeriodDetails: this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectTargetPeriod6Details,

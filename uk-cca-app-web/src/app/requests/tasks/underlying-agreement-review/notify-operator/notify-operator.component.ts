@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,6 +34,7 @@ import { createProposedUnderlyingAgreementPayload } from '../utils';
 @Component({
   selector: 'cca-notify-operator',
   templateUrl: './notify-operator.component.html',
+  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -44,8 +45,6 @@ import { createProposedUnderlyingAgreementPayload } from '../utils';
     SelectComponent,
     NoticeRecipientsTypePipe,
   ],
-  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotifyOperatorComponent {
   private readonly store = inject(RequestTaskStore);

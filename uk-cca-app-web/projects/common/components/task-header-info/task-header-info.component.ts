@@ -1,5 +1,5 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 import { DaysRemainingPipe } from '@netz/common/pipes';
 
@@ -31,10 +31,11 @@ import { RequestTaskPayload } from 'cca-api';
     }
 
     @if (payload()?.reportType) {
-      <p class="govuk-body"><strong>Target period report type:</strong> {{ payload()?.reportType | titlecase }}</p>
+      <p class="govuk-body">
+        <strong>Target period report type:</strong> {{ $safeNavigationMigration(payload()?.reportType) | titlecase }}
+      </p>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DaysRemainingPipe, DatePipe, TitleCasePipe],
 })
 export class TaskHeaderInfoComponent {

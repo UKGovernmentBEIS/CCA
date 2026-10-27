@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -15,7 +15,6 @@ import { toTPRCSVUploadCompletedSummary } from './tpr-csv-upload-completed-summa
     </div>
   `,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprCSVUploadCompletedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

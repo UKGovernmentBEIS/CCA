@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -39,7 +39,6 @@ import { SummaryComponent } from '@shared/components';
     SummaryComponent,
     ThroughputDetailsSummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprThroughputDetailsSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

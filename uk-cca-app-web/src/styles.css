@@ -51,6 +51,34 @@ a[role='button'] {
   cursor: pointer;
 }
 
+/* Buttons styled as links (action buttons that look like govuk links) */
+button.govuk-link {
+  appearance: none;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  color: var(--govuk-link-colour);
+  text-align: inherit;
+}
+
+/* Inverse variant for buttons on dark brand-coloured surfaces, e.g. the
+   header actions area. GDS scopes the inverse colours under :link/:visited,
+   which never match a button element. */
+button.govuk-link.govuk-link--inverse {
+  color: var(--govuk-inverse-text-colour);
+}
+
+/* The phase banner sits at the bottom of the page, above the footer, so it
+   separates from the content above instead of below. */
+cca-phase-bar .govuk-phase-banner {
+  border-top: 1px solid var(--govuk-border-colour);
+  border-bottom: none;
+}
+
 .pre-line {
   white-space: pre-line;
 }
@@ -112,4 +140,11 @@ a[role='button'] {
   span {
     margin-left: 15px;
   }
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 10px;
 }

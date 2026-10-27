@@ -6,14 +6,14 @@ import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
-import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
+import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateSyncWorkflowParamsProvider;
 
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class AdminTerminationFinalDecisionSubmittedDocumentTemplateWorkflowParamsProvider implements
-        DocumentTemplateWorkflowParamsProvider<AdminTerminationRequestPayload> {
+        DocumentTemplateSyncWorkflowParamsProvider<AdminTerminationRequestPayload> {
 
 	private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
 	

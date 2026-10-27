@@ -81,11 +81,12 @@ public class PerformanceAccountTemplateDataUploadValidationService {
 		                .fileName(entry.getKey())
 		                .fileContent(entry.getValue())
 		                .fileSize(entry.getValue().length)
-		                .fileType(MimeTypeUtils.detect(entry.getValue(), entry.getKey())).build();
+		                .fileType(MimeTypeUtils.detect(entry.getValue(), entry.getKey()))
+						.createdBy(asigneeUser)
+						.build();
 				
 				try {
-					final String accountReportFileUuid = fileAttachmentService.createFileAttachment(
-							file, FileStatus.SUBMITTED, asigneeUser);
+					final String accountReportFileUuid = fileAttachmentService.createFileAttachment(file, FileStatus.SUBMITTED);
 					report.getFile().setUuid(accountReportFileUuid);
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);

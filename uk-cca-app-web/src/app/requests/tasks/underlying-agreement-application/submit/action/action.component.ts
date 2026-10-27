@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -41,6 +41,7 @@ import { RequestTaskActionProcessDTO } from 'cca-api';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
+  providers: [ApiErrorFormProvider],
   imports: [
     ButtonDirective,
     ErrorSummaryComponent,
@@ -49,8 +50,6 @@ import { RequestTaskActionProcessDTO } from 'cca-api';
     ReactiveFormsModule,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [ApiErrorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementSubmitActionComponent {
   private readonly router = inject(Router);

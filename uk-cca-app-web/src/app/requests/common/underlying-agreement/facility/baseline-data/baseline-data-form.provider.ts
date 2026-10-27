@@ -4,15 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import {
-  facilityBaselineDataConditionallyRequiredFieldsValidator,
-  FacilityBaselineDataFormModel,
-  isCCA3Scheme,
-  normaliseNumber,
-  underlyingAgreementQuery,
-  UPLOAD_SECTION_ATTACHMENT_TYPE,
-} from '@requests/common';
 import { RequestTaskFileService } from '@shared/services';
+
+import { isCCA3Scheme } from '../../../utils';
+import { underlyingAgreementQuery } from '../../+state/underlying-agreement.selectors';
+import { getAttachmentType, UPLOAD_SECTION_ATTACHMENT_TYPE } from '../../types';
+import { FacilityBaselineDataFormModel } from '../types';
+import { normaliseNumber } from '../utils';
+import { facilityBaselineDataConditionallyRequiredFieldsValidator } from '../validators';
 
 export const FACILITY_BASELINE_DATA_FORM = new InjectionToken<FacilityBaselineDataFormModel>(
   'Facility baseline data form',
@@ -48,7 +47,7 @@ export const FacilityBaselineDataFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       baselineData?.greenfieldEvidences || [],
       attachments || {},
-      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

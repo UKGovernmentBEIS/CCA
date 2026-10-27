@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.files.attachments.service.FileAttachmentTokenService;
+import uk.gov.netz.api.files.attachments.service.storage.FileAttachmentStorageService;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.token.FileToken;
 
@@ -35,7 +35,7 @@ class AccountPerformanceDataStatusAttachmentServiceTest {
 	private AccountPerformanceDataStatusQueryService accountPerformanceDataStatusQueryService;
 
 	@Mock
-	private FileAttachmentTokenService fileAttachmentTokenService;
+	private FileAttachmentStorageService fileAttachmentStorageService;
 
 	@Test
 	void generateGetFileAttachmentToken() {
@@ -50,7 +50,7 @@ class AccountPerformanceDataStatusAttachmentServiceTest {
 
 		when(accountPerformanceDataStatusQueryService.getAccountPerformanceDataReportAttachment(accountId,
 				targetPeriodType)).thenReturn(performanceDataReport);
-		when(fileAttachmentTokenService.generateGetFileAttachmentToken(fileAttachmentUuid.toString()))
+		when(fileAttachmentStorageService.generateGetFileAttachmentToken(fileAttachmentUuid.toString()))
 				.thenReturn(fileToken);
 
 		final FileToken result = accountPerformanceDataStatusAttachmentService.generateGetAccountPerformanceDataReportAttachmentToken(accountId,
@@ -59,7 +59,7 @@ class AccountPerformanceDataStatusAttachmentServiceTest {
 		assertEquals(result, fileToken);
 		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceDataReportAttachment(accountId,
 				targetPeriodType);
-		verify(fileAttachmentTokenService, times(1)).generateGetFileAttachmentToken(fileAttachmentUuid.toString());
+		verify(fileAttachmentStorageService, times(1)).generateGetFileAttachmentToken(fileAttachmentUuid.toString());
 	}
 
 	@Test
@@ -82,7 +82,7 @@ class AccountPerformanceDataStatusAttachmentServiceTest {
 		assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
 		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceDataReportAttachment(accountId,
 				targetPeriodType);
-		verifyNoInteractions(fileAttachmentTokenService);
+		verifyNoInteractions(fileAttachmentStorageService);
 	}
 
 	@Test
@@ -102,6 +102,6 @@ class AccountPerformanceDataStatusAttachmentServiceTest {
 		assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
 		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceDataReportAttachment(accountId,
 				targetPeriodType);
-		verifyNoInteractions(fileAttachmentTokenService);
+		verifyNoInteractions(fileAttachmentStorageService);
 	}
 }

@@ -27,11 +27,15 @@
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">{{ targetLabel() }}</h3>
   <p class="govuk-!-margin-top-1">{{ improvementTarget().toNumber() | percent: '1.0-3' }}</p>
 
-  <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Actual throughput</h3>
-  <div cca-text-input formControlName="actualThroughput" class="govuk-!-width-one-third"></div>
+  <div
+    cca-text-input
+    formControlName="actualThroughput"
+    label="Actual throughput"
+    class="govuk-!-width-one-third"
+  ></div>
 
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Adjusted throughput</h3>
-  <p class="govuk-!-margin-top-1">{{ adjustedThroughput()?.toNumber() | number }}</p>
+  <p class="govuk-!-margin-top-1">{{ $safeNavigationMigration(adjustedThroughput()?.toNumber()) | number }}</p>
 
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Throughput unit</h3>
   <p class="govuk-!-margin-top-1">

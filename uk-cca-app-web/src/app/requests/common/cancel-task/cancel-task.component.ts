@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CancelComponent } from '@netz/common/components';
@@ -22,7 +22,6 @@ import { UnderlyingAgreementVariationCancelTaskComponent } from './underlying-ag
     NonComplianceDetailsCancelTaskComponent,
     UnderlyingAgreementVariationCancelTaskComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CancelTaskComponent {
   private readonly store = inject(RequestTaskStore);

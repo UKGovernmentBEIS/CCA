@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { map } from 'rxjs';
@@ -29,7 +29,6 @@ import { AuthService } from '@shared/services';
     </p>
   `,
   imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimedOutComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

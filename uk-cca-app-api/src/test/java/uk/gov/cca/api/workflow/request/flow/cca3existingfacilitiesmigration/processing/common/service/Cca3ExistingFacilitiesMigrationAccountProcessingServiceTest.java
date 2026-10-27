@@ -36,7 +36,6 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -79,7 +78,7 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingServiceTest {
     private CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
 
     @Test
-    void doProcess() throws BpmnExecutionException, IOException {
+    void doProcess() throws BpmnExecutionException {
         final String requestId = "requestId";
 
         final String calculatorFileName1 = "attachmentFilename1";

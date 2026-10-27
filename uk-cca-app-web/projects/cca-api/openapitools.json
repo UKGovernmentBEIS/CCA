@@ -1,0 +1,22 @@
+{
+  "$schema": "../../node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.25.0",
+    "generators": {
+      "typescript-angular": {
+        "generatorName": "typescript-angular",
+        "inputSpec": "projects/cca-api/src/assets/swagger.yaml",
+        "output": "projects/cca-api/src/lib",
+        "templateDir": "projects/cca-api/src/assets/templates",
+        "ignoreFileOverride": "projects/cca-api/.openapi-generator-ignore",
+        "additionalProperties": {
+          "ngVersion": "22",
+          "basePath": "/api",
+          "stringEnums": "true",
+          "supportsES6": "true"
+        }
+      }
+    }
+  }
+}

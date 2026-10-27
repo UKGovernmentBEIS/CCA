@@ -6,7 +6,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.time.Year;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +51,7 @@ class PerformanceAccountTemplateDataUploadValidationServiceTest {
 	private PerformanceAccountTemplateDataReportFileNameValidateService fileNameValidateService;
 
 	@Test
-	void extractValidateAndPersistFiles() throws ReportPackageMissingException, IOException {
+	void extractValidateAndPersistFiles() throws ReportPackageMissingException {
 		TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
 		Year targetPeriodYear = Year.of(2024);
 		UUID reportPackage1 = UUID.randomUUID();
@@ -140,14 +139,18 @@ class PerformanceAccountTemplateDataUploadValidationServiceTest {
 		                .fileName(file1.getFileName())
 		                .fileContent(file1.getFileContent())
 		                .fileSize(file1.getFileContent().length)
-		                .fileType(MimeTypeUtils.detect(file1.getFileContent(), file1.getFileName())).build(), FileStatus.SUBMITTED, asigneeUser)).thenReturn(zip1File1Uuid.toString());
+		                .fileType(MimeTypeUtils.detect(file1.getFileContent(), file1.getFileName()))
+						.createdBy(asigneeUser).build(),
+				FileStatus.SUBMITTED)).thenReturn(zip1File1Uuid.toString());
 		
 		UUID zip2File1Uuid = UUID.randomUUID();
 		when(fileAttachmentService.createFileAttachment(FileDTO.builder()
-		                .fileName(file3.getFileName())
-		                .fileContent(file3.getFileContent())
-		                .fileSize(file3.getFileContent().length)
-		                .fileType(MimeTypeUtils.detect(file3.getFileContent(), file3.getFileName())).build(), FileStatus.SUBMITTED, asigneeUser)).thenReturn(zip2File1Uuid.toString());
+						.fileName(file3.getFileName())
+						.fileContent(file3.getFileContent())
+						.fileSize(file3.getFileContent().length)
+						.fileType(MimeTypeUtils.detect(file3.getFileContent(), file3.getFileName()))
+						.createdBy(asigneeUser).build(),
+				FileStatus.SUBMITTED)).thenReturn(zip2File1Uuid.toString());
 		
 		
 		//invoke
@@ -171,15 +174,17 @@ class PerformanceAccountTemplateDataUploadValidationServiceTest {
 	                .fileName(file1.getFileName())
 	                .fileContent(file1.getFileContent())
 	                .fileSize(file1.getFileContent().length)
-	                .fileType(MimeTypeUtils.detect(file1.getFileContent(), file1.getFileName())).build(),
-                FileStatus.SUBMITTED, asigneeUser);
+	                .fileType(MimeTypeUtils.detect(file1.getFileContent(), file1.getFileName()))
+					.createdBy(asigneeUser).build(),
+				FileStatus.SUBMITTED);
 		
 		verify(fileAttachmentService, times(1)).createFileAttachment(FileDTO.builder()
-                .fileName(file3.getFileName())
-                .fileContent(file3.getFileContent())
-                .fileSize(file3.getFileContent().length)
-                .fileType(MimeTypeUtils.detect(file3.getFileContent(), file3.getFileName())).build(),
-            FileStatus.SUBMITTED, asigneeUser);
+						.fileName(file3.getFileName())
+                	.fileContent(file3.getFileContent())
+                	.fileSize(file3.getFileContent().length)
+                	.fileType(MimeTypeUtils.detect(file3.getFileContent(), file3.getFileName()))
+					.createdBy(asigneeUser).build(),
+				FileStatus.SUBMITTED);
 		
 		assertThat(result.getAccountFileReports().get(1L).getFile().getUuid()).isEqualTo(zip1File1Uuid.toString());
 		assertThat(result.getAccountFileReports().get(3L).getFile().getUuid()).isEqualTo(zip2File1Uuid.toString());

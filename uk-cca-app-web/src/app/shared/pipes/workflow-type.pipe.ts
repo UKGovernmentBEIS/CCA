@@ -27,6 +27,7 @@ export function workflowType(type: RequestDetailsDTO['requestType'], initiatorRo
       return 'Subsistence fees';
 
     case 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING':
+    case 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING':
       return 'Buy-out and surplus';
 
     case 'FACILITY_AUDIT':

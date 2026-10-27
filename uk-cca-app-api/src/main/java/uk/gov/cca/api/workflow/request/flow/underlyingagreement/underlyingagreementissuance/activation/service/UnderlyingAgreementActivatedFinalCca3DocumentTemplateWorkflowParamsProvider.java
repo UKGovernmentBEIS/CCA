@@ -11,12 +11,12 @@ import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocum
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
-import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
+import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateSyncWorkflowParamsProvider;
 
 @RequiredArgsConstructor
 @Component
-public class UnderlyingAgreementActivatedFinalCca3DocumentTemplateWorkflowParamsProvider implements 
-		DocumentTemplateWorkflowParamsProvider<UnderlyingAgreementRequestPayload>{
+public class UnderlyingAgreementActivatedFinalCca3DocumentTemplateWorkflowParamsProvider implements
+        DocumentTemplateSyncWorkflowParamsProvider<UnderlyingAgreementRequestPayload> {
 
 	private final DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
 	private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;

@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -29,6 +29,7 @@ import {
 @Component({
   selector: 'cca-received-amount',
   templateUrl: './received-amount.component.html',
+  providers: [ReceivedAmountFormProvider],
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
@@ -47,8 +48,6 @@ import {
     TextareaComponent,
     MultipleFileInputComponent,
   ],
-  providers: [ReceivedAmountFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReceivedAmountComponent implements OnInit {
   protected readonly activatedRoute = inject(ActivatedRoute);

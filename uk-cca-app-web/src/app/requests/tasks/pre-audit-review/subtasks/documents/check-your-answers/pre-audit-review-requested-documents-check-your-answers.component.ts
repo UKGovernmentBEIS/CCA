@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -32,7 +32,6 @@ import { PRE_AUDIT_REVIEW_REQUESTED_DOCUMENTS_SUBTASK } from '../../../types';
     ButtonDirective,
     PendingButtonDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreAuditReviewRequestedDocumentsCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

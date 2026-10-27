@@ -23,6 +23,6 @@ describe('UnderlyingAgreementVariationWaitActivationComponent', () => {
   });
 
   it('should show content', () => {
-    expect(getByText('Waiting for the regulator to make a determination', fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/Waiting for the regulator to make a determination/, fixture.nativeElement)).toBeTruthy();
   });
 });

@@ -4,14 +4,14 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
-import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
+import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateSyncWorkflowParamsProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class BuyOutSurplusDocumentTemplateWorkflowParamsProvider implements
-        DocumentTemplateWorkflowParamsProvider<BuyOutSurplusAccountProcessingRequestPayload> {
+        DocumentTemplateSyncWorkflowParamsProvider<BuyOutSurplusAccountProcessingRequestPayload> {
 
     @Override
     public String getContextActionType() {

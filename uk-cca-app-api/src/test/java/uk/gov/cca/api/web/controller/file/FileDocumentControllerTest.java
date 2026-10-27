@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentTokenService;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 
 import java.nio.charset.StandardCharsets;
 
@@ -38,7 +38,7 @@ class FileDocumentControllerTest {
     private FileDocumentController controller;
 
     @Mock
-    private FileDocumentTokenService fileDocumenTokenService;
+    private FileDocumentStorageService fileDocumentStorageService;
 
     @Mock
     private Validator validator;
@@ -62,7 +62,7 @@ class FileDocumentControllerTest {
             .fileContent(fileContent)
             .build();
 
-        when(fileDocumenTokenService.getFileDTOByToken(token)).thenReturn(file);
+        when(fileDocumentStorageService.getFileDTOByToken(token)).thenReturn(file);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
                 .get(CONTROLLER_PATH + "/" + token))
@@ -75,6 +75,6 @@ class FileDocumentControllerTest {
         assertThat(response.getHeader(HttpHeaders.CONTENT_DISPOSITION)).isEqualTo(
             ContentDisposition.builder("document").filename(name, StandardCharsets.UTF_8).build().toString());
 
-        verify(fileDocumenTokenService, times(1)).getFileDTOByToken(token);
+        verify(fileDocumentStorageService, times(1)).getFileDTOByToken(token);
     }
 }

@@ -1,6 +1,6 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -21,9 +21,8 @@ import { DecisionWithDateComponent } from './decision-with-date.component';
       <cca-decision-with-date />
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, DecisionWithDateComponent],
   providers: [facilityDecisionFormProvider()],
+  imports: [ReactiveFormsModule, DecisionWithDateComponent],
 })
 class TestComponent {
   form = inject<DecisionWithDateFormModel>(DECISION_FORM_PROVIDER);
@@ -38,7 +37,7 @@ describe('decision with date test', () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },

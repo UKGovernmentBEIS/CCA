@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
@@ -18,7 +18,6 @@ import { toReceivedAmountSummaryData } from './received-amount-summary';
     <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
   `,
   imports: [PageHeadingComponent, SummaryComponent, ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckYourAnswersComponent {
   private readonly router = inject(Router);

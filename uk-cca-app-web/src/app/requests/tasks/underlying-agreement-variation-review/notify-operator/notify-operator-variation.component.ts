@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,6 +40,7 @@ import { createProposedUnderlyingAgreementVariationPayload } from '../utils';
 @Component({
   selector: 'cca-notify-operator-variation',
   templateUrl: './notify-operator-variation.component.html',
+  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -50,8 +51,6 @@ import { createProposedUnderlyingAgreementVariationPayload } from '../utils';
     SelectComponent,
     NoticeRecipientsTypePipe,
   ],
-  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotifyOperatorVariationComponent {
   private readonly store = inject(RequestTaskStore);

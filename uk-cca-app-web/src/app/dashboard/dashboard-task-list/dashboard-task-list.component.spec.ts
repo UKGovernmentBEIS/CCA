@@ -22,8 +22,8 @@ class ActivatedRouteTestStub {
 @Component({
   selector: 'cca-dashboard-task-list-host',
   template: `<cca-dashboard-task-list heading="Test" [fetchFn]="fetchFn" />`,
-  imports: [DashboardTaskListComponent],
   standalone: true,
+  imports: [DashboardTaskListComponent],
 })
 class DashboardTaskListHostComponent {
   fetchFn: DashboardFetchFn = () => of({ items: [], totalItems: 0 });

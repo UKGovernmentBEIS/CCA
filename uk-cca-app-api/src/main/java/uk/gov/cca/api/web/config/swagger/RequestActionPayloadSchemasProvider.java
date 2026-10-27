@@ -9,6 +9,8 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.Adm
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.run.domain.BuyOutSurplusRunCompletedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.processing.domain.BuyOutSurplusFacilityAccountProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.run.domain.BuyOutSurplusFacilityRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.processing.domain.Cca2TerminationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload;
@@ -25,6 +27,8 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComp
 import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilitySubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadCompletedRequestActionPayload;
@@ -141,7 +145,14 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
 		addResolvedShemas(PerformanceDataFacilitySubmittedRequestActionPayload.class.getSimpleName(), PerformanceDataFacilitySubmittedRequestActionPayload.class);
 		// Performance Data Facility CSV Form
 		addResolvedShemas(PerformanceDataFacilityDataUploadCompletedRequestActionPayload.class.getSimpleName(), PerformanceDataFacilityDataUploadCompletedRequestActionPayload.class);
+
+		// CCA3 PAT
+		addResolvedShemas(FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload.class.getSimpleName(), FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload.class);
+		addResolvedShemas(FacilityPerformanceAccountTemplateDataUploadCompletedRequestActionPayload.class.getSimpleName(), FacilityPerformanceAccountTemplateDataUploadCompletedRequestActionPayload.class);
 		
+		// Buy Out Surplus Facility
+		addResolvedShemas(BuyOutSurplusFacilityRunCompletedRequestActionPayload.class.getSimpleName(), BuyOutSurplusFacilityRunCompletedRequestActionPayload.class);
+		addResolvedShemas(BuyOutSurplusFacilityAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), BuyOutSurplusFacilityAccountProcessingSubmittedRequestActionPayload.class);
 	}
 
 }

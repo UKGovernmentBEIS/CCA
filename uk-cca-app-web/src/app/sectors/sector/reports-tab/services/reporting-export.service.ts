@@ -1,8 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+import { TitleCasePipe } from '@angular/common';
+import { inject, Service } from '@angular/core';
 
 import { boolToString } from '@requests/common';
-import { formatScientificZero } from '@shared/utils';
-import { utils, writeFileXLSX } from 'xlsx';
+import { SpreadsheetExportService } from '@shared/services';
+import { formatScientificZero, getFacilityPerformanceReportStatusLabel } from '@shared/utils';
 
 import {
   SectorAccountPerformanceDataReportItemDTO,
@@ -12,18 +13,16 @@ import {
 } from 'cca-api';
 
 import { FacilityPerformanceDataCriteria } from '../facility-performance-data/facility-performance-data-report-form.provider';
-import { FacilityPerformanceReportStatusEnum } from '../facility-performance-data/facility-performance-report-status.pipe';
-import { PatCriteria } from '../pat/pat-report-form.provider';
+import { isFacilityPatYear, PatCriteria, PatReportItem } from '../pat/pat-report-form.provider';
 import { PerformanceDataCriteria } from '../performance-data/performance-data-report-form.provider';
 
 type AccountPerformanceDataExportItem = Omit<SectorAccountPerformanceDataReportItemDTO, 'accountId'>;
 type ExportCellValue = string | number | null | undefined;
 type ExportRow = Record<string, ExportCellValue>;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ReportingExportService {
+  private readonly spreadsheetExportService = inject(SpreadsheetExportService);
   private readonly service = inject(SectorLevelPerformanceDataViewPagesService);
   private readonly sectorLevelPerformanceAccountTemplateDataViewPagesService = inject(
     SectorLevelPerformanceAccountTemplateDataViewPagesService,
@@ -44,10 +43,7 @@ export class ReportingExportService {
           ({ accountId: _accountId, ...item }) => item,
         );
 
-        const ws = utils.json_to_sheet(dataToExport);
-        const wb = utils.book_new();
-        utils.book_append_sheet(wb, ws, 'Data');
-        writeFileXLSX(wb, 'tp_reporting.xlsx');
+        this.spreadsheetExportService.exportToExcel(dataToExport, 'tp_reporting.xlsx');
       });
   }
 
@@ -63,37 +59,42 @@ export class ReportingExportService {
         pageSize,
       })
       .subscribe((resp) => {
-        const ws = utils.json_to_sheet(
+        this.spreadsheetExportService.exportToExcel(
           toFacilityPerformanceDataExportRows(
             resp.performanceDataReportItems ?? [],
             filters.targetPeriodReportType === 'FINAL',
           ),
+          'tp_reporting.xlsx',
         );
-        const wb = utils.book_new();
-        utils.book_append_sheet(wb, ws, 'Data');
-        writeFileXLSX(wb, 'tp_reporting.xlsx');
       });
   }
 
-  exportPatData(sectorId: number, criteria: PatCriteria): void {
-    this.sectorLevelPerformanceAccountTemplateDataViewPagesService
-      .getSectorPerformanceAccountTemplateDataReportList(sectorId, {
-        targetUnitAccountBusinessId: criteria.targetUnitAccountBusinessId,
-        targetPeriodType: criteria.targetPeriodType || 'TP6',
-        submissionType: criteria.submissionType,
-        status: criteria.status,
-        pageNumber: criteria.pageNumber,
-        pageSize: criteria.pageSize,
-      })
-      .subscribe((resp) => {
-        const dataToExport = resp.items.map(({ accountId: _accountId, ...item }) => item);
+  exportPatData(sectorId: number, criteria: PatCriteria, pageSize: number): void {
+    const isFacilityReport = isFacilityPatYear(criteria.targetPeriodYear);
+    const request = {
+      term: criteria.term,
+      targetPeriodYear: criteria.targetPeriodYear,
+      status: criteria.status,
+      pageNumber: 0,
+      pageSize,
+    };
 
-        const ws = utils.json_to_sheet(dataToExport);
-        const wb = utils.book_new();
+    const report$ = isFacilityReport
+      ? this.sectorLevelPerformanceAccountTemplateDataViewPagesService.getSectorFacilityPerformanceAccountTemplateDataReportList(
+          sectorId,
+          request,
+        )
+      : this.sectorLevelPerformanceAccountTemplateDataViewPagesService.getSectorAccountPerformanceAccountTemplateDataReportList(
+          sectorId,
+          request,
+        );
 
-        utils.book_append_sheet(wb, ws, 'Data');
-        writeFileXLSX(wb, 'pat_reporting.xlsx');
-      });
+    report$.subscribe((resp) => {
+      this.spreadsheetExportService.exportToCsv(
+        toPatExportRows(resp.items ?? [], isFacilityReport),
+        'pat_reporting.csv',
+      );
+    });
   }
 }
 
@@ -127,8 +128,20 @@ export function toFacilityPerformanceDataExportRows(
   }));
 }
 
+export function toPatExportRows(items: PatReportItem[], isFacilityReport: boolean): ExportRow[] {
+  const titleCasePipe = new TitleCasePipe();
+
+  return items.map((item) => ({
+    ...(isFacilityReport
+      ? { 'Facility ID': item.businessId, 'Facility site name': item.name }
+      : { 'Target unit ID': item.businessId, Operator: item.name }),
+    'Date submitted': item.submissionDate,
+    Status: titleCasePipe.transform(item.status),
+  }));
+}
+
 function formatFacilityReportStatus(value: SectorFacilityPerformanceDataReportItemDTO['reportStatus']): string | null {
-  return value ? (FacilityPerformanceReportStatusEnum[value] ?? value) : null;
+  return value ? getFacilityPerformanceReportStatusLabel(value) : null;
 }
 
 function formatLocked(value: boolean | null | undefined): 'Y' | 'N' {

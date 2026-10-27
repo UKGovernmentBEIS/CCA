@@ -53,8 +53,8 @@ public class FileEvidenceUploadController {
             @Parameter(hidden = true) AppUser authUser,
             @RequestPart("file") @Parameter(description = "The evidence file", required = true) MultipartFile file) throws IOException {
 
-        final FileDTO fileDTO = fileDtoMapper.toFileDTO(file);
-        final String evidenceFileUuid = fileEvidenceService.createFileEvidence(fileDTO, authUser);
+        final FileDTO fileDTO = fileDtoMapper.toFileDTO(file, authUser.getUserId());
+        final String evidenceFileUuid = fileEvidenceService.createFileEvidence(fileDTO);
         FileUuidDTO fileUuidDTO = FileUuidDTO.builder().uuid(evidenceFileUuid).build();
 
         return new ResponseEntity<>(fileUuidDTO, HttpStatus.OK);

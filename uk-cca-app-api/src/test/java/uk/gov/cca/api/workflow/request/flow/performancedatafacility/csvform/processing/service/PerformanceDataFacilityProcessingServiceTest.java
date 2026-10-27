@@ -120,6 +120,8 @@ class PerformanceDataFacilityProcessingServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityValidator.validateFacilityProductsEligibility(targetPeriodYear, baselineAndTargets))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsBeforeFacilityBaseYear(baselineAndTargets))
+                .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
         		.thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityStatusService.submitPerformanceData(any()))
@@ -140,6 +142,8 @@ class PerformanceDataFacilityProcessingServiceTest {
                 .validateFacilityBaselineDateEligibility(targetPeriodYear, baselineAndTargets);
         verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(targetPeriodYear, baselineAndTargets);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsBeforeFacilityBaseYear(baselineAndTargets);
         verify(performanceDataFacilityValidator, times(1))
         		.validateFacilityReportingLock(facility, targetPeriodYear);
         verify(performanceDataFacilityStatusService, times(1))
@@ -201,6 +205,8 @@ class PerformanceDataFacilityProcessingServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityValidator.validateFacilityProductsEligibility(targetPeriodYear, baselineAndTargets))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsBeforeFacilityBaseYear(baselineAndTargets))
+                .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
 				.thenReturn(BusinessValidationResult.valid());
 
@@ -219,6 +225,8 @@ class PerformanceDataFacilityProcessingServiceTest {
                 .validateFacilityBaselineDateEligibility(targetPeriodYear, baselineAndTargets);
         verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(targetPeriodYear, baselineAndTargets);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsBeforeFacilityBaseYear(baselineAndTargets);
         verify(performanceDataFacilityValidator, times(1))
 				.validateFacilityReportingLock(facility, targetPeriodYear);
         verifyNoInteractions(performanceDataFacilityStatusService);

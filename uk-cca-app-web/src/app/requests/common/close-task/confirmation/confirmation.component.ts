@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -6,7 +6,7 @@ import { PanelComponent } from '@netz/govuk-components';
 @Component({
   selector: 'cca-non-compliance-conclusion-close-task-confirmation',
   template: `
-    <govuk-panel title="Task closed successfully"></govuk-panel>
+    <govuk-panel title="Task closed successfully" />
 
     <p>You have marked this task as 'Closed'.</p>
 
@@ -16,6 +16,5 @@ import { PanelComponent } from '@netz/govuk-components';
     <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true">Return to: Dashboard</a>
   `,
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CloseTaskConfirmationComponent {}

@@ -20,7 +20,7 @@ import { getBaselineUnits, getMeasurementAndThroughputUnits } from '../target-pe
 import { BaseLineAndTargetsStep } from '../types';
 import { addDecisionSummaryData } from './decision-summary-data';
 
-type BaselineAndTargetsSummaryMetadata = {
+export type BaselineAndTargetsSummaryMetadata = {
   isTp5Period: boolean;
   baselineExists: boolean | null;
   isEditable: boolean;

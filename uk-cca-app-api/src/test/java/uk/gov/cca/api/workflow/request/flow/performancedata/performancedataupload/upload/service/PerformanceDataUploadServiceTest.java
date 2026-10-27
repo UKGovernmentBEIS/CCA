@@ -25,6 +25,7 @@ import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatauploa
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.validation.PerformanceDataUploadAttachmentsExistValidatorService;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.validation.PerformanceDataUploadExcelFileNameValidator;
 import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.attachments.service.FileAttachmentService;
 import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
@@ -32,7 +33,6 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +41,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -72,7 +71,8 @@ class PerformanceDataUploadServiceTest {
     private PerformanceDataCreateSchemeValidator performanceDataCreateSchemeValidator;
 
     @Test
-    void submit() throws IOException {
+    void submit() {
+        final String sectorUserAssignee = "sectorUserAssignee";
         final UUID zip = UUID.randomUUID();
         final UUID excel = UUID.randomUUID();
         final String fileName = "ADS_1-T00001_TPR_TP6_V1.xlsx";
@@ -81,10 +81,10 @@ class PerformanceDataUploadServiceTest {
                 .fileType("text/plain")
                 .fileContent("Test".getBytes())
                 .fileSize(4)
+                .createdBy(sectorUserAssignee)
                 .build();
         final byte[] zipContent = ZipUtils.generateZipFile(List.of(excelFile));
         final FileDTO zipFile = FileDTO.builder().fileContent(zipContent).build();
-        final String sectorUserAssignee = "sectorUserAssignee";
         final SectorAssociationInfo sectorAssociationInfo = SectorAssociationInfo.builder().id(22L).build();
         RequestTask requestTask = RequestTask.builder()
                 .payload(PerformanceDataUploadSubmitRequestTaskPayload.builder()
@@ -110,7 +110,7 @@ class PerformanceDataUploadServiceTest {
                 .validate((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload()))
                 .thenReturn(BusinessValidationResult.valid());
         when(fileAttachmentService.getFileDTO(zip.toString())).thenReturn(zipFile);
-        when(fileAttachmentService.createFileAttachment(excelFile, FileStatus.SUBMITTED, sectorUserAssignee))
+        when(fileAttachmentService.createFileAttachment(excelFile, FileStatus.SUBMITTED))
                 .thenReturn(excel.toString());
         when(performanceDataUploadExcelFileNameValidator.validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap))
                 .thenReturn(BusinessValidationResult.valid());
@@ -139,7 +139,7 @@ class PerformanceDataUploadServiceTest {
                 .validate((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload());
         verify(fileAttachmentService, times(1)).getFileDTO(zip.toString());
         verify(fileAttachmentService, times(1))
-                .createFileAttachment(excelFile, FileStatus.SUBMITTED, sectorUserAssignee);
+                .createFileAttachment(excelFile, FileStatus.SUBMITTED);
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap);
         verify(performanceDataCreateSchemeValidator, times(1))
@@ -148,7 +148,8 @@ class PerformanceDataUploadServiceTest {
     }
 
     @Test
-    void submit_filename_not_valid() throws IOException {
+    void submit_filename_not_valid() {
+        final String sectorUserAssignee = "sectorUserAssignee";
         final UUID zip = UUID.randomUUID();
         final String fileName = "ADS_1-T00001_TPR_TP70_V1.xlsx";
         final FileDTO excelFile = FileDTO.builder()
@@ -156,10 +157,10 @@ class PerformanceDataUploadServiceTest {
                 .fileType("text/plain")
                 .fileContent("Test".getBytes())
                 .fileSize(4)
+                .createdBy(sectorUserAssignee)
                 .build();
         final byte[] zipContent = ZipUtils.generateZipFile(List.of(excelFile));
         final FileDTO zipFile = FileDTO.builder().fileContent(zipContent).build();
-        final String sectorUserAssignee = "sectorUserAssignee";
         final SectorAssociationInfo sectorAssociationInfo = SectorAssociationInfo.builder().id(22L).build();
         RequestTask requestTask = RequestTask.builder()
                 .payload(PerformanceDataUploadSubmitRequestTaskPayload.builder()
@@ -212,14 +213,15 @@ class PerformanceDataUploadServiceTest {
         verify(fileAttachmentService, times(1)).getFileDTO(zip.toString());
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap);
-        verify(fileAttachmentService, never()).createFileAttachment(any(), any(), anyString());
+        verify(fileAttachmentService, never()).createFileAttachment(any(), any());
         verify(performanceDataCreateSchemeValidator, times(1))
 				.isAvailableForScheme(eq(SchemeVersion.CCA_2), any());
         verifyNoMoreInteractions(fileAttachmentService);
     }
 
     @Test
-    void submit_throw_exception() throws IOException {
+    void submit_throw_exception() {
+        final String sectorUserAssignee = "sectorUserAssignee";
         final UUID zip = UUID.randomUUID();
         final String fileName = "ADS_1-T00001_TPR_TP6_V1.xlsx";
         final FileDTO excelFile = FileDTO.builder()
@@ -227,10 +229,10 @@ class PerformanceDataUploadServiceTest {
                 .fileType("text/plain")
                 .fileContent("Test".getBytes())
                 .fileSize(4)
+                .createdBy(sectorUserAssignee)
                 .build();
         final byte[] zipContent = ZipUtils.generateZipFile(List.of(excelFile));
         final FileDTO zipFile = FileDTO.builder().fileContent(zipContent).build();
-        final String sectorUserAssignee = "sectorUserAssignee";
         final SectorAssociationInfo sectorAssociationInfo = SectorAssociationInfo.builder().id(22L).build();
         RequestTask requestTask = RequestTask.builder()
                 .payload(PerformanceDataUploadSubmitRequestTaskPayload.builder()
@@ -256,8 +258,8 @@ class PerformanceDataUploadServiceTest {
                 .validate((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload()))
                 .thenReturn(BusinessValidationResult.valid());
         when(fileAttachmentService.getFileDTO(zip.toString())).thenReturn(zipFile);
-        when(fileAttachmentService.createFileAttachment(excelFile, FileStatus.SUBMITTED, sectorUserAssignee))
-                .thenThrow(new IOException("test"));
+        when(fileAttachmentService.createFileAttachment(excelFile, FileStatus.SUBMITTED))
+                .thenThrow(new BusinessException(ErrorCode.INVALID_FILE_TYPE));
         when(performanceDataUploadExcelFileNameValidator.validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataCreateSchemeValidator.isAvailableForScheme(eq(SchemeVersion.CCA_2), any()))
@@ -280,7 +282,7 @@ class PerformanceDataUploadServiceTest {
                 .validate((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload());
         verify(fileAttachmentService, times(1)).getFileDTO(zip.toString());
         verify(fileAttachmentService, times(1))
-                .createFileAttachment(excelFile, FileStatus.SUBMITTED, sectorUserAssignee);
+                .createFileAttachment(excelFile, FileStatus.SUBMITTED);
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap);
         verify(performanceDataCreateSchemeValidator, times(1))
@@ -289,7 +291,8 @@ class PerformanceDataUploadServiceTest {
     }
 
     @Test
-    void submit_duplicate_account() throws IOException {
+    void submit_duplicate_account() {
+        final String sectorUserAssignee = "sectorUserAssignee";
         final UUID zip = UUID.randomUUID();
         final UUID excel2 = UUID.randomUUID();
         final String fileName = "ADS_1-T00001_TPR_TP6_V1.xlsx";
@@ -298,6 +301,7 @@ class PerformanceDataUploadServiceTest {
                 .fileType("text/plain")
                 .fileContent("Test".getBytes())
                 .fileSize(4)
+                .createdBy(sectorUserAssignee)
                 .build();
         final String fileName2 = "ADS_1-T00001_TPR_TP6_V2.xlsx";
         final FileDTO excelFile2 = FileDTO.builder()
@@ -305,10 +309,10 @@ class PerformanceDataUploadServiceTest {
                 .fileType("text/plain")
                 .fileContent("Test".getBytes())
                 .fileSize(4)
+                .createdBy(sectorUserAssignee)
                 .build();
         final byte[] zipContent = ZipUtils.generateZipFile(List.of(excelFile, excelFile2));
         final FileDTO zipFile = FileDTO.builder().fileContent(zipContent).build();
-        final String sectorUserAssignee = "sectorUserAssignee";
         final SectorAssociationInfo sectorAssociationInfo = SectorAssociationInfo.builder().id(22L).build();
         RequestTask requestTask = RequestTask.builder()
                 .payload(PerformanceDataUploadSubmitRequestTaskPayload.builder()
@@ -334,7 +338,7 @@ class PerformanceDataUploadServiceTest {
                 .validate((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload()))
                 .thenReturn(BusinessValidationResult.valid());
         when(fileAttachmentService.getFileDTO(zip.toString())).thenReturn(zipFile);
-        when(fileAttachmentService.createFileAttachment(excelFile2, FileStatus.SUBMITTED, sectorUserAssignee))
+        when(fileAttachmentService.createFileAttachment(excelFile2, FileStatus.SUBMITTED))
                 .thenReturn(excel2.toString());
         when(performanceDataUploadExcelFileNameValidator.validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap))
                 .thenReturn(BusinessValidationResult.valid());
@@ -364,7 +368,7 @@ class PerformanceDataUploadServiceTest {
                 .validate((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload());
         verify(fileAttachmentService, times(1)).getFileDTO(zip.toString());
         verify(fileAttachmentService, times(1))
-                .createFileAttachment(excelFile2, FileStatus.SUBMITTED, sectorUserAssignee);
+                .createFileAttachment(excelFile2, FileStatus.SUBMITTED);
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap);
         verify(performanceDataUploadExcelFileNameValidator, times(1))
@@ -377,8 +381,8 @@ class PerformanceDataUploadServiceTest {
 
     @Test
     void submit_not_valid_files() {
-        final UUID zip = UUID.randomUUID();
         final String sectorUserAssignee = "sectorUserAssignee";
+        final UUID zip = UUID.randomUUID();
         final SectorAssociationInfo sectorAssociationInfo = SectorAssociationInfo.builder().id(22L).build();
         RequestTask requestTask = RequestTask.builder()
                 .payload(PerformanceDataUploadSubmitRequestTaskPayload.builder()
@@ -463,7 +467,7 @@ class PerformanceDataUploadServiceTest {
     }
 
     @Test
-    void createCsvFile() throws IOException {
+    void createCsvFile() {
         final String sectorUserAssignee = "sectorUserAssignee";
         final RequestTask requestTask = RequestTask.builder()
                 .id(1L)
@@ -492,7 +496,7 @@ class PerformanceDataUploadServiceTest {
         );
         final String fileCsv = "fileCsv";
 
-        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(sectorUserAssignee)))
+        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED)))
                 .thenReturn(fileCsv);
 
         // Invoke
@@ -502,11 +506,11 @@ class PerformanceDataUploadServiceTest {
         assertThat(((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload()).getCsvFile())
                 .isNotNull();
         verify(ccaFileAttachmentService, times(1))
-                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(sectorUserAssignee));
+                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED));
     }
 
     @Test
-    void createCsvFile_throw_exception() throws IOException {
+    void createCsvFile_throw_exception() {
         final String sectorUserAssignee = "sectorUserAssignee";
         final RequestTask requestTask = RequestTask.builder()
                 .id(1L)
@@ -534,8 +538,8 @@ class PerformanceDataUploadServiceTest {
                         .build()
         );
 
-        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(sectorUserAssignee)))
-                .thenThrow(new IOException("test"));
+        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED)))
+                .thenThrow(new NullPointerException("test"));
 
         // Invoke
         BpmnError ex = assertThrows(BpmnError.class, () ->
@@ -544,6 +548,6 @@ class PerformanceDataUploadServiceTest {
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo("csvError");
         verify(ccaFileAttachmentService, times(1))
-                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(sectorUserAssignee));
+                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED));
     }
 }

@@ -180,11 +180,11 @@ class TargetPeriodRepositoryIT extends AbstractContainerBaseTest {
         flushAndClear();
 
         List<TargetPeriod> result =
-                repository.findBySchemeVersionAndStartDateLessThanEqual(
+                repository.findBySchemeVersionAndStartDateLessThanEqualOrderByStartDateAsc(
                         SchemeVersion.CCA_3,
                         LocalDate.of(2026, 1, 1));
 
-        assertThat(result).containsExactlyInAnyOrder(older, current);
+        assertThat(result).containsExactly(older, current);
     }
 
     private TargetPeriod createTargetPeriod(TargetPeriodType businessId,

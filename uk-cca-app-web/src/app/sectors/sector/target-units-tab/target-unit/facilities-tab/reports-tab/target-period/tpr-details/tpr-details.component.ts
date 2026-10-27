@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -31,7 +31,6 @@ import { FacilityTargetPeriodReportStore } from '../../../facility-target-period
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

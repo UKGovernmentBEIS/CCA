@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -15,7 +15,6 @@ import { SummaryComponent } from '@shared/components';
   selector: 'cca-submit-results',
   templateUrl: './submit-results.component.html',
   imports: [PageHeadingComponent, DetailsComponent, SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmitResultsComponent {
   private readonly requestActionStore = inject(RequestActionStore);

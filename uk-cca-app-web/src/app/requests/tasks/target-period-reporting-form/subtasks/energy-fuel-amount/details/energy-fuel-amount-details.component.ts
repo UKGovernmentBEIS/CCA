@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -45,6 +45,7 @@ import {
 @Component({
   selector: 'cca-energy-fuel-amount-details',
   templateUrl: './energy-fuel-amount-details.component.html',
+  providers: [EnergyFuelAmountDetailsFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -57,8 +58,6 @@ import {
     RadioComponent,
     RadioOptionComponent,
   ],
-  providers: [EnergyFuelAmountDetailsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergyFuelAmountDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

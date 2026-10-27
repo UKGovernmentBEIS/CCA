@@ -23,7 +23,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestAction;
 import uk.gov.netz.api.workflow.request.core.service.RequestCreateService;
@@ -38,7 +38,7 @@ import java.util.Map;
 public class UnderlyingAgreementRequestMigrationService {
 
     private final RequestCreateService requestCreateService;
-    private final FileDocumentService fileDocumentService;
+    private final FileDocumentStorageService fileDocumentStorageService;
     private final AccountReferenceDetailsService accountReferenceDetailsService;
     private final UnderlyingAgreementTargetUnitDetailsMapper targetUnitDetailsMapper;
     private final UnderlyingAgreementRepository underlyingAgreementRepository;
@@ -62,7 +62,7 @@ public class UnderlyingAgreementRequestMigrationService {
         request.setEndDate(creationDate);
 
         UnderlyingAgreementDocument underlyingAgreementDocument = entity.getDocumentForSchemeVersion(SchemeVersion.CCA_2);
-        FileInfoDTO fileInfoDto = fileDocumentService.getFileInfoDTO(underlyingAgreementDocument.getFileDocumentUuid());
+        FileInfoDTO fileInfoDto = fileDocumentStorageService.getFileInfoDTO(underlyingAgreementDocument.getFileDocumentUuid());
         AccountReferenceData accountReferenceData = accountReferenceDetailsService.getAccountReferenceData(entity.getAccountId());
 
         UnderlyingAgreementPayload underlyingAgreementPayload = UnderlyingAgreementPayload.builder()

@@ -5,8 +5,11 @@
         {{ details?.workflowDetails.id }}
 
         <span>
-          <govuk-tag [color]="details?.workflowDetails.requestStatus | statusColor" class="tag-width">
-            {{ details?.workflowDetails.requestStatus | status }}
+          <govuk-tag
+            [color]="$safeNavigationMigration(details?.workflowDetails.requestStatus) | statusColor"
+            class="tag-width"
+          >
+            {{ $safeNavigationMigration(details?.workflowDetails.requestStatus) | status }}
           </govuk-tag>
         </span>
       </netz-page-heading>

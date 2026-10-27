@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
@@ -42,7 +42,6 @@ function toSummaryData(user: InvitedSectorUserExtended): SummaryData {
     <button netzPendingButton govukButton type="button" (click)="onSaveUserInvitationDetails()">Submit</button>
   `,
   imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorUserInvitationSummaryComponent {
   private readonly router = inject(Router);

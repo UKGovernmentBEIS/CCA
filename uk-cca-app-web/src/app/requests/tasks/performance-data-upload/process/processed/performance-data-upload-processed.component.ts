@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
@@ -26,7 +26,6 @@ import { toSubmissionResultsSummaryData } from './submission-results-summary-dat
     ErrorMessageTypePipe,
     SummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataUploadProcessedComponent {
   private readonly router = inject(Router);

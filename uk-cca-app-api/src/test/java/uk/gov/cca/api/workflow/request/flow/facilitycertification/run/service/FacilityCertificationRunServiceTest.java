@@ -14,7 +14,6 @@ import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,32 +44,6 @@ class FacilityCertificationRunServiceTest {
 
         // Verify
         assertThat(request.getSubmissionDate()).isNotNull();
-        verify(requestService, times(1)).findRequestById(requestId);
-    }
-
-    @Test
-    void accountProcessingCompleted() {
-        final String requestId = "requestId";
-        final Long accountId = 1L;
-        final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder().accountId(accountId).build();
-
-        final FacilityCertificationRunRequestPayload runRequestPayload = FacilityCertificationRunRequestPayload.builder()
-                .facilityCertificationAccountStates(new HashMap<>())
-                .build();
-        final Request request = Request.builder()
-                .id(requestId)
-                .payload(runRequestPayload)
-                .build();
-
-        when(requestService.findRequestById(requestId)).thenReturn(request);
-
-        // Invoke
-        facilityCertificationRunService.accountProcessingCompleted(requestId, accountId, accountState);
-
-        // Verify
-        assertThat(((FacilityCertificationRunRequestPayload) request.getPayload()).getFacilityCertificationAccountStates())
-                .isNotEmpty()
-                .containsAllEntriesOf(Map.of(1L, accountState));
         verify(requestService, times(1)).findRequestById(requestId);
     }
 

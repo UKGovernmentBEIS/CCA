@@ -1,18 +1,11 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 
-import { BuyOutAndSurplusTransactionInfoViewService } from 'cca-api';
+import { BuyOutAndSurplusAccountTransactionViewService } from 'cca-api';
 
 export const TRANSACTION_DETAILS_ROUTES: Routes = [
   {
     path: ':transactionId',
-    resolve: {
-      transactionDetails: (route: ActivatedRouteSnapshot) =>
-        inject(BuyOutAndSurplusTransactionInfoViewService).getBuyOutSurplusTransactionDetails(
-          +route.paramMap.get('transactionId'),
-        ),
-    },
-    runGuardsAndResolvers: 'always',
     data: {
       breadcrumb: {
         text: 'Buy-out and surplus',
@@ -20,8 +13,15 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
         link: '/buyout-surplus',
       },
     },
+    resolve: {
+      transactionDetails: (route: ActivatedRouteSnapshot) =>
+        inject(BuyOutAndSurplusAccountTransactionViewService).getAccountBuyOutSurplusTransaction(
+          +route.paramMap.get('transactionId'),
+        ),
+    },
     children: [
       {
+        title: 'Transaction details',
         path: '',
         loadComponent: () =>
           import('./transaction-details-container.component').then((c) => c.TransactionDetailsContainerComponent),
@@ -30,20 +30,22 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
         path: 'change-status',
         children: [
           {
+            title: 'Status',
             path: '',
-            data: { breadcrumb: false, backlink: '../' },
             loadComponent: () =>
-              import('./transcation-details-tab/change-status/change-status.component').then(
+              import('./transaction-details-tab/change-status/change-status.component').then(
                 (c) => c.ChangeStatusComponent,
               ),
+            data: { breadcrumb: false, backlink: '../' },
           },
           {
+            title: 'Payment status updated',
             path: 'confirmation',
-            data: { breadcrumb: false },
             loadComponent: () =>
-              import('./transcation-details-tab/change-status/confirmation/confirmation.component').then(
+              import('./transaction-details-tab/change-status/confirmation/confirmation.component').then(
                 (c) => c.ConfirmationComponent,
               ),
+            data: { breadcrumb: false },
           },
         ],
       },
@@ -51,31 +53,37 @@ export const TRANSACTION_DETAILS_ROUTES: Routes = [
         path: 'change-amount',
         children: [
           {
+            title: 'Amount',
             path: '',
-            data: { breadcrumb: false, backlink: '../' },
             loadComponent: () =>
-              import('./transcation-details-tab/change-amount/change-amount.component').then(
+              import('./transaction-details-tab/change-amount/change-amount.component').then(
                 (c) => c.ChangeAmountComponent,
               ),
+            data: { breadcrumb: false, backlink: '../' },
           },
           {
+            title: 'Current amount updated',
             path: 'confirmation',
-            data: { breadcrumb: false },
             loadComponent: () =>
-              import('./transcation-details-tab/change-amount/confirmation/confirmation-component').then(
+              import('./transaction-details-tab/change-amount/confirmation/confirmation-component').then(
                 (c) => c.ConfirmationComponent,
               ),
+            data: { breadcrumb: false },
           },
         ],
       },
       {
+        title: 'Your download has started',
         path: 'file-download/:uuid',
-        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
+        loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },
       {
+        title: 'Your download has started',
         path: 'file-evidences-download/:fileType/:uuid',
-        loadComponent: () => import('@shared/components').then((m) => m.EvidenceFileDownloadComponent),
+        loadComponent: () => import('@shared/components').then((c) => c.EvidenceFileDownloadComponent),
+        data: { evidenceResource: 'transactionDetail' },
       },
     ],
+    runGuardsAndResolvers: 'always',
   },
 ];

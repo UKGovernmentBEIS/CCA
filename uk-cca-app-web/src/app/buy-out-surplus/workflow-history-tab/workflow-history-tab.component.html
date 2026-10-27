@@ -24,16 +24,11 @@
             </div>
           }
 
-          @case ('totalAccounts') {
-            <div class="govuk-!-text-align-right">
-              <span>{{ row.requestMetadata[column.field] | number }}</span>
-            </div>
-          }
-
+          @case ('totalFacilities')
+          @case ('totalAccounts')
+          @case ('failedFacilities')
           @case ('failedAccounts') {
-            <div class="govuk-!-text-align-right">
-              <span>{{ row.requestMetadata[column.field] | number }}</span>
-            </div>
+            <span>{{ row.requestMetadata?.[column.field] | number }}</span>
           }
         }
       </ng-template>

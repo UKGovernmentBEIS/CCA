@@ -1,37 +1,28 @@
-import { Component, input, OnChanges } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, Params, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'govuk-back-link',
-  imports: [RouterLink],
   template: `
-    <a
-      [routerLink]="routerLink"
-      [queryParams]="queryParams"
-      class="govuk-back-link"
-      [class.govuk-back-link--inverse]="inverse()"
-    >
-      Back
-    </a>
+    <a [routerLink]="urlTree()" class="govuk-back-link" [class.govuk-back-link--inverse]="inverse()">Back</a>
   `,
+  imports: [RouterLink],
 })
-export class BackLinkComponent implements OnChanges {
-  readonly link = input<string>();
-  readonly route = input<ActivatedRouteSnapshot>();
+export class BackLinkComponent {
+  readonly link = input.required<string>();
+  readonly route = input.required<ActivatedRouteSnapshot>();
+  readonly fragment = input<string>();
+  /** Query params of the link. Defaults to the current ones, or none when a fragment is set. */
+  readonly queryParams = input<Params>();
   readonly inverse = input(false);
 
-  routerLink: string[];
-  queryParams: Params | null;
-
-  ngOnChanges(): void {
-    const urlTree = createUrlTreeFromSnapshot(
+  // A fragment targets a section (e.g. a tab) of the destination page, which does not need the current query params
+  protected readonly urlTree = computed(() =>
+    createUrlTreeFromSnapshot(
       this.route(),
       [this.link()],
-      this.route().queryParams,
-      this.route().fragment,
-    );
-
-    this.routerLink = urlTree.root.children.primary.segments.map((s) => s.path);
-    this.queryParams = urlTree.queryParams;
-  }
+      this.queryParams() ?? (this.fragment() ? null : this.route().queryParams),
+      this.fragment(),
+    ),
+  );
 }

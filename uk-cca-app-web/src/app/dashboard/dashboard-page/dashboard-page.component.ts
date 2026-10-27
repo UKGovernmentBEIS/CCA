@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
@@ -21,7 +21,6 @@ import { UnassignedComponent } from '../unassigned/unassigned.component';
     AssignedToOthersComponent,
     UnassignedComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPageComponent {
   private readonly authStore = inject(AuthStore);

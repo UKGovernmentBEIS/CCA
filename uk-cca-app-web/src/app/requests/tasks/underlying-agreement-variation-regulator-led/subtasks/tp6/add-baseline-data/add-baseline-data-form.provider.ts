@@ -6,6 +6,7 @@ import { GovukValidators } from '@netz/govuk-components';
 import {
   addBaselineDataConditionallyRequiredFieldsValidator,
   AddBaselineDataFormModel,
+  getAttachmentType,
   normaliseNumber,
   underlyingAgreementQuery,
   UPLOAD_SECTION_ATTACHMENT_TYPE,
@@ -27,7 +28,7 @@ export const addBaselineDataFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       baselineData?.greenfieldEvidences || [],
       attachments || {},
-      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

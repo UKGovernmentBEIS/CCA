@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -40,7 +40,6 @@ import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from '../../../types';
     FinalDecisionTypePipe,
     ReturnToTaskOrActionPageComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FinalDecisionReasonCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 export const AUDIT_DETAILS_CORRECTIVE_ACTIONS_ROUTES: Routes = [
   {
+    title: 'Audit details and corrective actions',
     path: '',
     children: [
       {

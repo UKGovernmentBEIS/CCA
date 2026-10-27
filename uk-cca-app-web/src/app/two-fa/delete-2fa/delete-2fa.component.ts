@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { first, map, of, switchMap } from 'rxjs';
@@ -11,7 +11,6 @@ import { UsersSecuritySetupService } from 'cca-api';
 @Component({
   selector: 'cca-delete-2fa',
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Delete2faComponent implements OnInit {
   private readonly router = inject(Router);

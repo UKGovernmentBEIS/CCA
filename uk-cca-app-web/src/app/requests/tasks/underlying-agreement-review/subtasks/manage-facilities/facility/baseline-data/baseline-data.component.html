@@ -2,7 +2,7 @@
   <cca-wizard-step
     (formSubmit)="onSubmit()"
     [formGroup]="form"
-    [caption]="facility?.facilityDetails?.name"
+    [caption]="$safeNavigationMigration(facility?.facilityDetails?.name)"
     heading="Baseline data"
     data-testid="baseline-data-form"
   >
@@ -77,9 +77,6 @@
             }}
           </h2>
 
-          <div class="govuk-!-margin-bottom-2">
-            Must the Special Reporting Methodology be applied for this facility?
-          </div>
           <span class="govuk-hint">
             SRM must be applied if all of the following factors apply:
             <ul>
@@ -93,7 +90,12 @@
               <li>the facility can import electricity from the grid.</li>
             </ul>
           </span>
-          <div formControlName="usedReportingMechanism" [isInline]="true" govuk-radio>
+          <div
+            formControlName="usedReportingMechanism"
+            [isInline]="true"
+            govuk-radio
+            legend="Must the Special Reporting Methodology be applied for this facility?"
+          >
             <govuk-radio-option [value]="true" [label]="'Yes'" />
             <govuk-radio-option [value]="false" [label]="'No'" />
           </div>

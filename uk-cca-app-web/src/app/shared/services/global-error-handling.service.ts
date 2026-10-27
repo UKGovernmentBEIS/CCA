@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { ErrorHandler, inject, Injectable } from '@angular/core';
+import { ErrorHandler, inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { first, from, Observable, switchMap, throwError } from 'rxjs';
@@ -8,7 +8,7 @@ import { logger } from '../utils/logger';
 import { AuthService } from './auth.service';
 import { StaleChunkRecoveryService } from './stale-chunk-recovery.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GlobalErrorHandlingService implements ErrorHandler {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
@@ -38,7 +38,7 @@ export class GlobalErrorHandlingService implements ErrorHandler {
           ).pipe(switchMap(() => throwError(() => res)));
 
         case HttpStatusCode.Unauthorized:
-          return from(this.authService.login()).pipe(switchMap(() => throwError(() => res)));
+          return from(this.authService.reauthenticate()).pipe(switchMap(() => throwError(() => res)));
 
         case HttpStatusCode.Forbidden:
           return this.authService.loadUserState().pipe(

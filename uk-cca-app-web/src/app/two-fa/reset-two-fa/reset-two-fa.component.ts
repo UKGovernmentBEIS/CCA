@@ -1,5 +1,5 @@
 import { AsyncPipe, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { combineLatest, map, switchMap, take } from 'rxjs';
@@ -14,7 +14,6 @@ import { OperatorUsersService, RegulatorUsersService, SectorUsersService } from 
   selector: 'cca-reset-two-fa',
   templateUrl: './reset-two-fa.component.html',
   imports: [PageHeadingComponent, PendingButtonDirective, ButtonDirective, RouterLink, AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetTwoFaComponent implements OnInit {
   private readonly regulatorUsersService = inject(RegulatorUsersService);

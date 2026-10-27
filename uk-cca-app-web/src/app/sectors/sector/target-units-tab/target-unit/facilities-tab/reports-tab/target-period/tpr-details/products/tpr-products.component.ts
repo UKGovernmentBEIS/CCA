@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { SplitByProductTableComponent } from '@requests/common';
@@ -17,7 +17,6 @@ import { FacilityTargetPeriodReportStore } from '../../../../facility-target-per
     />
   `,
   imports: [PageHeadingComponent, SplitByProductTableComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprProductsComponent {
   private readonly facilityTargetPeriodReportStore = inject(FacilityTargetPeriodReportStore);

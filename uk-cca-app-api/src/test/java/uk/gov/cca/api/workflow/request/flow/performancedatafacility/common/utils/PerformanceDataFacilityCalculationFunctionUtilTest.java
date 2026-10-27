@@ -40,15 +40,16 @@ import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domai
  *  Excel values:
  *  actualEnergyCarbon: Throughput!M29
  *  targetEnergyCarbon: Throughput!M26
- *  energyCarbonDifference: Throughput!M30
- *  weightedConversionFactor: Fuels!B36
- *  targetCo2Emissions: No representation
- *  actualCo2Emissions: Throughput!M36
- *  co2EmissionsDifference: Throughput!M31
- *  actualImprovement: Throughput!M33
+ *  energyCarbonDifference: Throughput!M31
+ *  targetImprovement: Throughput!M36
+ *  weightedConversionFactor: Fuels!B35
+ *  targetCo2Emissions: Throughput!M34
+ *  actualCo2Emissions: Throughput!M33
+ *  co2EmissionsDifference: Throughput!M35
+ *  actualImprovement: Throughput!M37
  *  targetPeriodResultType: No representation
- *  results.getSurplusGained(): Throughput!M35
- *  buyOutRequired: No representation
+ *  surplusGained: Throughput!M39
+ *  buyOutRequired: Throughput!M38
  */
 @ExtendWith(MockitoExtension.class)
 class PerformanceDataFacilityCalculationFunctionUtilTest  {
@@ -109,6 +110,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(27600000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(3400000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -178,6 +181,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(27600000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(3400000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -248,6 +253,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(52800000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-21800000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.12).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -318,6 +325,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(27000000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(4000000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.10).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -371,6 +380,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -385,8 +396,6 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getSurplusGained()).isEqualTo(BigDecimal.ZERO);
         assertThat(results.getBuyOutRequired()).isEqualTo(BigDecimal.ZERO);
     }
-
-	
 
     @Test
     void test_TP7_ENERGY_KWH_totals() {
@@ -446,6 +455,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(19923750).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(11076250).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -518,6 +529,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(28980000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(2020000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -591,6 +604,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(19057500).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(11942500).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.12).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -664,6 +679,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(19490625).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(11509375).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.10).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -719,6 +736,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
@@ -821,6 +840,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(30211968.0851064).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(788031.9148936).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.079692548).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -921,6 +942,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(43944680.8510638).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-12944680.8510638).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.079692548).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1037,6 +1060,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(8019001.3019987).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-8004901.3019987).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.023264153).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1942628).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1138,6 +1163,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(28898404.2553191).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(2101595.74468085).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.119705915).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1239,6 +1266,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(29549812.5).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(1450187.5).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.10).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1337,6 +1366,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(30064788.2110291).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(935211.7889709).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.084315361).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1418,6 +1449,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1491,6 +1524,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(22482500).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(8517500).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1563,6 +1598,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(28520000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(2480000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
         		.isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1636,6 +1673,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(30305000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(695000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.12).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 				.isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1709,6 +1748,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(21993750).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(9006250).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.10).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 				.isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1807,6 +1848,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(30715093.0851064).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(284906.914893616).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.079697585).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 				.isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -1907,6 +1950,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(40494680.8510638).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-9494680.85106383).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.079666344).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 				.isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2008,6 +2053,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(38179654.2553191).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-7179654.2553191).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.119777424).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 				.isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2110,6 +2157,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(30047373.6702128).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(952626.3297872).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.09970416).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1154753).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2176,6 +2225,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(27600000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(3400000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(120.3362903).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2249,6 +2300,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(29123750.0000000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(1876250).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(120.3362903).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2327,6 +2380,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(29123750).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(1880250).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(120.3337260).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2428,6 +2483,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 		        .isEqualTo(BigDecimal.valueOf(38179654.2553191).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(-7179654.2553191).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.119777424).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(120.3362903).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2529,6 +2586,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 		        .isEqualTo(BigDecimal.valueOf(38170000).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(-7170000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.12).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(120.3362903).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2630,6 +2689,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(30064788.2110291).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(935211.7889709).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.084315361).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(120.3362903).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2728,6 +2789,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(29549812.5).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(1450187.5000000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.10).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(120.3362903).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2807,6 +2870,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 		        .isEqualTo(BigDecimal.valueOf(4322059.1039968).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(-4304559.1039968).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.488372093).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(0.0602760).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2876,6 +2941,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(27600000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(3400000).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(33.4267475).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -2949,6 +3016,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(29123750.0000000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(1876250).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(33.4267475).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3041,6 +3110,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(14699.3212208).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-1199.3212208).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.835998432).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(21.7043210).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3140,6 +3211,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(977911.9707907).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-970511.9707907).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.833257289).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(29.8645871).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3241,6 +3314,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(30715093.0851064).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(284906.9148936).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.079697585).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(33.4267475).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3333,6 +3408,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(37722.9387804).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-24222.9387804).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.584866355).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(21.7043210).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3425,6 +3502,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(8089203.7084277).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-39203.3257116).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.048328979).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(29.8881645).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3486,6 +3565,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(3893507.3434638).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(17983122.7799862).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.055852635).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(0.1021709).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3581,6 +3662,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(7130593.9612375).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(2969406.0387625).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.036406221).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(30.9138064).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3712,6 +3795,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(2918061.1522426).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(6781938.8477574).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.027312949).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(0.1427456).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3810,6 +3895,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(30064788.2110291).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(935211.7889709).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.084315361).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(33.4267475).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -3908,6 +3995,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(28064668.996960500).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(2935331.0030395).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.145363233).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(33.4267475).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4009,6 +4098,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(28728575.4016500).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(2271424.5983500).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.125012456).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(33.4267475).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4083,6 +4174,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(802620.689655173).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-47055.2928851725).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1098553).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4155,6 +4248,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(828000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-72434.60323).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1098553).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4228,6 +4323,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(855724.137931035).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-100158.741161035).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.12).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.1098553).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4283,6 +4380,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
@@ -4351,6 +4450,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
         assertThat(results.getTargetEnergyCarbon().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.ZERO.setScale(7, RoundingMode.HALF_UP));
@@ -4453,6 +4554,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(28064668.9969605).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-24334243.9969605).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.145363233).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(0.1203363).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4525,6 +4628,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(1656000).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-1649228.1952300).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.08).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.0001175).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4587,6 +4692,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(1146.7190467).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(113.5873458).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.04).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(0.0001494).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4688,6 +4795,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
                 .isEqualTo(BigDecimal.valueOf(28064668.9969605).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getEnergyCarbonDifference().setScale(7, RoundingMode.HALF_UP))
                 .isEqualTo(BigDecimal.valueOf(-28060938.5719605).setScale(7, RoundingMode.HALF_UP));
+        assertThat(results.getTargetImprovement().setScale(7, RoundingMode.HALF_UP))
+                .isEqualTo(BigDecimal.valueOf(0.145363233).setScale(7, RoundingMode.HALF_UP));
         assertThat(results.getWeightedConversionFactor().setScale(7, RoundingMode.HALF_UP))
 		        .isEqualTo(BigDecimal.valueOf(0.0001203).setScale(7, RoundingMode.HALF_UP));
 		assertThat(results.getTargetCo2Emissions().setScale(7, RoundingMode.HALF_UP))
@@ -4810,6 +4919,8 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 				.apply(calculatedInfoData, data);
 		BigDecimal energyCarbonDifference = PerformanceDataFacilityCalculationFunctionUtil.ENERGY_CARBON_DIFFERENCE
 				.apply(actualEnergyCarbon, targetEnergyCarbon);
+        BigDecimal targetImprovement = PerformanceDataFacilityCalculationFunctionUtil
+                .TARGET_IMPROVEMENT.apply(calculatedInfoData, data).setScale(7, RoundingMode.HALF_UP);
 		BigDecimal weightedConversionFactor = PerformanceDataFacilityCalculationFunctionUtil.WEIGHTED_CONVERSION_FACTOR
 				.apply(data.getEnergyFuelDetails(), actualEnergyCarbon, calculatedInfoData.getMeasurementType());
 		BigDecimal targetCo2Emissions = PerformanceDataFacilityCalculationFunctionUtil.TARGET_TCO2_EMISSIONS
@@ -4828,9 +4939,10 @@ class PerformanceDataFacilityCalculationFunctionUtilTest  {
 				.apply(co2EmissionsDifference);
 		return PerformanceDataFacilityCalculatedResults.builder().actualEnergyCarbon(actualEnergyCarbon)
 				.targetEnergyCarbon(targetEnergyCarbon).energyCarbonDifference(energyCarbonDifference)
-				.weightedConversionFactor(weightedConversionFactor).targetCo2Emissions(targetCo2Emissions)
-				.actualCo2Emissions(actualCo2Emissions).co2EmissionsDifference(co2EmissionsDifference)
-				.actualImprovement(actualImprovement).targetPeriodResultType(targetPeriodResultType)
-				.surplusGained(surplusGained).buyOutRequired(buyOutRequired).build();
+                .targetImprovement(targetImprovement).weightedConversionFactor(weightedConversionFactor)
+                .targetCo2Emissions(targetCo2Emissions).actualCo2Emissions(actualCo2Emissions)
+                .co2EmissionsDifference(co2EmissionsDifference).actualImprovement(actualImprovement)
+                .targetPeriodResultType(targetPeriodResultType).surplusGained(surplusGained)
+                .buyOutRequired(buyOutRequired).build();
 	}
 }

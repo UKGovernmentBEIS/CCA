@@ -1,13 +1,18 @@
 package uk.gov.cca.api.targetperiodreporting.performancedatafacility.service;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDate;
+import java.time.Year;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacility;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityEntity;
@@ -21,11 +26,6 @@ import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
-
-import java.time.LocalDate;
-import java.time.Year;
-import java.util.Optional;
-import java.util.Set;
 
 @Validated
 @Service
@@ -115,6 +115,14 @@ public class PerformanceDataFacilityStatusService {
 				eligibleFacilityBusinessIds, targetYear);
 		
 	}
+	
+	@Transactional
+    public void lockPerformanceData(Set<Long> performanceDataIds) {
+	    List<PerformanceDataFacilityStatus> statuses =
+	            performanceDataFacilityStatusRepository.findUnlockedForUpdate(performanceDataIds);
+
+	    statuses.forEach(status -> status.setLocked(true));
+    }
 
 	private PerformanceDataFacilityStatus getFacilityPerformanceDataStatus(Long facilityId, Year year) {
 		return performanceDataFacilityStatusRepository

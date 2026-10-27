@@ -4,7 +4,7 @@
 
 .cca-side-navigation {
   font-family: 'GDS Transport', arial, sans-serif;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.25;
 }
 
@@ -23,8 +23,8 @@
 }
 
 .cca-side-navigation__title {
-  font-size: 19px;
-  color: var(--govuk-dark-grey);
+  font-size: 1.1875rem;
+  color: var(--govuk-secondary-text-colour);
   font-weight: normal;
   margin: 0;
   padding: var(--govuk-spacing-2);

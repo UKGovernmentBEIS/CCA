@@ -122,7 +122,7 @@ public class Cca3ExistingFacilitiesMigrationCreateRunService {
 
             // Find accounts migrated
             RequestCreateValidationResult result = cca3ExistingFacilitiesMigrationAccountProcessingCreateValidator
-                    .validateAction(account.getAccountId());
+                    .checkAvailability(account.getAccountId());
 
             if (!result.isValid()) {
                 accountState.getErrors().add(Cca3ExistingFacilitiesMigrationViolation.Cca3ExistingFacilitiesMigrationViolationMessage.ACCOUNT_NOT_ELIGIBLE_FOR_MIGRATION.getMessage());

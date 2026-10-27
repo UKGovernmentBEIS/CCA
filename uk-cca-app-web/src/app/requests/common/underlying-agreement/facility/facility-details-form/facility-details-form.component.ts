@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -27,6 +27,7 @@ import { FACILITY_DETAILS_FORM, FacilityDetailsFormModel } from './facility-deta
 @Component({
   selector: 'cca-facility-details-form',
   templateUrl: './facility-details-form.component.html',
+  viewProviders: [existingControlContainer],
   imports: [
     ReactiveFormsModule,
     RadioComponent,
@@ -40,8 +41,6 @@ import { FACILITY_DETAILS_FORM, FacilityDetailsFormModel } from './facility-deta
     WizardStepComponent,
     RouterLink,
   ],
-  viewProviders: [existingControlContainer],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityDetailsFormComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

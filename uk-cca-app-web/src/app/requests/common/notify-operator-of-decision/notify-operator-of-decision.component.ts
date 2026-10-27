@@ -12,8 +12,8 @@ import { CaExternalContactsService, RegulatorAuthoritiesService, TasksService } 
 @Component({
   selector: 'cca-notify-operator-of-decision',
   templateUrl: './notify-operator-of-decision.component.html',
-  imports: [ReactiveFormsModule, CheckboxComponent, CheckboxesComponent, SelectComponent, NoticeRecipientsTypePipe],
   viewProviders: [existingControlContainer],
+  imports: [ReactiveFormsModule, CheckboxComponent, CheckboxesComponent, SelectComponent, NoticeRecipientsTypePipe],
 })
 export class NotifyOperatorOfDecisionComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

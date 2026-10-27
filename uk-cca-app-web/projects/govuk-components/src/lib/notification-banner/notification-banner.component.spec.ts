@@ -11,13 +11,13 @@ describe('NotificationBannerComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    imports: [NotificationBannerComponent],
     template: `
       <govuk-notification-banner [type]="type" [heading]="heading">
         <h3 class="govuk-notification-banner__heading">Training outcome recorded and trainee withdrawn</h3>
         <p>Test content</p>
       </govuk-notification-banner>
     `,
+    imports: [NotificationBannerComponent],
   })
   class TestComponent {
     type: 'success' | 'neutral' = 'neutral';

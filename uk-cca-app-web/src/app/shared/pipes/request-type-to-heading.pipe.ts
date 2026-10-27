@@ -21,12 +21,13 @@ export class RequestTypeToHeadingPipe implements PipeTransform {
         return 'Underlying agreement';
 
       case 'UNDERLYING_AGREEMENT_VARIATION':
-        return `Underlying agreement variation${metadata?.['initiatorRoleType'] === 'REGULATOR' ? ' by regulator' : ''}`;
+        return `Underlying agreement variation${(metadata as { initiatorRoleType?: string })?.initiatorRoleType === 'REGULATOR' ? ' by regulator' : ''}`;
 
       case 'ADMIN_TERMINATION':
         return 'Admin termination';
 
       case 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING':
+      case 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING':
         return 'Buy-out and surplus';
 
       case 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING':
@@ -51,6 +52,10 @@ export class RequestTypeToHeadingPipe implements PipeTransform {
       case 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD':
       case 'PERFORMANCE_DATA_FACILITY_PROCESSING':
         return 'Target period report';
+
+      case 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD':
+      case 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING':
+        return 'PAT report';
     }
   }
 }

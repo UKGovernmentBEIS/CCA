@@ -17,6 +17,12 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe).toBeTruthy();
   });
 
+  it.each([true, false])('links to the CCA3 account event with workflow context %s', (isWorkflow) => {
+    expect(
+      pipe.transform({ ...requestAction, type: 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED' }, isWorkflow),
+    ).toEqual([isWorkflow ? './timeline' : '/timeline', 1]);
+  });
+
   it('should return empty link', () => {
     const noLinkActionTypes: RequestActionInfoDTO['type'][] = [
       'UNDERLYING_AGREEMENT_APPLICATION_CANCELLED',
@@ -32,6 +38,7 @@ describe('TimelineItemLinkPipe', () => {
       'RFI_EXPIRED',
 
       'REQUEST_TERMINATED',
+      'REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE',
 
       'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED',
 
@@ -40,6 +47,7 @@ describe('TimelineItemLinkPipe', () => {
       'SUBSISTENCE_FEES_RUN_SUBMITTED',
 
       'BUY_OUT_SURPLUS_RUN_SUBMITTED',
+      'BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED',
 
       'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW_REQUESTED',
 
@@ -56,6 +64,7 @@ describe('TimelineItemLinkPipe', () => {
       'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED',
       'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXPIRED',
       'PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED',
+      'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED',
     ];
 
     noLinkActionTypes.forEach((type) => {
@@ -147,6 +156,12 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
 
     requestAction.type = 'BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
 
     requestAction.type = 'TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED';
@@ -241,6 +256,11 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
 
     requestAction.type = 'PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+    requestAction.type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 

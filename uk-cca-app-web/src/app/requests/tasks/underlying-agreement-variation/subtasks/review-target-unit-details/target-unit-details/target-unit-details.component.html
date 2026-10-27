@@ -15,7 +15,7 @@
     ></div>
 
     <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Operator type</h3>
-    <p class="govuk-!-margin-top-0">{{ targetUnitDetails?.operatorType | operatorType }}</p>
+    <p class="govuk-!-margin-top-0">{{ $safeNavigationMigration(targetUnitDetails?.operatorType) | operatorType }}</p>
 
     <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Company number</h3>
     <p class="govuk-!-margin-top-0">

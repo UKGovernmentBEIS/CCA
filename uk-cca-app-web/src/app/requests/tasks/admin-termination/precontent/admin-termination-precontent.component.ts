@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -41,7 +41,6 @@ import { REASON_FOR_ADMIN_TERMINATION_SUBTASK } from '../types';
     }
   `,
   imports: [NotificationBannerComponent, ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminTerminationPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

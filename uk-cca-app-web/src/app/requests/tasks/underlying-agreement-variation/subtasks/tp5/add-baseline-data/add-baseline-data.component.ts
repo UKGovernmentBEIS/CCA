@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,6 +44,7 @@ import {
 @Component({
   selector: 'cca-add-baseline-data',
   templateUrl: './add-baseline-data.component.html',
+  providers: [AddBaselineDataFormProvider],
   imports: [
     WizardStepComponent,
     RadioComponent,
@@ -56,8 +57,6 @@ import {
     MeasurementTypeToUnitPipe,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [AddBaselineDataFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddBaselineDataComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

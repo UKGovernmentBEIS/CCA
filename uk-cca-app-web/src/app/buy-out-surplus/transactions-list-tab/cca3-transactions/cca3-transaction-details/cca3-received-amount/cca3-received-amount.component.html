@@ -1,0 +1,75 @@
+<cca-wizard-step
+  [formGroup]="form"
+  heading="Received amount"
+  caption="Change"
+  submitText="Confirm"
+  (formSubmit)="onSubmit()"
+>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <cca-summary [data]="summaryData()" />
+
+      <govuk-details summary="Received amount change history">
+        @for (entry of history(); track entry.id; let last = $last) {
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ historyTitle(entry) }}</h3>
+          <p class="govuk-!-margin-bottom-1">{{ entry.submissionDate | govukDate: 'datetime' }}</p>
+          <a class="govuk-link" [routerLink]="['history-details', entry.id]"
+            >View details<span class="govuk-visually-hidden">
+              of {{ historyTitle(entry) }}, {{ entry.submissionDate | govukDate: 'datetime' }}</span
+            ></a
+          >
+          @if (!last) {
+            <hr class="govuk-footer__section-break govuk-!-margin-top-3 govuk-!-margin-bottom-3" />
+          }
+        } @empty {
+          <p>No received amount change history available.</p>
+        }
+      </govuk-details>
+
+      <p class="govuk-!-margin-top-6 govuk-!-margin-bottom-1">
+        Add or subtract an amount to update the received amount of buy-out fee
+      </p>
+      <div id="adjustment-amount-hint" class="govuk-hint">
+        To increase an existing amount, select 'Add' and enter only the difference.<br />
+        For example, to change £500 to £600, select 'Add' and enter £100, not £600.
+      </div>
+
+      <div class="row-flex">
+        <div
+          govuk-select
+          formControlName="changeType"
+          label="Change type"
+          [options]="changeTypeOptions"
+          class="govuk-!-margin-right-3"
+        ></div>
+        <div
+          cca-text-input
+          formControlName="adjustmentAmount"
+          label="Amount (GBP)"
+          inputMode="decimal"
+          prefix="£"
+          widthClass="govuk-input--width-10"
+          ariaDescribedBy="adjustment-amount-hint"
+        ></div>
+      </div>
+
+      <div
+        govuk-date-input
+        formControlName="paymentDate"
+        [label]="
+          'Enter the date when the payment was received in the bank account' + (isSubtract() ? ' (optional)' : '')
+        "
+      ></div>
+
+      <div govuk-textarea formControlName="comments" label="Comments" [maxLength]="10000"></div>
+
+      <cca-multiple-file-input
+        baseDownloadUrl="../file-evidences-download/attachment/"
+        listTitle="Uploaded files"
+        emptyListText="No files have been uploaded yet"
+        label="Upload evidence (optional)"
+        formControlName="evidenceFiles"
+      />
+    </div>
+  </div>
+</cca-wizard-step>

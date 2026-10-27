@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { ButtonDirective, TabLazyDirective, TabsComponent, WarningTextComponent } from '@netz/govuk-components';
 
 import { BuyoutSurplusStore } from './buy-out-surplus.store';
+import { CostTabComponent } from './cost-tab/cost-tab.component';
 import { TransactionsFiltersComponent } from './transactions-list-tab/transactions-filters/transactions-filters.component';
 import { TransactionsTableComponent } from './transactions-list-tab/transactions-table/transactions-table.component';
 import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-history-tab.component';
@@ -23,11 +24,10 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
     ButtonDirective,
     WarningTextComponent,
     WorkflowHistoryTabComponent,
-    // CostTabComponent,
+    CostTabComponent,
     TransactionsFiltersComponent,
     TransactionsTableComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BuyOutSurplusComponent implements OnInit {
   private readonly router = inject(Router);
@@ -39,12 +39,12 @@ export class BuyOutSurplusComponent implements OnInit {
 
   constructor() {
     this.route.fragment.pipe(takeUntilDestroyed()).subscribe((fragment) => {
-      const paymentStatus = this.route.snapshot.queryParamMap.get('buyOutSurplusPaymentStatus');
+      const paymentStatus = this.route.snapshot.queryParamMap.get('paymentStatus');
       if (fragment === 'transactions' && !paymentStatus) {
         this.router.navigate([], {
           relativeTo: this.route,
           fragment,
-          queryParams: { buyOutSurplusPaymentStatus: 'AWAITING_PAYMENT' },
+          queryParams: { paymentStatus: 'AWAITING_PAYMENT' },
         });
       }
     });

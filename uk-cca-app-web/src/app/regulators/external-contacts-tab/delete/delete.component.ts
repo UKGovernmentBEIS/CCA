@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
@@ -15,7 +15,6 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
   selector: 'cca-delete',
   templateUrl: './delete.component.html',
   imports: [ButtonDirective, PanelComponent, RouterLink, WarningTextComponent, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteComponent {
   private readonly externalContactsService = inject(CaExternalContactsService);

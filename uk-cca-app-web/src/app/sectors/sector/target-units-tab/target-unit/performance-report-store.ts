@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -32,7 +32,7 @@ const initialState: AccountPerformanceDataReportState = {
   },
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class PerformanceReportStore extends SignalStore<AccountPerformanceDataReportState> {
   constructor() {
     super(initialState);

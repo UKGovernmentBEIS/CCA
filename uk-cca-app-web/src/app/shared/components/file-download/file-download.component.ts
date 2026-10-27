@@ -1,11 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { combineLatest, expand, map, Observable, of, switchMap, timer } from 'rxjs';
 
 import {
-  BuyOutAndSurplusTransactionInfoViewService,
+  BuyOutAndSurplusTransactionFilesViewService,
   FileAttachmentsService,
   FileDocumentsService,
   FileToken,
@@ -32,7 +32,6 @@ export type FileDownloadInfo = {
     <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
   imports: [AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileDownloadComponent implements AfterViewChecked {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -52,7 +51,7 @@ export class FileDownloadComponent implements AfterViewChecked {
   private readonly targetPeriodPerformanceAccountTemplateDataReportOfTheAccountService = inject(
     TargetPeriodPerformanceAccountTemplateDataReportOfTheAccountService,
   );
-  private readonly buyOutAndSurplusTransactionInfoViewService = inject(BuyOutAndSurplusTransactionInfoViewService);
+  private readonly buyOutAndSurplusTransactionFilesViewService = inject(BuyOutAndSurplusTransactionFilesViewService);
 
   protected readonly anchor = viewChild<ElementRef<HTMLAnchorElement>>('anchor');
 
@@ -193,7 +192,7 @@ export class FileDownloadComponent implements AfterViewChecked {
 
   private buyOutAndSurplusDownloadInfo(params: ParamMap): FileDownloadInfo {
     return {
-      request: this.buyOutAndSurplusTransactionInfoViewService.generateBuyOutSurplusTransactionDocumentToken(
+      request: this.buyOutAndSurplusTransactionFilesViewService.generateBuyOutSurplusTransactionDocumentToken(
         +params.get('transactionId'),
         params.get('uuid'),
       ),

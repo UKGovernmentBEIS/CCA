@@ -18,7 +18,7 @@
 
 @if (isActivePolling()) {
   <div class="govuk-!-margin-bottom-9">
-    <govuk-warning-text assistiveText="">
+    <govuk-warning-text>
       Buy-out and surplus batch is
       <a [routerLink]="[]" fragment="workflow-history" class="govuk-link">in progress</a>, you cannot initiate a new one
       until it has finished
@@ -36,7 +36,7 @@
     <cca-workflow-history-tab />
   </ng-template>
 
-  <!-- <ng-template govukTabLazy id="cost" label="Cost">
+  <ng-template govukTabLazy id="cost" label="Cost">
     <cca-cost-tab />
-  </ng-template> -->
+  </ng-template>
 </govuk-tabs>

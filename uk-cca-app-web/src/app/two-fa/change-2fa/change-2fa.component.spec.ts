@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
@@ -11,14 +10,10 @@ import { UsersSecuritySetupService } from 'cca-api';
 
 import { Change2faComponent } from './change-2fa.component';
 
-@Component({ template: '' })
-class DummyComponent {}
-
 describe('Change2faComponent', () => {
   let component: Change2faComponent;
   let fixture: ComponentFixture<Change2faComponent>;
   let page: Page;
-  let router: Router;
 
   const usersSecuritySetupService = mockClass(UsersSecuritySetupService);
 
@@ -50,9 +45,9 @@ describe('Change2faComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Change2faComponent, DummyComponent],
+      imports: [Change2faComponent],
       providers: [
-        provideRouter([{ path: '2fa/invalid-code', component: DummyComponent }]),
+        provideRouter([]),
         { provide: UsersSecuritySetupService, useValue: usersSecuritySetupService },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
@@ -61,7 +56,6 @@ describe('Change2faComponent', () => {
     fixture = TestBed.createComponent(Change2faComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);
-    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -110,8 +104,7 @@ describe('Change2faComponent', () => {
     expect(page.confirmationPanel).toBeTruthy();
   });
 
-  it('on returning error should navigate to invalid code error page', () => {
-    const navigateSpy = vi.spyOn(router, 'navigate');
+  it('on returning error should show inline error and keep input', () => {
     usersSecuritySetupService.requestTwoFactorAuthChange.mockReturnValue(
       throwError(() => new HttpErrorResponse({ status: 400, error: { code: 'OTP1001' } })),
     );
@@ -121,10 +114,11 @@ describe('Change2faComponent', () => {
     fixture.detectChanges();
 
     expect(page.errorSummary).toBeFalsy();
+    expect(page.confirmationPanel).toBeFalsy();
+    expect(fixture.nativeElement.textContent).toContain('Invalid code. Please try again.');
+    expect(component['form'].get('password').value).toBe('123456');
 
     expect(usersSecuritySetupService.requestTwoFactorAuthChange).toHaveBeenCalledTimes(1);
     expect(usersSecuritySetupService.requestTwoFactorAuthChange).toHaveBeenCalledWith({ password: '123456' });
-    expect(page.confirmationPanel).toBeFalsy();
-    expect(navigateSpy).toHaveBeenCalledWith(['2fa', 'invalid-code']);
   });
 });

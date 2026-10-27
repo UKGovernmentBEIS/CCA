@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -26,7 +26,6 @@ import { AdminTerminationPeerReviewStore } from '../+state';
     </div>
   </div>`,
   imports: [SummaryComponent, ButtonDirective, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckYourAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

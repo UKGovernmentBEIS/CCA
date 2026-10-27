@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 
@@ -13,7 +13,7 @@ import { FileUuidDTO, RequestTaskAttachmentsHandlingService, TasksService } from
 
 import { RequestTaskFileService } from './request-task-file.service';
 
-@Injectable()
+@Service({ autoProvided: false })
 class MockedStore extends SignalStore<MockedState> {
   constructor() {
     super(initialMockedState);
@@ -74,5 +74,41 @@ describe('RequestTaskFileService', () => {
         service.uploadMany(mockedStore.state.requestTaskId, 'RDE_SUBMIT')(control) as Observable<ValidationErrors>,
       ),
     ).resolves.toBeNull();
+  });
+
+  // `UploadedFileRef.name` is typed as a string and is what the file list renders, so stored files
+  // always get a name instead of undefined. The name is empty when the attachments map of the
+  // payload does not cover the uuid; payloads skip such entries rather than inventing a name.
+  describe('buildFormControl', () => {
+    it('should name a stored file from the attachments map', () => {
+      const control = service.buildFormControl(1, 'uuid-1', { 'uuid-1': 'permit.pdf' }, 'RDE_SUBMIT');
+
+      expect(control.value).toEqual({ uuid: 'uuid-1', file: { name: 'permit.pdf' } });
+    });
+
+    it('should leave the name empty when the attachments map does not cover the uuid', () => {
+      expect(service.buildFormControl(1, 'uuid-1', { 'uuid-2': 'other.pdf' }, 'RDE_SUBMIT').value).toEqual({
+        uuid: 'uuid-1',
+        file: { name: '' },
+      });
+      expect(service.buildFormControl(1, 'uuid-1', undefined, 'RDE_SUBMIT').value).toEqual({
+        uuid: 'uuid-1',
+        file: { name: '' },
+      });
+    });
+
+    it('should name a list of stored files', () => {
+      const control = service.buildFormControl(1, ['uuid-1', 'uuid-2'], { 'uuid-1': 'permit.pdf' }, 'RDE_SUBMIT');
+
+      expect(control.value).toEqual([
+        { uuid: 'uuid-1', file: { name: 'permit.pdf' } },
+        { uuid: 'uuid-2', file: { name: '' } },
+      ]);
+    });
+
+    it('should not build a file for an empty uuid field', () => {
+      expect(service.buildFormControl(1, null, {}, 'RDE_SUBMIT').value).toBeNull();
+      expect(service.buildFormControl(1, '', {}, 'RDE_SUBMIT').value).toBeNull();
+    });
   });
 });

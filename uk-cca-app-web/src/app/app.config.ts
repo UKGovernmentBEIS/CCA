@@ -1,13 +1,13 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import {
-  type ApplicationConfig,
-  ErrorHandler,
-  importProvidersFrom,
-  inject,
-  provideAppInitializer,
-} from '@angular/core';
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
+import { type ApplicationConfig, ErrorHandler, inject, provideAppInitializer } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { provideRouter, withInMemoryScrolling, withNavigationErrorHandler, withRouterConfig } from '@angular/router';
+import {
+  provideRouter,
+  TitleStrategy,
+  withInMemoryScrolling,
+  withNavigationErrorHandler,
+  withRouterConfig,
+} from '@angular/router';
 
 import { firstValueFrom } from 'rxjs';
 
@@ -22,9 +22,9 @@ import {
   recoverFromStaleChunkNavigation,
 } from '@shared/services';
 import { logger } from '@shared/utils';
-import type { KeycloakConfig } from 'keycloak-js';
+import type { KeycloakServerConfig } from 'keycloak-js';
 
-import { ApiModule, Configuration } from 'cca-api';
+import { provideCcaApi } from 'cca-api';
 
 import { environment } from 'src/environments/environment';
 
@@ -32,10 +32,14 @@ import { APP_ROUTES, routerOptions } from './app.routes';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { KeycloakBearerInterceptor } from './interceptors/keycloak-bearer.interceptor';
 import { PendingRequestInterceptor } from './interceptors/pending-request.interceptor';
+import { CcaTitleStrategy } from './title-strategy';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptors([KeycloakBearerInterceptor, HttpErrorInterceptor, PendingRequestInterceptor])),
+    provideHttpClient(
+      withXhr(),
+      withInterceptors([KeycloakBearerInterceptor, HttpErrorInterceptor, PendingRequestInterceptor]),
+    ),
     provideAppInitializer(() => {
       const initializerFn = init(
         inject(AuthService),
@@ -47,7 +51,7 @@ export const appConfig: ApplicationConfig = {
       );
       return initializerFn();
     }),
-    importProvidersFrom(ApiModule.forRoot(() => new Configuration({ basePath: environment.apiOptions.baseUrl }))),
+    provideCcaApi({ basePath: environment.apiOptions.baseUrl }),
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandlingService,
@@ -63,6 +67,7 @@ export const appConfig: ApplicationConfig = {
       // A lazy route whose chunk is gone after a deployment reloads the page.
       withNavigationErrorHandler(recoverFromStaleChunkNavigation),
     ),
+    { provide: TitleStrategy, useClass: CcaTitleStrategy },
   ],
 };
 
@@ -77,7 +82,7 @@ function init(
   return () =>
     firstValueFrom(configService.initConfigState())
       .then((state) => {
-        const keycloakConfig: KeycloakConfig = {
+        const keycloakConfig: KeycloakServerConfig = {
           ...environment.keycloakConfig,
           ...environment.keycloakInitOptions,
           url: state.keycloakServerUrl,

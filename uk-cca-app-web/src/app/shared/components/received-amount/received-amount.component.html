@@ -38,7 +38,9 @@
 
         <p class="govuk-!-margin-bottom-1">{{ historyList.submissionDate | govukDate: 'datetime' }}</p>
         <a [routerLink]="['history-details', historyList.id]" [relativeTo]="activatedRoute" class="govuk-link"
-          >View details</a
+          >View details<span class="govuk-visually-hidden">
+            of change by {{ historyList.submitter }}, {{ historyList.submissionDate | govukDate: 'datetime' }}</span
+          ></a
         >
         <hr class="govuk-footer__section-break govuk-!-margin-top-3 govuk-!-margin-bottom-3" />
       } @empty {

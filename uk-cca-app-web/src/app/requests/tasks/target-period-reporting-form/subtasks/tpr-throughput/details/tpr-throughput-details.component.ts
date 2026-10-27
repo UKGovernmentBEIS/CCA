@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { decideVariableEnergyType, tprFormQuery } from '@requests/common';
@@ -16,7 +16,6 @@ import { TprThroughputTotalsOnlyComponent } from './totals-only/tpr-throughput-t
     }
   `,
   imports: [TprThroughputSplitByProductComponent, TprThroughputTotalsOnlyComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprThroughputDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

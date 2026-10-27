@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -8,7 +8,7 @@ import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { ErrorSummaryComponent, GovukValidators, TextInputComponent } from '@netz/govuk-components';
 import { BackToTopComponent } from '@shared/components';
 import { WizardStepComponent } from '@shared/components';
-import { AuthService } from '@shared/services';
+import { AuthService, SignInTrackingService } from '@shared/services';
 
 import { ForgotPasswordService } from 'cca-api';
 
@@ -18,10 +18,10 @@ import { ResetPasswordStore } from '../+store/reset-password.store';
   selector: 'cca-submit-otp',
   templateUrl: './submit-otp.component.html',
   imports: [ErrorSummaryComponent, ReactiveFormsModule, WizardStepComponent, BackToTopComponent, TextInputComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmitOtpComponent {
-  private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
+  protected readonly signInTrackingService = inject(SignInTrackingService);
   private readonly router = inject(Router);
   private readonly forgotPasswordService = inject(ForgotPasswordService);
   private readonly fb = inject(UntypedFormBuilder);
@@ -66,7 +66,7 @@ export class SubmitOtpComponent {
         }),
       )
       .subscribe(() => {
-        this.signInUrl.set(this.authService.createLoginUrl({ redirectUri: location.origin }));
+        void this.authService.createLoginUrl({ redirectUri: location.origin }).then((url) => this.signInUrl.set(url));
         this.isPasswordReset.set(true);
       });
   }

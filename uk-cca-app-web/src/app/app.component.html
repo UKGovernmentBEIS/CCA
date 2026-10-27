@@ -2,102 +2,41 @@
   <cca-cookies-container />
 }
 
-<govuk-header title="Manage your Climate Change Agreement">
-  <govuk-skip-link />
+<govuk-skip-link />
 
-  <govuk-header-actions-list>
+<header class="govuk-template__header">
+  <govuk-header>
     @if (isLoggedIn()) {
-      <a class="govuk-header__link" routerLink="." (click)="authService.logout()"> Sign out </a>
+      <button type="button" class="govuk-link govuk-link--inverse" (click)="authService.logout()">Sign out</button>
     }
-  </govuk-header-actions-list>
+  </govuk-header>
 
-  @if (isAuthorized()) {
-    <govuk-header-nav-list identifier="navigation" ariaLabel="Primary navigation">
-      <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-        <a routerLinkActive class="govuk-header__link" [routerLink]="['/dashboard']"> Tasks </a>
-      </li>
+  <govuk-service-navigation
+    serviceName="Manage your Climate Change Agreements"
+    [serviceHomepage]="serviceHomepage()"
+    [navigation]="navigation()"
+  />
+</header>
 
-      <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-        <a routerLinkActive class="govuk-header__link" [routerLink]="['/target-unit-accounts']">
-          Target unit accounts
-        </a>
-      </li>
+<div class="govuk-width-container">
+  <section aria-label="Task information">
+    <cca-workflow-task-header />
+  </section>
 
-      @if (showSectors()) {
-        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-          <a class="govuk-header__link" [routerLink]="['/sectors']"> Manage sectors </a>
-        </li>
-
-        @if (roleType() === 'SECTOR_USER') {
-          <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-            <a routerLinkActive class="govuk-header__link" [routerLink]="['/sector-templates']"> Templates </a>
-          </li>
-        }
-      }
-
-      @if (showRegulators()) {
-        @if (!subsistenceFeesHideMenu) {
-          <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-            <a routerLinkActive class="govuk-header__link" [routerLink]="['/subsistence-fees']"> Subsistence fees </a>
-          </li>
-        }
-
-        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-          <a
-            routerLinkActive
-            class="govuk-header__link"
-            [routerLink]="['/buyout-surplus']"
-            [queryParams]="{ buyOutSurplusPaymentStatus: 'AWAITING_PAYMENT' }"
-          >
-            Buy-out and surplus
-          </a>
-        </li>
-
-        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-          <a routerLinkActive class="govuk-header__link" [routerLink]="['/user/regulators']"> Regulator users </a>
-        </li>
-
-        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-          <a routerLinkActive class="govuk-header__link" [routerLink]="['/mi-reports']"> MI Reports </a>
-        </li>
-
-        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
-          <a routerLinkActive class="govuk-header__link" [routerLink]="['/templates']"> Templates </a>
-        </li>
-      }
-    </govuk-header-nav-list>
-  }
-</govuk-header>
-
-<section class="govuk-width-container">
-  <cca-phase-bar [isUserLoggedIn]="isLoggedIn()" />
-  <cca-workflow-task-header />
   <netz-breadcrumbs />
   <netz-back-link />
 
-  <main class="govuk-main-wrapper" id="main-content" role="main" tabindex="0">
-    <router-outlet />
+  <main class="govuk-main-wrapper" id="main-content" tabindex="-1">
+    <router-outlet ccaMainContentFocus />
   </main>
-</section>
+</div>
 
-<govuk-footer>
-  <govuk-footer-meta-info>
-    <li class="govuk-footer__inline-list-item">
-      <a class="govuk-footer__link" routerLink="/privacy-notice"> Privacy Notice </a>
-    </li>
+<div class="govuk-width-container">
+  <cca-phase-bar [isUserLoggedIn]="isLoggedIn()" />
+</div>
 
-    <li class="govuk-footer__inline-list-item">
-      <a class="govuk-footer__link" routerLink="/contact-us"> Contact us </a>
-    </li>
-
-    <li class="govuk-footer__inline-list-item">
-      <a class="govuk-footer__link" routerLink="/accessibility"> Accessibility Statement </a>
-    </li>
-
-    <li class="govuk-footer__inline-list-item">
-      <a class="govuk-footer__link" routerLink="/legislation"> CCA legislation </a>
-    </li>
-  </govuk-footer-meta-info>
-</govuk-footer>
+<footer class="govuk-template__footer">
+  <govuk-footer [meta]="footerMeta" />
+</footer>
 
 <cca-timeout-banner />

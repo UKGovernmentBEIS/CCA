@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,7 +27,7 @@ describe('HasActionsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HasActionsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },

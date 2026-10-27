@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
@@ -24,7 +24,6 @@ import { ActiveOperatorStore } from '../active-operator.store';
     ButtonDirective,
     PendingButtonDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteOperatorComponent {
   private readonly pendingRequestService = inject(PendingRequestService);

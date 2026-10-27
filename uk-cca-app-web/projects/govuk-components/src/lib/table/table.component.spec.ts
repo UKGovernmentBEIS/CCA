@@ -8,10 +8,10 @@ import { GovukTableColumn, SortEvent } from './table.interface';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 describe('TableComponent', () => {
   @Component({
-    imports: [TableComponent],
     template: `
       <govuk-table [columns]="columns()" [data]="data()" [caption]="caption()" (sort)="onSort($event)"></govuk-table>
     `,
+    imports: [TableComponent],
   })
   class TestComponent {
     columns = signal<GovukTableColumn[]>([
@@ -27,7 +27,6 @@ describe('TableComponent', () => {
   }
 
   @Component({
-    imports: [TableComponent],
     template: `
       <govuk-table [columns]="columns()" [data]="data()" [caption]="caption()" (sort)="onSort($event)">
         <ng-template let-column="column" let-row="row">
@@ -39,6 +38,7 @@ describe('TableComponent', () => {
         </ng-template>
       </govuk-table>
     `,
+    imports: [TableComponent],
   })
   class TestTemplateComponent {
     columns = signal<GovukTableColumn[]>([
@@ -99,6 +99,27 @@ describe('TableComponent', () => {
     expect(headers[2].innerHTML).toContain('Age');
   });
 
+  it('should render a header hint as a regular-weight line below the header', () => {
+    hostComponent.columns.set([
+      { header: 'Certified status', field: 'certificationStatus', headerHint: '1/7/25 – 30/6/27' },
+      { header: 'Sortable', field: 'sortable', headerHint: 'Sortable hint', isSortable: true },
+    ]);
+
+    fixture.detectChanges();
+
+    const hostElement: HTMLElement = fixture.nativeElement;
+    const headers = hostElement.querySelectorAll<HTMLTableCellElement>('thead th');
+
+    expect(hostElement.querySelector('table')?.classList.contains('govuk-table--header-hint')).toBe(true);
+    expect(headers[0].textContent).toContain('Certified status');
+    expect(headers[0].querySelector('.govuk-\\!-display-block.govuk-\\!-font-weight-regular')?.textContent).toContain(
+      '1/7/25 – 30/6/27',
+    );
+    expect(headers[1].querySelector('.govuk-\\!-display-block.govuk-\\!-font-weight-regular')?.textContent).toContain(
+      'Sortable hint',
+    );
+  });
+
   it('should render the data', () => {
     hostComponent.data.set([
       { name: 'Name 1', surname: 'Surname 1', age: 23 },
@@ -150,6 +171,33 @@ describe('TableComponent', () => {
     expect(tds[3].classList).toContain('govuk-table__cell--numeric');
   });
 
+  it.each([false, true])('aligns declared numeric strings and their header, including row headers (%s)', (isHeader) => {
+    hostComponent.columns.set([
+      { header: 'ID', field: 'id' },
+      { header: 'Amount', field: 'amount', isNumeric: true, isHeader, widthClass: 'govuk-!-width-one-quarter' },
+    ]);
+    const amounts = ['0.00', '120.50', '999,999,999,999,999,999.99', '', undefined];
+    hostComponent.data.set(amounts.map((amount) => ({ id: '00123', amount })));
+    fixture.detectChanges();
+
+    const root: HTMLElement = fixture.nativeElement;
+    const header = root.querySelector('thead th:last-child');
+    expect(header.classList).toContain('govuk-table__header--numeric');
+    expect(header.classList).toContain('govuk-!-width-one-quarter');
+    const cells = Array.from(root.querySelectorAll('tbody tr > :last-child'));
+    expect(cells.map((cell) => cell.textContent.trim())).toEqual(amounts.map((amount) => amount ?? ''));
+    for (const cell of cells) {
+      expect(cell.classList).toContain(isHeader ? 'govuk-table__header--numeric' : 'govuk-table__cell--numeric');
+    }
+    expect(root.querySelector('tbody td:first-child').classList).not.toContain('govuk-table__cell--numeric');
+  });
+
+  it('preserves numeric header classes set by existing consumers through widthClass', () => {
+    hostComponent.columns.set([{ header: 'Amount', field: 'amount', widthClass: 'govuk-table__header--numeric' }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('thead th').classList).toContain('govuk-table__header--numeric');
+  });
+
   it('should display sort buttons and emit event on click', () => {
     hostComponent.columns.set([
       { header: 'One', field: 'first', isSortable: true },
@@ -187,6 +235,24 @@ describe('TableComponent', () => {
     expect(hostComponent.onSort).toHaveBeenCalledWith({ column: 'second', direction: 'ascending' });
     expect(sortButtons[0].parent.attributes['aria-sort']).toBe('none');
     expect(sortButtons[1].parent.attributes['aria-sort']).toBe('ascending');
+  });
+
+  it('should not expose arrow characters in sort names or live region announcements', () => {
+    hostComponent.columns.set([{ header: 'Name', field: 'name', isSortable: true }]);
+    hostComponent.data.set([{ name: 'A' }]);
+    fixture.detectChanges();
+
+    const hostElement: HTMLElement = fixture.nativeElement;
+    const button = hostElement.querySelector<HTMLButtonElement>('[aria-sort] button');
+    expect(button.textContent.trim()).toBe('Name');
+    expect(button.textContent).not.toMatch(/[▲▼↑↓]/);
+
+    button.click();
+    fixture.detectChanges();
+
+    const status = hostElement.querySelector<HTMLElement>('[role="status"]');
+    expect(status.textContent).toContain('Sort by Name (ascending)');
+    expect(status.textContent).not.toMatch(/[▲▼↑↓]/);
   });
 
   it('should display custom template', () => {

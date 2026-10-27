@@ -1,4 +1,4 @@
-<govuk-table [columns]="columns" [data]="state().transactions">
+<govuk-table [columns]="columns" [data]="tableData()">
   <ng-template let-column="column" let-row="row">
     @switch (column.field) {
       @case ('accountBusinessId') {
@@ -10,7 +10,7 @@
       }
 
       @case ('transactionCode') {
-        <a [routerLink]="['transactions', row.id]" fragment="transaction-details" class="govuk-link">
+        <a [routerLink]="row.transactionLink" [fragment]="row.transactionFragment" class="govuk-link">
           <span>{{ row.transactionCode }}</span>
         </a>
       }
@@ -24,7 +24,7 @@
       }
 
       @case ('buyOutFee') {
-        <span>{{ row.buyOutFee | number }}</span>
+        {{ row.buyOutFee | formatGbp }}
       }
 
       @default {

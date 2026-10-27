@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -23,9 +23,8 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
 @Component({
   selector: 'cca-provide-evidence',
   templateUrl: './provide-evidence.component.html',
-  imports: [MultipleFileInputComponent, ReactiveFormsModule, WizardStepComponent, ReturnToTaskOrActionPageComponent],
   providers: [ProvideEvidenceFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MultipleFileInputComponent, ReactiveFormsModule, WizardStepComponent, ReturnToTaskOrActionPageComponent],
 })
 export class ProvideEvidenceComponent {
   protected readonly store = inject(RequestTaskStore);

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 
 import java.math.BigDecimal;
 
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Builder
 public class SurplusGainedDTO {
 
-	private TargetPeriodType targetPeriod;
+	private SchemeVersion schemeVersion;
 
 	private BigDecimal surplusGained;
 

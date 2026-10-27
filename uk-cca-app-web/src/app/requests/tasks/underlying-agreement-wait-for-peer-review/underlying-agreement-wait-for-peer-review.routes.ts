@@ -2,19 +2,20 @@ import { Routes } from '@angular/router';
 
 export const UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW_ROUTES: Routes = [
   {
+    title: 'Application for underlying agreement sent to peer reviewer',
     path: '',
     children: [
       {
-        path: 'target-unit-details',
         title: 'Target unit details',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'target-unit-details',
         loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewTargetUnitDetailsComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        path: 'manage-facilities',
         title: 'Manage facilities list',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'manage-facilities',
         loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewManageFacilitiesComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
         path: 'facility',
@@ -23,33 +24,33 @@ export const UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW_ROUTES: Routes = [
             path: ':facilityId',
             children: [
               {
-                path: '',
                 title: 'Facility',
-                data: { backlink: '../../manage-facilities', breadcrumb: false },
+                path: '',
                 loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewFacilityComponent),
+                data: { backlink: '../../manage-facilities', breadcrumb: false },
               },
               {
-                path: 'products',
                 title: 'View Products',
-                data: { breadcrumb: false, backlink: '../' },
+                path: 'products',
                 loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsPeerReviewComponent),
+                data: { breadcrumb: false, backlink: '../' },
               },
             ],
           },
         ],
       },
       {
-        path: 'authorisation-additional-evidence',
         title: 'Authorisation and additional evidence',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'authorisation-additional-evidence',
         loadComponent: () =>
           import('@requests/common').then((c) => c.UNAPeerReviewAuthorisationAdditionalEvidenceComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        path: 'overall-decision',
         title: 'Overall decision',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'overall-decision',
         loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewOverallDecisionComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
         path: '**',

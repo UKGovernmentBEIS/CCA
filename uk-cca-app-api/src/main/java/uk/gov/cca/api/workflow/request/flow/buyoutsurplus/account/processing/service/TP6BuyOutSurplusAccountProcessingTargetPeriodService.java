@@ -1,14 +1,14 @@
 package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.service;
 
-import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusAccountProcessingException;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusAccountState;
@@ -16,10 +16,10 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.dom
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6BuyOutSurplusAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.transform.BuyOutSurplusAccountProcessingMapper;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.service.BuyOutSurplusPaymentDeadlineService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
-import uk.gov.netz.api.workflow.request.flow.common.service.CalculateWorkingDaysService;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class TP6BuyOutSurplusAccountProcessingTargetPeriodService implements Buy
     private final BuyOutSurplusAccountProcessingOfficialNoticeService buyOutSurplusAccountProcessingOfficialNoticeService;
     private final BuyOutSurplusManagementService buyOutSurplusManagementService;
     private final RequestService requestService;
-    private final CalculateWorkingDaysService calculateWorkingDaysService;
+    private final BuyOutSurplusPaymentDeadlineService buyOutSurplusPaymentDeadlineService;
     private static final BuyOutSurplusAccountProcessingMapper MAPPER = Mappers
             .getMapper(BuyOutSurplusAccountProcessingMapper.class);
 
@@ -46,7 +46,7 @@ public class TP6BuyOutSurplusAccountProcessingTargetPeriodService implements Buy
         TP6BuyOutSurplusCalculation buyOutSurplusCalculation = new TP6BuyOutSurplusCalculation(
                 this.targetUnitAccountNoticeRecipients, this.buyOutSurplusQueryService,
                 this.buyOutSurplusAccountProcessingOfficialNoticeService, this.buyOutSurplusManagementService,
-                this.calculateWorkingDaysService);
+                this.buyOutSurplusPaymentDeadlineService);
 
         buyOutSurplusCalculation
                 .init(request, performanceReportDetails)

@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { tprFormQuery } from '@requests/common';
+import { createZeroEnergyValidatorFn, tprFormQuery } from '@requests/common';
 import { CCAGovukValidators } from '@shared/validators';
 
 import { PerformanceDataFacilityProductVariableEnergyData, ProductVariableEnergyConsumptionData } from 'cca-api';
@@ -38,9 +38,17 @@ export const tprThroughputDetailsByProductFormProvider: Provider = {
     const savedProductsByName = new Map(savedProducts.map((product) => [product.productName, product]));
     const products = referenceData?.baselineAndTargets?.variableEnergyConsumptionDataByProduct ?? [];
 
-    return fb.group({
-      products: fb.array(products.map((p) => createProductRowForm(fb, p, savedProductsByName.get(p.productName)))),
-    });
+    const zeroEnergyValidator = createZeroEnergyValidatorFn(
+      performanceData?.energyFuelDetails,
+      referenceData?.baselineAndTargets,
+    );
+
+    return fb.group(
+      {
+        products: fb.array(products.map((p) => createProductRowForm(fb, p, savedProductsByName.get(p.productName)))),
+      },
+      { validators: [zeroEnergyValidator] },
+    );
   },
 };
 

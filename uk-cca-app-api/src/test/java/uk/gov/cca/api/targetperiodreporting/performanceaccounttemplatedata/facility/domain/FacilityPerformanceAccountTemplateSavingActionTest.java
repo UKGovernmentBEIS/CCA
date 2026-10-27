@@ -55,7 +55,7 @@ class FacilityPerformanceAccountTemplateSavingActionTest {
                 .savingActionsImplemented("saving")
                 .implementationDate(LocalDate.of(2026, 1, 1))
                 .fixedEnergyConsumptionOrCarbonEmissionsImpacted(EnergyConsumptionOrCarbonEmissionsImpactedType.FIXED_AND_VARIABLE)
-                .energyConsumptionOrCarbonEmissionsImpactedPercentage(BigDecimal.valueOf(102.6))
+                .energyConsumptionOrCarbonEmissionsImpactedPercentage(BigDecimal.valueOf(1023.6))
                 .expectedExtentOfChangeImplementedPercentage(BigDecimal.valueOf(20.6))
                 .expectedSavingsFromTheChangeImplementedPercentage(BigDecimal.valueOf(20.6))
                 .estimatedChangeInEnergyConsumptionPercentage(BigDecimal.valueOf(20.6))
@@ -67,8 +67,32 @@ class FacilityPerformanceAccountTemplateSavingActionTest {
         assertThat(violations).isNotEmpty();
         assertThat(violations).extracting(ConstraintViolation::getMessage)
                 .containsExactlyInAnyOrder("must be less than or equal to 100",
-                        "numeric value out of bounds (<2 digits>.<7 digits> expected)",
-                        "{performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.typeMismatch}");
+                        "numeric value out of bounds (<3 digits>.<7 digits> expected)",
+                        "{performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.mandatoryFieldsIncomplete}");
+    }
+
+    @Test
+    void validate_not_valid_100_plus() {
+        final FacilityPerformanceAccountTemplateSavingAction data = FacilityPerformanceAccountTemplateSavingAction.builder()
+                .actionCategoryType(ActionCategoryType.ENERGY_MANAGEMENT)
+                .supplyDemandSideMeasure(SupplyDemandSideMeasure.DEMAND_SIDE)
+                .savingActionsImplemented("saving")
+                .reasonsForImplementation("reasons")
+                .implementationDate(LocalDate.of(2026, 1, 1))
+                .fixedEnergyConsumptionOrCarbonEmissionsImpacted(EnergyConsumptionOrCarbonEmissionsImpactedType.FIXED_AND_VARIABLE)
+                .energyConsumptionOrCarbonEmissionsImpactedPercentage(BigDecimal.valueOf(120.6))
+                .expectedExtentOfChangeImplementedPercentage(BigDecimal.valueOf(100.6))
+                .expectedSavingsFromTheChangeImplementedPercentage(BigDecimal.valueOf(20.6))
+                .estimatedChangeInEnergyConsumptionPercentage(BigDecimal.valueOf(20.6))
+                .notes("notes")
+                .build();
+
+        final Set<ConstraintViolation<FacilityPerformanceAccountTemplateSavingAction>> violations = validator.validate(data);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactlyInAnyOrder("must be less than or equal to 100",
+                        "must be less than or equal to 100");
     }
 
     @Test
@@ -101,6 +125,18 @@ class FacilityPerformanceAccountTemplateSavingActionTest {
 
         assertThat(violations).isNotEmpty();
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsExactlyInAnyOrder("{performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.typeMismatch}");
+                .containsExactly("{performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.mandatoryFieldsIncomplete}");
+    }
+
+    @Test
+    void validate_no_actionCategoryType_not_valid() {
+        final FacilityPerformanceAccountTemplateSavingAction data = FacilityPerformanceAccountTemplateSavingAction.builder()
+                .build();
+
+        final Set<ConstraintViolation<FacilityPerformanceAccountTemplateSavingAction>> violations = validator.validate(data);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactly("must not be null");
     }
 }

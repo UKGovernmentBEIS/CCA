@@ -1,0 +1,59 @@
+@if (state.errorSummary(); as error) {
+  <div class="govuk-!-width-two-thirds">
+    <cca-error-summary [errorSummaryInfo]="error" />
+  </div>
+}
+
+<cca-wizard-step
+  [formGroup]="state.form"
+  heading="Current amount"
+  caption="Change"
+  submitText="Confirm"
+  [hideSubmit]="state.terminated()"
+  (formSubmit)="onSubmit()"
+>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <cca-summary [data]="state.summaryData()" />
+
+      <div class="govuk-!-margin-top-6">
+        <div class="govuk-label">New current amount (GBP)</div>
+        <div id="amount-hint" class="govuk-hint">
+          You must only enter a new amount in this field if the initial amount for this facility (in the buy-out fee
+          notice or refund letter) was incorrect and you have agreed with the operator that a different amount should be
+          paid or refunded.
+          <strong>Do not use this field to reflect partial payment amounts received for this facility.</strong>
+        </div>
+        <div
+          cca-text-input
+          formControlName="amount"
+          label="New current amount (GBP)"
+          ariaDescribedBy="amount-hint"
+          [labelHidden]="true"
+          inputMode="decimal"
+          prefix="£"
+          widthClass="govuk-input--width-5"
+        ></div>
+      </div>
+
+      <div
+        formControlName="comments"
+        govuk-textarea
+        label="Comments"
+        [maxLength]="10000"
+        [hint]="
+          state.transaction().chargeType === 'FEE'
+            ? 'Explain why you are changing the buy-out fee amount for the facility'
+            : 'Explain why you are changing the refund amount for the facility'
+        "
+      ></div>
+
+      <cca-multiple-file-input
+        [baseDownloadUrl]="state.evidenceDownloadUrl() + '/'"
+        listTitle="Uploaded files"
+        label="Upload evidence (optional)"
+        formControlName="evidenceFiles"
+      />
+    </div>
+  </div>
+</cca-wizard-step>

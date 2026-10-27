@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
@@ -53,7 +53,7 @@ describe('ProvideWithdrawalNoticeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProvideWithdrawalNoticeComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideRouter([]),
         { provide: ActivatedRoute, useValue: route },
@@ -97,7 +97,7 @@ describe('ProvideWithdrawalNoticeComponent', () => {
 
   it('should save the withdrawal notice and navigate to check-your-answers', () => {
     component['form'].setValue({
-      file: { uuid: 'uuid-1', file: { name: 'notice.pdf' } as File },
+      file: { uuid: 'uuid-1', file: { name: 'notice.pdf' } },
       comments: 'Withdrawal notice comments',
     });
 

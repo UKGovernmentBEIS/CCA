@@ -13,7 +13,7 @@ import {
 } from '@requests/common';
 import { FileType, FileValidators, UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 
 import { TargetComposition } from 'cca-api';
 
@@ -40,7 +40,7 @@ export const TargetCompositionFormProvider: Provider = {
     )();
 
     const sectorSchemeData = requestTaskStore.select(
-      underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
+      underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
     )();
 
     const attachments = requestTaskStore.select(underlyingAgreementQuery.selectAttachments)();

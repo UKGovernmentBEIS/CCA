@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
 import { TASK_RELATED_ACTIONS_MAP } from '@netz/common/components';
-import { ItemNamePipe, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
+import { getItemName, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
 import {
   getRequestTaskPageCanDeactivateGuard,
   getRequestTaskPageDefaultCanActivateGuard,
@@ -20,29 +20,25 @@ import { createIsEditableResolver, taskRelatedActionsMap } from './tasks.provide
 import { tasksContent } from './tasks-content';
 
 const taskTypeToReturnText = (type: RequestTaskDTO['type']): string => {
-  return new ItemNamePipe().transform(type as ItemDTO['taskType']) ?? 'Dashboard';
+  return getItemName(type as ItemDTO['taskType']) ?? 'Dashboard';
 };
 
 export const TASKS_ROUTES: Routes = [
   {
     path: ':taskId',
-    resolve: { type: () => inject(RequestTaskStore).state?.requestTaskItem?.requestTask?.type },
     canActivate: [getRequestTaskPageDefaultCanActivateGuard(), initializePayloadGuard],
     canDeactivate: [getRequestTaskPageCanDeactivateGuard()],
-    providers: [
-      { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
-      { provide: REQUEST_TASK_IS_EDITABLE_RESOLVER, useFactory: createIsEditableResolver },
-      { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: taskTypeToReturnText },
-    ],
+    resolve: { type: () => inject(RequestTaskStore).state?.requestTaskItem?.requestTask?.type },
     children: [
       {
+        title: () => taskTypeToReturnText(inject(RequestTaskStore).state?.requestTaskItem?.requestTask?.type),
         path: '',
+        loadChildren: () => import('@netz/common/request-task').then((r) => r.REQUEST_TASK_ROUTES),
         providers: [
           { provide: REQUEST_TASK_PAGE_CONTENT, useValue: tasksContent },
           { provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap },
           { provide: TASK_RELATED_ACTIONS_MAP, useValue: taskRelatedActionsMap },
         ],
-        loadChildren: () => import('@netz/common/request-task').then((r) => r.REQUEST_TASK_ROUTES),
       },
       { path: 'cancel', children: CANCEL_TASK_ROUTES },
       {
@@ -281,17 +277,31 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'pat-csv-upload',
+        loadChildren: () =>
+          import('./performance-account-template-csv-upload/performance-account-template-csv-upload.routes').then(
+            (r) => r.PERFORMANCE_ACCOUNT_TEMPLATE_CSV_UPLOAD_ROUTES,
+          ),
+      },
+      {
         path: 'appeal-outcome',
         loadChildren: () => import('./appeal-outcome/appeal-outcome.routes').then((r) => r.APPEAL_OUTCOME_ROUTES),
       },
       {
+        title: 'Your download has started',
         path: 'file-download/:uuid',
-        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
+        loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },
       {
+        title: 'Your download has started',
         path: 'file-download/:fileType/:uuid',
-        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
+        loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },
+    ],
+    providers: [
+      { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+      { provide: REQUEST_TASK_IS_EDITABLE_RESOLVER, useFactory: createIsEditableResolver },
+      { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: taskTypeToReturnText },
     ],
   },
   {

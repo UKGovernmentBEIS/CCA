@@ -11,14 +11,17 @@
       The scheme exit date determines whether the operator of this facility will be charged for the current charging
       period of subsistence fees.
     </p>
-
     <p class="govuk-hint">
       When a facility left the scheme before the current charging period, but the variation to remove that facility or a
       termination workflow hasn't completed, you can manually set the scheme exit date by selecting Yes.
     </p>
 
-    <h2 class="govuk-heading-m">Did the facility exit the scheme before the start of the current charging year?</h2>
-    <div formControlName="hasFacilityExited" govuk-radio>
+    <div
+      formControlName="hasFacilityExited"
+      govuk-radio
+      legend="Did the facility exit the scheme before the start of the current charging year?"
+      legendSize="medium"
+    >
       <govuk-radio-option [value]="false" [label]="'No'" />
 
       <govuk-radio-option [value]="true" [label]="'Yes, set scheme exit date'">

@@ -1,52 +1,28 @@
 # CCAApi
 
-This library wraps the OpenAPI generator's results based on the current [swagger.yml](src/assets/swagger.yaml) file.
+This library contains the OpenAPI generator output based on the [swagger.yaml](src/assets/swagger.yaml) file.
+
+> **Do not edit anything under `src/lib` by hand** — it is regenerated from the swagger file. Any necessary customization lives in the mustache templates under `src/assets/templates`.
 
 ## Usage
 
-Import any part of the generated code from `cca-api`. E.g.
+Import any part of the generated code from the root barrel. E.g.
 
-```Typescript
-import { SomeService } from 'cca-api';
+```typescript
+import { SomeService, SomeDTO } from 'cca-api';
 ```
 
 ## Code generation
 
-In order to generate an updated version of the library, replace the current swagger file with the new one and generate the new services.
+Run from the repo root (backend must be running on `localhost:8082`):
 
-Find the swagger ui projection, for example http://localhost:8080/api/swagger-ui/
-
-On the top of the page, find a link to the raw file, for example http://localhost:8080/api/v3/api-docs
-
-Open the raw file, copy its contents and format them into yaml, for example using https://editor.swagger.io/
-
-Copy the contents and paste/replace the old swagger.yaml found [here](src/assets/swagger.yaml)
-
-Run code generation
-
-```shell script
-yarn generate:api
+```bash
+yarn generate:api     # fetches the latest spec into src/assets/swagger.yaml, cleans and regenerates src/lib
+yarn postgenerate:api # lint-fix, build, format
 ```
 
-Build the cca-api library
+Then build and test the app. There should be few to no problems unless we know beforehand that there will be breaking changes. If more changes are needed, proceed to fix the app.
 
-```shell script
-ng build cca-api
-```
+Commit your working changes using a relevant message, for example `chore(api): generation`.
 
-Build, serve and test the app. There should be few to no problems unless we know beforehand that there will be breaking changes.
-If more changes need to be done, proceed to fix the app.
-
-Commit your working changes using a relevant message, for example `"chore(api): generation"`
-
-Use `--no-verify` as a last resort to bypass the message validation if left with no choice
-
-```shell script
-git commit -m "chore(api): generation" --no-verify
-```
-
-If you intend to use `--no-verify`, manually run linter and prettier fixes first
-
-```shell script
-yarn lint --fix && yarn pretty-quick --staged
-```
+Full documentation: [`docs/openapi-generator-update-guide.md`](../../docs/openapi-generator-update-guide.md).

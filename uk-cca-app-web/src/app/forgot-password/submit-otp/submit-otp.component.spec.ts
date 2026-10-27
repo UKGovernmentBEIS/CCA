@@ -6,7 +6,7 @@ import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { BasePage, mockClass } from '@netz/common/testing';
-import { AuthService } from '@shared/services';
+import { AuthService, SignInTrackingService } from '@shared/services';
 import { KeycloakService } from '@shared/services';
 
 import { ForgotPasswordService } from 'cca-api';
@@ -14,7 +14,9 @@ import { ForgotPasswordService } from 'cca-api';
 import { ResetPasswordStore } from '../+store/reset-password.store';
 import { SubmitOtpComponent } from './submit-otp.component';
 
-@Component({ template: '' })
+@Component({
+  template: '',
+})
 class DummyComponent {}
 
 describe('SubmitOtpComponent', () => {
@@ -26,6 +28,7 @@ describe('SubmitOtpComponent', () => {
 
   const forgotPasswordService = mockClass(ForgotPasswordService);
   const authService = mockClass(AuthService);
+  const signInTrackingService = mockClass(SignInTrackingService);
 
   class Page extends BasePage<SubmitOtpComponent> {
     set passwordValue(value: string) {
@@ -50,7 +53,7 @@ describe('SubmitOtpComponent', () => {
   }
 
   beforeEach(async () => {
-    authService.createLoginUrl.mockReturnValue('https://cca-sign-in.example');
+    authService.createLoginUrl.mockResolvedValue('https://cca-sign-in.example');
 
     await TestBed.configureTestingModule({
       imports: [SubmitOtpComponent, DummyComponent],
@@ -58,6 +61,7 @@ describe('SubmitOtpComponent', () => {
         provideRouter([{ path: 'error/404', component: DummyComponent }]),
         KeycloakService,
         { provide: AuthService, useValue: authService },
+        { provide: SignInTrackingService, useValue: signInTrackingService },
         { provide: ForgotPasswordService, useValue: forgotPasswordService },
       ],
     }).compileComponents();
@@ -145,15 +149,32 @@ describe('SubmitOtpComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['error', '404']);
   });
 
-  it('should link directly to the sign-in page after resetting the password', () => {
+  it('should link directly to the sign-in page after resetting the password', async () => {
     forgotPasswordService.resetPassword.mockReturnValueOnce(of({}));
 
     page.passwordValue = '123456';
     page.submitButton.click();
     fixture.detectChanges();
+    await Promise.resolve();
+    fixture.detectChanges();
     expect(page.errorSummary).toBeFalsy();
 
     expect(authService.createLoginUrl).toHaveBeenCalledWith({ redirectUri: location.origin });
     expect(page.link.href).toBe('https://cca-sign-in.example/');
+  });
+
+  it('should mark the sign-in as started when the sign-in link is used', async () => {
+    forgotPasswordService.resetPassword.mockReturnValueOnce(of({}));
+
+    page.passwordValue = '123456';
+    page.submitButton.click();
+    fixture.detectChanges();
+    await Promise.resolve();
+    fixture.detectChanges();
+
+    page.link.addEventListener('click', (event) => event.preventDefault());
+    page.link.click();
+
+    expect(signInTrackingService.markSignInStarted).toHaveBeenCalledTimes(1);
   });
 });

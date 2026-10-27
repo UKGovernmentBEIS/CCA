@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'govuk-cookies-pop-up',
-  imports: [RouterLink],
   templateUrl: './cookies-pop-up.component.html',
   styleUrl: './cookies-pop-up.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink],
 })
 export class CookiesPopUpComponent {
   readonly cookiesExpirationTime = input<string>();

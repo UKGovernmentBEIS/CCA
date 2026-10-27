@@ -1,10 +1,20 @@
 @if (details) {
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <netz-page-heading size="xl" [caption]="details?.workflowDetails.id" data-testid="page-heading">
-        {{ details?.workflowDetails.requestType | requestTypeToHeading: details?.workflowDetails?.requestMetadata }}
-        <govuk-tag style="float: right" [color]="details?.workflowDetails.requestStatus | statusColor">
-          {{ details?.workflowDetails.requestStatus | status }}
+      <netz-page-heading
+        size="xl"
+        [caption]="$safeNavigationMigration(details?.workflowDetails.id)"
+        data-testid="page-heading"
+      >
+        {{
+          $safeNavigationMigration(details?.workflowDetails.requestType)
+            | requestTypeToHeading: $safeNavigationMigration(details?.workflowDetails?.requestMetadata)
+        }}
+        <govuk-tag
+          style="float: right"
+          [color]="$safeNavigationMigration(details?.workflowDetails.requestStatus) | statusColor"
+        >
+          {{ $safeNavigationMigration(details?.workflowDetails.requestStatus) | status }}
         </govuk-tag>
       </netz-page-heading>
     </div>

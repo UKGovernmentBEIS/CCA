@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -29,7 +29,6 @@ import { resetDeterminationStatus } from '../../../utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PageHeadingComponent, ButtonDirective, ReturnToTaskOrActionPageComponent],
 })
 export class AvailableActionsComponent {

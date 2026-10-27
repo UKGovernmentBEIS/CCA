@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -32,7 +32,6 @@ import { createSaveDeterminationActionDTO } from '../../../transform';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [WizardStepComponent, TextareaComponent, ReactiveFormsModule, ReturnToTaskOrActionPageComponent],
 })
 export class ExplanationComponentComponent {

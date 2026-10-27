@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 
@@ -35,7 +35,6 @@ const HIDDEN_FEATURE_MAP = new Map<string, FeatureName>([
   selector: 'cca-start-new-task',
   templateUrl: './start-new-task.component.html',
   imports: [PageHeadingComponent, PendingButtonDirective, ButtonDirective, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StartNewTaskComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -72,6 +71,7 @@ export class StartNewTaskComponent {
       'FACILITY_AUDIT',
       'UNDERLYING_AGREEMENT_VARIATION',
       'NON_COMPLIANCE',
+      'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
       'PERFORMANCE_DATA_DOWNLOAD',
       'PERFORMANCE_DATA_UPLOAD',
       'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',

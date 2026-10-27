@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
-import { click, getAllByRole, getByText } from '@testing';
+import { assertInCellControlLabelsHidden, click, getAllByRole, getByText } from '@testing';
 import { Mocked, MockInstance } from 'vitest';
 
 import { RegulatorAuthoritiesService } from 'cca-api';
@@ -56,6 +56,10 @@ describe('RegulatorUsersComponent', () => {
   it('should have as many rows as regulators', async () => {
     const rows = getAllByRole('row');
     expect(rows).toHaveLength(mockRegulatorsRouteData.regulators.caUsers.length + 1);
+  });
+
+  it('should hide the labels of controls inside table cells, since the column header names them', () => {
+    assertInCellControlLabelsHidden(fixture.nativeElement);
   });
 
   it('should edit a regulator and save', async () => {

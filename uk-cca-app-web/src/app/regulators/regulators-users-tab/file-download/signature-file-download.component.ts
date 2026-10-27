@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { expand, map, Observable, switchMap, timer } from 'rxjs';
@@ -14,7 +14,6 @@ import { FileToken, RegulatorUsersService, UsersService } from 'cca-api';
     <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
   imports: [AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignatureFileDownloadComponent implements AfterViewChecked {
   private readonly route = inject(ActivatedRoute);

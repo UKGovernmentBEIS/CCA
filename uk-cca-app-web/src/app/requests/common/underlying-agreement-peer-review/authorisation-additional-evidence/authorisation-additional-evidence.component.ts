@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -19,7 +19,6 @@ import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer
     <a routerLink="../../" class="govuk-link">Return to: Peer review application for underlying agreement</a>
   `,
   imports: [PageHeadingComponent, SummaryComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorisationAdditionalEvidenceComponent {
   private readonly store = inject(RequestTaskStore);

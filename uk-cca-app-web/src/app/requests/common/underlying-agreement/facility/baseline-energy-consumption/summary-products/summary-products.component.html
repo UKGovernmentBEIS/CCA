@@ -1,18 +1,19 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
-    <netz-page-heading [caption]="facility()?.facilityDetails?.name">Split by product</netz-page-heading>
+    <netz-page-heading [caption]="$safeNavigationMigration(facility()?.facilityDetails?.name)"
+      >Split by product</netz-page-heading
+    >
   </div>
 
   @if (canChangeProducts()) {
     <div class="govuk-grid-column-one-quarter" style="text-align: end">
-      <button
-        type="button"
+      <a
         class="govuk-button govuk-button--secondary govuk-!-margin-top-5"
         [routerLink]="[`../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`]"
         [relativeTo]="activatedRoute"
       >
         Change
-      </button>
+      </a>
     </div>
   }
 </div>

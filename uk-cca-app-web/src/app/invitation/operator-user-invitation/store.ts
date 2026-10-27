@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -33,7 +33,7 @@ const INITIAL_STATE: InvitedOperatorUserExtended = {
   accountName: null,
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class OperatorUserInvitationStore extends SignalStore<InvitedOperatorUserExtended> {
   constructor() {
     super(INITIAL_STATE);

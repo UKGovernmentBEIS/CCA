@@ -37,7 +37,7 @@ describe('NonComplianceNoticeOfIntentSubmittedComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Upload file', 'Comments'],
-        ['filename.xls', 'A Martini. Shaken, Not Stirred.'],
+        ['filename.xls (opens in a new tab)', 'A Martini. Shaken, Not Stirred.'],
       ],
       [
         ['Users notified'],

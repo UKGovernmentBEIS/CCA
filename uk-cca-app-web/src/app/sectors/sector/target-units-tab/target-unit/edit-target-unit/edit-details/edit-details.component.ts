@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -18,9 +18,8 @@ import { EDIT_TARGET_UNIT_DETAILS_FORM, EditDetailsFormProvider } from './edit-d
 @Component({
   selector: 'cca-edit-details',
   templateUrl: './edit-details.component.html',
-  imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, TargetUnitDetailsInputComponent],
   providers: [EditDetailsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, TargetUnitDetailsInputComponent],
 })
 export class EditDetailsComponent {
   private readonly updateTargetUnitAccountService = inject(UpdateTargetUnitAccountService);

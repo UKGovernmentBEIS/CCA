@@ -42,9 +42,35 @@ describe('ErrorSummaryComponent', () => {
     expect(document.activeElement).toBe(errorSummary);
   });
 
+  it('should prefix the error message with a visually hidden Error', () => {
+    const prefix = (fixture.nativeElement as HTMLElement).querySelector(
+      '.govuk-error-summary__list p .govuk-visually-hidden',
+    );
+
+    expect(prefix?.textContent).toBe('Error: ');
+  });
+
   it('should render link when link and/or linkText is provided', () => {
     const link = (fixture.nativeElement as HTMLElement).querySelector('a');
     expect(link).toBeTruthy();
     expect(link?.textContent).toContain('Go to test link');
+  });
+
+  it('should not render link when linkText is not provided or empty', () => {
+    fixture.componentRef.setInput('errorSummaryInfo', {
+      message: 'Test error message without link',
+    });
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('a')).toBeNull();
+
+    fixture.componentRef.setInput('errorSummaryInfo', {
+      message: 'Test error message with empty linkText',
+      link: '',
+      linkText: '',
+    });
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('a')).toBeNull();
   });
 });

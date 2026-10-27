@@ -1,14 +1,24 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { firstValueFrom, of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
-import { mockClass } from '@netz/common/testing';
+import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { KeycloakService } from '@shared/services';
 
+import { AuthoritiesService, TermsAndConditionsService, UsersService } from 'cca-api';
+
+import {
+  mockAuthorityService,
+  mockKeycloakService,
+  mockTermsAndConditionsService,
+  mockUsersService,
+} from '../guards/mocks';
 import { AuthService } from '../services/auth.service';
+import { SignInTrackingService } from '../services/sign-in-tracking.service';
 import { GlobalErrorHandlingService } from './global-error-handling.service';
 import { StaleChunkRecoveryService } from './stale-chunk-recovery.service';
 
@@ -110,7 +120,7 @@ describe('GlobalErrorHandlingService', () => {
   });
 
   it('should handle the 401 error', async () => {
-    authService.login.mockResolvedValueOnce();
+    authService.reauthenticate.mockResolvedValueOnce();
 
     await expect(
       firstValueFrom(
@@ -123,7 +133,8 @@ describe('GlobalErrorHandlingService', () => {
       ),
     ).rejects.toBeTruthy();
 
-    expect(authService.login).toHaveBeenCalledTimes(1);
+    expect(authService.reauthenticate).toHaveBeenCalledTimes(1);
+    expect(authService.login).not.toHaveBeenCalled();
   });
 
   it('should handle the 403 error', async () => {
@@ -161,5 +172,40 @@ describe('GlobalErrorHandlingService', () => {
 
     await expect(firstValueFrom(service.handleHttpError(error))).rejects.toEqual(error);
     expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
+  describe('sign-in tracking', () => {
+    beforeEach(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          { provide: KeycloakService, useValue: mockKeycloakService },
+          { provide: UsersService, useValue: mockUsersService },
+          { provide: AuthoritiesService, useValue: mockAuthorityService },
+          { provide: TermsAndConditionsService, useValue: mockTermsAndConditionsService },
+          { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+        ],
+      });
+
+      vi.mocked(mockKeycloakService.login).mockResolvedValue(undefined);
+      sessionStorage.clear();
+    });
+
+    afterEach(() => {
+      document.cookie = 'uk_cca_cookies_policy=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      sessionStorage.clear();
+    });
+
+    it('should not mark a sign-in as started when a 401 sends the user to Keycloak', async () => {
+      document.cookie = 'uk_cca_cookies_policy={"usage":true}';
+      const errorService = TestBed.inject(GlobalErrorHandlingService);
+
+      await expect(
+        firstValueFrom(errorService.handleHttpError(new HttpErrorResponse({ status: 401, statusText: 'test' }))),
+      ).rejects.toBeTruthy();
+
+      expect(mockKeycloakService.login).toHaveBeenCalledTimes(1);
+      expect(sessionStorage.getItem(SignInTrackingService.SIGN_IN_STARTED_KEY)).toBeNull();
+    });
   });
 });

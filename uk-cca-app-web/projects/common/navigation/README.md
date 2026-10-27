@@ -48,8 +48,13 @@ The url of the link is determined by the route tree. This can also be ovewritten
 The `breadcrumb` property found in each route can be one of the following:
 
 - `string`: This is for when the route's breadcrumb is a static string e.g. In this case, the breadcrumb link is generated from code.
-- `object`: This is for when you need additional properties like a fragment, a custom link, or query params.
-- `function`: This is for when the breacrumb properties are dynamic. The function takes as input the route resolve data and can return either a string or an object with `text`, `link`, and possibly `fragment` and `queryParams` properties.
+- `object`: This is for when you need additional properties. The object has a `text` property, plus optional `link`, `from` and `fragment`.
+  - `link`: explicit link target. Takes precedence over `from`.
+  - `from`: the route config `path` of an ancestor (e.g. `:facilityId`). Use it instead of `link` when the crumb
+    should point at a parent route: the link resolves to that ancestor's URL, so the same route can be mounted under
+    different URL trees (e.g. `/target-unit-accounts/…` and `/sectors/…/target-units/…`) and still link to its parent.
+  - `fragment`: fragment appended to the resolved link.
+- `function`: This is for when the breacrumb properties are dynamic. The function takes as input the route resolve data and can return either a string or an object with `text`, `link` or `from`, and possibly `fragment`. Returning `false` or `null` hides the breadcrumb.
 - `false`: You can hide a breadcrumb by passing false as a value.
 
 ### Examples
@@ -74,7 +79,15 @@ export const ROUTES: Routes = [
               {
                 path: '',
                 component: HeroComponent,
-              }
+              },
+              {
+                path: 'reports/:reportId',
+                component: ReportDetailsComponent,
+                data: {
+                  // links to the nearest `:id` ancestor route, whatever tree this route was entered through
+                  breadcrumb: { text: 'Report details', from: ':id', fragment: 'reports' }
+                },
+              },
             ]
           },
         ]
@@ -152,8 +165,38 @@ const routes: Routes = [
 ];
 ```
 
-- `function`: The function must be of the form `(data: Data) => string` where `data` is the route's data. This is
-  commonly used together with a [ResolveFn](https://angular.io/api/router/ResolveFn) that can populate the route's
+- `object`: `{ link, fragment, queryParams }`, where `link` is a url relative to the current route and `fragment` is
+  appended to it. The back link keeps the current query params, unless `fragment` is set or `queryParams` overrides
+  them (pass `{}` to drop them). Use it to send users back to the tab they came from e.g.
+
+```typescript
+const routes: Routes = [
+  {
+    path: 'reports/:targetPeriodYear/toggle-lock',
+    data: { backlink: { link: '../../../', fragment: 'reports' } },
+    component: ToggleLockComponent,
+  },
+];
+```
+
+- `false`: hides the back link.
+
+- `function`: The function must be of the form `(data: Data, route: ActivatedRouteSnapshot) => string | false | null | Backlink`
+  where `data` is the route's data and `route` the route's snapshot. Returning `false` or `null` hides the back link.
+  Use `route` when the back link depends on how the page was entered, e.g. a query param set by a tab's change link:
+
+```typescript
+const route = {
+  path: 'reasons',
+  data: {
+    backlink: (_data, route) =>
+      route.queryParamMap.get('change') === 'true' ? { link: '../..', fragment: 'audit' } : '..',
+  },
+  component: ReasonsComponent,
+};
+```
+
+  The function is also commonly used together with a [ResolveFn](https://angular.io/api/router/ResolveFn) that can populate the route's
   data with relevant information. You can then extract the info you need from the `Data` object to get the
   back link url e.g.
 

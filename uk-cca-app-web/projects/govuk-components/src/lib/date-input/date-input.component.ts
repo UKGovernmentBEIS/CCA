@@ -16,9 +16,9 @@ import { DateInputValidators } from './date-input.validators';
  */
 @Component({
   selector: 'div[govuk-date-input]',
-  imports: [ErrorMessageComponent, ReactiveFormsModule, FieldsetHintDirective, LegendDirective, FieldsetDirective],
   templateUrl: './date-input.component.html',
   providers: [DatePipe],
+  imports: [ErrorMessageComponent, ReactiveFormsModule, FieldsetHintDirective, LegendDirective, FieldsetDirective],
 })
 export class DateInputComponent extends FormInput implements ControlValueAccessor, OnInit, DoCheck, OnDestroy {
   private readonly datePipe = inject(DatePipe);
@@ -178,7 +178,7 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
     return {
       ...GovukValidators.builder(
         errorMessage,
-        DateInputValidators.combinedRulesValidator(this.formGroup, this.isRequired()),
+        DateInputValidators.combinedRulesValidator(this.isRequired()),
       )(this.formGroup),
     };
   }

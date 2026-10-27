@@ -4,31 +4,36 @@ import { ReceivedAmountGuard } from './received-amount.guard';
 
 export const RECEIVED_AMOUNT_ROUTES: Routes = [
   {
+    title: 'Received amount',
     path: '',
-    data: { backlink: '..', breadcrumb: false },
     loadComponent: () => import('./received-amount.component').then((c) => c.ReceivedAmountComponent),
-  },
-  {
-    path: 'history-details/:detailsId',
-    data: { backlink: '../..', breadcrumb: false },
-    canActivate: [ReceivedAmountGuard],
-    loadComponent: () => import('./history-details/history-details.component').then((c) => c.HistoryDetailsComponent),
-  },
-  {
-    path: 'check-your-answers',
     data: { backlink: '..', breadcrumb: false },
+  },
+  {
+    title: 'Received amount history',
+    path: 'history-details/:detailsId',
+    loadComponent: () => import('./history-details/history-details.component').then((c) => c.HistoryDetailsComponent),
     canActivate: [ReceivedAmountGuard],
+    data: { backlink: '../..', breadcrumb: false },
+  },
+  {
+    title: 'Check your answers',
+    path: 'check-your-answers',
     loadComponent: () =>
       import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
-  },
-  {
-    path: 'confirmation',
-    data: { backlink: false, breadcrumb: false },
     canActivate: [ReceivedAmountGuard],
-    loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+    data: { backlink: '..', breadcrumb: false },
   },
   {
+    title: 'Received amount updated',
+    path: 'confirmation',
+    loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+    canActivate: [ReceivedAmountGuard],
+    data: { backlink: false, breadcrumb: false },
+  },
+  {
+    title: 'Your download has started',
     path: 'evidence-file-download/:fileType/:uuid',
-    loadComponent: () => import('@shared/components').then((m) => m.EvidenceFileDownloadComponent),
+    loadComponent: () => import('@shared/components').then((c) => c.EvidenceFileDownloadComponent),
   },
 ];

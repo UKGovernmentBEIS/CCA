@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -23,7 +23,6 @@ import { NON_COMPLIANCE_CONCLUSION_SUBTASK } from '../types';
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConclusionPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

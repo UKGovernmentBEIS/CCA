@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -34,7 +34,11 @@ describe('SectorUserInvitationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SectorUserInvitationComponent],
-      providers: [SectorUserInvitationStore, provideHttpClient(), { provide: ActivatedRoute, useValue: route }],
+      providers: [
+        SectorUserInvitationStore,
+        provideHttpClient(withXhr()),
+        { provide: ActivatedRoute, useValue: route },
+      ],
     }).compileComponents();
 
     router = TestBed.inject(Router);

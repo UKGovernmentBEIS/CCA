@@ -67,10 +67,13 @@ public class CcaBpmnProcessConstants {
     // Buy Out Surplus
     public final String BUY_OUT_SURPLUS_ACCOUNT_STATE = "buyOutSurplusAccountState";
     public final String BUY_OUT_SURPLUS_RUN_REQUEST_BUSINESS_KEY = "buyOutSurplusRunRequestBusinessKey";
+    
+    // Buy Out Surplus Facility
+    public final String BUY_OUT_SURPLUS_FACILITY_ACCOUNT_STATE = "buyOutSurplusFacilityAccountState";
+    public final String BUY_OUT_SURPLUS_FACILITY_RUN_REQUEST_BUSINESS_KEY = "buyOutSurplusFacilityRunRequestBusinessKey";
 
     // Facility Certification
     public final String FACILITY_CERTIFICATION_RUN_INITIATE_FLAG = "facilityCertificationRunInitiateFlag";
-    public final String FACILITY_CERTIFICATION_PERIOD = "facilityCertificationPeriod";
     public final String FACILITY_CERTIFICATION_ACCOUNT_STATE = "facilityCertificationAccountState";
     public final String FACILITY_CERTIFICATION_RUN_REQUEST_BUSINESS_KEY = "facilityCertificationRunRequestBusinessKey";
 
@@ -115,4 +118,7 @@ public class CcaBpmnProcessConstants {
     public static final String FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_REQUEST_BUSINESS_KEY = "facilityPerformanceAccountTemplateDataUploadRequestBusinessKey";
     public static final String FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_COMPLETED = "facilityPerformanceAccountTemplateDataProcessingCompleted";
     public static final String FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_MESSAGE_FAILED = "facilityPerformanceAccountTemplateDataProcessingMessageFailed";
+
+    // ETS
+    public static final String EMISSIONS_TRADING_SCHEME_DATA_OUTCOME = "emissionsTradingSchemeDataOutcome";
 }

@@ -1,0 +1,28 @@
+<netz-page-heading>PAT report details</netz-page-heading>
+
+<div class="govuk-!-width-two-thirds">
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Reporting year</dt>
+      <dd govukSummaryListRowValue>{{ reportingYear() }}</dd>
+    </div>
+  </dl>
+
+  <h2 class="govuk-heading-m">Actions reported</h2>
+  @for (action of actions(); track action; let i = $index) {
+    <dl govuk-summary-list>
+      <div govukSummaryListRow>
+        <a class="govuk-link" [routerLink]="[i]"> Entry {{ i + 1 }} </a>
+        <span>({{ action.actionCategoryType | facilityPatReportingTypes }})</span>
+        <p class="pre-line">
+          {{
+            truncateText(
+              action?.actionCategoryType === 'NO_ACTION' ? action?.notes : action?.savingActionsImplemented,
+              120
+            )
+          }}
+        </p>
+      </div>
+    </dl>
+  }
+</div>

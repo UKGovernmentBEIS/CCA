@@ -1,5 +1,5 @@
 import { LowerCasePipe, UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -59,7 +59,6 @@ const DEFAULT_PAGE_SIZE = 50;
     UpperCasePipe,
     PendingButtonDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorTargetUnitsTabComponent {
   private readonly sectorAssociationAuthoritiesService = inject(SectorAssociationAuthoritiesService);

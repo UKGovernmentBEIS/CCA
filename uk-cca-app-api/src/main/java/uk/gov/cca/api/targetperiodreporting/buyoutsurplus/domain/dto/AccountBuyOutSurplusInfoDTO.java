@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +13,5 @@ public class AccountBuyOutSurplusInfoDTO {
 
 	private boolean excluded;
 
-	private List<SurplusGainedDTO> surplusGainedDTOList;
-
+	private SurplusGainedDTO surplusDetails;
 }

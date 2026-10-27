@@ -1,11 +1,13 @@
-<fieldset [id]="identifier" govukFieldset>
-  <legend [size]="legendSize()" govukLegend>
-    @if (legend()) {
-      {{ legend() }}
-    } @else {
-      <ng-content select="[govukLegend]" />
-    }
-  </legend>
+<fieldset [id]="identifier" govukFieldset [hasError]="shouldDisplayErrors">
+  @if (shouldDisplayLegend()) {
+    <legend [size]="legendSize()" govukLegend>
+      @if (legend()) {
+        {{ legend() }}
+      } @else {
+        <ng-content select="[govukLegend]" />
+      }
+    </legend>
+  }
 
   @if (hint()) {
     <div govukFieldsetHint>{{ hint() }}</div>

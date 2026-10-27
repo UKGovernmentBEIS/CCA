@@ -11,12 +11,12 @@ import uk.gov.cca.api.files.attachments.service.CcaFileAttachmentService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.core.domain.constants.CcaRequestStatuses;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusAccountState;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusErrorType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusRunSummary;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.run.domain.BuyOutSurplusRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.run.transform.BuyOutSurplusRunMapper;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.run.utils.BuyOutSurplusRunUtil;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusErrorType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
 import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
@@ -67,11 +67,11 @@ public class BuyOutSurplusRunService {
         if(!buyOutSurplusAccountStates.isEmpty()) {
             try {
                 // Write CSV
-                final FileDTO csvFileDTO = BuyOutSurplusRunUtil.createCsvFileContent(requestId, buyOutSurplusAccountStates);
+                final FileDTO csvFileDTO = BuyOutSurplusRunUtil
+                        .createCsvFileContent(requestId, buyOutSurplusAccountStates, requestPayload.getSubmitterId());
 
                 // Save to DB
-                final String uuid = ccaFileAttachmentService.createSystemFileAttachment(
-                        csvFileDTO, FileStatus.SUBMITTED, requestPayload.getSubmitterId());
+                final String uuid = ccaFileAttachmentService.createSystemFileAttachment(csvFileDTO, FileStatus.SUBMITTED);
 
                 FileInfoDTO csvFile = FileInfoDTO.builder().uuid(uuid).name(csvFileDTO.getFileName()).build();
                 requestPayload.setCsvFile(csvFile);

@@ -44,7 +44,8 @@ export class FacilityItemListComponent {
 
   onSort(sortEvent: SortEvent): (fa: FacilityTimelineItemViewModel, fb: FacilityTimelineItemViewModel) => number {
     return (fa, fb) => {
-      const diff: number = fa[sortEvent.column].localeCompare(fb[sortEvent.column], 'en-GB', {
+      const column = sortEvent.column as keyof FacilityTimelineItemViewModel;
+      const diff: number = String(fa[column] ?? '').localeCompare(String(fb[column] ?? ''), 'en-GB', {
         numeric: true,
         sensitivity: 'base',
       });

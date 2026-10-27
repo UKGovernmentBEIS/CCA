@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 
 import { TaskListComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -17,7 +17,6 @@ import { getAllTPRReportingFormSubmittedSections } from './tpr-reporting-form-su
     </div>
   `,
   imports: [SummaryComponent, TaskListComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprReportingFormSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

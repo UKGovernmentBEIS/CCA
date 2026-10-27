@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -27,7 +27,6 @@ import { SectorMoaDetailsStore } from '../../sector-moa-details.store';
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkInProgressComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

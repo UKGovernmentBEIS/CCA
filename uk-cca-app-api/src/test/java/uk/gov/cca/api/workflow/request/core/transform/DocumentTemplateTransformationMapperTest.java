@@ -1,5 +1,13 @@
 package uk.gov.cca.api.workflow.request.core.transform;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,17 +15,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.netz.api.referencedata.domain.Country;
 import uk.gov.netz.api.referencedata.service.CountryService;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DocumentTemplateTransformationMapperTest {
@@ -82,5 +83,29 @@ class DocumentTemplateTransformationMapperTest {
 
         // Verify
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void constructFacilityAddressDTO() {
+        final FacilityAddressDTO address = FacilityAddressDTO.builder()
+                .line1("Line 1")
+                .line2("Line 2")
+                .city("City")
+                .county("County")
+                .postcode("code")
+                .country("GR")
+                .build();
+
+        when(countryService.getReferenceData())
+                .thenReturn(List.of(Country.builder().code("GR").name("Greece").build()));
+
+        final String expected = "Line 1\nLine 2\nCity\nCounty\ncode\nGreece";
+
+        // Invoke
+        String actual = documentTemplateTransformationMapper.constructFacilityAddressDTO(address);
+
+        // Verify
+        assertThat(actual).isEqualTo(expected);
+        verify(countryService, times(1)).getReferenceData();
     }
 }

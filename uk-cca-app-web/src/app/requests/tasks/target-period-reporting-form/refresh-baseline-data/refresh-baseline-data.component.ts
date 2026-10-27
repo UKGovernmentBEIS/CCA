@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, EMPTY } from 'rxjs';
@@ -20,7 +20,6 @@ import { ErrorSummaryComponent, ErrorSummaryInfo } from '@shared/components';
     PageHeadingComponent,
     ErrorSummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RefreshBaselineDataComponent {
   private readonly tasksApiService = inject(TasksApiService);

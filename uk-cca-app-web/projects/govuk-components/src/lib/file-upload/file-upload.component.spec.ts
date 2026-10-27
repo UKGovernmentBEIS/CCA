@@ -9,8 +9,8 @@ import { FileUploadComponent } from './file-upload.component';
 
 describe('FileUploadComponent', () => {
   @Component({
-    imports: [FileUploadComponent, ReactiveFormsModule],
     template: '<div govukFileUpload [formControl]="control"></div>',
+    imports: [FileUploadComponent, ReactiveFormsModule],
   })
   class TestComponent {
     control = new FormControl();

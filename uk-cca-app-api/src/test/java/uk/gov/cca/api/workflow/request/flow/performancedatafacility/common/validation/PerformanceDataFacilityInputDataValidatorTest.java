@@ -212,7 +212,10 @@ class PerformanceDataFacilityInputDataValidatorTest {
     @Test
     void validateData_no_actual_srm_not_valid() {
         final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
-                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder().build())
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder()
+                        .standardFuels(Map.of(PerformanceDataFacilityFixedConversionFactor.GRID_ELECTRICITY,
+                                PerformanceDataFacilityFuelEnergyConsumption.builder().build()))
+                        .build())
                 .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
                         .variableEnergyConsumptionDataByProduct(List.of(
                                 PerformanceDataFacilityProductVariableEnergyData.builder().productName("name").build()
@@ -249,6 +252,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
                         .build())
                 .build();
         final PerformanceDataFacilityCalculationParameters calculationParameters = PerformanceDataFacilityCalculationParameters.builder()
+                .totalFixedEnergy(BigDecimal.ZERO)
                 .usedReportingMechanism(true)
                 .build();
 
@@ -272,6 +276,7 @@ class PerformanceDataFacilityInputDataValidatorTest {
                         .build())
                 .build();
         final PerformanceDataFacilityCalculationParameters calculationParameters = PerformanceDataFacilityCalculationParameters.builder()
+                .totalFixedEnergy(BigDecimal.ZERO)
                 .usedReportingMechanism(true)
                 .build();
 
@@ -285,6 +290,85 @@ class PerformanceDataFacilityInputDataValidatorTest {
         assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
         assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
                 .INVALID_CHP_DATA.getMessage());
+        verify(performanceDataValidator, times(1)).validate(performanceData);
+    }
+
+    @Test
+    void validateData_with_Zeros_Fixed_not_valid() {
+        final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder().build())
+                .build();
+        final PerformanceDataFacilityCalculationParameters calculationParameters = PerformanceDataFacilityCalculationParameters.builder()
+                .totalFixedEnergy(BigDecimal.TEN)
+                .usedReportingMechanism(false)
+                .build();
+
+        when(performanceDataValidator.validate(performanceData))
+                .thenReturn(Optional.empty());
+
+        // Invoke
+        List<BusinessValidationResult> result = validator.validateData(performanceData, calculationParameters);
+
+        // Verify
+        assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
+        assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
+                .INVALID_ZERO_FUELS_DATA.getMessage());
+        verify(performanceDataValidator, times(1)).validate(performanceData);
+    }
+
+    @Test
+    void validateData_with_Zeros_Variable_not_valid() {
+        final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder().build())
+                .build();
+        final PerformanceDataFacilityCalculationParameters calculationParameters = PerformanceDataFacilityCalculationParameters.builder()
+                .variableEnergyType(VariableEnergyDepictionType.TOTALS)
+                .totalFixedEnergy(BigDecimal.ZERO)
+                .baselineVariableEnergy(BigDecimal.TEN)
+                .usedReportingMechanism(false)
+                .build();
+
+        when(performanceDataValidator.validate(performanceData))
+                .thenReturn(Optional.empty());
+
+        // Invoke
+        List<BusinessValidationResult> result = validator.validateData(performanceData, calculationParameters);
+
+        // Verify
+        assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
+        assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
+                .INVALID_ZERO_FUELS_DATA.getMessage());
+        verify(performanceDataValidator, times(1)).validate(performanceData);
+    }
+
+    @Test
+    void validateData_with_Zeros_Products_not_valid() {
+        final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
+                .energyFuelDetails(PerformanceDataFacilityInputEnergyFuelDetails.builder().build())
+                .throughputDetails(PerformanceDataFacilityThroughputDetails.builder()
+                        .variableEnergyConsumptionDataByProduct(List.of(
+                                PerformanceDataFacilityProductVariableEnergyData.builder().productName("name").build()
+                        ))
+                        .build())
+                .build();
+        final PerformanceDataFacilityCalculationParameters calculationParameters = PerformanceDataFacilityCalculationParameters.builder()
+                .usedReportingMechanism(false)
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder().productName("name").build()
+                ))
+                .build();
+
+        when(performanceDataValidator.validate(performanceData))
+                .thenReturn(Optional.empty());
+
+        // Invoke
+        List<BusinessValidationResult> result = validator.validateData(performanceData, calculationParameters);
+
+        // Verify
+        assertThat(result.stream().allMatch(BusinessValidationResult::isValid)).isFalse();
+        assertThat(getViolations(result)).containsExactly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
+                .INVALID_ZERO_FUELS_DATA.getMessage());
         verify(performanceDataValidator, times(1)).validate(performanceData);
     }
 

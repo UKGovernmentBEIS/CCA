@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 
 import java.math.BigDecimal;
 
@@ -18,9 +17,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class SurplusUpdateDTO {
-
-	@NotNull
-	private TargetPeriodType targetPeriodType;
 
 	@NotNull
 	@Digits(integer = Integer.MAX_VALUE, fraction = 0)

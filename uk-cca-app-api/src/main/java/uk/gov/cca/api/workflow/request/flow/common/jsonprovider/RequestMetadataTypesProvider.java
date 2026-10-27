@@ -19,6 +19,7 @@ import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2Te
 import uk.gov.cca.api.workflow.request.flow.cca2termination.processing.domain.Cca2TerminationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
@@ -68,7 +69,8 @@ public class RequestMetadataTypesProvider implements JsonSubTypesProvider {
 				new NamedType(PerformanceDataFacilityProcessingRequestMetadata.class, PERFORMANCE_DATA_FACILITY_PROCESSING),
 				new NamedType(PerformanceDataFacilityDigitalFormRequestMetadata.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM),
 				new NamedType(FacilityPerformanceAccountTemplateDataUploadRequestMetadata.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD),
-				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestMetadata.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING)
+				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestMetadata.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING),
+				new NamedType(EmissionsTradingSchemeDataRequestMetadata.class, EMISSIONS_TRADING_SCHEME_DATA)
 				);
 	}
 

@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { RequestTaskState, RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
-import { getByText } from '@testing';
+import { assertInCellControlLabelsHidden, getByText } from '@testing';
 import { Mocked } from 'vitest';
 
 import { PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload } from 'cca-api';
@@ -151,6 +151,12 @@ describe('TprThroughputSplitByProductComponent', () => {
 
   it('should create', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should hide the labels of controls inside table cells, since the column header names them', () => {
+    fixture.detectChanges();
+
+    assertInCellControlLabelsHidden(fixture.nativeElement);
   });
 
   it('should prepopulate actual throughput from saved throughput details', async () => {
@@ -314,5 +320,52 @@ describe('TprThroughputSplitByProductComponent', () => {
     // 1234567 / 1000 = 1234.567, formatted as "1,234.567 kWh/tonnes"
     const energyCell = fixture.nativeElement.querySelector('tbody tr .govuk-table__cell:nth-child(3)');
     expect(energyCell.textContent?.replace(/\s+/g, ' ').trim()).toBe('1,234.567 kWh/tonnes');
+  });
+
+  it('should set zeroEnergy form-level error when delivered energy is 0 for BY_PRODUCT facilities', () => {
+    expect(component['form'].invalid).toBe(true);
+    expect(component['form'].errors).toEqual({
+      zeroEnergy: 'Total energy/fuel amount consumed during the period must be greater than zero',
+    });
+  });
+
+  it('should not set zeroEnergy error when delivered energy is non-zero', async () => {
+    const validEnergyState = {
+      ...mockByProductState,
+      requestTaskItem: {
+        ...mockByProductState.requestTaskItem,
+        requestTask: {
+          ...mockByProductState.requestTaskItem.requestTask,
+          payload: {
+            ...mockByProductState.requestTaskItem.requestTask.payload,
+            performanceData: {
+              ...(
+                mockByProductState.requestTaskItem.requestTask
+                  .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+              ).performanceData,
+              energyFuelDetails: {
+                ...(
+                  mockByProductState.requestTaskItem.requestTask
+                    .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload
+                ).performanceData?.energyFuelDetails,
+                standardFuels: {
+                  GRID_ELECTRICITY: { deliveredEnergy: '100', primaryEnergy: '210' },
+                  NON_GRID_ELECTRICITY: { deliveredEnergy: '50', primaryEnergy: '50' },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    store.setState(validEnergyState as RequestTaskState);
+
+    fixture = TestBed.createComponent(TprThroughputSplitByProductComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component['form'].errors).toBeNull();
   });
 });

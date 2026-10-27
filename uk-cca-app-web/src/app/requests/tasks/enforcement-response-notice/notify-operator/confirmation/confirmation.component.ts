@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -23,7 +23,6 @@ import { enforcementResponseNoticeQuery } from '../../enforcement-response-notic
     </div>
   `,
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

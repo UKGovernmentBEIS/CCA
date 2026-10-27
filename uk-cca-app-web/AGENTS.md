@@ -95,6 +95,7 @@ yarn lint
 ### Component Design
 - Make components self-contained with clear responsibilities
 - Use explicit navigation rather than complex guards
+- In `uk-cca-app-web`, switching entities by changing only URL parameters while reusing the same workflow component is not a supported business flow. Do not add subscriptions, effects, draft resets, request cancellation, or tests solely to handle that hypothetical navigation. Use route snapshots for initialization and follow the actual in-app navigation flows.
 - Follow consistent patterns for form submission
 - Always add `<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />` immediately before `<netz-return-to-task-or-action-page />`
 

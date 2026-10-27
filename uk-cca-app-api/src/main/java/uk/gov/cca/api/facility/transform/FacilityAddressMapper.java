@@ -12,5 +12,7 @@ public interface FacilityAddressMapper {
     FacilityAddress toFacilityAddress(FacilityAddressDTO facilityAddressDTO);
 
     void setAddress(@MappingTarget FacilityAddress address, FacilityAddressDTO facilityAddressDTO);
+    
+    FacilityAddressDTO toFacilityAddressDTO(FacilityAddress facilityAddress);
 
 }

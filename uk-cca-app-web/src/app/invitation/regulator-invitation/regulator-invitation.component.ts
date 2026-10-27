@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -20,9 +20,8 @@ import { InvitedRegulatorUserStore } from './invited-regulator-user.store';
       </div>
     </cca-wizard-step>
   `,
-  imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
   providers: [passwordFormFactory],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
 })
 export class RegulatorInvitationComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);

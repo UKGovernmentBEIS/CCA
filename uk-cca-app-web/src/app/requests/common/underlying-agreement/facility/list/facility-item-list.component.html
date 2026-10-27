@@ -12,23 +12,27 @@
       @case ('links') {
         @if (isEditable()) {
           <div class="govuk-!-text-align-right">
-            <a class="govuk-link" [routerLink]="['../', row.facilityId, 'edit']">Edit</a>
+            <a class="govuk-link" [routerLink]="['../', row.facilityId, 'edit']"
+              >Edit<span class="govuk-visually-hidden"> {{ row.facilityId }}</span></a
+            >
 
             @switch (row[statusColumn]) {
               @case ('NEW') {
-                <a class="govuk-!-padding-left-3 govuk-link" [routerLink]="['../', row.facilityId, 'delete']">
-                  Delete
-                </a>
+                <a class="govuk-!-padding-left-3 govuk-link" [routerLink]="['../', row.facilityId, 'delete']"
+                  >Delete<span class="govuk-visually-hidden"> {{ row.facilityId }}</span></a
+                >
               }
 
               @case ('LIVE') {
-                <a class="govuk-!-padding-left-3 govuk-link" [routerLink]="['../', row.facilityId, 'exclude']">
-                  Exclude
-                </a>
+                <a class="govuk-!-padding-left-3 govuk-link" [routerLink]="['../', row.facilityId, 'exclude']"
+                  >Exclude<span class="govuk-visually-hidden"> {{ row.facilityId }}</span></a
+                >
               }
 
               @case ('EXCLUDED') {
-                <a class="govuk-!-padding-left-3 govuk-link" [routerLink]="['../', row.facilityId, 'undo']"> Undo </a>
+                <a class="govuk-!-padding-left-3 govuk-link" [routerLink]="['../', row.facilityId, 'undo']"
+                  >Undo<span class="govuk-visually-hidden"> {{ row.facilityId }}</span></a
+                >
               }
             }
           </div>

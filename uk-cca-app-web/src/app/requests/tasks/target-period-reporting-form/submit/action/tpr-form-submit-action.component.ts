@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, EMPTY } from 'rxjs';
@@ -34,7 +34,6 @@ import { createSubmitRequestTaskActionDTO } from '../../transform';
     ReturnToTaskOrActionPageComponent,
     SummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprFormSubmitActionComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

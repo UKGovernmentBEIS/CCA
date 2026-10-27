@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -34,7 +34,6 @@ import { MiReportsListComponent } from './mi-reports-list/mi-reports-list.compon
     </div>
   `,
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, MiReportsListComponent, ErrorSummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiReportsComponent {
   private readonly fb = inject(FormBuilder);

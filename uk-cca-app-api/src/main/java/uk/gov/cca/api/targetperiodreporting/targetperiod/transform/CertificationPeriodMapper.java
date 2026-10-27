@@ -12,6 +12,7 @@ import uk.gov.netz.api.common.config.MapperConfig;
 public interface CertificationPeriodMapper {
 
     @Mapping(target = "targetPeriodType", source = "targetPeriod.businessId")
+    @Mapping(target = "schemeVersion", source = "targetPeriod.schemeVersion")
     @Mapping(target = "certificationPeriodType", source = "businessId")
     CertificationPeriodDTO toCertificationPeriodDTO(CertificationPeriod certificationPeriod);
 

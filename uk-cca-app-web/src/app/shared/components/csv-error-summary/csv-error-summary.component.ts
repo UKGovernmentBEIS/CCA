@@ -1,14 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-  input,
-  OnChanges,
-  viewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, input, OnChanges, viewChild } from '@angular/core';
 import { AbstractControl, FormControlStatus, NgForm, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
@@ -22,7 +13,6 @@ import { NestedMessageValidationError } from './nested-message-validation-error.
   selector: 'cca-csv-error-summary',
   templateUrl: './csv-error-summary.component.html',
   imports: [AsyncPipe, DetailsComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
   private readonly formService = inject(FormService);
@@ -64,7 +54,7 @@ export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
   }
 
   private getAbstractControlErrors(control: AbstractControl, path: string[] = []): NestedMessageValidationError[] {
-    let childControlErrors = [];
+    let childControlErrors: NestedMessageValidationError[] = [];
 
     if (control instanceof UntypedFormGroup) {
       childControlErrors = Object.entries(control.controls)

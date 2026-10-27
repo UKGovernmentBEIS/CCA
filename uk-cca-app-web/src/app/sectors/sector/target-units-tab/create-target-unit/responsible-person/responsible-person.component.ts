@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,9 +13,8 @@ import {
 @Component({
   selector: 'cca-responsible-person',
   templateUrl: './responsible-person.component.html',
-  imports: [ReactiveFormsModule, WizardStepComponent, ResponsiblePersonInputComponent],
   providers: [TargetUnitResponsiblePersonFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, WizardStepComponent, ResponsiblePersonInputComponent],
 })
 export class ResponsiblePersonComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

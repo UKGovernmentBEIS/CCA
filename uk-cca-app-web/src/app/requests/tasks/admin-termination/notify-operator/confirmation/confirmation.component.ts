@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -10,7 +10,6 @@ import { adminTerminationQuery } from '../../admin-termination.selectors';
   selector: 'cca-confirmation',
   templateUrl: './confirmation.component.html',
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

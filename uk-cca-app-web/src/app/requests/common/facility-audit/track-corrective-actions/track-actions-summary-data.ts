@@ -1,10 +1,11 @@
 import { DatePipe } from '@angular/common';
 
-import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
 import { AuditCorrectiveActionResponse } from 'cca-api';
+
+import { boolToString } from '../../utils';
 
 export function toTrackActionSummaryData(
   action: AuditCorrectiveActionResponse,

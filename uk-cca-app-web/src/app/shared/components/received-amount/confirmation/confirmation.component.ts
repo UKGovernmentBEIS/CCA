@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -17,7 +17,6 @@ import { SubsistenceFeesMoAViewService } from 'cca-api';
     }
   `,
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

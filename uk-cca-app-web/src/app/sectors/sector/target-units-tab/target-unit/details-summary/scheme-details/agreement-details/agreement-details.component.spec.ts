@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { SchemeVersionEnum } from '@shared/types';
 
 import { AgreementDetailsComponent } from './agreement-details.component';
 
@@ -28,7 +29,7 @@ describe('AgreementDetailsComponent', () => {
     ]);
     componentRef.setInput('mainColumnClass', 'govuk-grid-column-two-thirds');
     componentRef.setInput('agreement', {
-      ['CCA_3']: {
+      [SchemeVersionEnum.CCA_3]: {
         activationDate: '2025-09-30',
         fileDocument: {
           name: 'ADS_1-T00002 CCA3 Underlying Agreement v1.pdf',

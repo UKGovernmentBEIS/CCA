@@ -12,6 +12,10 @@
 @if (summaryData().length) {
   @for (data of summaryData(); track data) {
     <cca-summary [data]="data.summary" />
-    <a class="govuk-link" [routerLink]="['reports', data.targetPeriodYear]">View details</a>
+    <a class="govuk-link" [routerLink]="['reports', data.targetPeriodYear]"
+      >View details<span class="govuk-visually-hidden"> of {{ data.targetPeriodYear }} report</span></a
+    >
   }
+} @else if (hasCriteria()) {
+  <p>There are no reports for the selected criteria.</p>
 }

@@ -7,29 +7,29 @@ const CanEditGuard = () => inject(ActiveSectorStore).state.editable;
 
 export const DETAILS_ROUTES: Routes = [
   {
+    title: 'Edit sector details',
     path: 'edit-details',
-    canActivate: [CanEditGuard],
-    data: {
-      pageTitle: 'Edit sector details',
-      backlink: '../',
-      breadcrumb: false,
-    },
     loadComponent: () =>
       import('./edit-sector-association-details/edit-sector-association-details.component').then(
         (c) => c.EditSectorAssociationDetailsComponent,
       ),
-  },
-  {
-    path: 'edit-contact-details',
     canActivate: [CanEditGuard],
     data: {
-      pageTitle: 'Edit sector contact details',
-      backlink: '../',
+      backlink: { link: '../', fragment: 'details' },
       breadcrumb: false,
     },
+  },
+  {
+    title: 'Edit sector contact details',
+    path: 'edit-contact-details',
     loadComponent: () =>
       import('./edit-sector-association-contact-details/edit-sector-association-contact-details.component').then(
         (c) => c.EditSectorAssociationContactDetailsComponent,
       ),
+    canActivate: [CanEditGuard],
+    data: {
+      backlink: { link: '../', fragment: 'details' },
+      breadcrumb: false,
+    },
   },
 ];

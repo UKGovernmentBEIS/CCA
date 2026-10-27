@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 
 import {
   SectorAssociationSchemeDTO,
@@ -23,10 +23,10 @@ export function getCca3Scheme(scheme: SectorAssociationSchemesDTO | SubsectorAss
   if (!scheme) return null;
 
   if ('sectorAssociationSchemeMap' in scheme) {
-    return scheme.sectorAssociationSchemeMap?.[SchemeVersion.CCA_3];
+    return scheme.sectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_3];
   }
 
-  return scheme.subsectorAssociationSchemeMap?.[SchemeVersion.CCA_3];
+  return scheme.subsectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_3];
 }
 
 export function sortTargetCommitments(targetCommitments: TargetCommitmentDTO[] = []): TargetCommitmentDTO[] {

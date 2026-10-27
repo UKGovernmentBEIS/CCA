@@ -21,7 +21,7 @@ export const taskStatusTagMap: TaskStatusTagMap = {
   },
   [TaskItemStatus.IN_PROGRESS]: {
     text: 'In progress',
-    color: 'light-blue',
+    color: 'blue',
   },
   [TaskItemStatus.ACCEPTED]: {
     text: 'Accepted',

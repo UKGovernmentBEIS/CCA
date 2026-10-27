@@ -25,7 +25,7 @@ public class PerformanceDataFacilityCalculationMapper {
         BigDecimal energyCarbonDifference = PerformanceDataFacilityCalculationFunctionUtil.ENERGY_CARBON_DIFFERENCE
                 .apply(actualEnergyCarbon, targetEnergyCarbon);
         BigDecimal targetImprovement = PerformanceDataFacilityCalculationFunctionUtil
-                .TARGET_IMPROVEMENT.apply(parameters).setScale(7, RoundingMode.HALF_UP);
+                .TARGET_IMPROVEMENT.apply(parameters, performanceData).setScale(7, RoundingMode.HALF_UP);
         BigDecimal weightedConversionFactor = PerformanceDataFacilityCalculationFunctionUtil.WEIGHTED_CONVERSION_FACTOR
                 .apply(performanceData.getEnergyFuelDetails(), actualEnergyCarbon, parameters.getMeasurementType());
         BigDecimal targetCo2Emissions = PerformanceDataFacilityCalculationFunctionUtil.TARGET_TCO2_EMISSIONS

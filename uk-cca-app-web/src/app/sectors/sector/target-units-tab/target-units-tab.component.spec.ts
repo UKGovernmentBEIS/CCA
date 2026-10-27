@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
+import { assertInCellControlLabelsHidden } from '@testing';
 import { Mocked, MockInstance } from 'vitest';
 
 import { SectorAssociationAuthoritiesService, SectorAssociationTargetUnitAccountsInfoService } from 'cca-api';
@@ -48,7 +49,7 @@ describe('SectorTargetUnitsTabComponent', () => {
       snapshot: {
         paramMap: { get: vi.fn().mockReturnValue('1') },
         queryParamMap: queryParamMock,
-        fragment: null,
+        fragment: null as string | null,
       },
       queryParamMap: queryParamSubject.asObservable(),
     };
@@ -78,6 +79,12 @@ describe('SectorTargetUnitsTabComponent', () => {
 
   describe('when editable', () => {
     beforeEach(() => setupComponent(mockTargetUnits));
+
+    it('should hide the labels of controls inside table cells, since the column header names them', () => {
+      fixture.detectChanges();
+
+      assertInCellControlLabelsHidden(fixture.nativeElement);
+    });
 
     it('should load data and update state when effect triggers', () => {
       fixture.detectChanges();

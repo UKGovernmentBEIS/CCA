@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -37,6 +37,7 @@ import {
 @Component({
   selector: 'cca-track-corrective-actions-is-carried-out',
   templateUrl: './track-corrective-actions-is-carried-out.component.html',
+  providers: [TrackCorrectiveActionIsCarriedOutFormProvider],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -51,8 +52,6 @@ import {
     ConditionalContentDirective,
     TextareaComponent,
   ],
-  providers: [TrackCorrectiveActionIsCarriedOutFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrackCorrectiveActionsIsCarriedOutComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -33,7 +33,6 @@ import { NON_COMPLIANCE_CONCLUSION_SUBTASK } from '../types';
     PendingButtonDirective,
     ReturnToTaskOrActionPageComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

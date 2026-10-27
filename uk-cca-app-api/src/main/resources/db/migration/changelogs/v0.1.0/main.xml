@@ -47,6 +47,7 @@
 
   <include file="file_evidence_ddl.xml" relativeToChangelogFile="true"/>
   <include file="file_document_cca.xml" relativeToChangelogFile="true"/>
+  <include file="file_attachment_cca.xml" relativeToChangelogFile="true"/>
 
   <include file="tpr_facility_certification_ddl.xml" relativeToChangelogFile="true"/>
 

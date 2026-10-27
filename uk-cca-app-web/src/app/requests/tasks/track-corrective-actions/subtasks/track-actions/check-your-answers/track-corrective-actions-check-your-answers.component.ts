@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -35,7 +35,6 @@ import { createRequestTaskActionProcessDTO, toSaveRequestTaskPayload } from '../
     </a>
   `,
   imports: [PageHeadingComponent, ButtonDirective, PendingButtonDirective, SummaryComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrackCorrectiveActionsCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, TaskListComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -13,7 +13,6 @@ import { getAllUnderlyingAgreementVariationReviewTimelineSections } from '../und
     <netz-task-list [sections]="sections()" />
   `,
   imports: [TaskListComponent, PageHeadingComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementVariationReviewedTaskListComponent {
   private readonly requestActionStore = inject(RequestActionStore);

@@ -37,7 +37,7 @@ describe('PhaseBarComponent', () => {
     expect(phaseText).toContain('This is a new service – your feedback will help us to improve it.');
 
     const userProfileText = compiled.querySelector('govuk-phase-banner span')?.textContent;
-    expect(userProfileText?.trim()).toContain('You are logged in as: Gimli Gloin');
+    expect(userProfileText?.trim()).toContain('You are signed in as: Gimli Gloin');
 
     fixture.componentRef.setInput('isUserLoggedIn', false);
     fixture.detectChanges();

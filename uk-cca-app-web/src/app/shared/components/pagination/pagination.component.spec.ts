@@ -131,7 +131,7 @@ describe('PaginationComponent', () => {
       setup(30, 1, 10);
       const spy = vi.spyOn(hostComponent, 'onPageChange');
 
-      clickElement('.govuk-pagination__next a');
+      clickElement('.govuk-pagination__next button');
 
       expect(spy).toHaveBeenCalledWith(2);
       expect(hostComponent.lastPageChanged()).toBe(2);
@@ -202,10 +202,10 @@ describe('PaginationComponent', () => {
 
     it('should hide page numbers when hideNumbers is true', () => {
       setup(50, 1, 10, false);
-      expect(getAllElements('.govuk-pagination__item a').length).toBeGreaterThan(0);
+      expect(getAllElements('.govuk-pagination__item button').length).toBeGreaterThan(0);
 
       setup(50, 1, 10, true);
-      expect(getAllElements('.govuk-pagination__item a').length).toBe(0);
+      expect(getAllElements('.govuk-pagination__item button').length).toBe(0);
     });
 
     it('should not show items when count is 0', () => {

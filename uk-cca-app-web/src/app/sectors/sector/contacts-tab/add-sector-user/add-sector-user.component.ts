@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,6 +24,7 @@ import { ADD_SECTOR_FORM, AddSectorFormModel, AddSectorFormProvider } from './ad
 @Component({
   selector: 'cca-add-sector-user',
   templateUrl: './add-sector-user.component.html',
+  providers: [AddSectorFormProvider],
   imports: [
     ButtonDirective,
     TextInputComponent,
@@ -34,8 +35,6 @@ import { ADD_SECTOR_FORM, AddSectorFormModel, AddSectorFormProvider } from './ad
     ReactiveFormsModule,
     PendingButtonDirective,
   ],
-  providers: [AddSectorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddSectorUserComponent {
   private readonly route = inject(ActivatedRoute);

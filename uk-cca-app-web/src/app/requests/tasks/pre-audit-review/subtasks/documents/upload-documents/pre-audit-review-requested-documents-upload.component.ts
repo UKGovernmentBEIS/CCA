@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -24,6 +24,7 @@ import {
 @Component({
   selector: 'cca-pre-audit-review-requested-documents-upload',
   templateUrl: './pre-audit-review-requested-documents-upload.component.html',
+  providers: [PreAuditReviewAuditReasonFormProvider],
   imports: [
     ReactiveFormsModule,
     ReturnToTaskOrActionPageComponent,
@@ -34,8 +35,6 @@ import {
     MultipleFileInputComponent,
     DetailsComponent,
   ],
-  providers: [PreAuditReviewAuditReasonFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreAuditReviewRequestedDocumentsUploadComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -50,13 +51,13 @@ class BuyOutSurplusFacilityRunCreateValidatorTest {
         TargetPeriod tp7 = TargetPeriod.builder()
                 .schemeVersion(SchemeVersion.CCA_3)
                 .businessId(TargetPeriodType.TP7)
-                .buyOutCost(10)
+                .buyOutCost(BigDecimal.valueOf(10))
                 .build();
 
         TargetPeriod tp8 = TargetPeriod.builder()
                 .schemeVersion(SchemeVersion.CCA_3)
                 .businessId(TargetPeriodType.TP8)
-                .buyOutCost(20)
+                .buyOutCost(BigDecimal.valueOf(20))
                 .build();
 
         when(requestQueryService.existByRequestTypeAndRequestStatusAndCompetentAuthority(
@@ -163,13 +164,13 @@ class BuyOutSurplusFacilityRunCreateValidatorTest {
         TargetPeriod tp7 = TargetPeriod.builder()
                 .schemeVersion(SchemeVersion.CCA_3)
                 .businessId(TargetPeriodType.TP7)
-                .buyOutCost(10)
+                .buyOutCost(BigDecimal.valueOf(10))
                 .build();
 
         TargetPeriod tp8 = TargetPeriod.builder()
                 .schemeVersion(SchemeVersion.CCA_3)
                 .businessId(TargetPeriodType.TP8)
-                .buyOutCost(20)
+                .buyOutCost(BigDecimal.valueOf(20))
                 .build();
 
         when(requestQueryService.existByRequestTypeAndRequestStatusAndCompetentAuthority(
@@ -225,7 +226,7 @@ class BuyOutSurplusFacilityRunCreateValidatorTest {
         TargetPeriod tp7 = TargetPeriod.builder()
                 .schemeVersion(SchemeVersion.CCA_3)
                 .businessId(TargetPeriodType.TP7)
-                .buyOutCost(10)
+                .buyOutCost(BigDecimal.valueOf(10))
                 .build();
 
         TargetPeriod tp8 = TargetPeriod.builder()

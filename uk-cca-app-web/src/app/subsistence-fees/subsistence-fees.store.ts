@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Injectable } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Service } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { EMPTY, map, Observable, pipe, switchMap, take, tap, timer } from 'rxjs';
@@ -56,7 +56,7 @@ const INITIAL_STATE: SubsistenceFeesState = {
   isValidChargeDate: undefined,
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
   private readonly destroyRef = inject(DestroyRef);
   private readonly requestsService = inject(RequestsService);

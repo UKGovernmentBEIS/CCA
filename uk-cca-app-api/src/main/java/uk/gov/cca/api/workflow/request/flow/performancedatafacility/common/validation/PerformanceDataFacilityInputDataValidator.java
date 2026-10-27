@@ -115,6 +115,13 @@ public class PerformanceDataFacilityInputDataValidator {
 	        validationResults.add(PerformanceDataFacilityValidationHelper.validateCHP(chpMessage).process(energyFuelDetails));
         }
 
+        // Validate submission with total energy = zero
+        if(energyFuelDetails.getStandardFuels().isEmpty() && energyFuelDetails.getNonStandardFuels().isEmpty()) {
+            String zeroFuelsMessage = PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
+                    .INVALID_ZERO_FUELS_DATA.getMessage();
+            validationResults.add(PerformanceDataFacilityValidationHelper.validateZeroFuels(zeroFuelsMessage).process(calculationParameters));
+        }
+
         return validationResults;
     }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,7 +27,6 @@ import { toEmailTemplateSummary } from '../email-template-summary';
     ButtonDirective,
     PendingButtonDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailEditComponent {
   private readonly router = inject(Router);

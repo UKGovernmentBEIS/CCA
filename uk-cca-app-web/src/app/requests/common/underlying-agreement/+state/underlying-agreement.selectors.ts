@@ -1,4 +1,5 @@
 import { createDescendingSelector, requestTaskQuery, RequestTaskState, StateSelector } from '@netz/common/store';
+import { SchemeVersion } from '@shared/types';
 
 import {
   AccountReferenceData,
@@ -9,6 +10,7 @@ import {
   UnderlyingAgreementPayload,
   UnderlyingAgreementTargetUnitDetails,
   UnderlyingAgreementVariationPayload,
+  UnderlyingAgreementVariationReviewRequestTaskPayload,
 } from 'cca-api';
 
 import { TaskItemStatus } from '../../task-item-status';
@@ -17,6 +19,14 @@ import { FacilityItemViewModel, UNARequestTaskPayload } from '../types';
 const selectPayload: StateSelector<RequestTaskState, UNARequestTaskPayload> = createDescendingSelector(
   requestTaskQuery.selectRequestTaskPayload,
   (payload) => payload as UNARequestTaskPayload,
+);
+
+const selectVariationReviewPayload: StateSelector<
+  RequestTaskState,
+  UnderlyingAgreementVariationReviewRequestTaskPayload
+> = createDescendingSelector(
+  requestTaskQuery.selectRequestTaskPayload,
+  (payload) => payload as UnderlyingAgreementVariationReviewRequestTaskPayload,
 );
 
 const selectAccountReferenceData: StateSelector<RequestTaskState, AccountReferenceData> = createDescendingSelector(
@@ -30,7 +40,7 @@ const selectAccountReferenceDataSectorAssociationDetails: StateSelector<RequestT
     (accountReferenceData) => accountReferenceData.sectorAssociationDetails,
   );
 
-const selectSectorAssociationDetailsSchemeData = (scheme: string) =>
+const selectSectorAssociationDetailsSchemeData = (scheme: SchemeVersion) =>
   createDescendingSelector(
     selectAccountReferenceDataSectorAssociationDetails,
     (details) => details?.schemeDataMap[scheme],
@@ -150,6 +160,7 @@ const selectFacilityTargets = (facilityIndex: number) =>
 
 export const underlyingAgreementQuery = {
   selectPayload,
+  selectVariationReviewPayload,
   selectSectionsCompleted,
   selectUnderlyingAgreementSubmitAttachments,
   selectAccountReferenceData,

@@ -1,6 +1,7 @@
 import { DecimalPipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  booleanAttribute,
   Component,
   computed,
   contentChild,
@@ -28,8 +29,8 @@ import { GovukTextWidthClass, HTMLInputType } from './text-input.type';
 @Component({
   selector: 'div[cca-text-input]',
   templateUrl: './text-input.component.html',
-  imports: [ErrorMessageComponent, NgClass, NgTemplateOutlet],
   providers: [DecimalPipe],
+  imports: [ErrorMessageComponent, NgClass, NgTemplateOutlet],
   schemas: [NO_ERRORS_SCHEMA],
 })
 export class TextInputComponent extends FormInput implements ControlValueAccessor, OnInit, AfterViewInit {
@@ -37,6 +38,7 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   private readonly renderer = inject(Renderer2);
 
   protected readonly hint = input<string>(undefined);
+  protected readonly ariaDescribedBy = input<string>(undefined);
   protected readonly inputType = input<HTMLInputType>('text');
   protected readonly autoComplete = input('on');
   protected readonly inputMode = input<string>(undefined);
@@ -47,13 +49,14 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   protected readonly suffix = input<string>(undefined);
   protected readonly valueTransform = input<(v: unknown) => string>(undefined);
   protected readonly label = input<string>();
+  protected readonly labelHidden = input(false, { transform: booleanAttribute });
   protected readonly labelSize = input<LabelSizeType>();
 
   protected readonly templateLabel = contentChild(LabelDirective);
   protected readonly input = viewChild<ElementRef<HTMLInputElement>>('input');
 
   protected readonly currentLabel = computed(() => this.label() || 'Insert label');
-  protected readonly isLabelHidden = computed(() => (this.label() ? false : true));
+  protected readonly isLabelHidden = computed(() => this.labelHidden() || !this.label());
 
   protected readonly currentLabelSize = computed(() => {
     switch (this.labelSize()) {

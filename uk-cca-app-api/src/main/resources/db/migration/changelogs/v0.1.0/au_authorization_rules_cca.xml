@@ -14087,4 +14087,1059 @@
         </rollback>
     </changeSet>
     
+    <changeSet id="0_1_0_add_rule_for_request_action_type_BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED_for_regulator" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED', 'requestActionViewHandler', 'REGULATOR');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST_ACTION'
+                and resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED'
+                and handler = 'requestActionViewHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_request_action_type_BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id from au_service s, au_rule r
+            where s.name = 'getRequestActionById'
+              and r.resource_type = 'REQUEST_ACTION'
+              and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED'
+              and r.handler = 'requestActionViewHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name = 'getRequestActionById'
+                and r.resource_type = 'REQUEST_ACTION'
+                and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED'
+                and r.handler = 'requestActionViewHandler'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_associate_services_with_rules_for_BUY_OUT_SURPLUS_FACILITY_RUN_request" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rules_for_request_action_type_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED" author="P70311">
+        <sql>
+            INSERT INTO au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED', 'requestActionViewHandler', 'REGULATOR', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED', 'requestActionViewHandler', 'SECTOR_USER', NULL);
+
+            INSERT INTO au_service_rule(service_id, rule_id) SELECT aus.id, aur.id FROM au_service aus, au_rule aur WHERE aus.name = 'getRequestActionById' AND aur.role_type in ('REGULATOR', 'SECTOR_USER') AND aur.resource_type = 'REQUEST_ACTION' AND aur.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED' AND aur.handler = 'requestActionViewHandler' AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name = 'getRequestActionById'
+                AND aur.role_type in ('REGULATOR', 'SECTOR_USER')
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+
+                DELETE FROM au_rule
+                WHERE resource_type = 'REQUEST_ACTION'
+                AND resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED'
+                AND handler = 'requestActionViewHandler'
+                AND role_type in ('REGULATOR', 'SECTOR_USER')
+                AND scope IS NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rules_for_request_action_type_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED" author="P70311">
+        <sql>
+            INSERT INTO au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED', 'requestActionViewHandler', 'REGULATOR', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED', 'requestActionViewHandler', 'SECTOR_USER', NULL);
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus,
+                 au_rule aur
+            WHERE aus.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken')
+              AND aur.role_type in ('REGULATOR', 'SECTOR_USER')
+              AND aur.resource_type = 'REQUEST_ACTION'
+              AND aur.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED'
+              AND aur.handler = 'requestActionViewHandler'
+              AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken')
+                AND aur.role_type in ('REGULATOR', 'SECTOR_USER')
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+
+                DELETE FROM au_rule
+                WHERE resource_type = 'REQUEST_ACTION'
+                AND resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED'
+                AND handler = 'requestActionViewHandler'
+                AND role_type in ('REGULATOR', 'SECTOR_USER')
+                AND scope IS NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rules_for_request_action_type_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED" author="P70311">
+        <sql>
+            INSERT INTO au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED', 'requestActionViewHandler', 'REGULATOR', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED', 'requestActionViewHandler', 'SECTOR_USER', NULL);
+
+            INSERT INTO au_service_rule(service_id, rule_id) SELECT aus.id, aur.id FROM au_service aus, au_rule aur WHERE aus.name = 'getRequestActionById' AND aur.role_type in ('REGULATOR', 'SECTOR_USER') AND aur.resource_type = 'REQUEST_ACTION' AND aur.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED' AND aur.handler = 'requestActionViewHandler' AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name = 'getRequestActionById'
+                AND aur.role_type in ('REGULATOR', 'SECTOR_USER')
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+
+                DELETE FROM au_rule
+                WHERE resource_type = 'REQUEST_ACTION'
+                AND resource_sub_type = 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED'
+                AND handler = 'requestActionViewHandler'
+                AND role_type in ('REGULATOR', 'SECTOR_USER')
+                AND scope IS NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_getFacilityPerformanceAccountTemplateDataReportInfo_service" author="P70383">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getFacilityPerformanceAccountTemplateDataReportInfo');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getFacilityPerformanceAccountTemplateDataReportInfo'
+              AND aur.role_type in ('REGULATOR','SECTOR_USER', 'OPERATOR')
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'getFacilityPerformanceAccountTemplateDataReportInfo'
+                AND aur.role_type IN ('REGULATOR','SECTOR_USER', 'OPERATOR')
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'getFacilityPerformanceAccountTemplateDataReportInfo';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_getFacilityPerformanceAccountTemplateDataReportDetails_service" author="P70383">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getFacilityPerformanceAccountTemplateDataReportDetails');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getFacilityPerformanceAccountTemplateDataReportDetails'
+              AND aur.role_type in ('REGULATOR','SECTOR_USER', 'OPERATOR')
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'getFacilityPerformanceAccountTemplateDataReportDetails'
+                AND aur.role_type IN ('REGULATOR','SECTOR_USER', 'OPERATOR')
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'getFacilityPerformanceAccountTemplateDataReportDetails';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_rename_service_getSectorPerformanceAccountTemplateDataReportList" author="P70383">
+        <sql>
+            update au_service
+            set name = 'getSectorAccountPerformanceAccountTemplateDataReportList'
+            where name = 'getSectorPerformanceAccountTemplateDataReportList';
+        </sql>
+        <rollback>
+            update au_service
+            set name = 'getSectorPerformanceAccountTemplateDataReportList'
+            where name = 'getSectorAccountPerformanceAccountTemplateDataReportList';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_authorization_rules_for_getSectorFacilityPerformanceAccountTemplateDataReportList" author="P70383">
+        <sql>
+            insert into au_service (id, name)
+            values (nextval('au_service_seq'), 'getSectorFacilityPerformanceAccountTemplateDataReportList');
+
+            insert into au_service_rule(service_id, rule_id)
+            select aus.id, aur.id
+            from au_service aus, au_rule aur
+            where aus.name = 'getSectorFacilityPerformanceAccountTemplateDataReportList'
+              and aur.role_type in ('REGULATOR', 'SECTOR_USER')
+              and aur.resource_type = 'SECTOR_ASSOCIATION'
+              and aur.resource_sub_type is null
+              and aur.handler = 'sectorAssociationAccessHandler'
+              and aur.scope is null;
+        </sql>
+        <rollback>
+            delete from au_service_rule where service_id = (select id from au_service where name = 'getSectorFacilityPerformanceAccountTemplateDataReportList');
+            delete from au_service where name = 'getSectorFacilityPerformanceAccountTemplateDataReportList';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rule_for_request_action_type_REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE_for_all_roles" author="loukerip@unisystems.gr">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE', 'requestActionViewHandler', 'OPERATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE', 'requestActionViewHandler', 'REGULATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE', 'requestActionViewHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST_ACTION'
+                and resource_sub_type = 'REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE'
+                and handler = 'requestActionViewHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_associate_services_with_request_action_type_REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE" author="loukerip@unisystems.gr">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id from au_service s, au_rule r
+            where s.name = 'getRequestActionById'
+              and r.resource_type = 'REQUEST_ACTION'
+              and r.resource_sub_type = 'REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE'
+              and r.handler = 'requestActionViewHandler'
+              and r.role_type in ('REGULATOR', 'OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name='getRequestActionById'
+                and r.resource_type = 'REQUEST_ACTION'
+                and r.resource_sub_type = 'REQUEST_TERMINATED_DUE_TO_PERFORMANCE_DATA_CSV_UPDATE'
+                and r.handler = 'requestActionViewHandler'
+                and r.role_type in ('REGULATOR', 'OPERATOR', 'SECTOR_USER')
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_rename_service_getAllSurplusHistoryByTargetPeriodAndAccountId" author="P70311">
+        <comment>Rename service that retrieves the surplus history for a specific account and scheme version</comment>
+        <sql>
+            update public.au_service
+            set name = 'getSurplusHistoryByAccountId'
+            where name = 'getAllSurplusHistoryByTargetPeriodAndAccountId';
+        </sql>
+        <rollback>
+            update public.au_service
+            set name = 'getAllSurplusHistoryByTargetPeriodAndAccountId'
+            where name = 'getSurplusHistoryByAccountId';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_rename_service_updateSurplusGained" author="P70311">
+        <comment>Rename service that updates the surplus and surplus history for a specific account</comment>
+        <sql>
+            update public.au_service
+            set name = 'updateAccountSurplusGained'
+            where name = 'updateSurplusGained';
+        </sql>
+        <rollback>
+            update public.au_service
+            set name = 'updateSurplusGained'
+            where name = 'updateAccountSurplusGained';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_RENAME_SERVICE_getBuyOutSurplusTransactionSummary_TO_getAccountBuyOutSurplusTransaction" author="P70383">
+        <sql>
+            update au_service
+            set name = 'getAccountBuyOutSurplusTransaction'
+            where name = 'getBuyOutSurplusTransactionSummary';
+        </sql>
+        <rollback>
+            update au_service
+            set name = 'getBuyOutSurplusTransactionSummary'
+            where name = 'getAccountBuyOutSurplusTransaction';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_CCA_BUY_OUT_SURPLUS_TRANSACTION_DETAIL_RULES_FOR_REGULATORS" author="P70383">
+        <comment>Populate the relevant tables to authorize a user to update Buy-out surplus transaction payment status</comment>
+        <sql>
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'BUY_OUT_SURPLUS_TRANSACTION_DETAIL', null, 'buyOutSurplusTransactionDetailAccessHandler', 'REGULATOR', null);
+        </sql>
+        <rollback>
+            DELETE FROM public.au_rule
+            WHERE resource_type = 'BUY_OUT_SURPLUS_TRANSACTION_DETAIL'
+            AND handler = 'buyOutSurplusTransactionDetailAccessHandler'
+            AND role_type = 'REGULATOR' AND scope IS NULL;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_REFACTOR_getBuyOutSurplusTransactionHistory" author="P70383">
+        <comment>Delete getBuyOutSurplusTransactionHistory and add new getBuyOutSurplusTransactionDetailHistory with new rule</comment>
+        <sql>
+            DELETE FROM au_service_rule
+            WHERE service_id = (SELECT id FROM au_service WHERE name = 'getBuyOutSurplusTransactionHistory');
+
+            DELETE FROM au_service WHERE name = 'getBuyOutSurplusTransactionHistory';
+        </sql>
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getBuyOutSurplusTransactionDetailHistory');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getBuyOutSurplusTransactionDetailHistory'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION_DETAIL'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'buyOutSurplusTransactionDetailAccessHandler'
+              AND aur.scope is null;
+        </sql>
+        <rollback>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getBuyOutSurplusTransactionHistory');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getBuyOutSurplusTransactionHistory'
+            AND aur.role_type = 'REGULATOR'
+            AND aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION'
+            AND aur.resource_sub_type IS NULL
+            AND aur.handler = 'buyOutSurplusTransactionAccessHandler'
+            AND aur.scope is null;
+
+            DELETE FROM au_service_rule
+            WHERE service_id = (SELECT id FROM au_service WHERE name = 'getBuyOutSurplusTransactionDetailHistory');
+
+            DELETE FROM au_service WHERE name = 'getBuyOutSurplusTransactionDetailHistory';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_generateBuyOutSurplusTransactionDetailEvidenceFileToken" author="P70383">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'generateBuyOutSurplusTransactionDetailEvidenceFileToken');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'generateBuyOutSurplusTransactionDetailEvidenceFileToken'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION_DETAIL'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'buyOutSurplusTransactionDetailAccessHandler'
+              AND aur.scope is null;
+        </sql>
+        <rollback>
+            DELETE FROM au_service_rule
+            WHERE service_id = (SELECT id FROM au_service WHERE name = 'generateBuyOutSurplusTransactionDetailEvidenceFileToken');
+
+            DELETE FROM au_service WHERE name = 'generateBuyOutSurplusTransactionDetailEvidenceFileToken';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_CCA_create_service_updateFacilitySurplusGained_and_associate_with_rule" author="P70311">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'updateFacilitySurplusGained');
+        </sql>
+        <sql>
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'updateFacilitySurplusGained'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'updateFacilitySurplusGained'
+                AND aur.role_type = 'REGULATOR'
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'updateFacilitySurplusGained';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_RENAME_SERVICE_getBuyOutSurplusTransactionDetails_TO_getFacilityBuyOutSurplusTransaction" author="P70383">
+        <sql>
+            update au_service
+            set name = 'getFacilityBuyOutSurplusTransaction'
+            where name = 'getBuyOutSurplusTransactionDetails';
+        </sql>
+        <rollback>
+            update au_service
+            set name = 'getBuyOutSurplusTransactionDetails'
+            where name = 'getFacilityBuyOutSurplusTransaction';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_getFacilityBuyOutSurplusTransactionDetails" author="P70383">
+        <sql>
+            INSERT INTO au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getFacilityBuyOutSurplusTransactionDetails');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getFacilityBuyOutSurplusTransactionDetails'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'buyOutSurplusTransactionAccessHandler'
+              AND aur.scope is null;
+        </sql>
+        <rollback>
+            DELETE FROM au_service_rule
+            WHERE service_id = (SELECT id FROM au_service WHERE name = 'getFacilityBuyOutSurplusTransactionDetails');
+
+            DELETE FROM au_service WHERE name = 'getFacilityBuyOutSurplusTransactionDetails';
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_CCA_getFacilitySurplusHistory" author="P70311">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getFacilitySurplusHistory');
+        </sql>
+        <sql>
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getFacilitySurplusHistory'
+              AND aur.role_type in ('REGULATOR','SECTOR_USER','OPERATOR')
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'getFacilitySurplusHistory'
+                AND aur.role_type IN ('REGULATOR','SECTOR_USER','OPERATOR')
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'getFacilitySurplusHistory';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rule_for_request_action_type_BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_for_regulator" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED', 'requestActionViewHandler', 'REGULATOR');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST_ACTION'
+                and resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED'
+                and handler = 'requestActionViewHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_rule_for_BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST' , 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING', 'requestAccessHandler', 'REGULATOR'),
+            (nextval('au_rule_seq'), 'REQUEST' , 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING', 'requestAccessHandler', 'SECTOR_USER'),
+            (nextval('au_rule_seq'), 'REQUEST' , 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING', 'requestAccessHandler', 'OPERATOR');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST'
+                and resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING'
+                and handler = 'requestAccessHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_rules_for_BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type in ('REGULATOR', 'OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type in ('REGULATOR', 'OPERATOR', 'SECTOR_USER')
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_request_action_type_BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id from au_service s, au_rule r
+            where s.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken')
+              and r.resource_type = 'REQUEST_ACTION'
+              and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED'
+              and r.handler = 'requestActionViewHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken')
+                and r.resource_type = 'REQUEST_ACTION'
+                and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED'
+                and r.handler = 'requestActionViewHandler'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rule_for_request_action_type_BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES_for_regulator" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES', 'requestActionViewHandler', 'REGULATOR');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST_ACTION'
+                and resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES'
+                and handler = 'requestActionViewHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_request_action_type_BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id from au_service s, au_rule r
+            where s.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken')
+              and r.resource_type = 'REQUEST_ACTION'
+              and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES'
+              and r.handler = 'requestActionViewHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken')
+                and r.resource_type = 'REQUEST_ACTION'
+                and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES'
+                and r.handler = 'requestActionViewHandler'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rule_for_request_action_type_BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED_for_all_roles" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED', 'requestActionViewHandler', 'OPERATOR');
+
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED', 'requestActionViewHandler', 'REGULATOR');
+
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED', 'requestActionViewHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST_ACTION'
+                and resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED'
+                and handler = 'requestActionViewHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_associate_services_with_request_action_type_BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionById', 'generateRequestActionGetFileDocumentToken')
+              and r.resource_type = 'REQUEST_ACTION'
+              and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED'
+              and r.handler = 'requestActionViewHandler'
+              and r.role_type in ('REGULATOR', 'OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionById', 'generateRequestActionGetFileDocumentToken')
+                and r.resource_type = 'REQUEST_ACTION'
+                and r.resource_sub_type = 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED'
+                and r.handler = 'requestActionViewHandler'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_RENAME_SERVICE_updateBuyOutSurplusTransactionPaymentStatus_TO_updateBuyOutSurplusTransactionDetailsPaymentStatus" author="P70383">
+        <sql>
+            update au_service
+            set name = 'updateBuyOutSurplusTransactionDetailsPaymentStatus'
+            where name = 'updateBuyOutSurplusTransactionPaymentStatus';
+        </sql>
+        <rollback>
+            update au_service
+            set name = 'updateBuyOutSurplusTransactionPaymentStatus'
+            where name = 'updateBuyOutSurplusTransactionDetailsPaymentStatus';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_REFACTOR_updateBuyOutSurplusTransactionAmount" author="P70383">
+        <comment>Delete updateBuyOutSurplusTransactionAmount and add new updateBuyOutSurplusTransactionDetailAmount with new rule</comment>
+        <sql>
+            DELETE FROM au_service_rule
+            WHERE service_id = (SELECT id FROM au_service WHERE name = 'updateBuyOutSurplusTransactionAmount');
+
+            DELETE FROM au_service WHERE name = 'updateBuyOutSurplusTransactionAmount';
+        </sql>
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'updateBuyOutSurplusTransactionDetailAmount');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'updateBuyOutSurplusTransactionDetailAmount'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION_DETAIL'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'buyOutSurplusTransactionDetailAccessHandler'
+              AND aur.scope is null;
+        </sql>
+        <rollback>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'updateBuyOutSurplusTransactionAmount');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'updateBuyOutSurplusTransactionAmount'
+            AND aur.role_type = 'REGULATOR'
+            AND aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION'
+            AND aur.resource_sub_type IS NULL
+            AND aur.handler = 'buyOutSurplusTransactionAccessHandler'
+            AND aur.scope is null;
+
+            DELETE FROM au_service_rule
+            WHERE service_id = (SELECT id FROM au_service WHERE name = 'updateBuyOutSurplusTransactionDetailAmount');
+
+            DELETE FROM au_service WHERE name = 'updateBuyOutSurplusTransactionDetailAmount';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_markAllBuyOutSurplusTransactionDetailsPaymentStatus" author="P70383">
+        <sql>
+            INSERT INTO au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'markAllBuyOutSurplusTransactionDetailsPaymentStatus');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'markAllBuyOutSurplusTransactionDetailsPaymentStatus'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'buyOutSurplusTransactionAccessHandler'
+              AND aur.scope is null;
+        </sql>
+        <rollback>
+            DELETE FROM au_service_rule
+            WHERE service_id = (SELECT id FROM au_service WHERE name = 'markAllBuyOutSurplusTransactionDetailsPaymentStatus');
+
+            DELETE FROM au_service WHERE name = 'markAllBuyOutSurplusTransactionDetailsPaymentStatus';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_service_getBuyOutSurplusTransactionReceivedAmountHistory_and_associate_with_rule" author="P70311">
+        <sql>
+            insert into au_service(id, name)
+            values (nextval('au_service_seq'), 'getBuyOutSurplusTransactionReceivedAmountHistory');
+        </sql>
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select aus.id, aur.id
+            from au_service aus
+                     cross join au_rule aur
+            where aus.name = 'getBuyOutSurplusTransactionReceivedAmountHistory'
+              and aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION'
+              and aur.resource_sub_type is null
+              and aur.role_type = 'REGULATOR'
+              and aur.handler = 'buyOutSurplusTransactionAccessHandler'
+              and scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule
+                where (service_id, rule_id) in (SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+                where aus.name = 'getBuyOutSurplusTransactionReceivedAmountHistory'
+                and aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION'
+                and aur.resource_sub_type is null
+                and aur.handler = 'buyOutSurplusTransactionAccessHandler'
+                and aur.scope is null);
+
+                delete from au_service
+                where name = 'getBuyOutSurplusTransactionReceivedAmountHistory';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_updateBuyOutSurplusTransactionReceivedAmount" author="P70311">
+        <sql>
+            INSERT INTO au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'updateBuyOutSurplusTransactionReceivedAmount');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id
+            FROM au_service aus, au_rule aur
+            WHERE aus.name = 'updateBuyOutSurplusTransactionReceivedAmount'
+              AND aur.role_type = 'REGULATOR'
+              AND aur.resource_type = 'BUY_OUT_SURPLUS_TRANSACTION'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'buyOutSurplusTransactionAccessHandler'
+              AND aur.scope is null;
+        </sql>
+        <rollback>
+            DELETE FROM au_service_rule
+            WHERE service_id = (SELECT id FROM au_service WHERE name = 'updateBuyOutSurplusTransactionReceivedAmount');
+
+            DELETE FROM au_service WHERE name = 'updateBuyOutSurplusTransactionReceivedAmount';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_CCA_getFacilityCertifications" author="P70383">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getFacilityCertifications');
+        </sql>
+        <sql>
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getFacilityCertifications'
+              AND aur.role_type in ('REGULATOR','SECTOR_USER','OPERATOR')
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'getFacilityCertifications'
+                AND aur.role_type IN ('REGULATOR','SECTOR_USER','OPERATOR')
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'getFacilityCertifications';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_rules_for_EMISSIONS_TRADING_SCHEME_DATA" author="P70311">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST' , 'EMISSIONS_TRADING_SCHEME_DATA', 'requestAccessHandler', 'REGULATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST' , 'EMISSIONS_TRADING_SCHEME_DATA', 'requestAccessHandler', 'OPERATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST' , 'EMISSIONS_TRADING_SCHEME_DATA', 'requestAccessHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST'
+                and resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+                and handler = 'requestAccessHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_rules_for_EMISSIONS_TRADING_SCHEME_DATA" author="P70311">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope is null;
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+              and r.resource_type = 'REQUEST'
+              and r.resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+              and r.handler = 'requestAccessHandler'
+              and r.role_type in ('OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type in ('OPERATOR', 'SECTOR_USER')
+                and r.scope is null;
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionsByRequestId', 'getItemsByRequest', 'getRequestDetailsById', 'getNotesByRequestId', 'createRequestNote', 'uploadRequestNoteFile', 'generateGetRequestFileNoteToken')
+                and r.resource_type = 'REQUEST'
+                and r.resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+                and r.handler = 'requestAccessHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rules_and_service_association_for_FACILITY_resource_and_EMISSIONS_TRADING_SCHEME_DATA_subresource_and_REQUEST_CREATE_handler_for_SECTOR_USER" author="P70311">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'), 'FACILITY', 'EMISSIONS_TRADING_SCHEME_DATA', 'facilityRequestCreateHandler', 'SECTOR_USER', 'REQUEST_CREATE');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name = 'processRequestCreateAction'
+              and r.resource_type = 'FACILITY'
+              and r.resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+              and r.handler = 'facilityRequestCreateHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_CREATE';
+
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'FACILITY',
+                        'EMISSIONS_TRADING_SCHEME_DATA',
+                        'REQUEST_CREATE',
+                        'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD',
+                        'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_resource_scope_permission
+                where resource_type = 'FACILITY'
+                and resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+                and scope = 'REQUEST_CREATE'
+                and permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD'
+                and role_type = 'SECTOR_USER';
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name = 'processRequestCreateAction'
+                and r.resource_type = 'FACILITY'
+                and r.resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+                and r.handler = 'facilityRequestCreateHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_CREATE';
+
+                delete
+                from au_rule
+                where resource_type = 'FACILITY'
+                and resource_sub_type = 'EMISSIONS_TRADING_SCHEME_DATA'
+                and handler = 'facilityRequestCreateHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_CREATE';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

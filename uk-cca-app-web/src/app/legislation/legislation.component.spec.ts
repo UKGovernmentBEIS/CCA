@@ -31,9 +31,9 @@ describe('LegislationComponent', () => {
       ),
     ).toBeTruthy();
 
-    expect(getByText('The Climate Change Agreements (Administration) Regulations 2012')).toBeTruthy();
+    expect(getByText(/The Climate Change Agreements \(Administration\) Regulations 2012/)).toBeTruthy();
 
-    expect(getByText('The Climate Change Agreements (Eligible Facilities) Regulations 2012')).toBeTruthy();
+    expect(getByText(/The Climate Change Agreements \(Eligible Facilities\) Regulations 2012/)).toBeTruthy();
 
     expect(
       getByText(

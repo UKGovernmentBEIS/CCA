@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
+  booleanAttribute,
   Component,
   computed,
   DestroyRef,
@@ -33,8 +33,6 @@ let nextComboboxId = 0;
 @Component({
   selector: 'cca-combobox',
   templateUrl: './combobox.component.html',
-  imports: [NgClass, ErrorMessageComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -47,6 +45,7 @@ let nextComboboxId = 0;
     '[class.govuk-form-group--error]': 'showErrors()',
   },
   styleUrl: './combobox.css',
+  imports: [NgClass, ErrorMessageComponent],
 })
 export class ComboboxComponent implements ControlValueAccessor, OnInit {
   private readonly formService = inject(FormService);
@@ -68,6 +67,8 @@ export class ComboboxComponent implements ControlValueAccessor, OnInit {
   readonly options = input<GovukSelectOption<string | null>[]>([]);
   readonly widthClass = input<GovukTextWidthClass>(undefined);
   readonly placeholder = input<string>('');
+  readonly label = input<string>();
+  readonly labelHidden = input(false, { transform: booleanAttribute });
 
   readonly inputValue = signal('');
   readonly typedQuery = signal('');
@@ -158,7 +159,9 @@ export class ComboboxComponent implements ControlValueAccessor, OnInit {
     this.isDisabled.set(isDisabled);
   }
 
-  onInput(value: string): void {
+  onInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+
     this.inputValue.set(value);
     this.typedQuery.set(value);
     this.isOpen.set(true);

@@ -11,9 +11,11 @@ import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.c
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.domain.FacilityPerformanceAccountTemplateUploadReport;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -30,9 +32,13 @@ public class FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayloa
     private FacilityPerformanceAccountTemplateDataUpload performanceAccountTemplateDataUpload;
     private FacilityPerformanceAccountTemplateDataUploadProcessingStatus processingStatus;
     private FacilityPerformanceAccountTemplateDataUploadErrorType errorMessage;
+    private FacilityPerformanceAccountTemplateDataUploadResults results;
 
     @Builder.Default
     private Map<Long, FacilityPerformanceAccountTemplateUploadReport> facilityReports = new HashMap<>();
+
+    @Builder.Default
+    private List<FacilityPerformanceAccountTemplateDataCsvErrorEntry> csvRowErrors = new ArrayList<>();
 
     @Builder.Default
     private Map<UUID, String> uploadAttachments = new HashMap<>();
@@ -48,11 +54,10 @@ public class FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayloa
                 .map(FacilityPerformanceAccountTemplateDataUpload::getFiles)
                 .orElse(Collections.emptySet()));
 
-//        if (results != null) {
-//            Optional.ofNullable(results.getUploadSummaryFile()).ifPresent(uploadedFiles::add);
-//        }
+        if (results != null) {
+            Optional.ofNullable(results.getUploadSummaryFile()).ifPresent(uploadedFiles::add);
+        }
 
         return uploadedFiles;
     }
-    //TODO: enhance
 }

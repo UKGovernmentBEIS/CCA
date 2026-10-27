@@ -11,7 +11,6 @@
         },
         "@schematics/angular:component": {
           "style": "none",
-          "changeDetection": "OnPush",
           "inlineStyle": false,
           "standalone": true
         },
@@ -30,11 +29,6 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "sourceMap": {
-              "styles": true,
-              "scripts": true,
-              "vendor": true
-            },
             "assets": [
               "src/assets",
               {
@@ -44,10 +38,20 @@
               }
             ],
             "styles": ["node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.css", "src/styles.css"],
-            "allowedCommonJsDependencies": ["keycloak-js", "js-sha256", "google-libphonenumber"]
+            "allowedCommonJsDependencies": ["google-libphonenumber"]
           },
           "configurations": {
             "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "namedChunks": false,
+              "outputHashing": "all",
+              "sourceMap": {
+                "scripts": false,
+                "styles": false,
+                "vendor": false,
+                "hidden": true
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -65,8 +69,7 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ],
-              "outputHashing": "all"
+              ]
             },
             "development": {
               "optimization": false,
@@ -104,7 +107,7 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "buildTarget": "uk-cca-app-web:build:development",
-            "runnerConfig": "vitest.config.ts"
+            "runnerConfig": "vitest.config.mts"
           }
         },
         "lint": {
@@ -123,8 +126,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "inlineStyle": true,
-          "inlineTemplate": true,
-          "changeDetection": "OnPush"
+          "inlineTemplate": true
         }
       },
       "architect": {

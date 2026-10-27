@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -7,7 +7,6 @@ import { of } from 'rxjs';
 
 import { AuthService } from '@shared/services';
 import { getByRole, getByText } from '@testing';
-import { Mocked } from 'vitest';
 
 import { mockSectorDetails, mockSectorUserDetails, mockSubSectorDetails } from '../../../../specs/fixtures/mock';
 import { DeleteSectorUserComponent } from './delete-sector-user.component';
@@ -16,18 +15,13 @@ describe('DeleteSectorUserComponent', () => {
   let component: DeleteSectorUserComponent;
   let fixture: ComponentFixture<DeleteSectorUserComponent>;
 
-  let authService: Partial<Mocked<AuthService>>;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DeleteSectorUserComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
-        {
-          provide: AuthService,
-          useValue: authService,
-        },
+        AuthService,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -60,7 +54,7 @@ describe('DeleteSectorUserComponent', () => {
   });
 
   it('should display correct warning', () => {
-    expect(getByText('You will not be able to undo this action.')).toBeTruthy();
+    expect(getByText(/You will not be able to undo this action/)).toBeTruthy();
   });
 
   it('should display correct deletion info', () => {

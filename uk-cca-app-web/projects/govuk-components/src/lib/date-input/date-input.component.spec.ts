@@ -1,4 +1,4 @@
-import { Component, DebugElement } from '@angular/core';
+import { Component, DebugElement, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -7,21 +7,22 @@ import { DateInputComponent } from './date-input.component';
 
 describe('DateInputComponent', () => {
   @Component({
+    template: '<div govuk-date-input [formControl]="control" [min]="min()" [max]="max()" label="Test date"></div>',
     imports: [DateInputComponent, ReactiveFormsModule],
-    template: '<div govuk-date-input [formControl]="control" [min]="min" [max]="max"></div>',
   })
   class TestComponent {
     control = new FormControl();
-    min: Date;
-    max: Date;
+    min = signal<Date>(undefined);
+    max = signal<Date>(undefined);
   }
 
   @Component({
+    template: '@if (showDateInput()) { <div govuk-date-input [formControl]="control"></div> }',
     imports: [DateInputComponent, ReactiveFormsModule],
-    template: '<div govuk-date-input [formControl]="control"></div>',
   })
   class Test2Component {
     control = new FormControl(null, Validators.required);
+    showDateInput = signal(true);
   }
 
   let component: DateInputComponent;
@@ -50,6 +51,39 @@ describe('DateInputComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('preserves validators cleared by the consumer before the input is destroyed', () => {
+    const host = fixture2.componentInstance;
+    host.control.clearValidators();
+    host.control.updateValueAndValidity();
+    host.showDateInput.set(false);
+    fixture2.detectChanges();
+
+    expect(host.control.validator).toBeNull();
+    expect(host.control.valid).toBe(true);
+  });
+
+  it('preserves replacement validators assigned by the consumer before the input is destroyed', () => {
+    const host = fixture2.componentInstance;
+    const replacementValidator = () => ({ replacement: true });
+    host.control.setValidators(replacementValidator);
+    host.control.updateValueAndValidity();
+    host.showDateInput.set(false);
+    fixture2.detectChanges();
+
+    expect(host.control.validator).toBe(replacementValidator);
+    expect(host.control.errors).toEqual({ replacement: true });
+  });
+
+  it('should render a legend when a label is provided', () => {
+    const legend = fixture.nativeElement.querySelector('legend');
+    expect(legend).not.toBeNull();
+    expect(legend.textContent.trim()).toEqual('Test date');
+  });
+
+  it('should not render a legend when no label is provided', () => {
+    expect(fixture2.nativeElement.querySelector('legend')).toBeNull();
   });
 
   it('should hydrate form with a date', () => {
@@ -197,10 +231,8 @@ describe('DateInputComponent', () => {
     let errorMessage = fixture.nativeElement.querySelector('.govuk-error-message');
     expect(errorMessage).toBeNull();
 
-    hostComponent.min = new Date('2020-05-31');
-    // TODO: remove this workaround once signal-based inputs are updated without NG0100 in tests.
-    fixture.changeDetectorRef.markForCheck();
-    await fixture.whenStable();
+    hostComponent.min.set(new Date('2020-05-31'));
+    fixture.detectChanges();
 
     expect(hostComponent.control.valid).not.toBeTruthy();
     expect(hostComponent.control.errors.minDate).toBeTruthy();
@@ -220,10 +252,8 @@ describe('DateInputComponent', () => {
     let errorMessage = fixture.nativeElement.querySelector('.govuk-error-message');
     expect(errorMessage).toBeNull();
 
-    hostComponent.max = new Date('2018-05-31');
-    // TODO: remove this workaround once signal-based inputs are updated without NG0100 in tests.
-    fixture.changeDetectorRef.markForCheck();
-    await fixture.whenStable();
+    hostComponent.max.set(new Date('2018-05-31'));
+    fixture.detectChanges();
 
     expect(hostComponent.control.valid).not.toBeTruthy();
     expect(hostComponent.control.errors.maxDate).toBeTruthy();

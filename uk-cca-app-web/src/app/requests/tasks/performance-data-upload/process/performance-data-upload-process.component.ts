@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -30,6 +30,7 @@ import { PerformanceDataUploadProcessedComponent } from './processed/performance
 @Component({
   selector: 'cca-performance-data-upload',
   templateUrl: './performance-data-upload-process.component.html',
+  providers: [PerformanceDataUploadProcessFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -40,8 +41,6 @@ import { PerformanceDataUploadProcessedComponent } from './processed/performance
     UploadProcessingComponent,
     PerformanceDataUploadProcessedComponent,
   ],
-  providers: [PerformanceDataUploadProcessFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataUploadProcessComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -93,7 +92,7 @@ export class PerformanceDataUploadProcessComponent implements OnInit {
         } as RequestTaskActionPayload,
       })
       .pipe(
-        catchNotFoundRequest(ErrorCode.NOTFOUND1001, () =>
+        catchNotFoundRequest<never>(ErrorCode.NOTFOUND1001, () =>
           this.businessErrorService.showErrorForceNavigation(taskNotFoundError),
         ),
         catchTaskReassignedBadRequest(() =>

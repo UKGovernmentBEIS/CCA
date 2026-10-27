@@ -2,12 +2,14 @@ package uk.gov.cca.api.workflow.request.flow.common.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
 @SuperBuilder
 public class CcaRequestParams extends RequestParams {
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,7 +11,6 @@ import { toAdminTerminationReasonSubmittedTimelineSummaryData } from './admin-te
   selector: 'cca-admin-termination-submited-timeline',
   template: `<cca-summary [data]="data" />`,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminTerminationSubmittedTimelineComponent {
   private readonly requestActionStore = inject(RequestActionStore);

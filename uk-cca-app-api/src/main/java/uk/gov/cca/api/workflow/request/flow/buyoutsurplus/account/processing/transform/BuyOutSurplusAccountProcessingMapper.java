@@ -3,8 +3,9 @@ package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.tr
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionCreateDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.AccountBuyOutSurplusTransactionCreate;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutCalculatedDetails;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
@@ -58,11 +59,11 @@ public interface BuyOutSurplusAccountProcessingMapper {
     @Mapping(target = "paymentStatus", source = "requestPayload.buyOutSurplus.paymentStatus")
     @Mapping(target = "transactionCode", source = "requestPayload.buyOutSurplus.transactionCode")
     @Mapping(target = "officialNotice", source = "requestPayload.officialNotice")
-    @Mapping(target = "dueDate", source = "requestPayload.buyOutSurplus.buyOutSurplusContainer.invoicedPaymentDeadline")
+    @Mapping(target = "dueDate", source = "requestPayload.buyOutSurplus.invoicedPaymentDeadline")
     @Mapping(target = "runId", source = "metadata.parentRequestId")
     BuyOutSurplusDetails toBuyOutSurplusDetails(
             BuyOutSurplusAccountProcessingRequestPayload requestPayload, BuyOutSurplusAccountProcessingRequestMetadata metadata);
 
-    @Mapping(target = "buyOutFee", source = "buyOutSurplusContainer.invoicedBuyOutFee")
-    BuyOutSurplusTransactionCreateDTO toBuyOutSurplusTransactionCreateDTO(BuyOutSurplusResult result);
+    @Mapping(target = "buyOutFee", source = "result.buyOutSurplusContainer.invoicedBuyOutFee")
+    AccountBuyOutSurplusTransactionCreate toAccountBuyOutSurplusTransactionCreateDTO(BuyOutSurplusResult result, Long accountId, TargetPeriodType targetPeriodType);
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { first, switchMap, tap } from 'rxjs';
@@ -27,7 +27,6 @@ import { DetailsStore } from '../details/details.store';
     RouterLink,
     PendingButtonDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteComponent {
   private readonly store = inject(DetailsStore);

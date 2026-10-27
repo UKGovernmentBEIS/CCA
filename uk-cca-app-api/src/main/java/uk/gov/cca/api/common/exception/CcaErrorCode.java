@@ -7,6 +7,8 @@ import uk.gov.netz.api.common.exception.NetzErrorCode;
 
 @Getter
 public enum CcaErrorCode implements NetzErrorCode {
+    
+    DUPLICATE_KEY("DUPLICATEKEY1001", HttpStatus.BAD_REQUEST, "A duplicate key was found"),
 
     /** Codes for Target period errors. */
     TARGET_PERIOD_YEAR_NOT_FOUND("TPR1001", HttpStatus.BAD_REQUEST, "Target period year not found", true),
@@ -66,6 +68,9 @@ public enum CcaErrorCode implements NetzErrorCode {
     INVALID_BUY_OUT_SURPLUS_TRANSACTION_PAYMENT_STATUS("BS1001", HttpStatus.BAD_REQUEST, "Invalid payment status"),
     TERMINATED_BUY_OUT_SURPLUS_TRANSACTION_PAYMENT_STATUS("BS1002", HttpStatus.BAD_REQUEST, "Changes are not allowed because the transaction has been automatically marked as terminated"),
     FILE_EVIDENCE_IS_NOT_RELATED_TO_TRANSACTION("BS1003", HttpStatus.BAD_REQUEST, "File evidence is not related to the provided transaction"),
+    BUY_OUT_SURPLUS_IN_PROGRESS("BS1004", HttpStatus.BAD_REQUEST, "Updates are not allowed while the buy-out batch run is in progress"),
+    NEGATIVE_BUYOUT_SURPLUS_TRANSACTION_RECEIVED_AMOUNT("BS1005", HttpStatus.BAD_REQUEST,"Negative transaction received amount is not permitted"),
+    INVALID_BUYOUT_SURPLUS_TRANSACTION_CHARGE_TYPE("BS1006", HttpStatus.BAD_REQUEST,"Invalid transaction charge type"),
     /** Codes for Facility Certification errors. */
     INVALID_PROVIDED_ACCOUNTS("CRT1001", HttpStatus.BAD_REQUEST, "Invalid provided accounts"),
     NO_FACILITIES_FOR_ACCOUNT("CRT1002", HttpStatus.BAD_REQUEST, "No facilities found for account"),
@@ -99,6 +104,7 @@ public enum CcaErrorCode implements NetzErrorCode {
     INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CALCULATED_RESULTS("TPRDF1007", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility Digital Form calculated results data"),
     INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_ORIGINAL_BASELINE_AND_TARGETS_IS_OUTDATED("TPRDF1008", HttpStatus.BAD_REQUEST, "Original baseline and targets is outdated for Performance Data Facility Digital Form Submit"),
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE("TPRDF1009", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form facility baseline date is not eligible for target period year"),
+    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCT_EXIST_BEFORE_FACILITY_BASE_YEAR("TPRDF1010", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form has one or more products with a base year earlier than the facility base year"),
     /** Codes for Performance Data Facility CSV Form. */
     INVALID_PERFORMANCE_DATA_FACILITY_UPLOAD_DATA("TPRUF1001", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility CSV Form data"),
     INVALID_PERFORMANCE_DATA_FACILITY_UPLOAD_PROCESS_STATUS("TPRUF1002", HttpStatus.BAD_REQUEST, "Performance Data Facility CSV is under process or process completed"),
@@ -118,6 +124,11 @@ public enum CcaErrorCode implements NetzErrorCode {
     INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_DATA("FPAT1001", HttpStatus.BAD_REQUEST, "Invalid Facility Performance Account Template CSV Form data"),
     INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_PROCESS_STATUS("FPAT1002", HttpStatus.BAD_REQUEST, "Facility Performance Account Template CSV is under process or process completed"),
     INVALID_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_FILE_TYPE("FPAT1003", HttpStatus.BAD_REQUEST, "Invalid file type"),
+    EXPIRED_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_SUBMISSION_DATE("FPAT1004", HttpStatus.BAD_REQUEST, "The PAT workflow has expired and can no longer be submitted"),
+    /** Emissions Trading Scheme Data */
+    EMISSIONS_TRADING_SCHEME_DATA_FACILITY_NOT_ELIGIBLE("ETS1001", HttpStatus.BAD_REQUEST, "Emissions Trading Scheme Data (ETS) for Target Year is not eligible for facility"),
+    EMISSIONS_TRADING_SCHEME_DATA_TARGET_YEAR_NOT_ELIGIBLE("ETS1002", HttpStatus.BAD_REQUEST, "Emissions Trading Scheme Data (ETS) is not eligible for Target Year"),
+    EMISSIONS_TRADING_SCHEME_DATA_SUBMISSION_DATE_NOT_VALID("ETS1003", HttpStatus.BAD_REQUEST, "Submission date for Emissions Trading Scheme Data (ETS) reporting is not valid"),
     ;
 
     private final String code;

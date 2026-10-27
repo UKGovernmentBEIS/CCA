@@ -1,0 +1,49 @@
+<div class="govuk-!-width-two-thirds">
+  @if (canMarkAll()) {
+    @if (errorSummaryInfo(); as errorSummary) {
+      <div class="govuk-!-width-two-thirds">
+        <cca-error-summary [errorSummaryInfo]="errorSummary" />
+      </div>
+    }
+
+    <cca-wizard-step
+      [formGroup]="form"
+      [heading]="content().heading"
+      caption="Change"
+      submitText="Confirm"
+      (formSubmit)="onSubmit()"
+    >
+      <p class="govuk-hint">{{ content().intro }}</p>
+
+      <cca-summary [data]="summaryData()" />
+
+      @if (status() === 'PAID') {
+        <div
+          formControlName="paymentDate"
+          govuk-date-input
+          label="Enter the date when the payment was received in the bank account"
+          hint="For example 27 3 2026"
+        ></div>
+      }
+
+      <div
+        formControlName="comments"
+        govuk-textarea
+        label="Comments (optional)"
+        [maxLength]="commentsMaxLength()"
+      ></div>
+
+      <cca-multiple-file-input
+        [baseDownloadUrl]="'../../file-evidences-download/attachment/'"
+        [listTitle]="'Uploaded files'"
+        label="Upload evidence (optional)"
+        formControlName="evidenceFiles"
+      />
+
+      <govuk-warning-text>
+        Some facilities may not be updated if they no longer meet the {{ content().eligibilityCriteria }} eligibility
+        criteria when processed.
+      </govuk-warning-text>
+    </cca-wizard-step>
+  }
+</div>

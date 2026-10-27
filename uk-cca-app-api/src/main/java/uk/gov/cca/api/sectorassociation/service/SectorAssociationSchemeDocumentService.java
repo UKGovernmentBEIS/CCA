@@ -43,7 +43,7 @@ public class SectorAssociationSchemeDocumentService {
     private static final Set<String> ALLOWED_FILE_TYPES = FileType.PDF.getMimeTypes();
 
     @Transactional
-    public String createSectorAssociationSchemeDocument(@Valid FileDTO fileDTO, AppUser appUser) {
+    public String createSectorAssociationSchemeDocument(@Valid FileDTO fileDTO) {
 
         if (!ALLOWED_FILE_TYPES.contains(fileDTO.getFileType())) {
             throw new BusinessException(CcaErrorCode.INVALID_SECTOR_ASSOCIATION_SCHEME_UPLOAD_FILE_TYPE);
@@ -54,7 +54,7 @@ public class SectorAssociationSchemeDocumentService {
         SectorAssociationSchemeDocument sectorAssociationSchemeDocument = sectorAssociationSchemeDocumentMapper.toSectorAssociationSchemeDocument(fileDTO);
         sectorAssociationSchemeDocument.setUuid(UUID.randomUUID().toString());
         sectorAssociationSchemeDocument.setStatus(FileStatus.PENDING);
-        sectorAssociationSchemeDocument.setCreatedBy(appUser.getUserId());
+        sectorAssociationSchemeDocument.setCreatedBy(fileDTO.getCreatedBy());
 
         sectorAssociationSchemeDocumentRepository.save(sectorAssociationSchemeDocument);
 

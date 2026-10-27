@@ -1,11 +1,12 @@
 <div class="govuk-grid-row govuk-!-padding-5">
   <h3 class="govuk-heading-m">Notes</h3>
 
-  <button type="button" govukSecondaryButton routerLink="notes/add-note">Add a note</button>
+  <a govukSecondaryButton routerLink="notes/add-note">Add a note</a>
 
   @if (hasNotes()) {
     <ul class="govuk-list">
       @for (note of notes(); track note) {
+        @let noteLabel = 'note by ' + note.submitter + ', ' + (note.lastUpdatedOn | date: 'd MMM yyyy, h:mma');
         <li class="govuk-!-margin-bottom-0">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
@@ -13,7 +14,7 @@
 
               @if (note.payload?.files) {
                 <ul class="govuk-list">
-                  @for (file of note.payload?.files | keyvalue; track file.key) {
+                  @for (file of $safeNavigationMigration(note.payload?.files) | keyvalue; track file.key) {
                     <li class="govuk-!-margin-bottom-1">
                       <a class="govuk-link" [routerLink]="['notes', 'file-download', file.key]">{{ file.value }}</a>
                     </li>
@@ -27,8 +28,12 @@
             </div>
 
             <div class="govuk-grid-column-one-third govuk-!-text-align-right govuk-!-margin-top-2">
-              <a class="govuk-link" [routerLink]="['notes', 'edit-note', note.id]">Edit</a>
-              <a class="govuk-!-padding-left-3 govuk-link" [routerLink]="['notes', 'delete-note', note.id]">Delete</a>
+              <a class="govuk-link" [routerLink]="['notes', 'edit-note', note.id]"
+                >Edit<span class="govuk-visually-hidden"> {{ noteLabel }}</span></a
+              >
+              <a class="govuk-!-padding-left-3 govuk-link" [routerLink]="['notes', 'delete-note', note.id]"
+                >Delete<span class="govuk-visually-hidden"> {{ noteLabel }}</span></a
+              >
             </div>
           </div>
 

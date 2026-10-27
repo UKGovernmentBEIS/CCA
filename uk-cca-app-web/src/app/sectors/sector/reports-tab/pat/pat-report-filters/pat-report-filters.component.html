@@ -1,46 +1,24 @@
 <cca-utility-panel heading="Filters">
   <form [formGroup]="filtersForm" (ngSubmit)="apply()">
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-third">
+      <div class="govuk-grid-column-one-half">
         <div
           govuk-text-input
           widthClass="govuk-!-width-full"
-          label="TU ID"
+          [label]="termLabel()"
           labelSize="small"
-          formControlName="targetUnitAccountBusinessId"
+          formControlName="term"
         ></div>
       </div>
 
-      <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-grid-column-one-third">
-          <div
-            govuk-select
-            widthClass="govuk-!-width-full"
-            [options]="targetPeriodTypeOptions"
-            label="Period"
-            formControlName="targetPeriodType"
-          ></div>
-        </div>
-
-        <div class="govuk-grid-column-one-third">
-          <div
-            govuk-select
-            widthClass="govuk-!-width-full"
-            [options]="statusOptions"
-            label="Status"
-            formControlName="status"
-          ></div>
-        </div>
-
-        <div class="govuk-grid-column-one-third">
-          <div
-            govuk-select
-            widthClass="govuk-!-width-full"
-            label="Type"
-            [options]="submissionTypeOptions"
-            formControlName="submissionType"
-          ></div>
-        </div>
+      <div class="govuk-grid-column-one-quarter">
+        <div
+          govuk-select
+          widthClass="govuk-!-width-full"
+          [options]="statusOptions"
+          label="Status"
+          formControlName="status"
+        ></div>
       </div>
     </div>
 

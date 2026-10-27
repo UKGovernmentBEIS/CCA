@@ -1,6 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -16,6 +15,8 @@ import { SortEvent } from '@netz/govuk-components';
 
 import { CcaTableColumn, SelectableRow } from './types';
 
+let tableInstanceId = 0;
+
 @Component({
   selector: 'cca-table',
   templateUrl: './table.component.html',
@@ -27,14 +28,16 @@ import { CcaTableColumn, SelectableRow } from './types';
     }
   `,
   imports: [NgTemplateOutlet, NgClass],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
+  protected readonly idPrefix = `cca-table-${tableInstanceId++}`;
+
   protected readonly columns = input.required<CcaTableColumn[]>();
   protected readonly data = input.required<Record<string, unknown>[]>();
   protected readonly caption = input<string>();
+  protected readonly ariaLabel = input<string>();
   protected readonly selectedRows = input(new Map());
   protected readonly showSelectAllCheckbox = input<boolean>();
 
@@ -75,6 +78,8 @@ export class TableComponent {
 
   areAllSelectableRowsSelected(): boolean {
     const selectableRows = this.data().filter((row) => row.isSelectable);
+    // a page without selectable rows has nothing selected, so the header checkbox must not appear checked
+    if (selectableRows.length === 0) return false;
     return selectableRows.every((r) => this.selectedRows().has(r[this.primaryColumn()]));
   }
 
@@ -89,6 +94,7 @@ export class TableComponent {
   }
 
   isRowSelected(row: unknown): boolean {
-    return this.selectedRows().has(row[this.primaryColumn()]);
+    if (typeof row !== 'object' || row === null) return false;
+    return this.selectedRows().has((row as Record<string, unknown>)[this.primaryColumn()]);
   }
 }

@@ -1,18 +1,11 @@
 package uk.gov.cca.api.workflow.request.flow.facilitycertification.common.service;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.SetUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import uk.gov.cca.api.common.exception.CcaErrorCode;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.AccountPerformanceDataInfo;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.CertificationPeriodService;
-import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
@@ -31,12 +24,10 @@ import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestCreateVali
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Validated
 @Service
 @RequiredArgsConstructor
 public class FacilityCertificationRunInitiateService {
@@ -44,7 +35,7 @@ public class FacilityCertificationRunInitiateService {
     private final FacilityCertificationCreateValidator facilityCertificationCreateValidator;
     private final CertificationPeriodService certificationPeriodService;
     private final StartProcessRequestService startProcessRequestService;
-    private final AccountPerformanceDataStatusQueryService accountPerformanceDataStatusQueryService;
+    private final FacilityCertificationRunResourceTypeDelegatorService facilityCertificationRunResourceTypeDelegatorService;
 
     public boolean isValidForFacilityCertificationRun() {
         LocalDate currentDate = LocalDate.now();
@@ -54,49 +45,14 @@ public class FacilityCertificationRunInitiateService {
         return certificationBatchTriggerDates.contains(currentDate);
     }
 
-    public void createFacilityCertificationRun(@NotEmpty List<String> providedAccountIds, @NotNull CertificationPeriodType type) {
-        // Validate
-        validateCreation();
-
-        Set<Long> accountIds = providedAccountIds.stream().map(Long::parseLong).collect(Collectors.toSet());
-        CertificationPeriodDTO certificationPeriodDetails = certificationPeriodService.getCertificationPeriodByType(type);
-
-        Map<Long, FacilityCertificationAccountState> facilityCertificationAccountStates = accountPerformanceDataStatusQueryService
-                .findAccountsWithPerformanceDataForTargetPeriod(certificationPeriodDetails.getTargetPeriodType(), accountIds).stream()
-                .collect(Collectors.toMap(
-                        AccountPerformanceDataInfo::getAccountId,
-                        acc -> FacilityCertificationAccountState.builder()
-                                .accountId(acc.getAccountId())
-                                .accountBusinessId(acc.getAccountBusinessId())
-                                .lastPerformanceDataId(acc.getLastPerformanceDataId())
-                                .build()
-                ));
-
-        // Validate if accounts exists
-        Set<Long> diffs = SetUtils.disjunction(accountIds, facilityCertificationAccountStates.keySet());
-        if(!diffs.isEmpty()) {
-            throw new BusinessException(CcaErrorCode.INVALID_PROVIDED_ACCOUNTS, diffs);
-        }
-
-        startFacilityCertificationRun(facilityCertificationAccountStates, certificationPeriodDetails);
-    }
-
     public void createFacilityCertificationRun() {
         // Validate
         validateCreation();
 
         CertificationPeriodDTO certificationPeriodDetails = certificationPeriodService.getCertificationPeriodByTriggerDate(LocalDate.now());
 
-        Map<Long, FacilityCertificationAccountState> facilityCertificationAccountStates = accountPerformanceDataStatusQueryService
-                .findAccountsWithPerformanceDataForTargetPeriod(certificationPeriodDetails.getTargetPeriodType()).stream()
-                .collect(Collectors.toMap(
-                        AccountPerformanceDataInfo::getAccountId,
-                        acc -> FacilityCertificationAccountState.builder()
-                                .accountId(acc.getAccountId())
-                                .accountBusinessId(acc.getAccountBusinessId())
-                                .lastPerformanceDataId(acc.getLastPerformanceDataId())
-                                .build()
-                ));
+        Map<Long, FacilityCertificationAccountState> facilityCertificationAccountStates = facilityCertificationRunResourceTypeDelegatorService
+                .getEligibleAccounts(certificationPeriodDetails);
 
         startFacilityCertificationRun(facilityCertificationAccountStates, certificationPeriodDetails);
     }
@@ -125,9 +81,7 @@ public class FacilityCertificationRunInitiateService {
                         .type(CcaRequestMetadataType.FACILITY_CERTIFICATION_RUN)
                         .certificationPeriodType(certificationPeriodDetails.getCertificationPeriodType())
                         .build())
-                .processVars(Map.of(
-                        CcaBpmnProcessConstants.ACCOUNT_IDS, new HashSet<>(facilityCertificationAccountStates.keySet()),
-                        CcaBpmnProcessConstants.NUMBER_OF_ACCOUNTS_COMPLETED, 0))
+                .processVars(Map.of(CcaBpmnProcessConstants.ACCOUNT_IDS, new HashSet<>(facilityCertificationAccountStates.keySet())))
                 .build();
 
         // Start process

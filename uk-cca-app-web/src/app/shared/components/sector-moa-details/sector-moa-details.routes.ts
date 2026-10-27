@@ -8,12 +8,12 @@ import { SectorMoaTUDetailsStore } from './sector-moa-tu-details/sector-moa-tu-d
 
 export const SECTOR_MOA_DETAILS_ROUTES: Routes = [
   {
+    title: 'Sector MoA',
     path: '',
     loadComponent: () => import('./sector-moa-details.component').then((c) => c.SectorMoaDetailsComponent),
   },
   {
     path: 'tu-details',
-    providers: [SectorMoaTUDetailsStore],
     canActivate: [
       () => {
         inject(SectorMoaTUDetailsStore).initialize();
@@ -33,10 +33,10 @@ export const SECTOR_MOA_DETAILS_ROUTES: Routes = [
           import('./sector-moa-tu-details/sector-moa-tu-details.routes').then((r) => r.SECTOR_MOA_TU_DETAILS_ROUTES),
       },
     ],
+    providers: [SectorMoaTUDetailsStore],
   },
   {
     path: 'received-amount',
-    providers: [ReceivedAmountStore],
     canDeactivate: [
       () => {
         inject(ReceivedAmountStore).reset();
@@ -44,6 +44,7 @@ export const SECTOR_MOA_DETAILS_ROUTES: Routes = [
       },
     ],
     loadChildren: () => import('@shared/components').then((r) => r.RECEIVED_AMOUNT_ROUTES),
+    providers: [ReceivedAmountStore],
   },
   {
     path: 'mark-facilities',

@@ -6,8 +6,8 @@ import { ACTIVE_TARGET_UNIT_ROUTES } from '../sectors/sector/target-units-tab/ta
 
 export const TARGET_UNIT_ACCOUNT_ROUTES: Routes = [
   {
+    title: 'Search for target unit accounts',
     path: '',
-    data: { pageTitle: 'Search for target unit accounts' },
     loadComponent: () =>
       import('./target-unit-account-search/target-unit-account-search.component').then(
         (c) => c.TargetUnitAccountSearchComponent,

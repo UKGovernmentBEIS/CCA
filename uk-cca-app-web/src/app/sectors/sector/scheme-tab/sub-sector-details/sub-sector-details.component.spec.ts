@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { SchemeVersionEnum } from '@shared/types';
 import { getByText } from '@testing';
 
 import { SubsectorAssociationSchemesDTO } from 'cca-api';
@@ -63,7 +64,7 @@ describe('SubSectorDetailsComponent', () => {
       const mockSubsectorScheme: SubsectorAssociationSchemesDTO = {
         name: 'Test Subsector',
         subsectorAssociationSchemeMap: {
-          CCA_2: {
+          [SchemeVersionEnum.CCA_2]: {
             targetSet: {
               id: 1,
               targetCurrencyType: 'Relative',

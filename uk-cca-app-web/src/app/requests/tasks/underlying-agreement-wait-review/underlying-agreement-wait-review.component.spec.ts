@@ -28,6 +28,6 @@ describe('UnderlyingAgreementWaitReviewComponent', () => {
   });
 
   it('should show content', () => {
-    expect(page.warningText).toEqual('!Waiting for the regulator to complete the review');
+    expect(page.warningText).toEqual('!WarningWaiting for the regulator to complete the review');
   });
 });

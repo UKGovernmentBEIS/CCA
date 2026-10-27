@@ -1,42 +1,80 @@
 package uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service;
 
-import lombok.RequiredArgsConstructor;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.SurplusEntity;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.SurplusHistory;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusGainedDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusHistoryDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.SurplusRepository;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.transform.SurplusMapper;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SurplusQueryService {
 
-	private final SurplusRepository surplusRepository;
-	private static final SurplusMapper SURPLUS_MAPPER = Mappers.getMapper(SurplusMapper.class);
+    private final SurplusRepository surplusRepository;
+    private static final SurplusMapper SURPLUS_MAPPER = Mappers.getMapper(SurplusMapper.class);
 
-	public List<SurplusGainedDTO> getListOfTargetPeriodSurplusGainedWithHistoryFlagByAccountId(Long accountId) {
-		return surplusRepository.getListOfTargetPeriodSurplusGainedWithHistoryFlagByAccountId(accountId);
-	}
+    @Transactional(readOnly = true)
+    public SurplusGainedDTO getAccountSurplusGainedWithHistoryFlag(Long accountId) {
+        return surplusRepository.findByResourceIdAndSchemeVersion(accountId, SchemeVersion.CCA_2)
+                .map(SURPLUS_MAPPER::toSurplusGainedDTO)
+                .orElse(SurplusGainedDTO.builder()
+                        .schemeVersion(SchemeVersion.CCA_2)
+                        .surplusGained(BigDecimal.ZERO)
+                        .hasHistory(false)
+                        .build());
+    }
 
-	public Optional<SurplusDTO> getSurplusByAccountIdAndTargetPeriod(Long accountId, TargetPeriodType targetPeriodType) {
-		return surplusRepository
-				.findByAccountIdAndTargetPeriod_BusinessId(accountId, targetPeriodType)
-				.map(SURPLUS_MAPPER::toSurplusDTO);
-	}
+    @Transactional(readOnly = true)
+    public SurplusGainedDTO getFacilitySurplusGainedWithHistoryFlag(Long facilityId) {
+        return surplusRepository.findByResourceIdAndSchemeVersion(facilityId, SchemeVersion.CCA_3)
+                .map(SURPLUS_MAPPER::toSurplusGainedDTO)
+                .orElse(SurplusGainedDTO.builder()
+                        .schemeVersion(SchemeVersion.CCA_3)
+                        .surplusGained(BigDecimal.ZERO)
+                        .hasHistory(false)
+                        .build());
+    }
 
-	@Transactional(readOnly = true)
-	public List<SurplusHistoryDTO> getAllSurplusHistoryByAccountIdAndTargetPeriod(TargetPeriodType targetPeriodType, Long accountId) {
-		return surplusRepository.findByAccountIdAndTargetPeriod_BusinessId(accountId, targetPeriodType)
-				.map(surplusEntity -> surplusEntity.getSurplusHistoryList().stream().map(SURPLUS_MAPPER::toSurplusHistoryDTO).toList())
-				.orElse(Collections.emptyList());
-	}
+    public Optional<SurplusDTO> getSurplusByResourceIdAndSchemeVersion(Long resourceId, SchemeVersion schemeVersion) {
+        return surplusRepository.findByResourceIdAndSchemeVersion(resourceId, schemeVersion)
+                .map(SURPLUS_MAPPER::toSurplusDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SurplusHistoryDTO> getAccountSurplusHistory(Long accountId) {
+        List<SurplusHistory> surplusHistories = surplusRepository.findByResourceIdAndSchemeVersion(accountId, SchemeVersion.CCA_2)
+                .map(SurplusEntity::getSurplusHistoryList).orElse(List.of());
+
+        return surplusHistories.stream().map(SURPLUS_MAPPER::toSurplusHistoryDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<SurplusHistoryDTO> getFacilitySurplusHistory(Long facilityId) {
+        List<SurplusHistory> surplusHistories = surplusRepository.findByResourceIdAndSchemeVersion(facilityId, SchemeVersion.CCA_3)
+                .map(SurplusEntity::getSurplusHistoryList).orElse(List.of());
+
+        return surplusHistories.stream().map(SURPLUS_MAPPER::toSurplusHistoryDTO).toList();
+    }
+
+    public Map<Long, BigDecimal> getFacilityPositiveSurplusMap(List<Long> facilityIds, SchemeVersion schemeVersion) {
+        return surplusRepository
+                .findAllByResourceIdInAndSchemeVersion(facilityIds, schemeVersion)
+                .stream()
+                .filter(entry -> entry.getSurplusGained().compareTo(BigDecimal.ZERO) > 0 )
+                .collect(Collectors.toMap(SurplusEntity::getResourceId, SurplusEntity::getSurplusGained));
+    }
 }

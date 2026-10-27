@@ -18,6 +18,6 @@ export const templateError = (
   };
 
   isErrorDisplayed$.next(true);
-  errorMessage$.next(errorMessageByCode[res.error.code]);
+  errorMessage$.next(errorMessageByCode[res.error.code as keyof typeof errorMessageByCode]);
   return EMPTY;
 };

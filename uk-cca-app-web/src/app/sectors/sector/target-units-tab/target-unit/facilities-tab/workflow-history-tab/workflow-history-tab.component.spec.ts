@@ -36,7 +36,7 @@ describe('WorkflowHistoryTabComponent', () => {
       snapshot: {
         params: { facilityId: '1' },
         queryParamMap: queryParamMock,
-        fragment: null,
+        fragment: null as string | null,
       },
       queryParamMap: of(queryParamMock),
     };

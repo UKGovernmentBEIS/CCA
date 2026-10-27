@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -30,7 +30,6 @@ type DashboardTaskListState = {
   selector: 'cca-dashboard-task-list',
   templateUrl: './dashboard-task-list.component.html',
   imports: [DashboardFiltersComponent, DashboardItemsListComponent, PaginationComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardTaskListComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);

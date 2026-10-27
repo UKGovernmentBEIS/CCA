@@ -33,3 +33,9 @@
 .space-between {
   justify-content: space-between;
 }
+
+/* Override GDS default min-width (11.5em) on select elements inside flex rows
+   so they can shrink to fit */
+.row-flex .govuk-select.govuk-\!-width-full {
+  min-width: 0;
+}

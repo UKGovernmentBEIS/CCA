@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -7,8 +7,8 @@ import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { mockRequestTaskState } from '@requests/common';
 
+import { mockRequestTaskState } from '../../testing/mock-data';
 import { FacilityDetailsFormComponent } from './facility-details-form.component';
 import { FACILITY_DETAILS_FORM } from './facility-details-form.provider';
 
@@ -30,7 +30,7 @@ describe('FacilityDetailsFormComponent', () => {
       imports: [FacilityDetailsFormComponent, ReactiveFormsModule],
       providers: [
         RequestTaskStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: FACILITY_DETAILS_FORM,

@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink } from '@angular/router';
 
 import { filter } from 'rxjs';
 
 import { BreadcrumbService, Link } from './breadcrumb.service';
+import { createLink } from './breadcrumb-link';
 
 @Component({
   selector: 'netz-breadcrumbs',
@@ -31,7 +32,6 @@ import { BreadcrumbService, Link } from './breadcrumb.service';
       </nav>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
 })
 export class BreadcrumbsComponent {
@@ -75,6 +75,11 @@ export class BreadcrumbsComponent {
 
       const breadcrumb = createLink(snapshot);
 
+      if (breadcrumb === null) {
+        snapshot = snapshot.firstChild;
+        continue;
+      }
+
       // Angular router transfers the data route property from the parent route to the child route.
       // That's why we need to determine if a breadcrumb with the same text already exists
       if (!hasText(routeData, breadcrumb.text)) {
@@ -103,40 +108,11 @@ function removeSameRouteBreadcrumb(breadcrumbData: Link[], path: string): Link[]
 
   if (index >= 0) bd.splice(index);
 
-  const isDashboardPage = path === '/dashboard' && bd.length === 1 && bd[0].link === '/';
-  return isDashboardPage ? [] : bd;
-}
-
-/**
- * Creates a breadcrumb link from the current route snapshot
- * @param snapshot
- * @returns
- */
-function createLink(snapshot: ActivatedRouteSnapshot): Link {
-  let breadcrumbRouteData = snapshot.data.breadcrumb;
-  let text = '';
-  let fragment: string | undefined;
-  let link = snapshot.pathFromRoot
-    .map((u) => u.url.join('/'))
-    .filter((u) => !!u)
-    .join('/');
-
-  link = `/${link}`;
-
-  // if the breadcrumb data is a function, we need to call it to get the breadcrumb data
-  // before reconciliating the text, link and fragment
-  if (typeof breadcrumbRouteData === 'function') breadcrumbRouteData = breadcrumbRouteData(snapshot.data);
-
-  if (typeof breadcrumbRouteData === 'string') {
-    text = breadcrumbRouteData;
-  } else if (breadcrumbRouteData && typeof breadcrumbRouteData === 'object' && 'text' in breadcrumbRouteData) {
-    text = breadcrumbRouteData.text;
-    fragment = breadcrumbRouteData.fragment;
-
-    if (breadcrumbRouteData.link) link = breadcrumbRouteData.link;
-  }
-
-  return { text, link, fragment };
+  // A lone home crumb adds no value: the top-level sections are already in the
+  // service navigation, so the breadcrumb is hidden on those pages. Deeper
+  // routes keep the full trail (e.g. Dashboard > Manage sectors).
+  const onlyHomeCrumb = bd.length === 1 && bd[0].link === '/';
+  return onlyHomeCrumb ? [] : bd;
 }
 
 /**

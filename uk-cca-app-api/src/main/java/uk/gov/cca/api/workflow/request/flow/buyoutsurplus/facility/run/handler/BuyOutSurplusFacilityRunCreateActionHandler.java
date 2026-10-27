@@ -1,17 +1,26 @@
 package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.run.handler;
 
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.service.BuyOutSurplusPaymentDeadlineService;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.common.domain.BuyOutSurplusFacilityAccountState;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.common.domain.BuyOutSurplusFacilityRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.common.domain.BuyOutSurplusFacilityRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.run.domain.BuyOutSurplusFacilityRunCreateActionPayload;
@@ -28,17 +37,38 @@ import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestCACreat
 @RequiredArgsConstructor
 public class BuyOutSurplusFacilityRunCreateActionHandler implements RequestCACreateActionHandler<BuyOutSurplusFacilityRunCreateActionPayload> {
 
-    private final TargetPeriodService targetPeriodService;
     private final StartProcessRequestService startProcessRequestService;
-
+    private final BuyOutSurplusQueryService buyOutSurplusQueryService;
+    private final TargetPeriodService targetPeriodService;
+    private final BuyOutSurplusPaymentDeadlineService buyOutSurplusPaymentDeadlineService;
+    
     @Override
     @Transactional
     public String process(CompetentAuthorityEnum ca, BuyOutSurplusFacilityRunCreateActionPayload payload, AppUser appUser) {
+    	
+    	LocalDate currentDate = LocalDate.now();
+    	
+    	Map<Long, BuyOutSurplusFacilityAccountState> accountStates = buyOutSurplusQueryService
+                .getAllEligibleAccountsByTargetPeriod(payload.getTargetPeriodType()).stream()
+                .collect(Collectors
+                        .toMap(TargetUnitAccountBusinessInfoDTO::getAccountId,
+                                dto -> BuyOutSurplusFacilityAccountState.builder()
+                                        .accountId(dto.getAccountId())
+                                        .accountBusinessId(dto.getBusinessId())
+                                        .build()));
 
-        // TODO get account states
-
-        // Get Target Period details
-        TargetPeriodInfoDTO targetPeriodDetails = targetPeriodService.getTargetPeriodInfoByTargetPeriodType(payload.getTargetPeriodType());
+        // Get Target Periods details
+    	TargetPeriod targetPeriod = targetPeriodService.findByTargetPeriodType(payload.getTargetPeriodType());
+        List<TargetPeriodInfoDTO> targetPeriodsDetails = targetPeriodService.getTargetPeriodsInfoForSchemeWithStartDateUpTo(
+        		targetPeriod.getSchemeVersion(), targetPeriod.getStartDate());
+        TargetPeriodInfoDTO currentTargetPeriodInfo = targetPeriodsDetails.getLast();
+        
+        // Should apply primary rules for this run if date is before secondary reporting start date of current TP
+        boolean shouldApplyPrimaryRules = currentDate.isBefore(currentTargetPeriodInfo.getSecondaryReportingStartDate());
+        
+        // Get payment deadlines per TP
+        Map<TargetPeriodType, LocalDate> invoicedPaymentDeadlinePerTP = buyOutSurplusPaymentDeadlineService.getBuyOutPaymentDeadlinePerTargetPeriod(
+        		ca, shouldApplyPrimaryRules, targetPeriodsDetails, currentTargetPeriodInfo, currentDate);
 
         // Create process
         CcaRequestParams requestParams = CcaRequestParams.builder()
@@ -47,14 +77,19 @@ public class BuyOutSurplusFacilityRunCreateActionHandler implements RequestCACre
                 .requestPayload(BuyOutSurplusFacilityRunRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.BUY_OUT_SURPLUS_FACILITY_RUN_REQUEST_PAYLOAD)
                         .submitterId(appUser.getUserId())
-                        .targetPeriodDetails(targetPeriodDetails)
+                        .creationDate(currentDate)
+                        .schemeVersion(targetPeriod.getSchemeVersion())
+                        .targetPeriodsDetails(targetPeriodsDetails)
+                        .applyPrimaryRules(shouldApplyPrimaryRules)
+                        .invoicedPaymentDeadlinePerTP(invoicedPaymentDeadlinePerTP)
+                        .accountStates(accountStates)
                         .build())
                 .requestMetadata(BuyOutSurplusFacilityRunRequestMetadata.builder()
                         .type(CcaRequestMetadataType.BUY_OUT_SURPLUS_FACILITY_RUN)
-                        .targetPeriodType(targetPeriodDetails.getBusinessId())
+                        .targetPeriodType(targetPeriodsDetails.getLast().getBusinessId())
                         .build())
                 .processVars(Map.of(
-                        CcaBpmnProcessConstants.ACCOUNT_IDS, new HashSet<>()))
+                        CcaBpmnProcessConstants.ACCOUNT_IDS, new HashSet<>(accountStates.keySet())))
                 .build();
 
         final Request request = startProcessRequestService.startProcess(requestParams);

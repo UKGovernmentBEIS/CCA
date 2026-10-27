@@ -6,7 +6,6 @@ import { UnderlyingAgreementPeerReviewStore } from '../+state';
 export const PEER_REVIEW_DECISION_ROUTES: Routes = [
   {
     path: '',
-    providers: [UnderlyingAgreementPeerReviewStore],
     canDeactivate: [
       () => {
         inject(UnderlyingAgreementPeerReviewStore).reset();
@@ -15,21 +14,25 @@ export const PEER_REVIEW_DECISION_ROUTES: Routes = [
     ],
     children: [
       {
+        title: 'Peer review decision',
         path: '',
-        data: { pageTitle: 'Peer review decision', backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('./peer-review-decision.component').then((m) => m.PeerReviewDecisionComponent),
+        loadComponent: () => import('./peer-review-decision.component').then((c) => c.PeerReviewDecisionComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
+        title: 'Check your answers',
         path: 'check-your-answers',
-        data: { pageTitle: 'Check your answers', backlink: '../', breadcrumb: false },
         loadComponent: () =>
-          import('../check-your-answers/check-your-answers.component').then((m) => m.CheckYourAnswersComponent),
+          import('../check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
+        data: { backlink: '../', breadcrumb: false },
       },
       {
+        title: 'Confirmation',
         path: 'confirmation',
-        data: { pageTitle: 'Confirmation', breadcrumb: false },
-        loadComponent: () => import('../confirmation/confirmation.component').then((m) => m.ConfirmationComponent),
+        loadComponent: () => import('../confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+        data: { breadcrumb: false },
       },
     ],
+    providers: [UnderlyingAgreementPeerReviewStore],
   },
 ];

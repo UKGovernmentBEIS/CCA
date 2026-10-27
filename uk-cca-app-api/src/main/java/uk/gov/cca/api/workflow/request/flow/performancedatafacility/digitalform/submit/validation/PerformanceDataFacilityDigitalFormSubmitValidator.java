@@ -134,6 +134,13 @@ public class PerformanceDataFacilityDigitalFormSubmitValidator {
         if(!validationFacilityProductsResults.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE);
         }
+
+        BusinessValidationResult validationExistenceFacilityProductsWithEarlierYearResult = performanceDataFacilityValidator
+                .validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear);
+
+        if(!validationExistenceFacilityProductsWithEarlierYearResult.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCT_EXIST_BEFORE_FACILITY_BASE_YEAR);
+        }
     }
 
     private void validateOriginalBaselineAndTargets(final RequestTask requestTask) {

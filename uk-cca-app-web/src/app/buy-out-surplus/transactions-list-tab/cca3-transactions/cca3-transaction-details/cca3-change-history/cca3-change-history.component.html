@@ -1,0 +1,22 @@
+<netz-page-heading [caption]="facility.facilityBusinessId">Change history</netz-page-heading>
+
+<div class="govuk-grid-row govuk-!-margin-bottom-6">
+  <div class="govuk-grid-column-two-thirds">
+    <cca-summary [data]="summary" />
+  </div>
+</div>
+
+@if (history(); as entries) {
+  @if (entries.length) {
+    <govuk-accordion id="facility-transaction-history" [cacheDisabled]="true">
+      @for (entry of entries; track entry.id) {
+        <govuk-accordion-item [header]="entry.header" [caption]="entry.submissionDate | govukDate: 'datetime'">
+          <cca-summary [data]="entry.summary" />
+        </govuk-accordion-item>
+      }
+    </govuk-accordion>
+  } @else {
+    <p>There is no change history yet.</p>
+    <p>More information will be available when changes to the amount or status have been made.</p>
+  }
+}

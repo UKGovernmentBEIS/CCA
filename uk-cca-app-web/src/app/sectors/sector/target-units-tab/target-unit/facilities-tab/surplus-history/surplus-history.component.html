@@ -1,0 +1,39 @@
+<netz-page-heading size="xl" [caption]="facilityDetails().facilityBusinessId">
+  Surplus gained change history
+</netz-page-heading>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    @if (surplusHistory(); as history) {
+      @if (history.length) {
+        <govuk-accordion id="facility-surplus-history" [cacheDisabled]="true" data-testid="history">
+          @for (entry of history; track entry) {
+            <govuk-accordion-item
+              [header]="
+                entry.submitter?.startsWith('batch run ID ')
+                  ? 'Amount changed by ' + entry.submitter
+                  : 'Amount changed by “' + entry.submitter + '”'
+              "
+              [caption]="entry.submissionDate | govukDate: 'datetime'"
+            >
+              <dl govuk-summary-list>
+                <div govukSummaryListRow>
+                  <dt govukSummaryListRowKey>Surplus gained (tCO2e)</dt>
+                  <dd govukSummaryListRowValue>{{ entry.surplusGained | surplusAmount }}</dd>
+                </div>
+                @if (entry.comments) {
+                  <div govukSummaryListRow>
+                    <dt govukSummaryListRowKey>Comments</dt>
+                    <dd govukSummaryListRowValue class="pre-line">{{ entry.comments }}</dd>
+                  </div>
+                }
+              </dl>
+            </govuk-accordion-item>
+          }
+        </govuk-accordion>
+      } @else {
+        <p class="govuk-body">There are no surplus gained changes.</p>
+      }
+    }
+  </div>
+</div>

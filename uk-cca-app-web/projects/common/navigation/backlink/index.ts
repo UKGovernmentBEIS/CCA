@@ -1,2 +1,2 @@
 export * from './back-link.component';
-export * from './back-link.factory';
+export { type Backlink, type RouteBacklink } from './backlink.interface';

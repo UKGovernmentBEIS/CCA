@@ -154,6 +154,7 @@ describe('TprThroughputDetailsSummaryComponent', () => {
   it('should build totals-only summary data', () => {
     expect(getByText(/Target period throughput details/, fixture.nativeElement)).toBeTruthy();
     expect(getByText(/Total throughput/, fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/Adjusted throughput/, fixture.nativeElement)).toBeTruthy();
   });
 
   it('should use carbon dioxide terminology in the carbon totals-only summary', () => {

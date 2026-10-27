@@ -1,17 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, viewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { AfterViewInit, Component, ElementRef, input, viewChild } from '@angular/core';
+import { Params, RouterLink } from '@angular/router';
 
 export type ErrorSummaryInfo = {
   message: string;
   link?: string;
   linkText?: string;
+  queryParams?: Params;
 };
 
 @Component({
   selector: 'cca-error-summary',
   templateUrl: './error-summary.component.html',
   imports: [RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorSummaryComponent implements AfterViewInit {
   protected readonly errorSummaryInfo = input.required<ErrorSummaryInfo>();

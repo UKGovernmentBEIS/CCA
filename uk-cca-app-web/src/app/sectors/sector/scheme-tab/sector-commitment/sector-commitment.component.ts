@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -20,9 +20,8 @@ import {
 @Component({
   selector: 'cca-sector-commitment',
   templateUrl: './sector-commitment.component.html',
-  imports: [WizardStepComponent, ReactiveFormsModule, TextInputComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SectorCommitmentFormProvider],
+  imports: [WizardStepComponent, ReactiveFormsModule, TextInputComponent],
 })
 export class SectorCommitmentComponent {
   private readonly route = inject(ActivatedRoute);

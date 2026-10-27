@@ -21,7 +21,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      <div govuk-textarea formControlName="queryDefinition" label="Query"></div>
+      <div govuk-textarea formControlName="queryDefinition" label="Query" [maxLength]="50000"></div>
     </div>
   </div>
 

@@ -1,24 +1,25 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, computed, inject, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterOutlet } from '@angular/router';
 
-import { filter, map } from 'rxjs';
+import { map } from 'rxjs';
 
 import { selectIsLoggedIn, selectUserRoleType, selectUserState } from '@netz/common/auth';
 import { AuthStore } from '@netz/common/auth';
 import { BackLinkComponent, BreadcrumbsComponent } from '@netz/common/navigation';
 import {
-  FooterComponent,
-  HeaderActionsListComponent,
-  HeaderComponent,
-  HeaderNavListComponent,
-  MetaInfoComponent,
+  GovukFooterComponent,
+  GovukHeaderComponent,
+  GovukLinkItem,
+  GovukLinkTarget,
+  GovukServiceNavigationComponent,
+  GovukServiceNavigationItem,
   SkipLinkComponent,
 } from '@netz/govuk-components';
 import { PhaseBarComponent, WorkflowTaskHeaderComponent } from '@shared/components';
 import { ConfigService } from '@shared/config';
-import { AnalyticsService, AuthService, CountryService, CountyService } from '@shared/services';
+import { MainContentFocusDirective } from '@shared/directives';
+import { AnalyticsService, AuthService, CountryService, CountyService, SignInTrackingService } from '@shared/services';
 
 import { CookiesService } from './cookies/cookies.service';
 import { CookiesContainerComponent } from './cookies/cookies-container.component';
@@ -27,34 +28,27 @@ import { TimeoutBannerComponent } from './timeout/timeout-banner/timeout-banner.
 @Component({
   selector: 'cca-root',
   templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CookiesContainerComponent,
-    HeaderComponent,
+    GovukHeaderComponent,
+    GovukServiceNavigationComponent,
     SkipLinkComponent,
-    HeaderActionsListComponent,
-    HeaderNavListComponent,
-    RouterLink,
     PhaseBarComponent,
     BreadcrumbsComponent,
     RouterOutlet,
     BackLinkComponent,
-    FooterComponent,
+    GovukFooterComponent,
     TimeoutBannerComponent,
-    MetaInfoComponent,
     WorkflowTaskHeaderComponent,
-    RouterLinkActive,
+    MainContentFocusDirective,
   ],
 })
 export class AppComponent implements OnInit {
-  private readonly destroyRef = inject(DestroyRef);
   private readonly authStore = inject(AuthStore);
-  private readonly titleService = inject(Title);
-  private readonly router = inject(Router);
-  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly cookiesService = inject(CookiesService);
   private readonly analyticsService = inject(AnalyticsService);
   private readonly configService = inject(ConfigService);
+  private readonly signInTrackingService = inject(SignInTrackingService);
   protected readonly authService = inject(AuthService);
   protected readonly countryService = inject(CountryService);
   protected readonly countyService = inject(CountyService);
@@ -68,35 +62,70 @@ export class AppComponent implements OnInit {
   protected readonly showRegulators = computed(() => this.isAuthorized() && this.roleType() === 'REGULATOR');
   protected readonly showSectors = computed(() => this.isAuthorized());
 
+  protected readonly serviceHomepage = computed<GovukLinkTarget>(() =>
+    this.isAuthorized() ? { routerLink: '/dashboard' } : { routerLink: '/landing' },
+  );
+
+  protected readonly navigation = computed<GovukServiceNavigationItem[]>(() => {
+    const items: GovukServiceNavigationItem[] = [];
+    if (!this.isAuthorized()) return items;
+
+    items.push({ text: 'Tasks', routerLink: ['/dashboard'] });
+    items.push({ text: 'Target unit accounts', routerLink: ['/target-unit-accounts'] });
+
+    if (this.showSectors()) {
+      items.push({ text: 'Manage sectors', routerLink: ['/sectors'] });
+
+      if (this.roleType() === 'SECTOR_USER') {
+        items.push({ text: 'Templates', routerLink: ['/sector-templates'] });
+      }
+    }
+
+    if (this.showRegulators()) {
+      if (!this.subsistenceFeesHideMenu) {
+        items.push({ text: 'Subsistence fees', routerLink: ['/subsistence-fees'] });
+      }
+
+      items.push({
+        text: 'Buy-out and surplus',
+        routerLink: ['/buyout-surplus'],
+        queryParams: { paymentStatus: 'AWAITING_PAYMENT' },
+      });
+      items.push({ text: 'Regulator users', routerLink: ['/user/regulators'] });
+      items.push({ text: 'MI Reports', routerLink: ['/mi-reports'] });
+      items.push({ text: 'Templates', routerLink: ['/templates'] });
+    }
+
+    return items;
+  });
+
+  protected readonly footerMeta: GovukLinkItem[] = [
+    { text: 'Privacy Notice', routerLink: '/privacy-notice' },
+    { text: 'Contact us', routerLink: '/contact-us' },
+    { text: 'Accessibility Statement', routerLink: '/accessibility' },
+    { text: 'CCA legislation', routerLink: '/legislation' },
+  ];
+
   protected readonly showCookiesBanner = toSignal(
     this.cookiesService.accepted$.pipe(map((cookiesAccepted) => !cookiesAccepted)),
   );
 
   ngOnInit() {
-    const appTitle = this.titleService.getTitle();
-
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map(() => {
-          let child = this.activatedRoute.firstChild;
-
-          while (child.firstChild) {
-            child = child.firstChild;
-          }
-
-          if (child.snapshot.data['pageTitle']) {
-            return child.snapshot.data['pageTitle'];
-          }
-
-          return appTitle;
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((title: string) => this.titleService.setTitle(`${title} - GOV.UK`));
-
     if (this.cookiesService.accepted$.getValue() && this.cookiesService.hasAnalyticsConsent()) {
       this.analyticsService.enableGoogleTagManager();
     }
+
+    const signInCompleted = this.signInTrackingService.consumeSignInStarted();
+
+    // Only signed in page loads are reported. Sessions that could not be established (expired session, failed Keycloak
+    // check, public sign-in and error pages) are treated as signed out and skipped.
+    if (!this.isLoggedIn()) return;
+
+    this.analyticsService.push({
+      event: 'service_context',
+      // sector_user | regulator | operator, or unknown when the role is missing; unfamiliar roles pass through
+      user_type: (this.roleType() || 'unknown').toLowerCase(),
+      ...(signInCompleted ? { login: true } : {}),
+    });
   }
 }

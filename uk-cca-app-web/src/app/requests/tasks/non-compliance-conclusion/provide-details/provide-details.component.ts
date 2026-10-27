@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -27,6 +27,8 @@ import {
 
 @Component({
   selector: 'cca-provide-conclusion-details',
+  templateUrl: './provide-details.component.html',
+  providers: [ProvideDetailsFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -37,9 +39,6 @@ import {
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [ProvideDetailsFormProvider],
-  templateUrl: './provide-details.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProvideDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

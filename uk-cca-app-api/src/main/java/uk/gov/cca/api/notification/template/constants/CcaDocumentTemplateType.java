@@ -58,6 +58,15 @@ public class CcaDocumentTemplateType {
 
     // L003_Secondary Buy-Out Overpayment Letter v01.docx
     public static final String SECONDARY_OVERPAYMENT_BUY_OUT = "SECONDARY_OVERPAYMENT_BUY_OUT";
+    
+    // Transaction ID Primary TPx Buy-out MoA updated v2.0
+    public static final String PRIMARY_BUY_OUT_CCA3 = "PRIMARY_BUY_OUT_CCA3";
+    
+    // Transaction ID Secondary TPx Buy-out MoA updated v2.0
+    public static final String SECONDARY_BUY_OUT_CCA3 = "SECONDARY_BUY_OUT_CCA3";
+    
+    // Transaction ID Secondary TPx Overpayment updated v2.0
+    public static final String SECONDARY_OVERPAYMENT_BUY_OUT_CCA3 = "SECONDARY_OVERPAYMENT_BUY_OUT_CCA3";
 
     // Buyout Refund Claim Form.docx
     public static final String REFUND_CLAIM_FORM_BUY_OUT = "REFUND_CLAIM_FORM_BUY_OUT";

@@ -4,6 +4,7 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 
 export const TARGET_PERIOD_REPORTING_FORM_ROUTES: Routes = [
   {
+    title: 'TP reporting (TP7, TP8, TP9) - Submit form',
     path: '',
     children: [
       {
@@ -24,11 +25,12 @@ export const TARGET_PERIOD_REPORTING_FORM_ROUTES: Routes = [
         loadChildren: () => import('./submit/submit.routes').then((r) => r.SUBMIT_ROUTES),
       },
       {
+        title: 'Refresh baseline data',
         path: 'refresh-baseline-data',
-        canActivate: [isEditableGuard],
-        data: { breadcrumb: false, backlink: '../../' },
         loadComponent: () =>
           import('./refresh-baseline-data/refresh-baseline-data.component').then((c) => c.RefreshBaselineDataComponent),
+        canActivate: [isEditableGuard],
+        data: { breadcrumb: false, backlink: '../../' },
       },
     ],
   },

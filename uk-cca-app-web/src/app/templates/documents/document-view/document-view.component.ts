@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,7 +28,6 @@ import { toDocumentTemplateSummary } from '../document-template-summary';
     }
   `,
   imports: [PageHeadingComponent, SummaryComponent, NotificationBannerComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentViewComponent {
   private readonly router = inject(Router);

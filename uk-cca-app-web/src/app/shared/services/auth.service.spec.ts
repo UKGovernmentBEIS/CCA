@@ -27,6 +27,7 @@ import {
 
 import { ConfigStore } from '../config/config.store';
 import { AuthService } from './auth.service';
+import { SignInTrackingService } from './sign-in-tracking.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -35,6 +36,7 @@ describe('AuthService', () => {
   let configStore: ConfigStore;
 
   const keycloakService = mockClass(KeycloakService);
+  const signInTrackingService = mockClass(SignInTrackingService);
 
   const user = {
     email: 'test@test.com',
@@ -69,6 +71,7 @@ describe('AuthService', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: KeycloakService, useValue: keycloakService },
+        { provide: SignInTrackingService, useValue: signInTrackingService },
         { provide: UsersService, useValue: usersService },
         { provide: AuthoritiesService, useValue: authoritiesService },
         { provide: TermsAndConditionsService, useValue: termsService },
@@ -80,6 +83,7 @@ describe('AuthService', () => {
     service = TestBed.inject(AuthService);
     activatedRoute = TestBed.inject(ActivatedRoute);
     keycloakService.loadUserProfile.mockResolvedValue({ email: 'test@test.com' });
+    keycloakService.login.mockResolvedValue(undefined);
     configStore = TestBed.inject(ConfigStore);
     configStore.setState({ features: { terms: true } });
   });
@@ -101,10 +105,39 @@ describe('AuthService', () => {
     expect(usersService.getCurrentUser).toHaveBeenCalledTimes(1);
   });
 
-  it('should create a login URL', () => {
-    keycloakService.createLoginUrl.mockReturnValue('https://cca-sign-in.example');
+  it('should mark the sign-in as started when logging in', async () => {
+    await service.login();
 
-    expect(service.createLoginUrl({ redirectUri: location.origin })).toBe('https://cca-sign-in.example');
+    expect(signInTrackingService.markSignInStarted).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not mark a sign-in as started when re-authenticating after a 401 response', async () => {
+    await service.reauthenticate();
+
+    expect(keycloakService.login).toHaveBeenCalledTimes(1);
+    expect(signInTrackingService.markSignInStarted).not.toHaveBeenCalled();
+  });
+
+  it('should not mark a sign-in as started when only a login URL is created', async () => {
+    keycloakService.createLoginUrl.mockResolvedValue('https://cca-sign-in.example');
+
+    await service.createLoginUrl();
+
+    expect(signInTrackingService.markSignInStarted).not.toHaveBeenCalled();
+  });
+
+  it('should clear the started sign-in when the Keycloak sign-in call fails', async () => {
+    keycloakService.login.mockRejectedValueOnce('Keycloak not initialized');
+
+    await expect(service.login()).rejects.toEqual('Keycloak not initialized');
+
+    expect(signInTrackingService.clearSignInStarted).toHaveBeenCalledTimes(1);
+  });
+
+  it('should create a login URL', async () => {
+    keycloakService.createLoginUrl.mockResolvedValue('https://cca-sign-in.example');
+
+    await expect(service.createLoginUrl({ redirectUri: location.origin })).resolves.toBe('https://cca-sign-in.example');
     expect(keycloakService.createLoginUrl).toHaveBeenCalledWith({ redirectUri: location.origin });
   });
 

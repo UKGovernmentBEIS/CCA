@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -17,7 +17,7 @@ describe('EditOperatorDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EditOperatorDetailsComponent],
-      providers: [ActiveOperatorStore, provideHttpClient(), provideHttpClientTesting()],
+      providers: [ActiveOperatorStore, provideHttpClient(withXhr()), provideHttpClientTesting()],
     })
       .overrideProvider(ActivatedRoute, {
         useValue: new ActivatedRouteStub({ targetUnitId: 1, userId: 'e7de58d5-0256-42a7-9501-014d25d5d310' }),

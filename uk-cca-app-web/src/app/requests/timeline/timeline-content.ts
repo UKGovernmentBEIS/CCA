@@ -13,14 +13,17 @@ import { AdminTerminationWithdrawSubmittedTimelineComponent } from './admin-term
 import { AppealOutcomeProvidedComponent } from './appeal-outcome-provided/appeal-outcome-provided.component';
 import { BuyOutFeeCalculatedComponent } from './buy-out-fee-calculated/buy-out-fee-calculated.component';
 import { BuyOutSurplusBatchRunCompletedComponent } from './buy-out-surplus-batch-run-completed/buy-out-surplus-batch-run-completed.component';
+import { BuyOutSurplusFacilityBatchRunCompletedComponent } from './buy-out-surplus-facility-batch-run-completed/buy-out-surplus-facility-batch-run-completed.component';
 import { CcaTerminationProcessingSubmittedComponent } from './cca-termination-processing-submitted/cca-termination-processing-submitted.component';
 import { Cca2ExtensionComponent } from './cca2-extension/cca2-extension.component';
+import { Cca3BuyoutSurplusComponent } from './cca3-buyout-surplus/cca3-buyout-surplus.component';
 import { Cca3MigrationActivatedComponent } from './cca3-migration/activated/cca3-migration-activated.component';
 import { Cca3MigrationCompletedComponent } from './cca3-migration/completed/cca3-migration-completed.component';
 import { EnforcementResponseNoticeSentComponent } from './enforcement-response-notice-sent/enforcement-response-notice-sent.component';
 import { DetailsCorrectiveActionsCompletedComponent } from './facility-audit/details-corrective-actions-completed/details-corrective-actions-completed.component';
 import { PreAuditReviewCompletedComponent } from './facility-audit/pre-audit-review-completed/pre-audit-review-completed.component';
 import { TrackCorrectiveActionsCompletedComponent } from './facility-audit/track-corrective-actions-completed/track-corrective-actions-completed.component';
+import { FacilityPATReportingSubmittedComponent } from './facility-pat-reporting-submitted/facility-pat-reporting-submitted.component';
 import { NonComplianceAppealProvidedComponent } from './non-compliance-appeal-provided/non-compliance-appeal-provided.component';
 import { NonComplianceClosedComponent } from './non-compliance-closed/non-compliance-closed.component';
 import { NonComplianceConclusionSubmittedComponent } from './non-compliance-conclusion-submitted/non-compliance-conclusion-submitted.component';
@@ -28,6 +31,7 @@ import { NonComplianceDetailsSubmittedComponent } from './non-compliance-details
 import { NonComplianceEnforcementResponseNoticePeerReviewerDecisionComponent } from './non-compliance-enforcement-response-notice-peer-reviewer-decision/non-compliance-enforcement-response-notice-peer-reviewer-decision.component';
 import { NonComplianceNoticeOfIntentPeerReviewerDecisionComponent } from './non-compliance-notice-of-intent-peer-reviewer-decision/non-compliance-notice-of-intent-peer-reviewer-decision.component';
 import { NonComplianceNoticeOfIntentSubmittedComponent } from './non-compliance-notice-of-intent-submitted/non-compliance-notice-of-intent-submitted.component';
+import { PatReportingSubmittedComponent } from './pat-reporting-submitted/pat-reporting-submitted.component';
 import { PATUploadSubmittedComponent } from './performance-account-template-upload-submitted/pat-upload-submitted.component';
 import { PerformanceDataUploadSubmittedComponent } from './performance-data-upload-submitted/performance-data-upload-submitted.component';
 import { SectorMoaGeneratedComponent } from './sector-moa-generated/sector-moa-generated.component';
@@ -338,6 +342,35 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     };
   },
 
+  BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: BuyOutSurplusFacilityBatchRunCompletedComponent,
+    };
+  },
+
+  BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: BuyOutSurplusFacilityBatchRunCompletedComponent,
+    };
+  },
+
+  BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED: () => {
+    const action = inject(RequestActionStore).select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: Cca3BuyoutSurplusComponent,
+    };
+  },
+
   TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED: () => {
     const store = inject(RequestActionStore);
     const action = store.select(requestActionQuery.selectAction)();
@@ -625,6 +658,26 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: TprReportingFormSubmittedComponent,
+    };
+  },
+
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PatReportingSubmittedComponent,
+    };
+  },
+
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: FacilityPATReportingSubmittedComponent,
     };
   },
 };

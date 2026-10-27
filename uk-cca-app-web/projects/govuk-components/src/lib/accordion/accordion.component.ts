@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, contentChildren, effect, inject, input } from '@angular/core';
+import { Component, computed, contentChildren, effect, inject, input } from '@angular/core';
 import { AccordionItemComponent } from './accordion-item/accordion-item.component';
 import { ACCORDION, Accordion, accordionFactory } from './accordion';
 
@@ -24,7 +24,6 @@ import { ACCORDION, Accordion, accordionFactory } from './accordion';
     </div>
   `,
   providers: [accordionFactory],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionComponent {
   private accordion = inject<Accordion>(ACCORDION);

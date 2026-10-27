@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -13,7 +13,6 @@ import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-authorisation-additional-evidence-summary',
-  imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
   template: `
     <div>
       <netz-page-heading caption="Authorisation and additional evidence">Summary</netz-page-heading>
@@ -23,7 +22,7 @@ import { generateDownloadUrl } from '@shared/utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
 })
 export default class AuthorisationAdditionalEvidenceSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

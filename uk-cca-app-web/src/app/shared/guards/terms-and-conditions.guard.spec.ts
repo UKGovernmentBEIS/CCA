@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 
 import { lastValueFrom, of } from 'rxjs';
 
@@ -30,7 +30,7 @@ describe('TermsAndConditionsGuard', () => {
 
   mockAuthService.checkUser.mockReturnValue(of(undefined));
 
-  function getGuard(_, snapshot) {
+  function getGuard(_: ActivatedRouteSnapshot, snapshot: RouterStateSnapshot) {
     return TestBed.runInInjectionContext(() => TermsAndConditionsGuard(null, snapshot));
   }
 

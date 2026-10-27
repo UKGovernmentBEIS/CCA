@@ -1,0 +1,68 @@
+<div class="govuk-width-container">
+  <div class="govuk-service-navigation__container">
+    @if (serviceName()) {
+      <span class="govuk-service-navigation__service-name">
+        @if (isRouterLink(serviceHomepage())) {
+          <a
+            class="govuk-service-navigation__link"
+            [fragment]="serviceHomepage()!.fragment"
+            [queryParams]="serviceHomepage()!.queryParams ?? null"
+            [routerLink]="serviceHomepage()!.routerLink"
+          >
+            {{ serviceName() }}
+          </a>
+        } @else if (serviceHomepage()?.href) {
+          <a class="govuk-service-navigation__link" [href]="serviceHomepage()!.href">{{ serviceName() }}</a>
+        } @else {
+          <span class="govuk-service-navigation__text">{{ serviceName() }}</span>
+        }
+      </span>
+    }
+
+    @if (navigation().length) {
+      <nav class="govuk-service-navigation__wrapper" [attr.aria-label]="navigationLabel() ?? menuButtonText()">
+        @if (collapsible()) {
+          <button
+            class="govuk-service-navigation__toggle"
+            type="button"
+            [attr.aria-controls]="navigationId()"
+            [attr.aria-expanded]="isDesktop() ? null : menuOpen()"
+            [attr.aria-hidden]="isDesktop() ? 'true' : null"
+            [attr.aria-label]="menuButtonAriaLabel()"
+            [attr.hidden]="isDesktop() ? '' : null"
+            (click)="toggleMenu()"
+          >
+            {{ menuButtonText() }}
+          </button>
+        }
+
+        <ul class="govuk-service-navigation__list" [attr.hidden]="menuHidden() ? '' : null" [id]="navigationId()">
+          @for (item of navigation(); track $index) {
+            <li
+              class="govuk-service-navigation__item"
+              routerLinkActive="govuk-service-navigation__item--active"
+              [routerLinkActiveOptions]="activeOptions"
+            >
+              <a
+                #rla="routerLinkActive"
+                ariaCurrentWhenActive="page"
+                class="govuk-service-navigation__link"
+                routerLinkActive
+                [routerLinkActiveOptions]="activeOptions"
+                [fragment]="item.fragment"
+                [queryParams]="item.queryParams ?? null"
+                [routerLink]="item.routerLink"
+              >
+                @if (rla.isActive) {
+                  <strong class="govuk-service-navigation__active-fallback">{{ item.text }}</strong>
+                } @else {
+                  {{ item.text }}
+                }
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+    }
+  </div>
+</div>

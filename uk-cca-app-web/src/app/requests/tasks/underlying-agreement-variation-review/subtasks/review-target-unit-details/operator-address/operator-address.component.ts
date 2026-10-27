@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -42,9 +42,8 @@ import { OPERATOR_ADDRESS_FORM, OperatorAddressFormProvider } from './operator-a
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  imports: [WizardStepComponent, AccountAddressInputComponent, ReturnToTaskOrActionPageComponent, ReactiveFormsModule],
   providers: [OperatorAddressFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WizardStepComponent, AccountAddressInputComponent, ReturnToTaskOrActionPageComponent, ReactiveFormsModule],
 })
 export class OperatorAddressComponent {
   private readonly store = inject(RequestTaskStore);
@@ -102,15 +101,11 @@ export class OperatorAddressComponent {
     this.tasksApiService
       .saveRequestTaskAction(dto)
       .subscribe((payload: UnderlyingAgreementVariationReviewRequestTaskPayload) => {
-        let path = '';
-
-        if (areIdentical) {
-          path = '../check-your-answers';
-        } else {
-          path = isTargetUnitDetailsWizardCompleted(payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails)
+        const path = areIdentical
+          ? '../check-your-answers'
+          : isTargetUnitDetailsWizardCompleted(payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails)
             ? '../decision'
             : `../${ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON}`;
-        }
 
         this.router.navigate([path], { relativeTo: this.activatedRoute });
       });

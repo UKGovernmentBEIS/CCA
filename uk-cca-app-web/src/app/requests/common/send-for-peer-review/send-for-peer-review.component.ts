@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -39,7 +39,6 @@ import { TasksApiService } from '../tasks-api.service';
     <a class="govuk-link" routerLink="../../" [replaceUrl]="true"> {{ returnToText() }} </a>
   `,
   imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, SelectComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendForPeerReviewComponent {
   protected readonly requestTaskActionType = input.required<string>();

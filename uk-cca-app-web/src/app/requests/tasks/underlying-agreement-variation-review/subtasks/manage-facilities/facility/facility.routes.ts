@@ -26,52 +26,52 @@ export const FACILITY_ROUTES: Routes = [
         children: [],
       },
       {
-        path: FacilityWizardStep.DETAILS,
         title: 'Facility details',
-        data: { backlink: '../../', breadcrumb: false },
+        path: FacilityWizardStep.DETAILS,
         loadComponent: () => import('./details/facility-details.component').then((c) => c.FacilityDetailsComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        path: FacilityWizardStep.CONTACT_DETAILS,
         title: 'Facility contact details',
-        data: { backlink: `../${FacilityWizardStep.DETAILS}`, breadcrumb: false },
+        path: FacilityWizardStep.CONTACT_DETAILS,
         loadComponent: () =>
           import('./contact-details/facility-contact-details.component').then((c) => c.FacilityContactDetailsComponent),
+        data: { backlink: `../${FacilityWizardStep.DETAILS}`, breadcrumb: false },
       },
       {
-        path: FacilityWizardStep.ELIGIBILITY_DETAILS,
         title: 'CCA eligibility details and authorisation',
-        data: { backlink: `../${FacilityWizardStep.CONTACT_DETAILS}`, breadcrumb: false },
+        path: FacilityWizardStep.ELIGIBILITY_DETAILS,
         loadComponent: () =>
           import('./eligibility-details/facility-eligibility-details.component').then(
             (c) => c.FacilityEligibilityDetailsComponent,
           ),
+        data: { backlink: `../${FacilityWizardStep.CONTACT_DETAILS}`, breadcrumb: false },
       },
       {
-        path: FacilityWizardStep.EXTENT,
         title: 'Extent of the facility',
-        data: { backlink: `../${FacilityWizardStep.ELIGIBILITY_DETAILS}`, breadcrumb: false },
+        path: FacilityWizardStep.EXTENT,
         loadComponent: () => import('./extent/facility-extent.component').then((c) => c.FacilityExtentComponent),
+        data: { backlink: `../${FacilityWizardStep.ELIGIBILITY_DETAILS}`, breadcrumb: false },
       },
       {
-        path: FacilityWizardStep.APPLY_RULE,
         title: 'Apply the 70% rule',
-        data: { backlink: `../${FacilityWizardStep.EXTENT}`, breadcrumb: false },
+        path: FacilityWizardStep.APPLY_RULE,
         loadComponent: () =>
           import('./apply-rule/facility-apply-rule.component').then((c) => c.FacilityApplyRuleComponent),
+        data: { backlink: `../${FacilityWizardStep.EXTENT}`, breadcrumb: false },
       },
       {
-        path: FacilityWizardStep.TARGET_COMPOSITION,
         title: 'Target composition',
-        data: { backlink: `../${FacilityWizardStep.APPLY_RULE}`, breadcrumb: false },
+        path: FacilityWizardStep.TARGET_COMPOSITION,
         loadComponent: () =>
-          import('./target-composition/target-composition.component').then((m) => m.TargetCompositionComponent),
+          import('./target-composition/target-composition.component').then((c) => c.TargetCompositionComponent),
+        data: { backlink: `../${FacilityWizardStep.APPLY_RULE}`, breadcrumb: false },
       },
       {
-        path: FacilityWizardStep.BASELINE_DATA,
         title: 'Baseline data',
+        path: FacilityWizardStep.BASELINE_DATA,
+        loadComponent: () => import('./baseline-data/baseline-data.component').then((c) => c.BaselineDataComponent),
         data: { backlink: `../${FacilityWizardStep.TARGET_COMPOSITION}`, breadcrumb: false },
-        loadComponent: () => import('./baseline-data/baseline-data.component').then((m) => m.BaselineDataComponent),
       },
       {
         path: FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION,
@@ -82,33 +82,34 @@ export const FACILITY_ROUTES: Routes = [
           ),
       },
       {
-        path: FacilityWizardStep.TARGETS,
         title: 'Targets',
+        path: FacilityWizardStep.TARGETS,
+        loadComponent: () => import('./targets/targets.component').then((c) => c.TargetsComponent),
         data: { backlink: `../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`, breadcrumb: false },
-        loadComponent: () => import('./targets/targets.component').then((m) => m.TargetsComponent),
       },
       {
-        path: 'decision',
         title: (route: ActivatedRouteSnapshot) => {
           const store = inject(RequestTaskStore);
           const facility = store.select(underlyingAgreementQuery.selectFacility(route.params.facilityId))();
-          return facility.facilityDetails.name;
+          return `Facility decision - ${facility.facilityDetails.name}`;
         },
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'decision',
         loadComponent: () => import('./decision/facility-decision.component').then((c) => c.FacilityDecisionComponent),
-      },
-      {
-        path: 'check-your-answers',
-        title: 'Check your answers',
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('./check-answers/facility-check-answers.component'),
       },
       {
-        path: 'products',
+        title: 'Check your answers',
+        path: 'check-your-answers',
+        loadComponent: () => import('./check-answers/facility-check-answers.component'),
+        data: { backlink: '../../', breadcrumb: false },
+      },
+      {
         title: 'View Products',
+        path: 'products',
+        loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsComponent),
         data: {
           breadcrumb: false,
-          backlink: ({ sectionStatus }) =>
+          backlink: ({ sectionStatus }: { sectionStatus: TaskItemStatus }) =>
             sectionStatus === TaskItemStatus.COMPLETED ? '../summary' : '../check-your-answers',
         },
         resolve: {
@@ -119,13 +120,12 @@ export const FACILITY_ROUTES: Routes = [
             return sectionsCompleted?.[facilityId];
           },
         },
-        loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsComponent),
       },
       {
-        path: 'summary',
         title: 'Summary details',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'summary',
         loadComponent: () => import('./summary/facility-summary.component'),
+        data: { backlink: '../../', breadcrumb: false },
       },
     ],
   },

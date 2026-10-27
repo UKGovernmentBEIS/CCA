@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -29,7 +29,6 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
     ButtonDirective,
     PendingButtonDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExternalContactsDetailsComponent {
   private readonly fb = inject(UntypedFormBuilder);

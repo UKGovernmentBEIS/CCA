@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -14,7 +14,6 @@ import { PanelComponent } from '@netz/govuk-components';
     <ng-content />
     <a class="gov uk-link" routerLink="/dashboard"> Return to dashboard </a>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, PanelComponent],
 })
 export class CancelConfirmationComponent {}

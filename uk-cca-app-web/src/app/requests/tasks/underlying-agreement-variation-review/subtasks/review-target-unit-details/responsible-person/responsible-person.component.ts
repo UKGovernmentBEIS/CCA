@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -40,14 +40,13 @@ import { applySaveActionSideEffects, deleteDecision } from '../../../utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
+  providers: [ResponsiblePersonFormProvider],
   imports: [
     WizardStepComponent,
     ResponsiblePersonInputComponent,
     ReturnToTaskOrActionPageComponent,
     ReactiveFormsModule,
   ],
-  providers: [ResponsiblePersonFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResponsiblePersonComponent {
   private readonly store = inject(RequestTaskStore);

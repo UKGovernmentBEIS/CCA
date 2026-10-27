@@ -1,7 +1,8 @@
 import { RequestActionState } from '@netz/common/store';
-import { PeerReviewDecisionActionPayload } from '@requests/common';
 
 import { RequestActionDTO } from 'cca-api';
+
+import { PeerReviewDecisionActionPayload } from '../peer-review-submitted.component.selectors';
 
 export const acceptedPayload: PeerReviewDecisionActionPayload = {
   payloadType: 'ADMIN_TERMINATION_PEER_REVIEW_SUBMITTED_PAYLOAD',

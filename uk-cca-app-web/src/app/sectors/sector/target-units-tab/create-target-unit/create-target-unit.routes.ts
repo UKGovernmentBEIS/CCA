@@ -10,64 +10,71 @@ import { CreateTargetUnitSubSectorResolver } from './create-target-unit-subsecto
 
 export const CREATE_TARGET_UNIT_ROUTES: Routes = [
   {
-    path: 'create',
     title: 'Target unit creation',
-    resolve: { subSectorScheme: CreateTargetUnitSubSectorResolver },
-    providers: [CreateTargetUnitStore],
+    path: 'create',
     canDeactivate: [ResetCreateUnitAccountStore],
+    resolve: { subSectorScheme: CreateTargetUnitSubSectorResolver },
     children: [
       {
+        title: 'Does the operator have a company number?',
         path: 'company-registration-number',
-        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./company-registration-number/company-registration-number.component').then(
             (c) => c.CompanyRegistrationNumberComponent,
           ),
+        data: { backlink: { link: '../../../', fragment: 'target-units' }, breadcrumb: false },
       },
       {
+        title: 'Target unit details',
         path: 'target-unit-details',
-        data: { backlink: '../company-registration-number', breadcrumb: false },
         loadComponent: () => import('./create-target-unit.component').then((c) => c.CreateTargetUnitComponent),
+        data: { backlink: '../company-registration-number', breadcrumb: false },
       },
       {
+        title: 'Operator address',
         path: 'operator-address',
-        data: { backlink: '../target-unit-details', breadcrumb: false },
-        canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
           import('./operator-address/operator-address.component').then((c) => c.OperatorAddressComponent),
+        canActivate: [CanActivateTargetUnitCreationStep],
+        data: { backlink: '../target-unit-details', breadcrumb: false },
       },
       {
+        title: 'Responsible person',
         path: 'responsible-person',
-        data: { backlink: '../operator-address', breadcrumb: false },
-        canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
           import('./responsible-person/responsible-person.component').then((c) => c.ResponsiblePersonComponent),
+        canActivate: [CanActivateTargetUnitCreationStep],
+        data: { backlink: '../operator-address', breadcrumb: false },
       },
       {
+        title: 'Administrative contact details',
         path: 'administrative-contact',
-        data: { backlink: '../responsible-person', breadcrumb: false },
-        canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
           import('./administrative-contact/administrative-contact.component').then(
             (c) => c.AdministrativeContactComponent,
           ),
+        canActivate: [CanActivateTargetUnitCreationStep],
+        data: { backlink: '../responsible-person', breadcrumb: false },
       },
       {
+        title: 'Check your answers',
         path: 'summary',
-        data: { breadcrumb: false },
-        canActivate: [CanActivateTargetUnitCreationSummary],
         loadComponent: () =>
           import('./summary/create-target-unit-summary.component').then((c) => c.CreateTargetUnitSummaryComponent),
+        canActivate: [CanActivateTargetUnitCreationSummary],
+        data: { breadcrumb: false },
       },
       {
+        title: 'Target unit created',
         path: 'confirmation',
-        data: { breadcrumb: false },
         loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+        data: { breadcrumb: false },
       },
       {
         path: '**',
         redirectTo: 'company-registration-number',
       },
     ],
+    providers: [CreateTargetUnitStore],
   },
 ];

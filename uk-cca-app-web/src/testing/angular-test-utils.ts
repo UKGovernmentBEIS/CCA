@@ -54,6 +54,34 @@ export const getAllByText = (matcher: TextMatcher, root: QueryRoot = document): 
   return matches;
 };
 
+const inCellControlHosts = [
+  'div[govuk-select]',
+  'div[govuk-text-input]',
+  'div[govuk-textarea]',
+  'div[cca-text-input]',
+  'div[cca-textarea]',
+  'cca-combobox',
+];
+
+/**
+ * A control inside a table cell is already named by its column header, so its own label must be hidden with
+ * `labelHidden`. Add any new control host to `inCellControlHosts` when it starts being used inside cells.
+ */
+export const assertInCellControlLabelsHidden = (root: QueryRoot = document): void => {
+  const inCellControlLabel = inCellControlHosts.map((host) => `.govuk-table__cell ${host} > label`).join(', ');
+  const visibleLabels = queryAll(root, inCellControlLabel).filter(
+    (label) => !label.classList.contains('govuk-visually-hidden'),
+  );
+
+  if (visibleLabels.length > 0) {
+    const labels = visibleLabels.map((label) => `"${collapseWhitespace(label.textContent)}"`).join(', ');
+    throw new Error(
+      `Control labels inside a table cell must be visually hidden with [labelHidden]="true", because the column ` +
+        `header already names the control. Visible in-cell labels found: ${labels}`,
+    );
+  }
+};
+
 const byId = (id: string, root: QueryRoot): HTMLElement | null => {
   // Use exact id matching to support ids containing dots (e.g. "address.line1").
   if (root instanceof Document) {
@@ -217,7 +245,8 @@ export const clear = (element: HTMLInputElement | HTMLTextAreaElement): void => 
  * GDS Utility - Extracts data from definition lists (<dl> elements)
  *
  * Returns an array of [terms, definitions] pairs for each <dl> element found.
- * Filters out any "Change" links commonly found in GDS summary lists.
+ * Filters out any "Change" links commonly found in GDS summary lists,
+ * including accessible variants like "Change First name".
  *
  * @param root - Optional root element to search within (defaults to document)
  * @returns Array of [terms, definitions] tuples, where each is an array of trimmed text content
@@ -229,10 +258,16 @@ export const clear = (element: HTMLInputElement | HTMLTextAreaElement): void => 
  * ]);
  */
 export const getSummaryListData = (root: QueryRoot = document): [string[], string[]][] => {
+  const isChangeLink = (dd: Element): boolean => {
+    const text = dd.textContent?.trim() ?? '';
+    const isChangeText = text === 'Change' || text.startsWith('Change ');
+    return isChangeText && dd.querySelector('a.govuk-link') !== null;
+  };
+
   return Array.from(root.querySelectorAll('dl')).map((el) => [
     Array.from(el.querySelectorAll('dt')).map((dt) => dt.textContent?.trim() ?? ''),
     Array.from(el.querySelectorAll('dd'))
-      .filter((dd) => dd.textContent?.trim() !== 'Change')
+      .filter((dd) => !isChangeLink(dd))
       .map((dd) => dd.textContent?.trim() ?? ''),
   ]);
 };

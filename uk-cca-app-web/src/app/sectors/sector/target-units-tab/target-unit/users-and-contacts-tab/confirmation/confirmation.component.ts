@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -16,7 +16,6 @@ import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
     <a class="govuk-link" routerLink="/dashboard"> Go to my dashboard </a>
   </div>`,
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddOperatorConfirmationComponent {
   private readonly store = inject(ActiveTargetUnitStore);

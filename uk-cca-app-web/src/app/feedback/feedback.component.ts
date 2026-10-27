@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
@@ -35,7 +35,6 @@ type RateWithoutNotApplicable = Exclude<Rate, 'NOT_APPLICABLE_NOT_USED_YET'>;
     RadioOptionComponent,
     TextareaComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeedbackComponent implements OnInit {
   private readonly fb = inject(UntypedFormBuilder);

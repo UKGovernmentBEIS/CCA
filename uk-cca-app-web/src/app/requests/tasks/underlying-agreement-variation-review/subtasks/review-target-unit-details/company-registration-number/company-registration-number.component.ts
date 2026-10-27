@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -27,7 +27,6 @@ import { applySaveActionSideEffects, deleteDecision } from '../../../utils';
   selector: 'cca-company-registration-number',
   template: `<cca-common-company-registration-number (submitted)="onSubmit($event)" />`,
   imports: [CommonCompanyRegistrationNumberComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompanyRegistrationNumberComponent {
   private readonly store = inject(RequestTaskStore);
@@ -85,17 +84,13 @@ export class CompanyRegistrationNumberComponent {
     this.tasksApiService
       .saveRequestTaskAction(dto)
       .subscribe((updatedRequestTaskPayload: UnderlyingAgreementVariationReviewRequestTaskPayload) => {
-        let path = '';
-
-        if (areIdentical) {
-          path = '../check-your-answers';
-        } else {
-          path = isTargetUnitDetailsWizardCompleted(
-            updatedRequestTaskPayload.underlyingAgreement?.underlyingAgreementTargetUnitDetails,
-          )
+        const path = areIdentical
+          ? '../check-your-answers'
+          : isTargetUnitDetailsWizardCompleted(
+                updatedRequestTaskPayload.underlyingAgreement?.underlyingAgreementTargetUnitDetails,
+              )
             ? '../decision'
             : `../${ReviewTargetUnitDetailsWizardStep.TARGET_UNIT_DETAILS}`;
-        }
 
         this.router.navigate([path], { relativeTo: this.route });
       });

@@ -1,5 +1,5 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -19,7 +19,11 @@ import {
 import { PaginationComponent } from '@shared/components';
 import { StatusPipe } from '@shared/pipes';
 
-import { CertificationPeriodViewInfoService, FacilityInfoViewService, type FacilitySearchResults } from 'cca-api';
+import {
+  CertificationPeriodViewInfoService,
+  FacilitiesSearchInfoViewService,
+  type FacilitySearchResults,
+} from 'cca-api';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 50;
@@ -27,6 +31,7 @@ const DEFAULT_PAGE_SIZE = 50;
 @Component({
   selector: 'cca-facilities-list',
   templateUrl: './facilities-list.component.html',
+  providers: [DatePipe],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -40,14 +45,12 @@ const DEFAULT_PAGE_SIZE = 50;
     DatePipe,
     TitleCasePipe,
   ],
-  providers: [DatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilitiesListComponent {
   private readonly fb = inject(FormBuilder);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly facilityInfoViewService = inject(FacilityInfoViewService);
+  private readonly facilitiesSearchInfoViewService = inject(FacilitiesSearchInfoViewService);
   private readonly certificationPeriodViewInfoService = inject(CertificationPeriodViewInfoService);
   private readonly authStore = inject(AuthStore);
   private readonly datePipe = inject(DatePipe);
@@ -74,7 +77,7 @@ export class FacilitiesListComponent {
           )}`
         : '';
 
-    const fields = [
+    const fields: GovukTableColumn[] = [
       { field: 'facilityBusinessId', header: 'ID' },
       { field: 'siteName', header: 'Site name', widthClass: 'govuk-!-width-one-third' },
       { field: 'status', header: 'Status' },
@@ -88,7 +91,8 @@ export class FacilitiesListComponent {
       { field: 'schemeExitDate', header: 'Scheme exit date' },
       {
         field: 'certificationStatus',
-        header: `Certified status${range ? ` ${range}` : ''}`,
+        header: 'Certified status',
+        headerHint: range,
       },
     );
 
@@ -127,7 +131,7 @@ export class FacilitiesListComponent {
       switchMap(({ page, pageSize, term }) => {
         this.form.get('term')?.setValue(term, { emitEvent: false });
 
-        return this.facilityInfoViewService.searchFacilities(this.targetUnitId, page - 1, pageSize, term);
+        return this.facilitiesSearchInfoViewService.searchFacilities(this.targetUnitId, page - 1, pageSize, term);
       }),
     ),
     { initialValue: { facilities: [], total: 0 } as FacilitySearchResults },

@@ -43,7 +43,7 @@ describe('BuyOutSurplusBatchRunCompletedComponent', () => {
           'Total refund transactions',
           'Batch run summary report',
         ],
-        ['Completed', '1', '1', '0', 'BOS-TP6003 Buy-out and surplus summary report.csv'],
+        ['Completed', '1', '1', '0', 'BOS-TP6003 Buy-out and surplus summary report.csv (opens in a new tab)'],
       ],
     ]);
   });

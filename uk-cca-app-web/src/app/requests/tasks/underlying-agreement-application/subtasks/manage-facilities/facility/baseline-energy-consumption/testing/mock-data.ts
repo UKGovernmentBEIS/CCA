@@ -1,3 +1,5 @@
+import { ActivatedRouteSnapshot } from '@angular/router';
+
 import { FacilityBaselineEnergyConsumption, ProductVariableEnergyConsumptionData } from 'cca-api';
 
 export const mockFacilityId = 'ADS_1-F00001';
@@ -89,7 +91,7 @@ export const mockRequestTaskPayloadWithProducts = {
 export const mockActivatedRoute = {
   snapshot: {
     params: { facilityId: mockFacilityId },
-    pathFromRoot: [],
+    pathFromRoot: [] as ActivatedRouteSnapshot[],
   },
 };
 
@@ -103,7 +105,7 @@ export const mockActivatedRouteWithProductParams = {
         return null;
       }),
     },
-    pathFromRoot: [],
+    pathFromRoot: [] as ActivatedRouteSnapshot[],
   },
 };
 

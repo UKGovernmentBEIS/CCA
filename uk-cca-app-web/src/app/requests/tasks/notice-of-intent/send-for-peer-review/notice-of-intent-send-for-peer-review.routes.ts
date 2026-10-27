@@ -10,22 +10,22 @@ export const NOTICE_OF_INTENT_SEND_FOR_PEER_REVIEW_ROUTES: Routes = [
     },
     children: [
       {
-        path: '',
         title: 'Send for peer review',
-        data: { backlink: '../../', breadcrumb: false },
-        canActivate: [isEditableGuard],
+        path: '',
         loadComponent: () => import('./send-for-peer-review.component'),
+        canActivate: [isEditableGuard],
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        path: 'confirmation/:assigneeId',
         title: 'Peer review request sent',
+        path: 'confirmation/:assigneeId',
+        loadComponent: () => import('@requests/common').then((c) => c.PeerReviewConfirmationComponent),
         data: {
           backlink: false,
           breadcrumb: false,
           confirmationPrefix: 'Notice of Intent sent to',
           confirmationSuffix: ' for peer review.',
         },
-        loadComponent: () => import('@requests/common').then((c) => c.PeerReviewConfirmationComponent),
       },
     ],
   },

@@ -37,7 +37,7 @@ describe('EnforcementResponseNoticeSentComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Type of enforcement response notice', 'Upload file', 'Your comments'],
-        ['Penalty notice', 'penalty_notice.pdf', 'A Martini. Shaken, Not Stirred.'],
+        ['Penalty notice', 'penalty_notice.pdf (opens in a new tab)', 'A Martini. Shaken, Not Stirred.'],
       ],
       [
         ['Users notified'],

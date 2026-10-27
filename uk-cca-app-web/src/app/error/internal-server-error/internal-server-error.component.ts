@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 
@@ -15,6 +15,5 @@ import { PageHeadingComponent } from '@netz/common/components';
     </p>
   `,
   imports: [PageHeadingComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InternalServerErrorComponent {}

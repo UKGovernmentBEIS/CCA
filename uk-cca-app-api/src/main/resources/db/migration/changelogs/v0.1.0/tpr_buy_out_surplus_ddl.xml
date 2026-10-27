@@ -7,14 +7,14 @@
 
     <changeSet id="0_1_0_TPR_BUY_OUY_SURPLUS_EXCLUSION_SEQUENCE" author="vourdoukasd@unisystems.gr">
         <createSequence
-                sequenceName="tpr_buy_out_surplus_exclusion_seq"
-                minValue="0"
-                maxValue="999999999999999999"
-                incrementBy="1"
-                startValue="1"
-                cycle="false"/>
+            sequenceName="tpr_buy_out_surplus_exclusion_seq"
+            minValue="0"
+            maxValue="999999999999999999"
+            incrementBy="1"
+            startValue="1"
+            cycle="false" />
         <rollback>
-            <dropSequence sequenceName="tpr_buy_out_surplus_exclusion_seq"/>
+            <dropSequence sequenceName="tpr_buy_out_surplus_exclusion_seq" />
         </rollback>
     </changeSet>
 
@@ -22,25 +22,30 @@
         <comment>Buy-out surplus exclusion accounts Table. All end dates (deadlines) are inclusive</comment>
         <createTable tableName="tpr_buy_out_surplus_exclusion" remarks="Represents the buy out surplus exclusion accounts">
         <column name="id" type="bigint" remarks="Primary key">
-            <constraints primaryKey="true" primaryKeyName="tpr_buy_out_surplus_exclusion_pk" nullable="false"/>
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_exclusion_pk"
+                    nullable="false" />
         </column>
         <column name="account_id" type="bigint" remarks="Represents the account id">
-            <constraints unique="true" uniqueConstraintName="tpr_buy_out_surplus_exclusion_accountId_uq" nullable="false"/>
+                <constraints unique="true"
+                    uniqueConstraintName="tpr_buy_out_surplus_exclusion_accountId_uq"
+                    nullable="false" />
         </column>
     </createTable>
         <rollback>
-            <dropTable tableName="tpr_buy_out_surplus_exclusion" cascadeConstraints="true"/>
+            <dropTable tableName="tpr_buy_out_surplus_exclusion"
+                cascadeConstraints="true" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_TPR_BUY_OUT_SURPLUS_sequence" author="P70383">
         <createSequence
-                sequenceName="tpr_buy_out_surplus_seq"
-                minValue="0"
-                maxValue="999999999999999999"
-                incrementBy="1"
-                startValue="1"
-                cycle="false"/>
+            sequenceName="tpr_buy_out_surplus_seq"
+            minValue="0"
+            maxValue="999999999999999999"
+            incrementBy="1"
+            startValue="1"
+            cycle="false" />
         <rollback>
             <sql>
                 DROP SEQUENCE IF EXISTS tpr_buy_out_surplus_seq;
@@ -53,20 +58,21 @@
         <createTable tableName="tpr_buy_out_surplus"
                      remarks="Represents the buy out surplus for performance data results">
             <column name="id" type="bigint" remarks="Primary key">
-                <constraints primaryKey="true" primaryKeyName="tpr_buy_out_surplus_pk"
-                             nullable="false"/>
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_pk"
+                    nullable="false" />
             </column>
             <column name="performance_data_id" type="bigint" remarks="The performance data id value">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false" unique="true" />
             </column>
             <column name="transaction_id" type="varchar(20)" remarks="The transaction ID">
-                <constraints nullable="true" unique="true"/>
+                <constraints nullable="true" unique="true" />
             </column>
             <column name="buy_out_fee" type="numeric" remarks="The current buy out fee value">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="payment_status" type="varchar(20)" remarks="The payment status">
-                <constraints nullable="true"/>
+                <constraints nullable="true" />
             </column>
             <column name="data" type="jsonb" remarks="The metrics as calculated during the buy-out and surplus batch run">
                 <constraints nullable="false" />
@@ -89,13 +95,15 @@
         <comment>Create buy out transaction identifier table</comment>
         <createTable tableName="tpr_buy_out_transaction_identifier" remarks="Represents the latest transaction identifier value">
             <column name="id" type="integer" remarks="Primary key">
-                <constraints primaryKey="true" primaryKeyName="tpr_buy_out_transaction_identifier_pk" nullable="false"/>
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_transaction_identifier_pk"
+                    nullable="false" />
             </column>
             <column name="target_period_type" type="varchar(20)" remarks="The target period type">
-                <constraints unique="true" nullable="false"/>
+                <constraints unique="true" nullable="false" />
             </column>
             <column name="transaction_id" type="bigint" remarks="The sequential number">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
         </createTable>
         <rollback>
@@ -107,64 +115,69 @@
 
     <changeSet id="0_1_0_TPR_SURPLUS_sequence" author="vourdoukasd">
         <createSequence sequenceName="tpr_surplus_seq"
-                        incrementBy="1"
-                        startValue="1"
-                        minValue="0"
-                        cycle="false"
-                        maxValue="999999999999999999" />
+            incrementBy="1"
+            startValue="1"
+            minValue="0"
+            cycle="false"
+            maxValue="999999999999999999" />
         <rollback>
-            <dropSequence sequenceName="tpr_surplus_seq"/>
+            <dropSequence sequenceName="tpr_surplus_seq" />
         </rollback>
     </changeSet>
     
     <changeSet id="0_1_0_TPR_SURPLUS_CREATE_TABLE" author="vourdoukasd">
         <createTable tableName="tpr_surplus" remarks="Represents the surplus table">
             <column name="id" type="bigint" remarks="Primary key" >
-                <constraints primaryKey="true" primaryKeyName="tpr_surplus_pk" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="tpr_surplus_pk"
+                    nullable="false" />
             </column>
             <column name="account_id" type="bigint" remarks="Represents the account id">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="target_period_id" type="bigint" remarks="Represents the target period id">
-                <constraints foreignKeyName="target_period_id_fk" references="tpr_target_period(id)" nullable="false"/>
+                <constraints foreignKeyName="target_period_id_fk"
+                    references="tpr_target_period(id)" nullable="false" />
             </column>
             <column name="surplus_gained" type="numeric" remarks="Represents the surplus gained" >
                 <constraints nullable="false" />
             </column>
         </createTable>
         <addUniqueConstraint tableName="tpr_surplus"
-                             columnNames="account_id, target_period_id"
-                             constraintName="tpr_surplus_account_id_target_period_id_uq"
+            columnNames="account_id, target_period_id"
+            constraintName="tpr_surplus_account_id_target_period_id_uq"
         />
         <rollback>
-            <dropTable tableName="tpr_surplus" cascadeConstraints="true"/>
+            <dropTable tableName="tpr_surplus" cascadeConstraints="true" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_TPR_SURPLUS_HISTORY_sequence" author="vourdoukasd">
         <createSequence sequenceName="tpr_surplus_history_seq"
-                        incrementBy="1"
-                        startValue="1"
-                        minValue="0"
-                        cycle="false"
-                        maxValue="999999999999999999" />
+            incrementBy="1"
+            startValue="1"
+            minValue="0"
+            cycle="false"
+            maxValue="999999999999999999" />
         <rollback>
-            <dropSequence sequenceName="tpr_surplus_history_seq"/>
+            <dropSequence sequenceName="tpr_surplus_history_seq" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_TPR_SURPLUS_HISTORY_CREATE_TABLE" author="vourdoukasd">
         <createTable tableName="tpr_surplus_history"  remarks="Represents the surplus history table">
             <column name="id" type="bigint" remarks="Primary key" >
-                <constraints primaryKey="true" primaryKeyName="tpr_surplus_history_pk" nullable="false"/>
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_surplus_history_pk" nullable="false" />
             </column>
             <column name="surplus_id" type="bigint" remarks="Represents the surplus id">
-                <constraints foreignKeyName="surplus_id_fk" references="tpr_surplus(id)" nullable="false"/>
+                <constraints foreignKeyName="surplus_id_fk"
+                    references="tpr_surplus(id)" nullable="false" />
             </column>
             <column name="new_surplus_gained" type="numeric" remarks="Represents the new surplus gained" >
                 <constraints nullable="false" />
             </column>
-            <column name="comments" type="TEXT" remarks="Represents the comments of the user"/>
+            <column name="comments" type="TEXT"
+                remarks="Represents the comments of the user" />
             <column name="submitter_id" type="varchar(255)" remarks="Represents the submitter id">
                 <constraints nullable="true" />
             </column>
@@ -176,32 +189,34 @@
             </column>
         </createTable>
         <rollback>
-            <dropTable tableName="tpr_surplus_history" cascadeConstraints="true"/>
+            <dropTable tableName="tpr_surplus_history" cascadeConstraints="true" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_TPR_SURPLUS_HISTORY_update_submitter_to_required" author="P70383">
-        <addNotNullConstraint tableName="tpr_surplus_history" columnName="submitter"/>
+        <addNotNullConstraint tableName="tpr_surplus_history"
+            columnName="submitter" />
         <rollback>
-            <dropNotNullConstraint tableName="tpr_surplus_history" columnName="submitter"/>
+            <dropNotNullConstraint tableName="tpr_surplus_history"
+                columnName="submitter" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_tpr_buy_out_surplus_DROP_TABLE" author="P70383">
         <comment>Drop buy out surplus table</comment>
-        <dropTable tableName="tpr_buy_out_surplus" cascadeConstraints="true"/>
-        <dropSequence sequenceName="tpr_buy_out_surplus_seq"/>
+        <dropTable tableName="tpr_buy_out_surplus" cascadeConstraints="true" />
+        <dropSequence sequenceName="tpr_buy_out_surplus_seq" />
     </changeSet>
 
     <changeSet id="0_1_0_tpr_buy_out_surplus_transaction_sequence" author="P70383">
         <createSequence sequenceName="tpr_buy_out_surplus_transaction_seq"
-                        incrementBy="1"
-                        startValue="1"
-                        minValue="0"
-                        cycle="false"
-                        maxValue="999999999999999999" />
+            incrementBy="1"
+            startValue="1"
+            minValue="0"
+            cycle="false"
+            maxValue="999999999999999999" />
         <rollback>
-            <dropSequence sequenceName="tpr_buy_out_surplus_transaction_seq"/>
+            <dropSequence sequenceName="tpr_buy_out_surplus_transaction_seq" />
         </rollback>
     </changeSet>
 
@@ -209,19 +224,21 @@
         <comment>Create buy out surplus transaction table</comment>
         <createTable tableName="tpr_buy_out_surplus_transaction"  remarks="Represents the buy out surplus transaction table">
             <column name="id" type="bigint" remarks="Primary key" >
-                <constraints primaryKey="true" primaryKeyName="tpr_buy_out_surplus_transaction_pk" nullable="false"/>
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_transaction_pk"
+                    nullable="false" />
             </column>
             <column name="performance_data_id" type="bigint" remarks="The performance data id value">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false" unique="true" />
             </column>
             <column name="transaction_code" type="varchar(20)" remarks="The transaction code">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false" unique="true" />
             </column>
             <column name="buy_out_fee" type="numeric" remarks="The current buy out fee value">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="payment_status" type="varchar(20)" remarks="The payment status">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="data" type="jsonb" remarks="The metrics as calculated during the buy-out and surplus batch run">
                 <constraints nullable="false" />
@@ -234,28 +251,31 @@
             </column>
         </createTable>
         <rollback>
-            <dropTable tableName="tpr_buy_out_surplus_transaction" cascadeConstraints="true"/>
+            <dropTable tableName="tpr_buy_out_surplus_transaction"
+                cascadeConstraints="true" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_TPR_BUY_OUT_TRANSACTION_IDENTIFIER_RENAME_TABLE" author="P70383">
         <comment>Rename to buy out surplus transaction identifier table</comment>
-        <renameTable newTableName="tpr_buy_out_surplus_transaction_identifier" oldTableName="tpr_buy_out_transaction_identifier" />
+        <renameTable newTableName="tpr_buy_out_surplus_transaction_identifier"
+            oldTableName="tpr_buy_out_transaction_identifier" />
         <rollback>
-            <renameTable newTableName="tpr_buy_out_transaction_identifier" oldTableName="tpr_buy_out_surplus_transaction_identifier" />
+            <renameTable newTableName="tpr_buy_out_transaction_identifier"
+                oldTableName="tpr_buy_out_surplus_transaction_identifier" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_tpr_buy_out_surplus_processed_data_SEQUENCE" author="P70383">
         <createSequence
-                sequenceName="tpr_buy_out_surplus_processed_data_seq"
-                minValue="0"
-                maxValue="999999999999999999"
-                incrementBy="1"
-                startValue="1"
-                cycle="false"/>
+            sequenceName="tpr_buy_out_surplus_processed_data_seq"
+            minValue="0"
+            maxValue="999999999999999999"
+            incrementBy="1"
+            startValue="1"
+            cycle="false" />
         <rollback>
-            <dropSequence sequenceName="tpr_buy_out_surplus_processed_data_seq"/>
+            <dropSequence sequenceName="tpr_buy_out_surplus_processed_data_seq" />
         </rollback>
     </changeSet>
 
@@ -263,29 +283,34 @@
         <comment>Create buy out surplus processed data table</comment>
         <createTable tableName="tpr_buy_out_surplus_processed_data" remarks="Represents the buy out surplus processed data from batch run">
             <column name="id" type="bigint" remarks="Primary key">
-                <constraints primaryKey="true" primaryKeyName="tpr_buy_out_surplus_processed_data_pk" nullable="false"/>
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_processed_data_pk"
+                    nullable="false" />
             </column>
             <column name="performance_data_id" type="bigint" remarks="The performance data id value">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false" unique="true" />
             </column>
             <column name="creation_date" type="timestamp" remarks="The date creation">
                 <constraints nullable="false" />
             </column>
         </createTable>
         <rollback>
-            <dropTable tableName="tpr_buy_out_surplus_processed_data" cascadeConstraints="true"/>
+            <dropTable tableName="tpr_buy_out_surplus_processed_data"
+                cascadeConstraints="true" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_tpr_buy_out_surplus_transaction_history_sequence" author="P70383">
-        <createSequence sequenceName="tpr_buy_out_surplus_transaction_history_seq"
-                        incrementBy="1"
-                        startValue="1"
-                        minValue="0"
-                        cycle="false"
-                        maxValue="999999999999999999" />
+        <createSequence
+            sequenceName="tpr_buy_out_surplus_transaction_history_seq"
+            incrementBy="1"
+            startValue="1"
+            minValue="0"
+            cycle="false"
+            maxValue="999999999999999999" />
         <rollback>
-            <dropSequence sequenceName="tpr_buy_out_surplus_transaction_history_seq"/>
+            <dropSequence
+                sequenceName="tpr_buy_out_surplus_transaction_history_seq" />
         </rollback>
     </changeSet>
 
@@ -293,13 +318,17 @@
         <comment>Create buy out surplus transaction history table</comment>
         <createTable tableName="tpr_buy_out_surplus_transaction_history"  remarks="Represents the buy out surplus transaction history table">
             <column name="id" type="bigint" remarks="Primary key" >
-                <constraints primaryKey="true" primaryKeyName="tpr_buy_out_surplus_transaction_history_pk" nullable="false"/>
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_transaction_history_pk"
+                    nullable="false" />
             </column>
             <column name="buy_out_surplus_transaction_id" type="bigint" remarks="The buy out surplus transaction id">
-                <constraints foreignKeyName="buy_out_surplus_transaction_id_fk" references="tpr_buy_out_surplus_transaction(id)" nullable="false"/>
+                <constraints foreignKeyName="buy_out_surplus_transaction_id_fk"
+                    references="tpr_buy_out_surplus_transaction(id)"
+                    nullable="false" />
             </column>
             <column name="payload" type="jsonb" remarks="The historical data">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="submitter_id" type="varchar(255)" remarks="The submitter id">
                 <constraints nullable="true" />
@@ -317,16 +346,19 @@
                     GENERATED ALWAYS AS ((payload ->> 'type')::text) STORED;
         </sql>
         <rollback>
-            <dropTable tableName="tpr_buy_out_surplus_transaction_history" cascadeConstraints="true"/>
+            <dropTable tableName="tpr_buy_out_surplus_transaction_history"
+                cascadeConstraints="true" />
         </rollback>
     </changeSet>
 
     <changeSet id="0_1_0_tpr_buy_out_surplus_transaction_add_column_payment_date" author="vourdoukasd@unisystems.gr">
         <addColumn tableName="tpr_buy_out_surplus_transaction">
-            <column name="payment_date" type="date" remarks="The payment date for buy out transaction"/>
+            <column name="payment_date" type="date"
+                remarks="The payment date for buy out transaction" />
         </addColumn>
         <rollback>
-            <dropColumn tableName="tpr_buy_out_surplus_transaction" columnName="payment_date" />
+            <dropColumn tableName="tpr_buy_out_surplus_transaction"
+                columnName="payment_date" />
         </rollback>
     </changeSet>
     
@@ -338,28 +370,379 @@
         </addColumn>
         <rollback>
             <dropColumn tableName="tpr_buy_out_surplus_processed_data">
-                <column name="performance_data_resource_type"/>
+                <column name="performance_data_resource_type" />
             </dropColumn>
         </rollback>
     </changeSet>
     
     <changeSet id="0_1_0_UPDATE_tpr_buy_out_surplus_processed_data_change_unique_constraint" author="apostolouk@unisystems.gr">
-	    <dropUniqueConstraint
-	            tableName="tpr_buy_out_surplus_processed_data"
-	            constraintName="tpr_buy_out_surplus_processed_data_performance_data_id_key"/>
-	    <addUniqueConstraint
-	            tableName="tpr_buy_out_surplus_processed_data"
-	            columnNames="performance_data_id, performance_data_resource_type"
-	            constraintName="tpr_buy_out_surplus_processed_data_perf_data_id_resource_type_uk"/>
+        <dropUniqueConstraint
+            tableName="tpr_buy_out_surplus_processed_data"
+            constraintName="tpr_buy_out_surplus_processed_data_performance_data_id_key" />
+        <addUniqueConstraint
+            tableName="tpr_buy_out_surplus_processed_data"
+            columnNames="performance_data_id, performance_data_resource_type"
+            constraintName="tpr_buy_out_surplus_processed_data_perf_data_id_resource_type_uk" />
 	    <rollback>
-	        <dropUniqueConstraint
-	                tableName="tpr_buy_out_surplus_processed_data"
-	                constraintName="tpr_buy_out_surplus_processed_data_perf_data_id_resource_type_uk"/>
-	        <addUniqueConstraint
-	                tableName="tpr_buy_out_surplus_processed_data"
-	                columnNames="performance_data_id"
-	                constraintName="tpr_buy_out_surplus_processed_data_performance_data_id_key"/>
+            <dropUniqueConstraint
+                tableName="tpr_buy_out_surplus_processed_data"
+                constraintName="tpr_buy_out_surplus_processed_data_perf_data_id_resource_type_uk" />
+            <addUniqueConstraint
+                tableName="tpr_buy_out_surplus_processed_data"
+                columnNames="performance_data_id"
+                constraintName="tpr_buy_out_surplus_processed_data_performance_data_id_key" />
 	    </rollback>
 	</changeSet>
+
+    <changeSet id="0_1_0_create_tpr_buy_out_surplus_calculation_sequence" author="P70311">
+        <createSequence sequenceName="tpr_buy_out_surplus_calculation_seq"
+            minValue="0" maxValue="999999999999999999"
+            incrementBy="1" startValue="1" cycle="false" />
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS tpr_buy_out_surplus_calculation_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_table_tpr_buy_out_surplus_calculation" author="P70311">
+        <createTable tableName="tpr_buy_out_surplus_calculation" remarks="Represents the buy out surplus calculation data">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_calculation_pk"
+                    nullable="false" />
+            </column>
+            <column name="account_id" type="bigint" remarks="The account identifier">
+                <constraints nullable="false" />
+            </column>
+            <column name="target_period_type" type="varchar(20)" remarks="The target period type">
+                <constraints nullable="false" />
+            </column>
+            <column name="facility_business_id" type="varchar(20)" remarks="The facility business id value">
+                <constraints nullable="false" />
+            </column>
+            <column name="performance_data_id" type="bigint" remarks="The performance data id value">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="creation_date" type="timestamp" remarks="The creation date">
+                <constraints nullable="false" />
+            </column>
+            <column name="data" type="jsonb" remarks="The metrics as calculated during the buy-out and surplus batch run">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS tpr_buy_out_surplus_calculation CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_tpr_buy_out_surplus_transaction_RENAME_TABLE" author="P70383">
+        <comment>Rename to tpr_buy_out_surplus_transaction_bak</comment>
+        <sql>
+            ALTER TABLE tpr_buy_out_surplus_transaction RENAME CONSTRAINT tpr_buy_out_surplus_transaction_pk TO tpr_buy_out_surplus_transaction_bak_pk;
+        </sql>
+        <renameTable newTableName="tpr_buy_out_surplus_transaction_bak"
+            oldTableName="tpr_buy_out_surplus_transaction" />
+    </changeSet>
+
+    <changeSet id="0_1_0_new_tpr_buy_out_surplus_transaction_CREATE_TABLE" author="P70383">
+        <comment>Create new buy out surplus transaction table</comment>
+        <createTable tableName="tpr_buy_out_surplus_transaction"  remarks="Represents the buy out surplus transaction table">
+            <column name="id" type="bigint" remarks="Primary key" >
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_transaction_pk"
+                    nullable="false" />
+            </column>
+            <column name="transaction_code" type="varchar(20)" remarks="The transaction code">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="account_id" type="bigint" remarks="The account id">
+                <constraints nullable="false" />
+            </column>
+            <column name="target_period_id" type="bigint" remarks="Foreign key referencing tpr_target_period">
+                <constraints foreignKeyName="target_period_id_fk"
+                    references="tpr_target_period(id)" nullable="false" />
+            </column>
+            <column name="charge_type" type="varchar(20)" remarks="The charge of the transaction">
+                <constraints nullable="false" />
+            </column>
+            <column name="invoiced_buy_out_fee" type="numeric" remarks="The buy out fee value">
+                <constraints nullable="false" />
+            </column>
+            <column name="invoiced_payment_deadline" type="date" remarks="The payment deadline date">
+                <constraints nullable="true" />
+            </column>
+            <column name="file_document_uuid" type="varchar(255)" remarks="The notice's file document uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="received_amount" type="numeric" remarks="The received amount value">
+                <constraints nullable="true" />
+            </column>
+            <column name="performance_data_resource_type" type="varchar(64)" remarks="Defines the resource of the transaction (ACCOUNT or FACILITY)">
+                <constraints nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp" remarks="The date creation of the transaction">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="tpr_buy_out_surplus_transaction"
+                cascadeConstraints="true" />
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_tpr_buy_out_surplus_transaction_detail_sequence" author="P70383">
+        <createSequence
+            sequenceName="tpr_buy_out_surplus_transaction_detail_seq"
+            incrementBy="1"
+            startValue="1"
+            minValue="0"
+            cycle="false"
+            maxValue="999999999999999999" />
+        <rollback>
+            <dropSequence
+                sequenceName="tpr_buy_out_surplus_transaction_detail_seq" />
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_tpr_buy_out_surplus_transaction_detail_CREATE_TABLE" author="P70383">
+        <comment>Create buy out surplus transaction detail table</comment>
+        <createTable tableName="tpr_buy_out_surplus_transaction_detail"  remarks="Represents the buy out surplus transaction detail table">
+            <column name="id" type="bigint" remarks="Primary key" >
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_transaction_detail_pk"
+                    nullable="false" />
+            </column>
+            <column name="buy_out_surplus_transaction_id" type="bigint" remarks="Foreign key referencing tpr_buy_out_surplus_transaction">
+                <constraints foreignKeyName="buy_out_surplus_transaction_fk"
+                    references="tpr_buy_out_surplus_transaction(id)"
+                    nullable="false" />
+            </column>
+            <column name="performance_data_id" type="bigint" remarks="The performance data id value">
+                <constraints unique="true"
+                    uniqueConstraintName="performance_data_id_uq"
+                    nullable="false" />
+            </column>
+            <column name="buy_out_fee" type="numeric" remarks="The current buy out fee value">
+                <constraints nullable="false" />
+            </column>
+            <column name="payment_status" type="varchar(20)" remarks="The payment status">
+                <constraints nullable="false" />
+            </column>
+            <column name="data" type="jsonb" remarks="The metrics as calculated during the buy-out and surplus batch run">
+                <constraints nullable="false" />
+            </column>
+            <column name="payment_date" type="date" remarks="The payment date for buy out transaction">
+                <constraints nullable="true" />
+            </column>
+            <column name="calculation_id" type="bigint" remarks="Foreign key referencing tpr_buy_out_surplus_calculation">
+                <constraints foreignKeyName="tpr_buy_out_surplus_calculation_fk"
+                    references="tpr_buy_out_surplus_calculation(id)"
+                    nullable="true" />
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="tpr_buy_out_surplus_transaction_detail"
+                cascadeConstraints="true" />
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_rename_buy_out_surplus_transaction_history" author="P70383">
+        <comment>Rename to tpr_buy_out_surplus_transaction_history_bak</comment>
+        <sql>
+            ALTER TABLE tpr_buy_out_surplus_transaction_history RENAME CONSTRAINT tpr_buy_out_surplus_transaction_history_pk TO tpr_buy_out_surplus_transaction_history_bak_pk;
+        </sql>
+        <renameTable newTableName="tpr_buy_out_surplus_transaction_history_bak"
+            oldTableName="tpr_buy_out_surplus_transaction_history" />
+    </changeSet>
+
+    <changeSet id="0_1_0_tpr_buy_out_surplus_transaction_detail_history_CREATE_TABLE" author="P70383">
+        <comment>Create tpr_buy_out_surplus_transaction_detail_history table</comment>
+        <createTable tableName="tpr_buy_out_surplus_transaction_detail_history"  remarks="Represents the buy out surplus transaction detail history table">
+            <column name="id" type="bigint" remarks="Primary key" >
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_transaction_detail_history_pk"
+                    nullable="false" />
+            </column>
+            <column name="buy_out_surplus_transaction_detail_id" type="bigint" remarks="The buy out surplus transaction detail id">
+                <constraints
+                    foreignKeyName="buy_out_surplus_transaction_detail_id_fk"
+                    references="tpr_buy_out_surplus_transaction_detail(id)"
+                    nullable="false" />
+            </column>
+            <column name="payload" type="jsonb" remarks="The historical data">
+                <constraints nullable="false" />
+            </column>
+            <column name="submitter_id" type="varchar(255)" remarks="The submitter id">
+                <constraints nullable="true" />
+            </column>
+            <column name="submitter" type="varchar(255)" remarks="The submitter name">
+                <constraints nullable="false" />
+            </column>
+            <column name="submission_date" type="timestamp" remarks="The submission date of data entry">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <sql>
+            ALTER TABLE tpr_buy_out_surplus_transaction_detail_history
+                ADD COLUMN change_type varchar(64)
+                    GENERATED ALWAYS AS ((payload ->> 'type')::text) STORED;
+        </sql>
+        <renameSequence
+            newSequenceName="tpr_buy_out_surplus_transaction_detail_history_seq"
+            oldSequenceName="tpr_buy_out_surplus_transaction_history_seq" />
+        <rollback>
+            <dropTable
+                tableName="tpr_buy_out_surplus_transaction_detail_history"
+                cascadeConstraints="true" />
+            <renameSequence
+                newSequenceName="tpr_buy_out_surplus_transaction_history_seq"
+                oldSequenceName="tpr_buy_out_surplus_transaction_detail_history_seq" />
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_refactor_tpr_surplus_TABLE" author="P70383">
+        <dropUniqueConstraint tableName="tpr_surplus"
+            constraintName="tpr_surplus_account_id_target_period_id_uq" />
+        <dropColumn tableName="tpr_surplus" columnName="target_period_id" />
+        <renameColumn tableName="tpr_surplus" oldColumnName="account_id"
+            newColumnName="resource_id" />
+        <addColumn tableName="tpr_surplus">
+            <column name="performance_data_resource_type" type="varchar(64)" value="ACCOUNT" remarks="Defines the resource of the performance data (ACCOUNT or FACILITY)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <addColumn tableName="tpr_surplus">
+            <column name="scheme_version" type="varchar(8)" value="CCA2" remarks="The CCA scheme version">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <addUniqueConstraint tableName="tpr_surplus"
+            columnNames="resource_id, scheme_version"
+            constraintName="tpr_surplus_uq"
+        />
+    </changeSet>
+
+    <changeSet id="0_1_0_tpr_buy_out_surplus_transaction_detail_refactor_unique_keys" author="P70383">
+        <dropUniqueConstraint tableName="tpr_buy_out_surplus_transaction_detail"
+            constraintName="performance_data_id_uq" />
+        <addUniqueConstraint tableName="tpr_buy_out_surplus_transaction_detail"
+            columnNames="buy_out_surplus_transaction_id, performance_data_id"
+            constraintName="tpr_buy_out_surplus_transaction_detail_uq" />
+        <rollback>
+            <dropUniqueConstraint
+                tableName="tpr_buy_out_surplus_transaction_detail"
+                constraintName="tpr_buy_out_surplus_transaction_detail_uq" />
+            <addUniqueConstraint
+                tableName="tpr_buy_out_surplus_transaction_detail"
+                columnNames="performance_data_id"
+                constraintName="performance_data_id_uq" />
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_tpr_buy_out_surplus_transaction_history_sequence" author="P70311">
+        <createSequence
+            sequenceName="tpr_buy_out_surplus_transaction_history_seq"
+            minValue="0" maxValue="999999999999999999"
+            incrementBy="1" startValue="1" cycle="false" />
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS tpr_buy_out_surplus_transaction_history_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_tpr_buy_out_surplus_transaction_history_table" author="P70311">
+        <createTable tableName="tpr_buy_out_surplus_transaction_history">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true"
+                    primaryKeyName="tpr_buy_out_surplus_transaction_history_pk"
+                    nullable="false" />
+            </column>
+            <column name="buy_out_surplus_transaction_id" type="bigint" remarks="Foreign key referencing tpr_buy_out_surplus_transaction">
+                <constraints foreignKeyName="buy_out_surplus_transaction_fk"
+                    references="tpr_buy_out_surplus_transaction(id)"
+                    nullable="false" />
+            </column>
+            <column name="payload" type="jsonb" remarks="The historical data">
+                <constraints nullable="false" />
+            </column>
+            <column name="submitter_id" type="varchar(255)" remarks="The submitter uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="submitter" type="varchar(255)" remarks="The full name of the submitter">
+                <constraints nullable="false" />
+            </column>
+            <column name="submission_date" type="timestamp" remarks="The submission date of data entry">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <sql>
+            ALTER TABLE tpr_buy_out_surplus_transaction_history
+                ADD COLUMN change_type varchar(64)
+                    GENERATED ALWAYS AS ((payload ->> 'type')::text) STORED;
+        </sql>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS tpr_buy_out_surplus_transaction_history CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_drop_unique_performance_data_id_on_tpr_buy_out_surplus_calculation" author="loukerip">
+        <dropUniqueConstraint
+            tableName="tpr_buy_out_surplus_calculation"
+            constraintName="tpr_buy_out_surplus_calculation_performance_data_id_key" />
+    </changeSet>
+
+    <changeSet id="0_1_0_update_tpr_buy_out_surplus_calculation" author="loukerip">
+        <dropColumn tableName="tpr_buy_out_surplus_calculation"
+            columnName="target_period_type" />
+        <dropColumn tableName="tpr_buy_out_surplus_calculation"
+            columnName="facility_business_id" />
+
+        <addColumn tableName="tpr_buy_out_surplus_calculation">
+            <column name="target_period_id" type="bigint" remarks="Represents the target period id">
+                <constraints nullable="false"
+                    foreignKeyName="target_period_id_fk"
+                    references="tpr_target_period(id)" />
+            </column>
+            <column name="facility_id" type="bigint" remarks="The id of the facility">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+
+        <rollback>
+            <dropColumn tableName="tpr_buy_out_surplus_calculation"
+                columnName="target_period_id" />
+            <dropColumn tableName="tpr_buy_out_surplus_calculation"
+                columnName="facility_id" />
+
+            <addColumn tableName="tpr_buy_out_surplus_calculation">
+                <column name="target_period_type" type="varchar(20)" remarks="The target period type">
+                    <constraints nullable="false" />
+                </column>
+                <column name="facility_business_id" type="varchar(20)" remarks="The facility business id value">
+                    <constraints nullable="false" />
+                </column>
+            </addColumn>
+        </rollback>
+
+    </changeSet>
+
+    <changeSet id="0_1_0_tpr_buy_out_surplus_calculation_add_account_target_period_idx" author="loukerip">
+        <createIndex indexName="tpr_buy_out_surplus_calc_acc_tp_idx" tableName="tpr_buy_out_surplus_calculation">
+            <column name="account_id" />
+            <column name="target_period_id" />
+        </createIndex>
+
+        <rollback>
+            <sql>
+                DROP INDEX IF EXISTS tpr_buy_out_surplus_calc_acc_tp_idx CASCADE
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

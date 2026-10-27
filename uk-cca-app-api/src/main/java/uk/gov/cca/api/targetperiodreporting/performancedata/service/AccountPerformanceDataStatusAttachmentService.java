@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.files.attachments.service.FileAttachmentTokenService;
+import uk.gov.netz.api.files.attachments.service.storage.FileAttachmentStorageService;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.token.FileToken;
 
@@ -17,7 +17,7 @@ import uk.gov.netz.api.token.FileToken;
 @RequiredArgsConstructor
 public class AccountPerformanceDataStatusAttachmentService {
 	private final AccountPerformanceDataStatusQueryService accountPerformanceDataStatusQueryService;
-	private final FileAttachmentTokenService fileAttachmentTokenService;
+	private final FileAttachmentStorageService fileAttachmentStorageService;
 
 	public FileToken generateGetAccountPerformanceDataReportAttachmentToken(final Long accountId, final TargetPeriodType targetPeriodType,
 			final UUID fileAttachmentUuid) {
@@ -29,6 +29,6 @@ public class AccountPerformanceDataStatusAttachmentService {
 			throw new BusinessException(RESOURCE_NOT_FOUND);
 		}
 
-		return fileAttachmentTokenService.generateGetFileAttachmentToken(fileAttachmentUuid.toString());
+		return fileAttachmentStorageService.generateGetFileAttachmentToken(fileAttachmentUuid.toString());
 	}
 }

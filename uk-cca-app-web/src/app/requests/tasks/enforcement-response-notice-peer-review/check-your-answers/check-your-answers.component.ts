@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -29,7 +29,6 @@ import { EnforcementResponseNoticePeerReviewStore } from '../+state';
     <netz-return-to-task-or-action-page />
   `,
   imports: [SummaryComponent, ButtonDirective, PageHeadingComponent, ReturnToTaskOrActionPageComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckYourAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

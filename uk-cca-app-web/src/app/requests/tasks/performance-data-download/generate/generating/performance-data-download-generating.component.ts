@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { NotificationBannerComponent } from '@netz/govuk-components';
@@ -17,6 +17,5 @@ import { NotificationBannerComponent } from '@netz/govuk-components';
     <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true">Return to: Dashboard</a>
   `,
   imports: [NotificationBannerComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataDownloadGeneratingComponent {}

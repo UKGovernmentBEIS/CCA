@@ -1,10 +1,10 @@
-import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Validates provided length to actual fileName length
  */
 export function fileNameLengthValidator(maxLength: number, message: string): ValidatorFn {
-  return (control: FormControl): ValidationErrors | null => {
+  return (control: AbstractControl): ValidationErrors | null => {
     const file = control.value;
 
     if (file instanceof File) {

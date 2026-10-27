@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -16,9 +16,8 @@ type TargetPeriod = NonNullable<TargetPeriodBuyOutDetailsDTO['businessId']>;
 @Component({
   selector: 'cca-change-cost',
   templateUrl: './change-cost.component.html',
-  imports: [ReactiveFormsModule, TextInputComponent, WizardStepComponent],
   providers: [ChangeCostFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, TextInputComponent, WizardStepComponent],
 })
 export class ChangeCostComponent {
   private readonly route = inject(ActivatedRoute);
@@ -34,8 +33,11 @@ export class ChangeCostComponent {
   protected readonly targetPeriod = computed(() => this.targetPeriodDetails().businessId as TargetPeriod);
 
   onSubmit(): void {
+    const buyOutCost = this.form.controls.buyOutCost.value;
+    if (!this.form.valid || buyOutCost == null) return;
+
     this.buyOutAndSurplusCostInfoService
-      .updateBuyOutCost(this.targetPeriod(), { buyOutCost: this.form.controls.buyOutCost.value! })
+      .updateBuyOutCost(this.targetPeriod(), { buyOutCost })
       .pipe(
         catchError((error) => {
           logger.error('Error updating buy-out cost', error);

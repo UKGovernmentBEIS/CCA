@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -7,7 +7,7 @@ import { AuthStore } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { BackToTopComponent } from '@shared/components';
-import { KeycloakService } from '@shared/services';
+import { AuthService, KeycloakService } from '@shared/services';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService, UserStateDTO } from 'cca-api';
 
@@ -36,7 +36,7 @@ describe('LandingPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [LandingPageComponent, PageHeadingComponent, BackToTopComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: KeycloakService, useValue: mockKeycloakService },
         { provide: UsersService, useValue: mockUsersService },
@@ -64,6 +64,27 @@ describe('LandingPageComponent', () => {
 
     expect(organisationLink).toBeFalsy();
     expect(notLoggedInLandingPageLinks).toHaveLength(1);
+  });
+
+  it('should link to the operations manual and sector contact list pages', () => {
+    const operationsManualLink = getByText('CCA operations manual', fixture.nativeElement);
+    const sectorAssociationLink = getByText('sector association', fixture.nativeElement);
+
+    expect(operationsManualLink.getAttribute('href')).toEqual(
+      'https://www.gov.uk/government/publications/climate-change-agreements-operations-manual--2',
+    );
+    expect(sectorAssociationLink.getAttribute('href')).toEqual(
+      'https://www.gov.uk/government/publications/climate-change-agreement-cca-sector-contact-list',
+    );
+  });
+
+  it('should sign in when clicking the start button', () => {
+    const loginSpy = vi.spyOn(TestBed.inject(AuthService), 'login').mockResolvedValue();
+    const startButton = document.querySelector<HTMLButtonElement>('button.govuk-button--start');
+
+    startButton.click();
+
+    expect(loginSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should only display application button to operators', async () => {

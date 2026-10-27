@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
@@ -20,7 +20,6 @@ import { toSubmissionResultsSummaryData } from './pat-submission-results-summary
   selector: 'cca-pat-processed',
   templateUrl: './pat-upload-processed.component.html',
   imports: [NotificationBannerComponent, ButtonDirective, PendingButtonDirective, SummaryComponent, ErrorTypePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PatUploadProcessedComponent {
   private readonly router = inject(Router);

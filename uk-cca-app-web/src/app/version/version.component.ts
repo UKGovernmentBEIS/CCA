@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 
@@ -14,7 +14,6 @@ import { VERSION } from '../../environments/version';
     </p>
   `,
   imports: [PageHeadingComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VersionComponent {
   version = VERSION;

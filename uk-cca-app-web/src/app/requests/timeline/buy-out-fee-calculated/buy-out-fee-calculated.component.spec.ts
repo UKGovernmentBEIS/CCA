@@ -41,7 +41,7 @@ describe('BuyOutFeeCalculatedComponent', () => {
           'TP6-V1 (Buy-out required)',
           'Primary',
           'CCA060001',
-          'CCA060001 Primary buy-out MoA.pdf',
+          'CCA060001 Primary buy-out MoA.pdf (opens in a new tab)',
           '01 Jul 2025',
           'BOS-TP6003',
         ],

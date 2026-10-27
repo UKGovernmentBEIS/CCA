@@ -97,7 +97,7 @@
     <div
       widthClass="govuk-!-width-one-quarter"
       formControlName="throughput"
-      [suffix]="targetComposition?.throughputUnit"
+      [suffix]="$safeNavigationMigration(targetComposition?.throughputUnit)"
       [label]="'Enter the baseline throughput ' + (targetComposition?.throughputUnit ?? '')"
       hint="Not applicable for novem targets. Enter a number up to 7 decimals, without alpha or special characters"
       inputType="number"

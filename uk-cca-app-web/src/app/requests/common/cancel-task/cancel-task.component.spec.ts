@@ -59,7 +59,7 @@ describe('CancelTaskComponent', () => {
   });
 
   it('should cancel with NON_COMPLIANCE_CANCEL_APPLICATION', () => {
-    const cancelButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find(
+    const cancelButton = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
       (button: HTMLButtonElement) => button.textContent?.trim() === 'Yes, cancel this task',
     ) as HTMLButtonElement;
 

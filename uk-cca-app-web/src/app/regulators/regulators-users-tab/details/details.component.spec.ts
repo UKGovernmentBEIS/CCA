@@ -1,5 +1,6 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -31,7 +32,11 @@ describe('RegulatorDetailsComponent', () => {
 
   async function bootstrap(
     route: ActivatedRouteStub,
-    opts: { add: boolean; edit: boolean } = { add: false, edit: true },
+    opts: {
+      add: boolean;
+      edit: boolean;
+      regulatorRoles?: (typeof editorUserState)['regulatorRoles'];
+    } = { add: false, edit: true },
   ) {
     authoritiesService = {
       getRegulatorRoles: vi.fn().mockReturnValue(of(mockRegulatorBasePermissions)),
@@ -46,7 +51,8 @@ describe('RegulatorDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideZonelessChangeDetection(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         DetailsStore,
         { provide: Router, useValue: { navigate: vi.fn() } },
@@ -69,8 +75,16 @@ describe('RegulatorDetailsComponent', () => {
     authStore.setUserState(mockRegulatorUserState);
     detailsStore = TestBed.inject(DetailsStore);
 
-    if (opts.add) detailsStore.setState(addUserState);
-    else opts.edit ? detailsStore.setState(editorUserState) : detailsStore.setState(viewerUserState);
+    if (opts.add) {
+      detailsStore.setState(addUserState);
+    } else if (opts.edit) {
+      detailsStore.setState({
+        ...editorUserState,
+        ...(opts.regulatorRoles ? { regulatorRoles: opts.regulatorRoles } : {}),
+      });
+    } else {
+      detailsStore.setState(viewerUserState);
+    }
 
     fixture = TestBed.createComponent(DetailsComponent);
     fixture.detectChanges();
@@ -113,18 +127,78 @@ describe('RegulatorDetailsComponent', () => {
     expect(
       fixture.nativeElement.querySelector('cca-file-input')?.textContent.includes(editorUserState.user.signature.name),
     ).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('#regulator_administrator')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('#regulator_basic_user')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('input[value="regulator_administrator"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('input[value="regulator_basic_user"]')).toBeTruthy();
   });
 
   it('should show radios if editable is true', async () => {
     await bootstrap(routeEdit);
-    expect(fixture.nativeElement.querySelectorAll("input[type='radio']")).toHaveLength(12);
+    expect(fixture.nativeElement.querySelectorAll("input[type='radio']")).toHaveLength(14);
+  });
+
+  it('should group the base permission radios under one name', async () => {
+    await bootstrap(routeEdit);
+
+    const inputs = Array.from<HTMLInputElement>(fixture.nativeElement.querySelectorAll('input[name="basePermission"]'));
+
+    expect(inputs).toHaveLength(2);
+    expect(fixture.nativeElement.querySelector('fieldset#basePermission')).toBeTruthy();
+    inputs.forEach((input) => {
+      expect(fixture.nativeElement.querySelector(`label[for="${input.id}"]`)?.textContent.trim()).toBeTruthy();
+    });
+  });
+
+  it('should clear the selected role when the permissions service does not know it', async () => {
+    await bootstrap(routeEdit, { add: false, edit: true, regulatorRoles: [] });
+
+    const administratorUserInput = fixture.nativeElement.querySelector(
+      'input[value="regulator_administrator"]',
+    ) as HTMLInputElement;
+    administratorUserInput.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
+
+    expect(administratorUserInput.checked).toBe(false);
+  });
+
+  it('should re-apply the base permissions when the selected role is chosen again', async () => {
+    await bootstrap(routeEdit);
+
+    const administratorUserInput = fixture.nativeElement.querySelector(
+      'input[value="regulator_administrator"]',
+    ) as HTMLInputElement;
+    const associationExecuteInput = fixture.nativeElement.querySelector(
+      '#permissions\\.MANAGE_SECTOR_ASSOCIATIONS-optionEXECUTE',
+    ) as HTMLInputElement;
+    const associationNoneInput = fixture.nativeElement.querySelector(
+      '#permissions\\.MANAGE_SECTOR_ASSOCIATIONS-optionNONE',
+    ) as HTMLInputElement;
+
+    administratorUserInput.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
+
+    expect(administratorUserInput.checked).toBe(true);
+
+    // Editing a permission stops the role describing the form, so the role is no longer selected.
+    fixture.componentInstance['form'].get('permissions').patchValue({ MANAGE_SECTOR_ASSOCIATIONS: 'NONE' });
+    fixture.detectChanges();
+
+    expect(associationNoneInput.checked).toBe(true);
+    expect(associationExecuteInput.checked).toBe(false);
+    expect(administratorUserInput.checked).toBe(false);
+
+    // Choosing the same role again re-applies its defaults.
+    administratorUserInput.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
+
+    expect(associationExecuteInput.checked).toBe(true);
+    expect(associationNoneInput.checked).toBe(false);
   });
 
   it('change permissions on administrator click', async () => {
     await bootstrap(routeEdit);
-    click(fixture.nativeElement.querySelector('#regulator_administrator'));
+    (fixture.nativeElement.querySelector('input[value="regulator_administrator"]') as HTMLInputElement).dispatchEvent(
+      new Event('change', { bubbles: true }),
+    );
     fixture.detectChanges();
     expect(
       (
@@ -211,7 +285,9 @@ describe('RegulatorDetailsComponent', () => {
 
   it('change permissions on base user click', async () => {
     await bootstrap(routeEdit);
-    click(fixture.nativeElement.querySelector('#regulator_basic_user'));
+    (fixture.nativeElement.querySelector('input[value="regulator_basic_user"]') as HTMLInputElement).dispatchEvent(
+      new Event('change', { bubbles: true }),
+    );
     fixture.detectChanges();
     expect(
       (
@@ -328,8 +404,8 @@ describe('RegulatorDetailsComponent', () => {
     expect(
       fixture.nativeElement.querySelector('cca-file-input')?.textContent.includes(viewerUserState.user.signature.name),
     ).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('#regulator_administrator')).toBeFalsy();
-    expect(fixture.nativeElement.querySelector('#regulator_basic_user')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('input[value="regulator_administrator"]')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('input[value="regulator_basic_user"]')).toBeFalsy();
     expect(fixture.nativeElement.textContent).toContain('Permissions');
   });
 
@@ -362,8 +438,8 @@ describe('RegulatorDetailsComponent', () => {
       (fixture.nativeElement.querySelector('#user\\.mobileNumber') as HTMLInputElement | HTMLSelectElement | null)
         ?.value ?? '',
     ).toBe('');
-    expect(fixture.nativeElement.querySelector('#regulator_administrator')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('#regulator_basic_user')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('input[value="regulator_administrator"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('input[value="regulator_basic_user"]')).toBeTruthy();
   });
 
   it('should submit new regulator', async () => {
@@ -374,7 +450,9 @@ describe('RegulatorDetailsComponent', () => {
     type(fixture.nativeElement.querySelector('#user\\.jobTitle'), 'Job Title for George');
     type(fixture.nativeElement.querySelector('#user\\.email'), 'georgemitau@cca.uk');
     type(fixture.nativeElement.querySelector('#user\\.phoneNumber'), '123123123');
-    click(fixture.nativeElement.querySelector('#regulator_basic_user'));
+    (fixture.nativeElement.querySelector('input[value="regulator_basic_user"]') as HTMLInputElement).dispatchEvent(
+      new Event('change', { bubbles: true }),
+    );
     fixture.detectChanges();
     const signature = new File(['image bytes'], 'sample.bmp');
     const uploader = fixture.nativeElement.querySelector('input[type="file"]');
@@ -384,8 +462,8 @@ describe('RegulatorDetailsComponent', () => {
     });
     uploader.dispatchEvent(new Event('change', { bubbles: true }));
     fixture.detectChanges();
-    const submitBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
-      el.textContent.includes('Submit'),
+    const submitBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Submit'),
     ) as HTMLButtonElement;
     click(submitBtn);
     expect(spy).toHaveBeenCalled();
@@ -394,8 +472,8 @@ describe('RegulatorDetailsComponent', () => {
   it('should show first name error if empty was submitted', async () => {
     await bootstrap(routeEdit);
     clear(fixture.nativeElement.querySelector('#user\\.firstName'));
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
-      el.textContent.includes('Save'),
+    const saveBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
     fixture.detectChanges();
@@ -406,8 +484,8 @@ describe('RegulatorDetailsComponent', () => {
   it('should show last name error if empty was submitted', async () => {
     await bootstrap(routeEdit);
     clear(fixture.nativeElement.querySelector('#user\\.lastName'));
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
-      el.textContent.includes('Save'),
+    const saveBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
     fixture.detectChanges();
@@ -419,8 +497,8 @@ describe('RegulatorDetailsComponent', () => {
     await bootstrap(routeEdit);
     clear(fixture.nativeElement.querySelector('#user\\.firstName'));
     clear(fixture.nativeElement.querySelector('#user\\.lastName'));
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
-      el.textContent.includes('Save'),
+    const saveBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
     fixture.detectChanges();
@@ -431,13 +509,13 @@ describe('RegulatorDetailsComponent', () => {
 
   it('should show signature file error', async () => {
     await bootstrap(routeEdit);
-    const deleteBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
-      el.textContent.includes('Delete'),
+    const deleteBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Delete'),
     ) as HTMLButtonElement;
     click(deleteBtn);
     fixture.detectChanges();
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
-      el.textContent.includes('Save'),
+    const saveBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
     fixture.detectChanges();
@@ -449,8 +527,8 @@ describe('RegulatorDetailsComponent', () => {
     await bootstrap(routeEdit, { add: false, edit: false });
     const spy = vi.spyOn(regulatorUsersService, 'updateCurrentRegulatorUser');
     type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
-      el.textContent.includes('Save'),
+    const saveBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
     expect(spy).toHaveBeenCalled();
@@ -460,10 +538,22 @@ describe('RegulatorDetailsComponent', () => {
     await bootstrap(routeEdit2);
     const spy = vi.spyOn(regulatorUsersService, 'updateRegulatorUserByCaAndId');
     type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
-    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: HTMLButtonElement) =>
-      el.textContent.includes('Save'),
+    const saveBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should not add the base permission selection to the submitted payload', async () => {
+    await bootstrap(routeEdit2);
+    const spy = vi.spyOn(regulatorUsersService, 'updateRegulatorUserByCaAndId');
+    type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
+    const saveBtn = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (el: HTMLButtonElement) => el.textContent.includes('Save'),
+    ) as HTMLButtonElement;
+    click(saveBtn);
+
+    expect(Object.keys(spy.mock.calls[0][1]).sort()).toEqual(['permissions', 'user']);
   });
 });

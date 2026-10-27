@@ -5,52 +5,53 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.service.SchemeTerminationHelper;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusChargeType;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusContainer;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransaction;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransactionHistory;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransactionDetail;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.FacilityPerformanceDataWithBuyOutProcessedStatus;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AccountBuyOutSurplusTransactionDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AvailableTargetPeriodsBuyOutDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDetailsDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionHistoryDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDetailInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionListItemDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionSummaryDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionsListDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionsListSearchCriteria;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusEligibleAccountsCustomRepository;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusEligibleFacilitiesCustomRepository;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusExclusionRepository;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusTransactionCustomRepository;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusTransactionRepository;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.transform.BuyOutSurplusTransactionHistoryMapper;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
+import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataDetailsInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.PerformanceDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodBuyOutDetailsDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataDetailsInfoDTO;
-import uk.gov.cca.api.targetperiodreporting.performancedata.service.PerformanceDataQueryService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -76,69 +77,47 @@ class BuyOutSurplusQueryServiceTest {
     private PerformanceDataQueryService performanceDataQueryService;
     
     @Mock
-    private FileDocumentService fileDocumentService;
-    
-    @Mock
-    private BuyOutSurplusTransactionHistoryMapper buyOutSurplusHistoryMapper;
+    private FileDocumentStorageService fileDocumentStorageService;
     
     @Mock
     private TargetPeriodService targetPeriodService;
     
     @Mock
     private SchemeTerminationHelper schemeTerminationHelper;
+    
+    @Mock
+    private BuyOutSurplusEligibleFacilitiesCustomRepository buyOutSurplusEligibleFacilitiesCustomRepository;
 
     @Test
-    void getAllTransactionInfoByAccountAndTargetPeriodPessimistic() {
+    void getAccountTransactionInfo() {
         final long accountId = 1L;
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
 
         final BuyOutSurplusTransaction entity = BuyOutSurplusTransaction.builder()
                 .id(1L)
-                .transactionCode("CCA060020")
-                .buyOutFee(BigDecimal.TEN)
-                .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
-                .fileDocumentUuid("fileDocumentUuid")
+                .transactionDetailList(List.of(
+                        BuyOutSurplusTransactionDetail.builder().id(22L).buyOutFee(BigDecimal.TEN).paymentStatus(BuyOutSurplusPaymentStatus.PAID).build()
+                ))
+                .performanceDataResourceType(PerformanceDataResourceType.ACCOUNT)
                 .build();
-        final BuyOutSurplusTransactionInfoDTO expected = BuyOutSurplusTransactionInfoDTO.builder()
-                .id(1L)
+        final BuyOutSurplusTransactionDetailInfoDTO expected = BuyOutSurplusTransactionDetailInfoDTO.builder()
+                .id(22L)
                 .buyOutFee(BigDecimal.TEN)
                 .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
                 .build();
 
         when(buyOutSurplusTransactionRepository
-                .findAllByAccountIdAndTargetPeriodTypePessimistic(accountId, targetPeriodType))
+                .findAllByAccountIdAndTargetPeriodType(accountId, targetPeriodType))
                 .thenReturn(List.of(entity));
 
         // Invoke
-        List<BuyOutSurplusTransactionInfoDTO> results = buyOutSurplusQueryService.getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType);
+        List<BuyOutSurplusTransactionDetailInfoDTO> results = buyOutSurplusQueryService
+                .getAccountTransactionInfo(accountId, targetPeriodType);
 
         // Verify
         assertThat(results.getFirst()).isEqualTo(expected);
         verify(buyOutSurplusTransactionRepository, times(1))
-                .findAllByAccountIdAndTargetPeriodTypePessimistic(accountId, targetPeriodType);
-    }
-
-    @Test
-    void getAllTransactionInfoByIds() {
-        final Set<Long> ids = Set.of(1L);
-
-        final List<BuyOutSurplusTransaction> transactions = List.of(
-                BuyOutSurplusTransaction.builder().id(1L).buyOutFee(BigDecimal.TEN).paymentStatus(BuyOutSurplusPaymentStatus.PAID).build()
-        );
-        final BuyOutSurplusTransactionInfoDTO expected = BuyOutSurplusTransactionInfoDTO.builder()
-                .id(1L)
-                .buyOutFee(BigDecimal.TEN)
-                .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
-                .build();
-
-        when(buyOutSurplusTransactionRepository.findAllByIdIn(ids)).thenReturn(transactions);
-
-        // Invoke
-        List<BuyOutSurplusTransactionInfoDTO> results = buyOutSurplusQueryService.getAllTransactionInfoByIds(ids);
-
-        // Verify
-        assertThat(results.getFirst()).isEqualTo(expected);
-        verify(buyOutSurplusTransactionRepository, times(1)).findAllByIdIn(ids);
+                .findAllByAccountIdAndTargetPeriodType(accountId, targetPeriodType);
     }
 
     @Test
@@ -147,19 +126,24 @@ class BuyOutSurplusQueryServiceTest {
         final String accountName = "name";
         final String accountBusinessId= "businessId";
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
+        final TargetPeriodInfoDTO targetPeriodInfoDTO = TargetPeriodInfoDTO.builder()
+                .schemeVersion(SchemeVersion.CCA_2)
+                .businessId(targetPeriodType)
+                .build();
 
         final List<TargetUnitAccountBusinessInfoDTO> eligibleAccounts = List.of(TargetUnitAccountBusinessInfoDTO.builder()
                 .accountId(accountId).businessId(accountBusinessId).name(accountName).build());
 
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(targetPeriodType))
+            .thenReturn(targetPeriodInfoDTO);
         when(eligibleAccountsCustomRepository.findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType))
                 .thenReturn(eligibleAccounts);
-
         when(buyOutSurplusExclusionRepository.findAllAccountIds())
                 .thenReturn(List.of());
 
         final List<TargetUnitAccountBusinessInfoDTO> results = buyOutSurplusQueryService.getAllEligibleAccountsByTargetPeriod(targetPeriodType);
 
-
+        verify(targetPeriodService).getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
         verify(eligibleAccountsCustomRepository, times(1))
                 .findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType);
         verify(buyOutSurplusExclusionRepository, times(1))
@@ -173,6 +157,11 @@ class BuyOutSurplusQueryServiceTest {
         final String accountName = "name";
         final String accountBusinessId = "businessId";
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final TargetPeriodInfoDTO targetPeriodInfoDTO = TargetPeriodInfoDTO.builder()
+                .schemeVersion(SchemeVersion.CCA_3)
+                .businessId(targetPeriodType)
+                .build();
+
         final TargetUnitAccountBusinessInfoDTO eligibleAccount =
                 TargetUnitAccountBusinessInfoDTO.builder()
                         .accountId(accountId)
@@ -186,6 +175,8 @@ class BuyOutSurplusQueryServiceTest {
                 .secondaryReportingStartDate(LocalDate.now().plusDays(10))
                 .build();
 
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(targetPeriodType))
+                .thenReturn(targetPeriodInfoDTO);
         when(targetPeriodService.findByTargetPeriodType(targetPeriodType))
                 .thenReturn(targetPeriod);
         when(eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(
@@ -197,6 +188,7 @@ class BuyOutSurplusQueryServiceTest {
         final List<TargetUnitAccountBusinessInfoDTO> results =
                 buyOutSurplusQueryService.getAllEligibleAccountsByTargetPeriod(targetPeriodType);
 
+        verify(targetPeriodService).getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
         verify(targetPeriodService, times(1)).findByTargetPeriodType(targetPeriodType);
         verify(eligibleAccountsCustomRepository, times(1))
                 .findAccountsWithFacilityPerformanceDataPendingBuyOut(Set.of(targetPeriodType));
@@ -210,6 +202,10 @@ class BuyOutSurplusQueryServiceTest {
         final String accountName = "name";
         final String accountBusinessId = "businessId";
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
+        final TargetPeriodInfoDTO targetPeriodInfoDTO = TargetPeriodInfoDTO.builder()
+                .schemeVersion(SchemeVersion.CCA_2)
+                .businessId(targetPeriodType)
+                .build();
         final TargetUnitAccountBusinessInfoDTO eligibleAccount =
                 TargetUnitAccountBusinessInfoDTO.builder()
                         .accountId(accountId)
@@ -217,6 +213,8 @@ class BuyOutSurplusQueryServiceTest {
                         .name(accountName)
                         .build();
 
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(targetPeriodType))
+                .thenReturn(targetPeriodInfoDTO);
         when(eligibleAccountsCustomRepository.findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType))
                 .thenReturn(List.of(eligibleAccount));
         when(buyOutSurplusExclusionRepository.findAllAccountIds())
@@ -225,6 +223,8 @@ class BuyOutSurplusQueryServiceTest {
         List<TargetUnitAccountBusinessInfoDTO> results =
                 buyOutSurplusQueryService.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
 
+        verify(targetPeriodService, times(1))
+                .getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
         verify(eligibleAccountsCustomRepository).findAccountsWithPerformanceDataPendingBuyOut(targetPeriodType);
         verify(buyOutSurplusExclusionRepository).findAllAccountIds();
         assertThat(results).containsExactly(eligibleAccount);
@@ -235,6 +235,10 @@ class BuyOutSurplusQueryServiceTest {
         final long accountId = 999L;
         final String accountBusinessId = "businessId";
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final TargetPeriodInfoDTO targetPeriodInfoDTO = TargetPeriodInfoDTO.builder()
+                .schemeVersion(SchemeVersion.CCA_3)
+                .businessId(targetPeriodType)
+                .build();
         final TargetPeriod targetPeriod = TargetPeriod.builder()
                 .businessId(targetPeriodType)
                 .schemeVersion(SchemeVersion.CCA_3)
@@ -249,6 +253,8 @@ class BuyOutSurplusQueryServiceTest {
                         .name("name")
                         .build();
 
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(targetPeriodType))
+                .thenReturn(targetPeriodInfoDTO);
         when(targetPeriodService.findByTargetPeriodType(targetPeriodType))
                 .thenReturn(targetPeriod);
         when(eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(
@@ -260,6 +266,7 @@ class BuyOutSurplusQueryServiceTest {
         List<TargetUnitAccountBusinessInfoDTO> results =
                 buyOutSurplusQueryService.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
 
+        verify(targetPeriodService, times(1)).getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
         verify(targetPeriodService).findByTargetPeriodType(targetPeriodType);
         verify(eligibleAccountsCustomRepository).findAccountsWithFacilityPerformanceDataPendingBuyOut(Set.of(targetPeriodType));
         verify(buyOutSurplusExclusionRepository).findAllAccountIds();
@@ -271,17 +278,16 @@ class BuyOutSurplusQueryServiceTest {
         final long accountId = 999L;
         final String accountBusinessId = "businessId";
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP8;
-
+        final TargetPeriodInfoDTO targetPeriodInfoDTO = TargetPeriodInfoDTO.builder()
+                .schemeVersion(SchemeVersion.CCA_3)
+                .businessId(targetPeriodType)
+                .build();
         final TargetPeriod targetPeriod = TargetPeriod.builder()
                 .businessId(targetPeriodType)
                 .schemeVersion(SchemeVersion.CCA_3)
                 .startDate(LocalDate.of(2026, 1, 1))
                 .secondaryReportingStartDate(LocalDate.of(2025, 1, 1))
                 .build();
-
-        final Set<TargetPeriodType> applicableTargetPeriods =
-                Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8);
-
         final TargetUnitAccountBusinessInfoDTO eligibleAccount =
                 TargetUnitAccountBusinessInfoDTO.builder()
                         .accountId(accountId)
@@ -289,11 +295,28 @@ class BuyOutSurplusQueryServiceTest {
                         .name("name")
                         .build();
 
-        when(targetPeriodService.findByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
-        when(targetPeriodService.getTargetPeriodsForSchemeUpTo(
+        final List<TargetPeriodInfoDTO> applicableTargetPeriodsInfo = List.of(
+                TargetPeriodInfoDTO.builder()
+                        .businessId(TargetPeriodType.TP7)
+                        .build(),
+                TargetPeriodInfoDTO.builder()
+                        .businessId(TargetPeriodType.TP8)
+                        .build());
+
+        final Set<TargetPeriodType> applicableTargetPeriods =
+                Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8);
+
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(targetPeriodType))
+                .thenReturn(targetPeriodInfoDTO);
+
+        when(targetPeriodService.findByTargetPeriodType(targetPeriodType))
+                .thenReturn(targetPeriod);
+
+        when(targetPeriodService.getTargetPeriodsInfoForSchemeWithStartDateUpTo(
                 SchemeVersion.CCA_3,
                 LocalDate.of(2026, 1, 1)))
-                .thenReturn(applicableTargetPeriods);
+                .thenReturn(applicableTargetPeriodsInfo);
+
         when(eligibleAccountsCustomRepository.findAccountsWithFacilityPerformanceDataPendingBuyOut(
                 applicableTargetPeriods))
                 .thenReturn(List.of(eligibleAccount));
@@ -302,9 +325,11 @@ class BuyOutSurplusQueryServiceTest {
         List<TargetUnitAccountBusinessInfoDTO> results =
                 buyOutSurplusQueryService.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
 
+        verify(targetPeriodService).getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
         verify(targetPeriodService).findByTargetPeriodType(targetPeriodType);
-        verify(targetPeriodService).getTargetPeriodsForSchemeUpTo(
-        		SchemeVersion.CCA_3, LocalDate.of(2026, 1, 1));
+        verify(targetPeriodService).getTargetPeriodsInfoForSchemeWithStartDateUpTo(
+                SchemeVersion.CCA_3,
+                LocalDate.of(2026, 1, 1));
         verify(eligibleAccountsCustomRepository)
                 .findAccountsWithFacilityPerformanceDataPendingBuyOut(applicableTargetPeriods);
         verify(buyOutSurplusExclusionRepository).findAllAccountIds();
@@ -312,62 +337,206 @@ class BuyOutSurplusQueryServiceTest {
     }
     
     @Test
-    void getBuyOutSurplusTransactionsList_usingSearchCriteria() {
+    void getBuyOutSurplusTransactionsList() {
         BuyOutSurplusTransactionsListSearchCriteria criteria = BuyOutSurplusTransactionsListSearchCriteria.builder()
                 .term("some term")
                 .targetPeriodType(TargetPeriodType.TP6)
                 .paging(PagingRequest.builder()
-                        .pageNumber(1)
+                        .pageNumber(0)
                         .pageSize(25)
                         .build())
                 .build();
-        
-        BuyOutSurplusTransactionListItemDTO item = BuyOutSurplusTransactionListItemDTO.builder()
-                .transactionCode("some term")
-                .build();
-        
+
         BuyOutSurplusTransactionsListDTO dto = BuyOutSurplusTransactionsListDTO.builder()
-                .transactions(List.of(item))
+                .transactions(List.of(BuyOutSurplusTransactionListItemDTO.builder()
+                        .transactionCode("some term")
+                        .build()))
                 .total(1L)
                 .build();
         
         AppUser appUser = mock(AppUser.class);
         
-        when(buyOutSurplusTransactionCustomRepository.findBuyOutSurplusTransactions(appUser.getCompetentAuthority(), criteria)).thenReturn(dto);
-        
-        final BuyOutSurplusTransactionsListDTO resultDto = buyOutSurplusQueryService.getBuyOutSurplusTransactionsList(appUser, criteria);
-    
-        verify(buyOutSurplusTransactionCustomRepository, times(1)).findBuyOutSurplusTransactions(appUser.getCompetentAuthority(), criteria);
-        assertThat(resultDto).isEqualTo(dto);
+        when(buyOutSurplusTransactionCustomRepository.findBuyOutSurplusTransactions(appUser.getCompetentAuthority(), criteria))
+                .thenReturn(dto);
+
+        // Invoke
+        final BuyOutSurplusTransactionsListDTO result = buyOutSurplusQueryService.getBuyOutSurplusTransactionsList(appUser, criteria);
+
+        // Verify
+        verify(buyOutSurplusTransactionCustomRepository, times(1))
+                .findBuyOutSurplusTransactions(appUser.getCompetentAuthority(), criteria);
+        assertThat(result).isEqualTo(dto);
     }
     
     @Test
-    void getBuyOutSurplusTransactionsDetails_byTransactionId() {
-        
+    void getAccountBuyOutSurplusTransaction() {
+        final Long id = 1L;
+
         BuyOutSurplusTransaction entity = BuyOutSurplusTransaction.builder()
-                .id(1L)
+                .id(id)
+                .invoicedPaymentDeadline(LocalDate.of(2025, 1, 1))
                 .transactionCode("TC00001")
-                .performanceDataId(1L)
-                .creationDate(LocalDateTime.now())
+                .creationDate(LocalDate.of(2024, 1, 1).atStartOfDay())
+                .chargeType(BuyOutSurplusChargeType.FEE)
                 .fileDocumentUuid("uuid")
+                .transactionDetailList(List.of(BuyOutSurplusTransactionDetail.builder()
+                        .id(22L)
+                        .buyOutSurplusContainer(BuyOutSurplusContainer.builder()
+                                .priBuyOutCost(BigDecimal.valueOf(10))
+                                .invoicedBuyOutFee(BigDecimal.valueOf(20))
+                                .invoicedSurplusGained(BigDecimal.valueOf(30))
+                                .invoicedPreviousPaidFees(BigDecimal.valueOf(40))
+                                .build())
+                        .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
+                        .buyOutFee(BigDecimal.valueOf(50))
+                        .performanceDataId(11L)
+                        .build()))
                 .build();
-        
-        PerformanceDataDetailsInfoDTO performanceDataDetailsInfoDTO =
-                PerformanceDataDetailsInfoDTO.builder()
-                        .build();
-        
-        FileInfoDTO fileInfoDTO = FileInfoDTO.builder().build();
-        
-        when(fileDocumentService.getFileInfoDTO("uuid")).thenReturn(fileInfoDTO);
-        when(buyOutSurplusTransactionRepository.findBuyOutSurplusTransactionById(1L)).thenReturn(Optional.of(entity));
-        when(performanceDataQueryService.getPerformanceDataBuyOutSurplusTransactionDetails(1L)).thenReturn(performanceDataDetailsInfoDTO);
-        
-        final BuyOutSurplusTransactionDetailsDTO resultDto = buyOutSurplusQueryService.getBuyOutSurplusTransactionDetails(1L);
-        
-        verify(buyOutSurplusTransactionRepository, times(1)).findBuyOutSurplusTransactionById(1L);
-        assertEquals(resultDto.getTransactionCode(), entity.getTransactionCode());
-        assertEquals(resultDto.getCreationDate(), entity.getCreationDate());
+        PerformanceDataDetailsInfoDTO performanceDataDTO = PerformanceDataDetailsInfoDTO.builder()
+                .accountBusinessId("ACC-123")
+                .operatorName("Test Operator")
+                .reportVersion(1)
+                .targetPeriodResultType(TargetPeriodResultType.TARGET_MET)
+                .submissionType(PerformanceDataSubmissionType.PRIMARY)
+                .priBuyOutCarbon(BigDecimal.valueOf(100))
+                .build();
+        FileInfoDTO file = FileInfoDTO.builder()
+                .name("filename")
+                .uuid("someUuid")
+                .build();
+
+        AccountBuyOutSurplusTransactionDTO dto = AccountBuyOutSurplusTransactionDTO.builder()
+                .id(id)
+                .detailId(22L)
+                .transactionCode("TC00001")
+                .accountBusinessId("ACC-123")
+                .operatorName("Test Operator")
+                .targetPeriodResultType(TargetPeriodResultType.TARGET_MET)
+                .reportVersion("1")
+                .submissionType(PerformanceDataSubmissionType.PRIMARY)
+                .fileInfoDTO(file)
+                .creationDate(LocalDate.of(2024, 1, 1).atStartOfDay())
+                .dueDate(LocalDate.of(2025, 1, 1))
+                .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
+                .chargeType(BuyOutSurplusChargeType.FEE)
+                .priBuyOutCarbon(BigDecimal.valueOf(100))
+                .priBuyOutCost(BigDecimal.valueOf(10))
+                .invoicedBuyOutFee(BigDecimal.valueOf(20))
+                .invoicedSurplusGained(BigDecimal.valueOf(30))
+                .invoicedPreviousPaidFees(BigDecimal.valueOf(40))
+                .buyOutFee(BigDecimal.valueOf(50))
+                .build();
+
+        when(buyOutSurplusTransactionRepository
+                .findBuyOutSurplusTransactionByIdAndPerformanceDataResourceType(id, PerformanceDataResourceType.ACCOUNT))
+                .thenReturn(Optional.of(entity));
+        when(performanceDataQueryService.getPerformanceDataBuyOutSurplusTransactionDetails(11L))
+                .thenReturn(performanceDataDTO);
+        when(fileDocumentStorageService.getFileInfoDTO("uuid")).thenReturn(file);
+
+        // Invoke
+        final AccountBuyOutSurplusTransactionDTO result = buyOutSurplusQueryService.getAccountBuyOutSurplusTransaction(id);
+
+        // Verify
+        assertThat(result).isEqualTo(dto);
+        verify(buyOutSurplusTransactionRepository, times(1))
+                .findBuyOutSurplusTransactionByIdAndPerformanceDataResourceType(id, PerformanceDataResourceType.ACCOUNT);
+        verify(performanceDataQueryService, times(1))
+                .getPerformanceDataBuyOutSurplusTransactionDetails(11L);
+        verify(fileDocumentStorageService, times(1))
+                .getFileInfoDTO("uuid");
     }
+
+  //TODO Restore this once we implement file generation for the buyout workflow.
+//    @Test
+//    void getFacilityBuyOutSurplusTransaction() {
+//        final Long id = 1L;
+//
+//        final Long accountId = 2L;
+//        final BuyOutSurplusTransaction entity = BuyOutSurplusTransaction.builder()
+//                .id(id)
+//                .accountId(accountId)
+//                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP7).build())
+//                .invoicedPaymentDeadline(LocalDate.of(2025, 1, 1))
+//                .invoicedBuyOutFee(BigDecimal.valueOf(200))
+//                .receivedAmount(BigDecimal.valueOf(60))
+//                .transactionCode("TC00001")
+//                .creationDate(LocalDate.of(2024, 1, 1).atStartOfDay())
+//                .chargeType(BuyOutSurplusChargeType.FEE)
+//                .fileDocumentUuid("uuid")
+//                .transactionDetailList(List.of(
+//                        BuyOutSurplusTransactionDetail.builder()
+//                                .id(22L)
+//                                .buyOutSurplusContainer(BuyOutSurplusContainer.builder()
+//                                        .priBuyOutCost(BigDecimal.valueOf(10))
+//                                        .invoicedBuyOutFee(BigDecimal.valueOf(20))
+//                                        .invoicedSurplusGained(BigDecimal.valueOf(30))
+//                                        .invoicedPreviousPaidFees(BigDecimal.valueOf(40))
+//                                        .build())
+//                                .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
+//                                .buyOutFee(BigDecimal.valueOf(50))
+//                                .build(),
+//                        BuyOutSurplusTransactionDetail.builder()
+//                                .id(23L)
+//                                .buyOutSurplusContainer(BuyOutSurplusContainer.builder()
+//                                        .priBuyOutCost(BigDecimal.valueOf(20))
+//                                        .invoicedBuyOutFee(BigDecimal.valueOf(30))
+//                                        .invoicedSurplusGained(BigDecimal.valueOf(40))
+//                                        .invoicedPreviousPaidFees(BigDecimal.valueOf(50))
+//                                        .build())
+//                                .paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT)
+//                                .buyOutFee(BigDecimal.valueOf(60))
+//                                .build()
+//                ))
+//                .build();
+//        final TargetUnitAccountBusinessInfoDTO account = TargetUnitAccountBusinessInfoDTO.builder()
+//                .accountId(accountId)
+//                .businessId("accountBusinessId")
+//                .name("accountName")
+//                .build();
+//        final FileInfoDTO file = FileInfoDTO.builder()
+//                .name("filename")
+//                .uuid("someUuid")
+//                .build();
+//
+//        final FacilityBuyOutSurplusTransactionDTO dto = FacilityBuyOutSurplusTransactionDTO.builder()
+//                .id(id)
+//                .targetPeriodType(TargetPeriodType.TP7)
+//                .chargeType(BuyOutSurplusChargeType.FEE)
+//                .transactionCode("TC00001")
+//                .accountBusinessId("accountBusinessId")
+//                .operatorName("accountName")
+//                .fileInfoDTO(file)
+//                .invoicedBuyOutFee(BigDecimal.valueOf(200))
+//                .creationDate(LocalDate.of(2024, 1, 1).atStartOfDay())
+//                .dueDate(LocalDate.of(2025, 1, 1))
+//                .paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT)
+//                .expectedAmount(BigDecimal.valueOf(110))
+//                .receivedAmount(BigDecimal.valueOf(60))
+//                .amountAllocated(BigDecimal.valueOf(50))
+//                .expectedMarkedFacilities(2)
+//                .actualMarkedFacilities(1)
+//                .hasBulkAction(true)
+//                .build();
+//
+//        when(buyOutSurplusTransactionRepository
+//                .findBuyOutSurplusTransactionByIdAndPerformanceDataResourceType(id, PerformanceDataResourceType.FACILITY))
+//                .thenReturn(Optional.of(entity));
+//        when(targetUnitAccountQueryService.getTargetUnitAccountBusinessInfoDTO(accountId)).thenReturn(account);
+//        when(fileDocumentStorageService.getFileInfoDTO("uuid")).thenReturn(file);
+//
+//        // Invoke
+//        final FacilityBuyOutSurplusTransactionDTO result = buyOutSurplusQueryService.getFacilityBuyOutSurplusTransaction(id);
+//
+//        // Verify
+//        assertThat(result).isEqualTo(dto);
+//        verify(buyOutSurplusTransactionRepository, times(1))
+//                .findBuyOutSurplusTransactionByIdAndPerformanceDataResourceType(id, PerformanceDataResourceType.FACILITY);
+//        verify(targetUnitAccountQueryService, times(1))
+//                .getTargetUnitAccountBusinessInfoDTO(accountId);
+//        verify(fileDocumentStorageService, times(1))
+//                .getFileInfoDTO("uuid");
+//    }
     
     @Test
     void existsBuyOutSurplusTransactionByIdAndDocumentId_ShouldCallRepositoryWithCorrectParameters() {
@@ -380,108 +549,6 @@ class BuyOutSurplusQueryServiceTest {
         verify(buyOutSurplusTransactionRepository)
                 .findBuyOutSurplusTransactionByIdAndFileDocumentUuid(transactionId, documentUuidString);
         verifyNoMoreInteractions(buyOutSurplusTransactionRepository);
-    }
-    
-    @Test
-    void getBuyOutSurplusTransactionHistory_shouldReturnEmptyListWhenNoHistoryFound() {
-        Long transactionId = 1L;
-        BuyOutSurplusTransaction transaction = new BuyOutSurplusTransaction();
-        when(buyOutSurplusTransactionRepository
-                .findById(transactionId))
-                .thenReturn(Optional.of(transaction));
-        
-        List<BuyOutSurplusTransactionHistoryDTO> result =
-                buyOutSurplusQueryService.getBuyOutSurplusTransactionHistory(transactionId);
-        
-        assertTrue(result.isEmpty());
-        verify(buyOutSurplusTransactionRepository)
-                .findById(transactionId);
-        verifyNoInteractions(buyOutSurplusHistoryMapper);
-    }
-    
-    @Test
-    void getBuyOutSurplusTransactionHistory_shouldReturnResultsWhenHistoryFound() {
-        Long transactionId = 1L;
-        BuyOutSurplusTransaction transaction = new BuyOutSurplusTransaction();
-        LocalDateTime now = LocalDateTime.now();
-        
-        BuyOutSurplusTransactionHistory newerHistory = createTestHistory(2L, "User1");
-        newerHistory.setSubmissionDate(now.minusDays(1));
-        
-        BuyOutSurplusTransactionHistory olderHistory = createTestHistory(1L, "User2");
-        olderHistory.setSubmissionDate(now);
-        
-        transaction.setTransactionHistoryList(List.of(newerHistory, olderHistory));
-        
-        when(buyOutSurplusTransactionRepository
-                .findById(transactionId))
-                .thenReturn(Optional.of(transaction));
-        
-        List<BuyOutSurplusTransactionHistoryDTO> result =
-                buyOutSurplusQueryService.getBuyOutSurplusTransactionHistory(transactionId);
-        
-        assertEquals(2, result.size());
-        verify(buyOutSurplusTransactionRepository)
-                .findById(transactionId);
-    }
-    
-    private BuyOutSurplusTransactionHistory createTestHistory(Long id, String submitter) {
-        return BuyOutSurplusTransactionHistory.builder()
-                .id(id)
-                .submitter(submitter)
-                .submissionDate(LocalDateTime.now())
-                .build();
-    }
-
-    @Test
-    void getBuyOutSurplusTransactionSummary() {
-        final Long transactionId = 1L;
-
-        final BuyOutSurplusTransaction transactionEntity = BuyOutSurplusTransaction.builder()
-                .id(transactionId)
-                .transactionCode("TRX12345")
-                .build();
-
-        final BuyOutSurplusTransactionSummaryDTO expectedDTO = BuyOutSurplusTransactionSummaryDTO.builder()
-                .transactionCode("TRX12345")
-                .build();
-
-        when(buyOutSurplusTransactionRepository.findById(transactionId))
-                .thenReturn(Optional.of(transactionEntity));
-
-        BuyOutSurplusTransactionSummaryDTO result =
-                buyOutSurplusQueryService.getBuyOutSurplusTransactionSummary(transactionId);
-
-        verify(buyOutSurplusTransactionRepository, times(1)).findById(transactionId);
-        assertThat(result).isEqualTo(expectedDTO);
-    }
-
-    @Test
-    void getBuyOutSurplusTransactionByPerformanceData() {
-        final Long performanceDataId = 1L;
-
-        final BuyOutSurplusTransaction transaction = BuyOutSurplusTransaction.builder()
-                .id(11L)
-                .buyOutFee(BigDecimal.TEN)
-                .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
-                .build();
-        final BuyOutSurplusTransactionInfoDTO expected = BuyOutSurplusTransactionInfoDTO.builder()
-                .id(11L)
-                .buyOutFee(BigDecimal.TEN)
-                .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
-                .build();
-
-        when(buyOutSurplusTransactionRepository.findByPerformanceDataId(performanceDataId))
-                .thenReturn(Optional.of(transaction));
-
-        // Invoke
-        Optional<BuyOutSurplusTransactionInfoDTO> result = buyOutSurplusQueryService
-                .getBuyOutSurplusTransactionByPerformanceData(performanceDataId);
-
-        // Verify
-        assertThat(result).isPresent().contains(expected);
-        verify(buyOutSurplusTransactionRepository, times(1))
-                .findByPerformanceDataId(performanceDataId);
     }
     
     @Test
@@ -555,5 +622,99 @@ class BuyOutSurplusQueryServiceTest {
         assertThat(result.getPreviousTargetPeriods()).isEmpty();
         verify(targetPeriodService).getTargetPeriodBuyOutCurrentAndPrevious(date);
         verify(schemeTerminationHelper).isAfterCca2TerminationDate(date);
+    }
+    
+    @Test
+    void shouldGetTransactionDetailsSummaryByAccountIdAndTargetPeriodIds() {
+        Long accountId = 123L;
+        List<Long> targetPeriodIds = List.of(1L, 2L);
+
+        when(buyOutSurplusTransactionRepository.findTransactionDetailsSummaryByAccountIdAndTargetPeriodIds(accountId, targetPeriodIds)).thenReturn(List.of());
+
+        buyOutSurplusQueryService.getTransactionDetailsSummaryByAccountIdAndTargetPeriodIds(accountId, targetPeriodIds);
+
+        verify(buyOutSurplusTransactionRepository).findTransactionDetailsSummaryByAccountIdAndTargetPeriodIds(accountId, targetPeriodIds);
+    }
+    
+    @Test
+    void shouldGroupPerformanceDataByFacilityAndTargetPeriod() {
+        Long accountId = 123L;
+        List<Long> targetPeriodIds = List.of(1L, 2L, 3L);
+
+        when(buyOutSurplusEligibleFacilitiesCustomRepository
+                .findFacilitiesPerformanceDataWithBuyOutProcessedStatus(accountId, targetPeriodIds))
+                .thenReturn(List.of(
+                        mockPerformanceData("FACILITY-1", TargetPeriodType.TP7),
+                        mockPerformanceData("FACILITY-1", TargetPeriodType.TP8),
+                        mockPerformanceData("FACILITY-1", TargetPeriodType.TP9),
+                        mockPerformanceData("FACILITY-2", TargetPeriodType.TP9)
+                ));
+
+        Map<String, Map<TargetPeriodType, FacilityPerformanceDataWithBuyOutProcessedStatus>> result =
+                buyOutSurplusQueryService.getPerformanceDataWithBuyOutProcessedStatusPerFacility(accountId, targetPeriodIds);
+
+        assertThat(result).hasSize(2).containsKeys("FACILITY-1", "FACILITY-2");
+        assertThat(result.get("FACILITY-1"))
+                .containsKeys(
+                        TargetPeriodType.TP7,
+                        TargetPeriodType.TP8,
+                        TargetPeriodType.TP9
+                );
+
+        verify(buyOutSurplusEligibleFacilitiesCustomRepository)
+                .findFacilitiesPerformanceDataWithBuyOutProcessedStatus(accountId, targetPeriodIds);
+    }
+
+    @Test
+    void shouldReturnEmptyMapWhenRepositoryReturnsNoResults() {
+        Long accountId = 123L;
+        List<Long> targetPeriodIds = List.of(1L, 2L, 3L);
+
+        when(buyOutSurplusEligibleFacilitiesCustomRepository
+                .findFacilitiesPerformanceDataWithBuyOutProcessedStatus(accountId, targetPeriodIds))
+                .thenReturn(List.of());
+
+        Map<String, Map<TargetPeriodType, FacilityPerformanceDataWithBuyOutProcessedStatus>> result =
+                buyOutSurplusQueryService
+                        .getPerformanceDataWithBuyOutProcessedStatusPerFacility(accountId, targetPeriodIds);
+
+        assertThat(result).isEmpty();
+
+        verify(buyOutSurplusEligibleFacilitiesCustomRepository)
+                .findFacilitiesPerformanceDataWithBuyOutProcessedStatus(accountId, targetPeriodIds);
+    }
+
+    @Test
+    void shouldOrderTargetPeriodsByNumber() {
+        Long accountId = 123L;
+        List<Long> targetPeriodIds = List.of(1L, 2L, 3L);
+
+        when(buyOutSurplusEligibleFacilitiesCustomRepository
+                .findFacilitiesPerformanceDataWithBuyOutProcessedStatus(accountId, targetPeriodIds))
+                .thenReturn(List.of(
+                        mockPerformanceData("FACILITY-1", TargetPeriodType.TP8),
+                        mockPerformanceData("FACILITY-1", TargetPeriodType.TP7),
+                        mockPerformanceData("FACILITY-1", TargetPeriodType.TP9)));
+
+        Map<String, Map<TargetPeriodType, FacilityPerformanceDataWithBuyOutProcessedStatus>> result =
+                buyOutSurplusQueryService
+                        .getPerformanceDataWithBuyOutProcessedStatusPerFacility(accountId, targetPeriodIds);
+
+        assertThat(result.get("FACILITY-1").keySet())
+                .containsExactly(
+                        TargetPeriodType.TP7,
+                        TargetPeriodType.TP8,
+                        TargetPeriodType.TP9
+                );
+    }   
+
+    private FacilityPerformanceDataWithBuyOutProcessedStatus mockPerformanceData(
+            String facilityBusinessId,
+            TargetPeriodType targetPeriodType) {
+
+        return FacilityPerformanceDataWithBuyOutProcessedStatus.builder()
+                .facilityBusinessId(facilityBusinessId)
+                .targetPeriodType(targetPeriodType)
+                .build();
     }
 }

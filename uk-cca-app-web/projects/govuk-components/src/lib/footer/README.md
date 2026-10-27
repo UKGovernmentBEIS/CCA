@@ -1,35 +1,23 @@
-The footer components are designed to add footer content to a full screen app.
-To set up a govuk footer we use three components: `<govuk-footer>` which acts as
-a structural container for our content including the styling and icons from the
-GOV.UK design standards and navigation, `<govuk-footer-nav-list>` which represents
-the secondary navigation of the application, and `<govuk-footer-meta-info>` which
-can include links to meta information about a site, like cookies and contact details in the footer.
+The footer component renders the GOV.UK footer, including the crown logo, the Open
+Government Licence and the Crown copyright link.
 
-### Specifying the footer, navigation and meta information
+The `navigation` input takes columns of links shown above the meta row. The `meta`
+input takes the support links (cookies, accessibility, contact and similar), shown in
+the meta row. Both accept items with either a `routerLink` (navigation inside the
+app) or an `href` (links leaving the app). Projected content is rendered below the
+support links.
 
-Both the navigation and the meta information should be placed inside `<govuk-footer>` tag.
-
-The navigation should be wrapped in a `<govuk-footer-nav-list>`. The `title` property can be used
-to add title to the navigation section of the footer. The `twoColumnList` property can be used to
-define if the navigation should be in a two columns layout or in a single column.
-
-The `govukLink` directive is required with input `footer` for every link inside the `<govuk-footer-nav-list>` container
-in order to apply the required styling.
-
-The meta information should be wrapped in a `<govuk-footer-meta-info>`.
-
-The `govukLink` directive is required with input `meta` for every link inside the `<govuk-footer-meta-info>` container
-in order to apply the required styling.
-
-The following is an example of a valid footer container:
+Wrap the footer in `<footer class="govuk-template__footer">`. The component renders a
+`<div>`, matching the GOV.UK Frontend v6 Nunjucks macro; the wrapper supplies the
+contentinfo landmark from the GOV.UK page template.
 
 ```html
-<govuk-footer>
-  <govuk-footer-nav-list title="Single column list" [columns]="1">
-    <a govukLink="footer" href="#1"> Navigation item 1 </a>
-  </govuk-footer-nav-list>
-  <govuk-footer-meta-info>
-    <a govukLink="meta" href="#3"> Item 1 </a>
-  </govuk-footer-meta-info>
-</govuk-footer>
+<footer class="govuk-template__footer">
+  <govuk-footer
+    [meta]="[
+      { text: 'Privacy Notice', routerLink: '/privacy-notice' },
+      { text: 'Contact us', routerLink: '/contact-us' },
+      { text: 'Accessibility Statement', routerLink: '/accessibility' },
+    ]" />
+</footer>
 ```

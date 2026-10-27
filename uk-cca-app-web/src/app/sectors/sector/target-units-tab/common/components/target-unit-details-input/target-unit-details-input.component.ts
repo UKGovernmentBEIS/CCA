@@ -26,6 +26,7 @@ import { addSicCodeFormControl } from '../../utils';
 @Component({
   selector: 'cca-target-unit-details-input',
   templateUrl: './target-unit-details-input.component.html',
+  viewProviders: [existingControlContainer],
   imports: [
     ReactiveFormsModule,
     TextInputComponent,
@@ -34,7 +35,6 @@ import { addSicCodeFormControl } from '../../utils';
     SelectComponent,
     ButtonDirective,
   ],
-  viewProviders: [existingControlContainer],
 })
 export class TargetUnitDetailsInputComponent implements OnInit {
   private readonly controlContainer = inject(ControlContainer);

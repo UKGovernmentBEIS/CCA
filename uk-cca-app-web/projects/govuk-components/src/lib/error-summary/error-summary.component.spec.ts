@@ -1,8 +1,8 @@
+import { provideRouter } from '@angular/router';
 import { Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { GovukValidators } from '../error-message';
 import { TextInputComponent } from '../text-input';
@@ -10,7 +10,6 @@ import { ErrorSummaryComponent } from './error-summary.component';
 
 describe('ErrorSummaryComponent', () => {
   @Component({
-    imports: [ErrorSummaryComponent, ReactiveFormsModule, TextInputComponent, FormsModule],
     template: `
       @if (!isTemplate()) {
         <form [formGroup]="form">
@@ -37,6 +36,7 @@ describe('ErrorSummaryComponent', () => {
         </form>
       }
     `,
+    imports: [ErrorSummaryComponent, ReactiveFormsModule, TextInputComponent, FormsModule],
   })
   class TestComponent {
     public readonly testForm = viewChild<NgForm>('templateForm');
@@ -66,7 +66,8 @@ describe('ErrorSummaryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, TestComponent],
+      imports: [TestComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
@@ -116,6 +117,17 @@ describe('ErrorSummaryComponent', () => {
     hostComponent.form.markAllAsTouched();
 
     expect(document.title).toContain('Error');
+  });
+
+  it('should render the error summary heading as an h2', async () => {
+    hostComponent.form = reactiveForm;
+    hostComponent.form.markAllAsTouched();
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
+
+    const heading = fixture.nativeElement.querySelector('.govuk-error-summary__title');
+    expect(heading.tagName).toBe('H2');
+    expect(heading.textContent.trim()).toBe('There is a problem');
   });
 
   it('should focus on error container', () => {

@@ -8,9 +8,8 @@ import { RadioOptionComponent } from './radio-option/radio-option.component';
 
 describe('RadioComponent', () => {
   @Component({
-    imports: [RadioComponent, ReactiveFormsModule, RadioOptionComponent],
     template: `
-      <div govuk-radio [formControl]="control">
+      <div govuk-radio [formControl]="control" legend="Select an option">
         @for (option of options; track option) {
           <govuk-radio-option [value]="option.value" [label]="option.label"></govuk-radio-option>
         }
@@ -24,6 +23,7 @@ describe('RadioComponent', () => {
         </div>
       </form>
     `,
+    imports: [RadioComponent, ReactiveFormsModule, RadioOptionComponent],
   })
   class TestComponent {
     control = new FormControl();
@@ -58,6 +58,20 @@ describe('RadioComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render a fieldset with a legend when a legend is provided', () => {
+    const fieldsets = element.querySelectorAll('fieldset');
+    expect(fieldsets.length).toBe(2);
+
+    const legend = element.querySelector('fieldset legend');
+    expect(legend).not.toBeNull();
+    expect(legend.textContent.trim()).toBe('Select an option');
+  });
+
+  it('should not render a legend when none is provided', () => {
+    const formFieldset = element.querySelector('form fieldset');
+    expect(formFieldset.querySelector('legend')).toBeNull();
   });
 
   it('should disable the radio', () => {
@@ -103,5 +117,6 @@ describe('RadioComponent', () => {
 
     expect(hostComponent.form.get('radio').errors).toBeTruthy();
     expect(element.querySelector('.govuk-error-message')).toBeTruthy();
+    expect(element.querySelector('form fieldset').getAttribute('aria-describedby')).toEqual('radio-error');
   });
 });

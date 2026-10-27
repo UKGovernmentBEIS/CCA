@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, inject, input, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { RequestTaskDTO, RequestTaskItemDTO } from 'cca-api';
@@ -22,7 +22,6 @@ import { RelatedActionsMap, TASK_RELATED_ACTIONS_MAP } from './related-actions.p
     </aside>
   `,
   styleUrl: './related-actions.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
 })
 export class RelatedActionsComponent implements OnChanges {

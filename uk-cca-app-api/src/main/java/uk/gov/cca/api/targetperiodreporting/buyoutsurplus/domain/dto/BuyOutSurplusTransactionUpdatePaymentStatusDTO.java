@@ -1,6 +1,7 @@
 package uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto;
 
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
@@ -13,17 +14,23 @@ import uk.gov.netz.api.common.validation.SpELExpression;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@SpELExpression(expression = "{!(#status == 'TERMINATED')}",
+		message = "buyOutSurplus.transaction.status.invalid")
 @SpELExpression(expression = "{!((#status == 'UNDER_APPEAL' || #status == 'NOT_REQUIRED') && #comments == null)}",
-		message = "buyOutSurplusTransaction.comments.notEmpty")
+		message = "buyOutSurplus.transaction.comments.notEmpty")
 @SpELExpression(expression = "{!((#status == 'PAID') == (#paymentDate == null))}",
-		message = "buyOutSurplusTransaction.paymentDate")
+		message = "buyOutSurplus.transaction.paymentDate")
+@SpELExpression(expression = "{!((#status == 'UNDER_APPEAL') == (#dateOfAppeal == null))}",
+		message = "buyOutSurplus.transaction.dateOfAppeal")
 public class BuyOutSurplusTransactionUpdatePaymentStatusDTO {
 
 	@NotNull
@@ -37,4 +44,11 @@ public class BuyOutSurplusTransactionUpdatePaymentStatusDTO {
 
 	@PastOrPresent
 	private LocalDate paymentDate;
+
+	@PastOrPresent
+	private LocalDate dateOfAppeal;
+
+	@Builder.Default
+	@NotEmpty
+	private Set<Long> detailIds = new HashSet<>();
 }

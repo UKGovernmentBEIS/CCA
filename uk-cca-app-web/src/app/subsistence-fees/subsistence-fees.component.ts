@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { tap } from 'rxjs';
@@ -23,7 +23,6 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
     WorkflowHistoryTabComponent,
     WarningTextComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubsistenceFeesComponent implements OnInit {
   private readonly router = inject(Router);

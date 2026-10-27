@@ -2,13 +2,14 @@ import { Routes } from '@angular/router';
 
 export const NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW_ROUTES: Routes = [
   {
+    title: 'Notice of intent sent for peer review',
     path: '',
     children: [
       {
-        path: 'upload-notice-of-intent',
         title: 'Upload notice of intent file',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'upload-notice-of-intent',
         loadComponent: () => import('@requests/common').then((c) => c.UploadNoticeOfIntentSummaryComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
         path: '**',

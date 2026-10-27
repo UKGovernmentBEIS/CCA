@@ -11,7 +11,6 @@ describe('ConditionalContentDirective', () => {
   let hostComponent: TestComponent;
 
   @Component({
-    imports: [ReactiveFormsModule, ConditionalContentDirective, TextInputComponent],
     template: `
       <form [formGroup]="form">
         <div govukConditionalContent>
@@ -31,6 +30,7 @@ describe('ConditionalContentDirective', () => {
         </div>
       </form>
     `,
+    imports: [ReactiveFormsModule, ConditionalContentDirective, TextInputComponent],
   })
   class TestComponent {
     readonly conditionals = viewChildren(ConditionalContentDirective);

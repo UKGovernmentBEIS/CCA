@@ -1,11 +1,11 @@
-@if (facilityInfoDTO; as details) {
+@if (facilityInfoDTO(); as details) {
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <netz-page-heading size="l" [caption]="details.facilityBusinessId" class="govuk-tag-heading-align">
         {{ details.siteName }}
 
         <span>
-          <govuk-tag [color]="details.status === 'LIVE' ? 'green' : 'red'">
+          <govuk-tag [color]="details.status | statusColor">
             {{ details.status | status }}
           </govuk-tag>
         </span>
@@ -13,9 +13,7 @@
     </div>
 
     <div class="govuk-grid-column-one-quarter" style="text-align: end">
-      <button class="govuk-!-margin-top-6" govukButton type="button" routerLink="./process-actions">
-        Start a facility task
-      </button>
+      <a class="govuk-!-margin-top-6" govukButton routerLink="./process-actions">Start a facility task</a>
     </div>
   </div>
 
@@ -23,9 +21,43 @@
     <govuk-tabs queryParamsHandling="replace">
       <ng-template govukTabLazy id="details" label="Facility details">
         <cca-summary [data]="summaryData()" />
+
+        @if (surplusDetails(); as surplus) {
+          <h2 class="govuk-heading-m">Surplus</h2>
+          <dl govuk-summary-list [hasBorders]="false" data-testid="surplus">
+            <div govukSummaryListRow>
+              <dt govukSummaryListRowKey>Surplus gained (tCO2e)</dt>
+              <dd govukSummaryListRowValue>{{ surplus.surplusGained | surplusAmount }}</dd>
+              @if (showSurplusActions()) {
+                <dd govukSummaryListRowActions>
+                  <ul class="govuk-summary-list__actions-list">
+                    @if (canEditSurplus()) {
+                      <li class="govuk-summary-list__actions-list-item">
+                        <a class="govuk-link" routerLink="edit-surplus">
+                          Change<span class="govuk-visually-hidden"> surplus gained (tCO2e)</span>
+                        </a>
+                      </li>
+                    }
+                    @if (canViewSurplusHistory()) {
+                      <li class="govuk-summary-list__actions-list-item">
+                        <a class="govuk-link" routerLink="surplus-history">
+                          View history<span class="govuk-visually-hidden"> of surplus gained</span>
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </dd>
+              }
+            </div>
+          </dl>
+        }
       </ng-template>
 
-      @if (roleType() !== 'SECTOR_USER') {
+      <ng-template govukTabLazy id="certification-status" label="Certification status">
+        <cca-certification-status-tab />
+      </ng-template>
+
+      @if (showAudit()) {
         <ng-template govukTabLazy id="audit" label="Audit">
           <cca-audit-summary />
         </ng-template>

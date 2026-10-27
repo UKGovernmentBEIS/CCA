@@ -1,5 +1,5 @@
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserId } from '@netz/common/auth';
@@ -23,7 +23,6 @@ import { ProductStatusColorPipe } from '../pipes';
     RouterLink,
     DecimalPipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SplitByProductTableComponent {
   private readonly authStore = inject(AuthStore);

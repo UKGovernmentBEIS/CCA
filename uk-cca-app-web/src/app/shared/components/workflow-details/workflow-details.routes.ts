@@ -1,23 +1,25 @@
 import { Routes } from '@angular/router';
 
 import { NOTES_ROUTES } from '../notes-tab/notes.routes';
-import { WorkflowDetailsResolver } from './workflow-details.resolver';
+import { ResolvedWorkflowDetails, WorkflowDetailsResolver } from './workflow-details.resolver';
 
 export const WORKFLOW_DETAILS_ROUTES: Routes = [
   {
     path: ':workflowId',
-    resolve: { workflowDetailsItemsAndActions: WorkflowDetailsResolver },
     data: {
-      breadcrumb: ({ workflowDetailsItemsAndActions }) => `${workflowDetailsItemsAndActions.workflowDetails.id}`,
+      breadcrumb: ({ workflowDetailsItemsAndActions }: { workflowDetailsItemsAndActions: ResolvedWorkflowDetails }) =>
+        `${workflowDetailsItemsAndActions.workflowDetails.id}`,
     },
+    resolve: { workflowDetailsItemsAndActions: WorkflowDetailsResolver },
     children: [
       {
+        title: 'Workflow details',
         path: '',
         loadComponent: () => import('./workflow-details.component').then((c) => c.WorkflowDetailsComponent),
       },
       {
         path: 'timeline',
-        loadChildren: () => import('@requests/timeline').then((c) => c.TIMELINE_ROUTES),
+        loadChildren: () => import('@requests/timeline').then((r) => r.TIMELINE_ROUTES),
       },
       ...NOTES_ROUTES,
     ],

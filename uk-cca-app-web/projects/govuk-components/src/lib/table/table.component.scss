@@ -1,5 +1,12 @@
 @use 'govuk-frontend/dist/govuk/index' as govuk;
 
+// A header hint makes its column taller than the rest. Anchor every header
+// cell to the bottom so the single-line headers stay right above the row
+// border instead of leaving an empty gap beneath them.
+.govuk-table--header-hint .govuk-table__header {
+  vertical-align: bottom;
+}
+
 [aria-sort] button,
 [aria-sort] button:hover {
   background-color: transparent;

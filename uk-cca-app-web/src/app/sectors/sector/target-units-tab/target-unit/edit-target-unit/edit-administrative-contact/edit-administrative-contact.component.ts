@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -17,9 +17,8 @@ import {
 @Component({
   selector: 'cca-edit-administrative-contact',
   templateUrl: './edit-administrative-contact.component.html',
-  imports: [ReactiveFormsModule, AdministrativeContactInputComponent, WizardStepComponent, RouterLink],
   providers: [EditAdministrativeContactFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, AdministrativeContactInputComponent, WizardStepComponent, RouterLink],
 })
 export class EditAdministrativeContactComponent {
   private readonly updateTargetUnitAccountService = inject(UpdateTargetUnitAccountService);

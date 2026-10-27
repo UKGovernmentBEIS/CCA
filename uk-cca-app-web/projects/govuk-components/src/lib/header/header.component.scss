@@ -1,0 +1,50 @@
+@use 'govuk-frontend/dist/govuk/base' as govuk;
+
+:host {
+  display: block;
+}
+
+// The actions area is an extension of the upstream govuk-frontend header,
+// expected to hold the "Change service" and "Sign out" links. Hide it when
+// nothing is projected so the empty flex item leaves no gap.
+.govuk-header__actions:empty {
+  display: none;
+}
+
+// The actions area is an extension of the upstream govuk-frontend header,
+// expected to hold the "Change service" and "Sign out" links
+.govuk-header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.govuk-header__logo {
+  width: auto;
+  float: none;
+}
+
+.govuk-header__actions {
+  display: flex;
+  align-items: center;
+  column-gap: govuk.govuk-spacing(4);
+
+  // The links and buttons are projected content, so they carry the projecting
+  // component's scoping attribute; ::ng-deep lifts the emulated encapsulation
+  // for them while staying anchored under the component-scoped actions class.
+  // The divider lives outside the action's own box (positioned in the middle
+  // of the flex gap), so the focus state only highlights the action itself
+  ::ng-deep :is(a, button) + :is(a, button) {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -#{govuk.govuk-spacing(2)};
+      width: 1px;
+      background: govuk.govuk-functional-colour(inverse-text);
+    }
+  }
+}

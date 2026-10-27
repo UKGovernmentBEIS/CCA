@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
@@ -6,9 +6,17 @@ import { GovukDatePipe } from '@netz/common/pipes';
 import { AccordionComponent, AccordionItemComponent } from '@netz/govuk-components';
 import { SummaryComponent } from '@shared/components';
 
-import { BuyOutAndSurplusTransactionInfoViewService, BuyOutSurplusTransactionHistoryDTO } from 'cca-api';
+import {
+  AccountBuyOutSurplusTransactionDTO,
+  BuyOutAndSurplusTransactionDetailInfoViewService,
+  BuyOutSurplusTransactionDetailHistoryDTO,
+} from 'cca-api';
 
-import { toAmountHistorySummaryData, toStatusHistorySummaryData } from './transaction-history-summary-data';
+import {
+  isAmountChangedPayload,
+  toAmountHistorySummaryData,
+  toStatusHistorySummaryData,
+} from './transaction-history-summary-data';
 
 @Component({
   selector: 'cca-transaction-history-tab',
@@ -30,26 +38,30 @@ import { toAmountHistorySummaryData, toStatusHistorySummaryData } from './transa
       </govuk-accordion>
     }
   `,
-  imports: [AccordionComponent, AccordionItemComponent, GovukDatePipe, SummaryComponent],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AccordionComponent, AccordionItemComponent, GovukDatePipe, SummaryComponent],
 })
 export class TransactionHistoryTabComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly buyOutAndSurplusTransactionInfoViewService = inject(BuyOutAndSurplusTransactionInfoViewService);
-
-  private readonly transactionId = +this.activatedRoute.snapshot.paramMap.get('transactionId');
-
-  protected readonly transactionHistory = toSignal(
-    this.buyOutAndSurplusTransactionInfoViewService.getBuyOutSurplusTransactionHistory(this.transactionId),
+  private readonly buyOutAndSurplusTransactionDetailInfoViewService = inject(
+    BuyOutAndSurplusTransactionDetailInfoViewService,
   );
 
-  toTransactionHistorySummaryData(th: BuyOutSurplusTransactionHistoryDTO) {
-    if (th.payload.type === 'AMOUNT_CHANGED') return toAmountHistorySummaryData(th);
-    return toStatusHistorySummaryData(th);
+  private readonly transactionDetails = this.activatedRoute.snapshot.data
+    .transactionDetails as AccountBuyOutSurplusTransactionDTO;
+
+  protected readonly transactionHistory = toSignal(
+    this.buyOutAndSurplusTransactionDetailInfoViewService.getBuyOutSurplusTransactionDetailHistory(
+      this.transactionDetails.detailId,
+    ),
+  );
+
+  toTransactionHistorySummaryData(th: BuyOutSurplusTransactionDetailHistoryDTO) {
+    if (isAmountChangedPayload(th.payload)) return toAmountHistorySummaryData(th.payload);
+    return toStatusHistorySummaryData(th.payload);
   }
 
-  toHeader(th: BuyOutSurplusTransactionHistoryDTO) {
-    return th.payload.type === 'AMOUNT_CHANGED' ? 'Amount' : 'Status';
+  toHeader(th: BuyOutSurplusTransactionDetailHistoryDTO) {
+    return isAmountChangedPayload(th.payload) ? 'Amount' : 'Status';
   }
 }

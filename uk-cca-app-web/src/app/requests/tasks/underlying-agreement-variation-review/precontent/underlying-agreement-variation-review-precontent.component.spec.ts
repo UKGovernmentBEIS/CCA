@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
@@ -23,7 +23,7 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UnderlyingAgreementVariationReviewPrecontentComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), RequestTaskStore, provideRouter([])],
+      providers: [provideHttpClient(withXhr()), provideHttpClientTesting(), RequestTaskStore, provideRouter([])],
     })
       .overrideProvider(Router, { useValue: mockRouter })
       .overrideProvider(ActivatedRoute, { useValue: mockRoute })

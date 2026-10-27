@@ -37,14 +37,14 @@ describe('AdminTerminationSubmittedTimelineComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Termination reason', 'Explain why the account is being terminated', 'Uploaded files'],
-        ['Failure to agree a variation in a target', 'asdsadsad', 'sample_profile1.png'],
+        ['Failure to agree a variation in a target', 'asdsadsad', 'sample_profile1.png (opens in a new tab)'],
       ],
       [
         ['Users', 'Name and signature on the official notice', 'Official notice'],
         [
           'asdasdsa lname, Responsible person, test-test@cca.ukasd England, Administrative contact, test-admin@test.comFred_2 William_2, Sector contact, fredwilliam_2@agindustries.org.uk',
           'Regulator England',
-          'Notice of intent to terminate agreement.pdf',
+          'Notice of intent to terminate agreement.pdf (opens in a new tab)',
         ],
       ],
     ]);

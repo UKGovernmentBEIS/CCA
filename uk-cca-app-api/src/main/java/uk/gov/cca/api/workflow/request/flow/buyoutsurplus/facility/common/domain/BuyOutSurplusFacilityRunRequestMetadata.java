@@ -12,4 +12,6 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSu
 @SuperBuilder
 public class BuyOutSurplusFacilityRunRequestMetadata extends BuyOutSurplusRunRequestMetadata {
 
+	private Long totalFacilities;
+    private Long failedFacilities;
 }

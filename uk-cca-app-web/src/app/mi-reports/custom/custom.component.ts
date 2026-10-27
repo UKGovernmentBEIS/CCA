@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { EMPTY, map } from 'rxjs';
@@ -10,7 +10,6 @@ import { ButtonDirective, ErrorSummaryComponent, GovukValidators, TextareaCompon
 
 import { CustomMiReportQuery, MiReportsUserDefinedService } from 'cca-api';
 
-import { ExtendedMiReportResult } from '../core/mi-interfaces';
 import { MiReportsExportService } from '../core/mi-reports-export.service';
 
 @Component({
@@ -24,7 +23,6 @@ import { MiReportsExportService } from '../core/mi-reports-export.service';
     PendingButtonDirective,
     ErrorSummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomReportComponent {
   private readonly fb = inject(FormBuilder);
@@ -52,7 +50,7 @@ export class CustomReportComponent {
           this.isErrorSummaryDisplayed.set(true);
           return EMPTY;
         }),
-        map((results: ExtendedMiReportResult) => {
+        map((results) => {
           this.miReportsExportService.exportToExcel(results, 'Custom sql report');
         }),
       )

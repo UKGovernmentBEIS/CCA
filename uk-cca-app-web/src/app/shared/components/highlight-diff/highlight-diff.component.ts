@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -19,7 +18,6 @@ import { StaleChunkRecoveryService } from '../../services/stale-chunk-recovery.s
   templateUrl: './highlight-diff.component.html',
   styleUrl: './highlight-diff.component.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HighlightDiffComponent implements AfterViewInit {
   private readonly domSanitizer = inject(DomSanitizer);
@@ -63,6 +61,12 @@ export class HighlightDiffComponent implements AfterViewInit {
   }
 
   onClickDiff(event: MouseEvent | KeyboardEvent) {
+    // Links inside the diffed HTML are real anchors: Enter activates them natively.
+    // Handle Enter here so navigation stays SPA-only and the browser does not also fire click.
+    if (event.type === 'keydown' && (event as KeyboardEvent).key !== 'Enter') {
+      return;
+    }
+
     let eventTarget: HTMLElement;
 
     if (event.target instanceof HTMLAnchorElement) {
@@ -71,12 +75,7 @@ export class HighlightDiffComponent implements AfterViewInit {
       eventTarget = (event.target as Node).parentElement;
     }
 
-    if (
-      eventTarget &&
-      eventTarget instanceof HTMLAnchorElement &&
-      eventTarget.getAttribute('target') !== '_blank' &&
-      event.type === 'click'
-    ) {
+    if (eventTarget && eventTarget instanceof HTMLAnchorElement && eventTarget.getAttribute('target') !== '_blank') {
       event.preventDefault();
       const link = eventTarget.href.replace(eventTarget.baseURI, '');
       this.router.navigateByUrl(this.router.serializeUrl(this.router.parseUrl(link)));

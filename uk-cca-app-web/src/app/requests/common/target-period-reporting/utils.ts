@@ -1,3 +1,5 @@
+import { ValidationErrors, ValidatorFn } from '@angular/forms';
+
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit, transformMeasurementTypeToUnit } from '@shared/pipes';
 import BigNumber from 'bignumber.js';
 
@@ -292,7 +294,7 @@ export function calculateAdjustedImprovementTarget(
 
   const facilityTarget = calculateFacilityImprovementTarget(referenceData, reportType, targetPeriodType);
 
-  if (!facilityBaseYear || !productBaseYear || productBaseYear === facilityBaseYear) {
+  if (!facilityBaseYear || !productBaseYear || productBaseYear <= facilityBaseYear) {
     return facilityTarget;
   }
 
@@ -417,6 +419,67 @@ export function decideVariableEnergyType(
   variableEnergyType: PerformanceDataFacilityBaselineAndTargets['variableEnergyType'] | null,
 ): PerformanceDataFacilityBaselineAndTargets['variableEnergyType'] {
   return variableEnergyType === 'BY_PRODUCT' ? 'BY_PRODUCT' : 'TOTALS';
+}
+
+export function calculateTotalDeliveredEnergy(
+  energyFuelDetails?: PerformanceDataFacilityInputEnergyFuelDetails,
+): BigNumber {
+  let total = new BigNumber(0);
+
+  if (energyFuelDetails?.standardFuels) {
+    Object.values(energyFuelDetails.standardFuels).forEach((fuel) => {
+      total = total.plus(toBigNumber(fuel?.deliveredEnergy));
+    });
+  }
+
+  if (energyFuelDetails?.nonStandardFuels) {
+    energyFuelDetails.nonStandardFuels.forEach((fuel) => {
+      total = total.plus(toBigNumber(fuel?.deliveredEnergy));
+    });
+  }
+
+  return total;
+}
+
+export function validateZeroEnergyForThroughput(
+  energyFuelDetails?: PerformanceDataFacilityInputEnergyFuelDetails,
+  baselineAndTargets?: PerformanceDataFacilityBaselineAndTargets,
+): string | null {
+  const totalDeliveredEnergy = calculateTotalDeliveredEnergy(energyFuelDetails);
+
+  if (!totalDeliveredEnergy.isZero()) {
+    return null;
+  }
+
+  // Zero energy is only allowed when the facility has no variable energy or uses totals-only
+  // AND the total baseline energy (fixed + variable) is also zero.
+  const variableEnergyType = baselineAndTargets?.variableEnergyType;
+  const isTotalsOnlyOrNoVariableEnergy = variableEnergyType !== 'BY_PRODUCT';
+
+  const baselineFixedEnergy = toBigNumber(baselineAndTargets?.totalFixedEnergy);
+  const baselineVariableEnergy = toBigNumber(baselineAndTargets?.baselineVariableEnergy);
+  const totalBaselineEnergy = baselineFixedEnergy.plus(baselineVariableEnergy);
+
+  if (isTotalsOnlyOrNoVariableEnergy && totalBaselineEnergy.isZero()) {
+    return null;
+  }
+
+  return 'Total energy/fuel amount consumed during the period must be greater than zero';
+}
+
+/**
+ * Creates a form-group-level ValidatorFn that wraps {@link validateZeroEnergyForThroughput}.
+ * The energy and baseline values are captured at form creation time (they don't change
+ * during the form's lifecycle).
+ */
+export function createZeroEnergyValidatorFn(
+  energyFuelDetails: PerformanceDataFacilityInputEnergyFuelDetails | undefined,
+  baselineAndTargets: PerformanceDataFacilityBaselineAndTargets | undefined,
+): ValidatorFn {
+  return (): ValidationErrors | null => {
+    const errorMessage = validateZeroEnergyForThroughput(energyFuelDetails, baselineAndTargets);
+    return errorMessage ? { zeroEnergy: errorMessage } : null;
+  };
 }
 
 export function calculateActualEnergyTotal(

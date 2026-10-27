@@ -7,12 +7,14 @@ import com.fasterxml.jackson.databind.jsontype.NamedType;
 
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.run.domain.BuyOutSurplusRunCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.run.domain.BuyOutSurplusFacilityRunCreateActionPayload;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountCreationSubmitApplicationCreateActionPayload;
 import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
 
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestCreateActionPayloadType.BUY_OUT_SURPLUS_FACILITY_RUN_CREATE_ACTION_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestCreateActionPayloadType.BUY_OUT_SURPLUS_RUN_CREATE_ACTION_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestCreateActionPayloadType.EMISSIONS_TRADING_SCHEME_DATA_CREATE_ACTION_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestCreateActionPayloadType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CREATE_ACTION_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestCreateActionPayloadType.TARGET_UNIT_ACCOUNT_CREATION_SUBMIT_PAYLOAD;
 
@@ -29,7 +31,9 @@ public class RequestCreateActionPayloadTypesProvider implements JsonSubTypesProv
 				// Buy Out Surplus Facility
 				new NamedType(BuyOutSurplusFacilityRunCreateActionPayload.class, BUY_OUT_SURPLUS_FACILITY_RUN_CREATE_ACTION_PAYLOAD),
 				// Performance Data Facility Digital Form
-				new NamedType(PerformanceDataFacilityDigitalFormRequestCreateActionPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CREATE_ACTION_PAYLOAD)
+				new NamedType(PerformanceDataFacilityDigitalFormRequestCreateActionPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CREATE_ACTION_PAYLOAD),
+				// Emissions Trading Scheme
+				new NamedType(EmissionsTradingSchemeDataRequestCreateActionPayload.class, EMISSIONS_TRADING_SCHEME_DATA_CREATE_ACTION_PAYLOAD)
 		);
 	}
 

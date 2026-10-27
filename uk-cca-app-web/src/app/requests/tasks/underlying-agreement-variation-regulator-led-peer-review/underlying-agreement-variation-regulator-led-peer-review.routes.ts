@@ -4,23 +4,26 @@ import { userIsAssigneeGuard } from '@shared/guards';
 
 export const UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW_ROUTES: Routes = [
   {
+    title: 'Peer review of underlying agreement variation',
     path: '',
     children: [
       {
+        title: 'Variation details',
         path: 'variation-details',
-        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewVariationDetailsComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
+        title: 'Target unit details',
         path: 'review-target-unit-details',
-        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetUnitDetailsComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        path: 'manage-facilities',
         title: 'Manage facilities list',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'manage-facilities',
         loadComponent: () => import('@requests/common').then((c) => c.RegulatorLedPeerReviewManageFacilitiesComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
         path: 'facility',
@@ -29,41 +32,45 @@ export const UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW_ROUTES: Ro
             path: ':facilityId',
             children: [
               {
-                path: '',
                 title: 'Facility',
-                data: { backlink: '../../manage-facilities', breadcrumb: false },
+                path: '',
                 loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewFacilityComponent),
+                data: { backlink: '../../manage-facilities', breadcrumb: false },
               },
               {
-                path: 'products',
                 title: 'View Products',
-                data: { breadcrumb: false, backlink: '../' },
+                path: 'products',
                 loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsPeerReviewComponent),
+                data: { breadcrumb: false, backlink: '../' },
               },
             ],
           },
         ],
       },
       {
+        title: 'TP5 (2021-2022)',
         path: 'target-period-5',
-        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetPeriod5Component),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
+        title: 'TP6 (2024)',
         path: 'target-period-6',
-        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetPeriod6Component),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
+        title: 'Authorisation and additional evidence',
         path: 'authorisation-additional-evidence',
-        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
           import('@requests/common').then((c) => c.UNAVariationPeerReviewAuthorisationAdditionalEvidenceComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
+        title: 'Determine operator assent',
         path: 'operator-assent-decision',
-        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('@requests/common').then((c) => c.OperatorAssentDecisionComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
         path: 'peer-review-decision',

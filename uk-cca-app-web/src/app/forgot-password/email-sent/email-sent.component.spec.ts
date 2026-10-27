@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 import { BasePage } from '@netz/common/testing';
 
@@ -23,7 +23,8 @@ describe('EmailSentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmailSentComponent, RouterTestingModule],
+      imports: [EmailSentComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmailSentComponent);
@@ -38,7 +39,7 @@ describe('EmailSentComponent', () => {
   });
 
   it('should display appropriate title for password reset', () => {
-    expect(element.querySelector('h2').textContent.trim()).toEqual('Password reset email sent');
+    expect(element.querySelector('h1').textContent.trim()).toEqual('Password reset email sent');
   });
 
   it('should render details to reveal more information ', () => {

@@ -8,31 +8,33 @@ export const SUBMIT_ROUTES: Routes = [
     resolve: { calculatedResults: calculatedResultsResolver },
     children: [
       {
-        path: '',
         title: 'Confirm results and submit',
-        data: { backlink: '../../', breadcrumb: false },
+        path: '',
         loadComponent: () =>
           import('./action/tpr-form-submit-action.component').then((c) => c.TprFormSubmitActionComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
+        title: 'Target period report submitted',
         path: 'confirmation',
-        data: { backlink: false, breadcrumb: false },
         loadComponent: () =>
           import('./confirmation/tpr-form-submit-confirmation.component').then(
             (c) => c.TprFormSubmitConfirmationComponent,
           ),
+        data: { backlink: false, breadcrumb: false },
       },
       {
+        title: 'Target period report expired',
         path: 'expired',
-        data: { backlink: false, breadcrumb: false },
         loadComponent: () =>
           import('./expired/tpr-form-submit-expired.component').then((c) => c.TprFormSubmitExpiredComponent),
+        data: { backlink: false, breadcrumb: false },
       },
       {
-        path: 'products',
         title: 'View Products',
-        data: { breadcrumb: false, backlink: '../' },
+        path: 'products',
         loadComponent: () => import('@requests/common').then((c) => c.TprProductsComponent),
+        data: { breadcrumb: false, backlink: '../' },
       },
     ],
   },

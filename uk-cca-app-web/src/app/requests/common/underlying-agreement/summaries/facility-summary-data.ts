@@ -1,12 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
-import {
-  calculateFixedEnergy,
-  calculateOtherYearsVariableEnergy,
-  calculateTotalEnergy,
-  calculateVariableEnergy,
-} from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { StatusPipe, transformAddress } from '@shared/pipes';
 import { MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '@shared/pipes';
@@ -29,6 +23,12 @@ import {
 } from 'cca-api';
 
 import { boolToString, isCCA2Scheme, isCCA3Scheme } from '../../utils';
+import {
+  calculateFixedEnergy,
+  calculateOtherYearsVariableEnergy,
+  calculateTotalEnergy,
+  calculateVariableEnergy,
+} from '../facility/utils';
 import { AgreementCompositionTypePipe, AgreementTypeEnum, ApplicationReasonTypeEnum, CaNameEnum } from '../pipes';
 import { FacilityWizardStep } from '../types';
 import { addFacilityDecisionSummaryData } from './decision-summary-data';

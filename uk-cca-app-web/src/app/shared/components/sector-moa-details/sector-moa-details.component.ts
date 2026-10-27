@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -37,6 +37,7 @@ const DEFAULT_PAGE_SIZE = 30;
 @Component({
   selector: 'cca-sector-moa-details',
   templateUrl: './sector-moa-details.component.html',
+  providers: [TargetUnitsListFormProvider, StatusPipe],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -55,8 +56,6 @@ const DEFAULT_PAGE_SIZE = 30;
     WarningTextComponent,
     UtilityPanelComponent,
   ],
-  providers: [TargetUnitsListFormProvider, StatusPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorMoaDetailsComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

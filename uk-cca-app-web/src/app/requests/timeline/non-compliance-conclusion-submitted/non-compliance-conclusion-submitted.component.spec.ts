@@ -77,7 +77,7 @@ describe('NonComplianceConclusionSubmittedComponent', () => {
       ],
       [
         ['Upload file', 'Comments'],
-        ['withdrawal-notice.pdf', 'Withdrawal notice comments'],
+        ['withdrawal-notice.pdf (opens in a new tab)', 'Withdrawal notice comments'],
       ],
       [
         ['Users notified'],

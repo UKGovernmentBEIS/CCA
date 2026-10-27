@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,6 +24,7 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
 @Component({
   selector: 'cca-explanation-component',
   templateUrl: './additional-info.component.html',
+  providers: [provideAdditionalInfo()],
   imports: [
     WizardStepComponent,
     TextareaComponent,
@@ -34,8 +35,6 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
     MultipleFileInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [provideAdditionalInfo()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdditionalInfoComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

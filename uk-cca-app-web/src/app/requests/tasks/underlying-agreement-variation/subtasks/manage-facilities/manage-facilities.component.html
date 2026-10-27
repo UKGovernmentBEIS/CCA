@@ -8,7 +8,7 @@
 
   @if (isEditable()) {
     <div class="govuk-grid-column-one-quarter" style="text-align: end">
-      <button [routerLink]="['add']" govukSecondaryButton type="button">Add facility</button>
+      <a [routerLink]="['add']" govukSecondaryButton>Add facility</a>
     </div>
   }
 </div>
@@ -91,19 +91,21 @@
                   @if (isEditable()) {
                     <div class="govuk-!-text-align-center">
                       @if (row['status'] === 'NEW') {
-                        <a class="govuk-!-padding-left-1 govuk-link" [routerLink]="[row.facilityId, 'delete']">
-                          Delete
-                        </a>
+                        <a class="govuk-!-padding-left-1 govuk-link" [routerLink]="[row.facilityId, 'delete']"
+                          >Delete<span class="govuk-visually-hidden"> {{ row.facilityId }}</span></a
+                        >
                       }
 
                       @if (row['status'] === 'LIVE') {
-                        <a class="govuk-!-padding-left-1 govuk-link" [routerLink]="[row.facilityId, 'exclude']">
-                          Exclude
-                        </a>
+                        <a class="govuk-!-padding-left-1 govuk-link" [routerLink]="[row.facilityId, 'exclude']"
+                          >Exclude<span class="govuk-visually-hidden"> {{ row.facilityId }}</span></a
+                        >
                       }
 
                       @if (row['status'] === 'EXCLUDED') {
-                        <a class="govuk-!-padding-left-1 govuk-link" [routerLink]="[row.facilityId, 'undo']"> Undo </a>
+                        <a class="govuk-!-padding-left-1 govuk-link" [routerLink]="[row.facilityId, 'undo']"
+                          >Undo<span class="govuk-visually-hidden"> {{ row.facilityId }}</span></a
+                        >
                       }
                     </div>
                   }
@@ -118,7 +120,7 @@
 
           @if (manageFacilities()?.length >= filtersAndPaginationLimit) {
             <cca-pagination
-              [count]="filteredItems()?.length"
+              [count]="$safeNavigationMigration(filteredItems()?.length)"
               [currentPage]="currentPage()"
               [pageSize]="pageSize()"
               (pageChange)="onPageChange($event)"

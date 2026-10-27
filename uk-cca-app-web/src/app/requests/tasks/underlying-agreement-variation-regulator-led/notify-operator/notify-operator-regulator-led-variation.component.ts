@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +31,7 @@ import { createNotifyOperatorActionDTO } from '../transform';
 @Component({
   selector: 'cca-notify-operator-regulator-led-variation',
   templateUrl: './notify-operator-regulator-led-variation.component.html',
+  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -41,8 +42,6 @@ import { createNotifyOperatorActionDTO } from '../transform';
     SelectComponent,
     NoticeRecipientsTypePipe,
   ],
-  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotifyOperatorRegulatorLedVariationComponent {
   private readonly store = inject(RequestTaskStore);

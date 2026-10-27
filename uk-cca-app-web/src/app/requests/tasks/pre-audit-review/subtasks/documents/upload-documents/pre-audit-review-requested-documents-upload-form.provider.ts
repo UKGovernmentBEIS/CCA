@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn } fr
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
+import { getAttachmentType } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 
@@ -39,7 +40,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       requestedDocuments?.processFlowMapsFile,
       attachments || {},
-      PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -48,7 +49,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       requestedDocuments?.manufacturingProcessFile,
       attachments || {},
-      PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -57,7 +58,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       requestedDocuments?.annotatedSitePlansFile,
       attachments || {},
-      PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -66,7 +67,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       requestedDocuments?.eligibleProcessFile,
       attachments || {},
-      PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -75,7 +76,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       requestedDocuments?.directlyAssociatedActivitiesFile,
       attachments || {},
-      PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -84,7 +85,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       requestedDocuments?.seventyPerCentRuleEvidenceFile,
       attachments || {},
-      PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -93,7 +94,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       requestedDocuments?.baseYearTargetPeriodEvidenceFiles || [],
       attachments || {},
-      PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -102,7 +103,7 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       store.select(requestTaskQuery.selectRequestTaskId)(),
       requestedDocuments?.additionalDocuments || [],
       attachments || {},
-      PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(PRE_AUDIT_REVIEW_UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !store.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -131,7 +132,8 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
 };
 
 function atLeastOneFileUploadedValidator(): ValidatorFn {
-  return (group: PreAuditReviewRequestedDocumentsFormModel): ValidationErrors | null => {
+  return (control): ValidationErrors | null => {
+    const group = control as PreAuditReviewRequestedDocumentsFormModel;
     if (!group || !(group instanceof FormGroup)) return null;
 
     if (

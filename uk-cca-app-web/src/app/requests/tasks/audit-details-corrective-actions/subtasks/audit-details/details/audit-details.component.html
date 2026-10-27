@@ -6,8 +6,14 @@
     caption="Audit details"
     data-testid="audit-details-form"
   >
-    <p class="govuk-label govuk-label--m">Audit technique</p>
-    <div class="govuk-!-margin-bottom-9" formControlName="auditTechnique" govuk-radio [isInline]="true">
+    <div
+      class="govuk-!-margin-bottom-9"
+      formControlName="auditTechnique"
+      govuk-radio
+      [isInline]="true"
+      legend="Audit technique"
+      legendSize="medium"
+    >
       <govuk-radio-option [value]="'DESK_BASED_INTERVIEW'" [label]="'Desk-based audit'" />
       <govuk-radio-option [value]="'ON_SITE_VISIT'" [label]="'On-site visit'" />
     </div>
@@ -39,9 +45,12 @@
       [max]="today"
     ></div>
 
-    <p class="govuk-label govuk-label--m">Audit documents</p>
-    <span class="govuk-hint"> Upload the final audit report you sent to the operator</span>
-    <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="auditDocuments" label=" " hint=" " />
+    <cca-multiple-file-input
+      [baseDownloadUrl]="downloadUrl"
+      formControlName="auditDocuments"
+      label="Audit documents"
+      hint="Upload the final audit report you sent to the operator"
+    />
   </cca-wizard-step>
 
   <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />

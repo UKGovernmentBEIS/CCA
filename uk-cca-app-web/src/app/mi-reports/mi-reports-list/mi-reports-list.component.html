@@ -5,8 +5,13 @@
         <a [routerLink]="['edit-mi-report', row.id]" class="govuk-link">{{ row.reportName }}</a>
       }
       @case ('id') {
-        <a class="govuk-link" href="javascript:void(0)" (click)="exportToExcel(row)">Export to Excel</a> |
-        <a [routerLink]="['delete-mi-report', row.id]" class="govuk-link">Delete</a>
+        <button type="button" class="govuk-link" (click)="exportToExcel(row)">
+          Export to Excel<span class="govuk-visually-hidden"> {{ row.reportName }}</span>
+        </button>
+        |
+        <a [routerLink]="['delete-mi-report', row.id]" class="govuk-link"
+          >Delete<span class="govuk-visually-hidden"> {{ row.reportName }}</span></a
+        >
       }
       @case ('description') {
         <span>{{ row[column.field] | textEllipsis }}</span>

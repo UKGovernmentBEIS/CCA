@@ -5,8 +5,8 @@
         {{ subFeesDetails.paymentRequestId }}
 
         <span>
-          <govuk-tag [color]="subFeesDetails?.paymentStatus | statusColor" class="tag-width">
-            {{ subFeesDetails?.paymentStatus | status }}
+          <govuk-tag [color]="$safeNavigationMigration(subFeesDetails?.paymentStatus) | statusColor" class="tag-width">
+            {{ $safeNavigationMigration(subFeesDetails?.paymentStatus) | status }}
           </govuk-tag>
         </span>
       </netz-page-heading>
@@ -19,11 +19,19 @@
         <cca-summary [data]="data()" />
       </ng-template>
 
-      <ng-template govukTabLazy id="sector-moas" [label]="'Sector MoAs (' + subFeesDetails?.sectorMoasCount + ')'">
+      <ng-template
+        govukTabLazy
+        id="sector-moas"
+        [label]="'Sector MoAs (' + $safeNavigationMigration(subFeesDetails?.sectorMoasCount) + ')'"
+      >
         <cca-sector-moas />
       </ng-template>
 
-      <ng-template govukTabLazy id="tu-moas" [label]="'Target unit MoAs (' + subFeesDetails?.targetUnitMoasCount + ')'">
+      <ng-template
+        govukTabLazy
+        id="tu-moas"
+        [label]="'Target unit MoAs (' + $safeNavigationMigration(subFeesDetails?.targetUnitMoasCount) + ')'"
+      >
         <cca-tu-moas />
       </ng-template>
     </govuk-tabs>

@@ -1,5 +1,5 @@
 import { HttpEvent } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { requestTaskReassignedError } from '@shared/errors';
 
 import { FileEvidencesUploadService, FileInfoDTO, FileUuidDTO } from 'cca-api';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class FileEvidenceUploadService {
   private readonly formBuilder = inject(FormBuilder);
   private readonly businessErrorService = inject(BusinessErrorService);
@@ -45,7 +45,7 @@ export class FileEvidenceUploadService {
   private buildFileEvent(uuid: string, name: string): FileUploadEvent {
     return {
       uuid,
-      file: { name } as File,
+      file: { name },
     };
   }
 

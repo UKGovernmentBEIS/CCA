@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -54,7 +54,7 @@ describe('NoticeOfIntentCheckYourAnswersComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NoticeOfIntentCheckYourAnswersComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideZonelessChangeDetection(),
         { provide: ActivatedRoute, useValue: route },

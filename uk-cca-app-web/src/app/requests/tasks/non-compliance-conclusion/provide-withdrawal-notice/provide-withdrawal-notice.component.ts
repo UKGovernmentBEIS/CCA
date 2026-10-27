@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -22,6 +22,8 @@ import {
 
 @Component({
   selector: 'cca-provide-withdrawal-notice',
+  templateUrl: './provide-withdrawal-notice.component.html',
+  providers: [ProvideWithdrawalNoticeFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -29,9 +31,6 @@ import {
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [ProvideWithdrawalNoticeFormProvider],
-  templateUrl: './provide-withdrawal-notice.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProvideWithdrawalNoticeComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

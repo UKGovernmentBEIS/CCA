@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -19,7 +19,6 @@ import { RequestTaskActionPayload, TasksService } from 'cca-api';
     </div>
   `,
   imports: [PendingButtonDirective, PageHeadingComponent, ButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CloseTaskComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

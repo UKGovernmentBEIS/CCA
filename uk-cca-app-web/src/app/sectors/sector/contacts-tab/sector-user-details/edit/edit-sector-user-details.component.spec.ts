@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -32,7 +32,7 @@ describe('EditSectorUserDetailsComponent', () => {
       imports: [EditSectorUserDetailsComponent],
       providers: [
         ActiveSectorUserStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         {
           provide: ActivatedRoute,
           useValue: new ActivatedRouteStub({ sectorId: '4321', sectorUserId: '1234' }),

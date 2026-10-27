@@ -1,0 +1,19 @@
+<h3 class="govuk-heading-s">PAT report</h3>
+<form [formGroup]="form" data-testid="pat-report-form">
+  <div
+    label="Select reporting year"
+    [options]="reportingYearOptions"
+    formControlName="reportingYear"
+    govuk-select
+  ></div>
+</form>
+
+@if (summaryData()) {
+  <cca-summary [data]="summaryData()" />
+  <div class="flex-column">
+    <a class="govuk-link" [routerLink]="['reports', reportingYearValue(), 'pat-details']">View details</a>
+    <button type="button" class="govuk-link" (click)="exportToCSV()">Download PAT report</button>
+  </div>
+} @else if (reportingYearValue()) {
+  <p>There are no reports for the selected criteria.</p>
+}

@@ -223,6 +223,7 @@ describe('TprThroughputDetailsCheckYourAnswersComponent', () => {
   it('should build summary data with throughput section', () => {
     expect(getByText(/Target period throughput details/, fixture.nativeElement)).toBeTruthy();
     expect(getByText(/Total throughput/, fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/Adjusted throughput/, fixture.nativeElement)).toBeTruthy();
   });
 
   it('should call api with completed status and navigate on submit', () => {

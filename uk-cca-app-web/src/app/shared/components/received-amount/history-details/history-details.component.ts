@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -16,18 +16,19 @@ import { toHistoryDetailsSummary } from './history-details-summary';
       Amount {{ +amountHistory()?.transactionAmount > 0 ? 'added' : 'subtracted' }}
       {{
         +amountHistory()?.transactionAmount > 0
-          ? (amountHistory()?.transactionAmount | number)
+          ? ($safeNavigationMigration(amountHistory()?.transactionAmount) | number)
           : (amountHistory()?.transactionAmount.split('-')[1] | number)
       }}
       GBP by "{{ amountHistory()?.submitter }}"
     </netz-page-heading>
 
-    <p class="govuk-!-margin-bottom-9">{{ amountHistory()?.submissionDate | govukDate: 'datetime' }}</p>
+    <p class="govuk-!-margin-bottom-9">
+      {{ $safeNavigationMigration(amountHistory()?.submissionDate) | govukDate: 'datetime' }}
+    </p>
 
     <cca-summary [data]="data()" />
   `,
   imports: [PageHeadingComponent, GovukDatePipe, DecimalPipe, SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryDetailsComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

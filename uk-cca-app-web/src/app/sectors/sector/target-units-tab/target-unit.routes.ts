@@ -15,36 +15,36 @@ import { PatReportStore } from './target-unit/pat-report-store';
 import { PerformanceReportStore } from './target-unit/performance-report-store';
 import { REPORTS_TAB_ROUTES } from './target-unit/reports-tab/reports-tab.routes';
 import { USERS_AND_CONTACTS_ROUTES } from './target-unit/users-and-contacts-tab/users-and-contacts-tab.routes';
+import { targetUnitBreadcrumb, targetUnitTabBreadcrumb } from './target-unit-breadcrumb';
 
 export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
   {
+    title: 'Target unit details',
     path: ':targetUnitId',
-    providers: [ActiveTargetUnitStore, PerformanceReportStore, PatReportStore, BuyoutAndSurplusTabStore],
     canActivate: [TargetUnitGuard],
     canDeactivate: [
       () => inject(PerformanceReportStore).reset(),
       () => inject(PatReportStore).reset(),
       () => inject(BuyoutAndSurplusTabStore).reset(),
     ],
+    data: { breadcrumb: targetUnitBreadcrumb },
     resolve: { targetUnit: () => inject(ActiveTargetUnitStore).state },
-    data: {
-      breadcrumb: ({ targetUnit }) => `${targetUnit.targetUnitAccountDetails.name}`,
-      pageTitle: 'Target unit details',
-    },
     children: [
       {
+        title: 'Target unit details',
         path: '',
         loadComponent: () => import('./target-unit/target-unit.component').then((c) => c.TargetUnitComponent),
       },
       {
-        path: 'process-actions',
         title: 'Start a new task',
-        canDeactivate: [PendingRequestGuard],
+        path: 'process-actions',
         loadComponent: () => import('@shared/components').then((c) => c.StartNewTaskComponent),
+        canDeactivate: [PendingRequestGuard],
       },
       {
+        title: 'Your download has started',
         path: ':unaId/file-download/:fileType/:uuid',
-        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
+        loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },
       {
         path: 'facilities',
@@ -56,10 +56,12 @@ export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
       ...BUYOUT_AND_SURPLUS_ROUTES,
       {
         path: 'workflow-details',
+        data: { breadcrumb: targetUnitTabBreadcrumb('workflow-history') },
         children: WORKFLOW_DETAILS_ROUTES,
       },
       ...NOTES_ROUTES,
     ],
+    providers: [ActiveTargetUnitStore, PerformanceReportStore, PatReportStore, BuyoutAndSurplusTabStore],
   },
 ];
 

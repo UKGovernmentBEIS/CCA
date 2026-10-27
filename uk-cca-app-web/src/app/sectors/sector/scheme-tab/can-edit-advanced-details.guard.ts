@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 
 import { map } from 'rxjs';
 
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 
 import { SectorAssociationSchemeService } from 'cca-api';
 
@@ -16,7 +16,7 @@ export const canEditAdvancedDetailsGuard: CanActivateFn = (route) => {
     .getSectorAssociationSchemeBySectorAssociationId(sectorId)
     .pipe(
       map((sectorScheme) =>
-        sectorScheme.sectorAssociationSchemeMap?.[SchemeVersion.CCA_3]?.editable
+        sectorScheme.sectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_3]?.editable
           ? true
           : router.createUrlTree(['/sectors', sectorId], { fragment: 'scheme' }),
       ),

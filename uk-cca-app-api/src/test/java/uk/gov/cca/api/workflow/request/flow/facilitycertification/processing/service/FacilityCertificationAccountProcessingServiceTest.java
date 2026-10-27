@@ -6,24 +6,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusProcessedDataQueryService;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
-import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.service.FacilityCertificationService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
 import uk.gov.cca.api.workflow.bpmn.exception.BpmnExecutionException;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationAccountState;
+import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.service.FacilityCertificationRunResourceTypeDelegatorService;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestMetadata;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,185 +39,73 @@ class FacilityCertificationAccountProcessingServiceTest {
     private RequestService requestService;
 
     @Mock
-    private BuyOutSurplusProcessedDataQueryService buyOutSurplusProcessedDataQueryService;
-
-    @Mock
-    private BuyOutSurplusQueryService buyOutSurplusQueryService;
+    private FacilityCertificationRunResourceTypeDelegatorService facilityCertificationRunResourceTypeDelegatorService;
 
     @Mock
     private FacilityCertificationService facilityCertificationService;
 
     @Test
     void doProcess() throws BpmnExecutionException {
-        final String requestId = "requestId";
-        final List<Long> facilityIds = List.of(1L, 2L, 3L);
-        final long performanceDataId = 10L;
-        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
-        final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
-                .lastPerformanceDataId(performanceDataId)
-                .facilityIds(facilityIds)
-                .build();
-
         final CertificationPeriodDTO certificationPeriod = CertificationPeriodDTO.builder()
                 .id(1L)
                 .startDate(LocalDate.of(2025, 7, 1))
                 .build();
         final Request request = Request.builder()
-                .id(requestId)
                 .metadata(FacilityCertificationAccountProcessingRequestMetadata.builder()
                         .certificationPeriodDetails(certificationPeriod)
                         .build())
                 .build();
+        final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
+                .facilityIds(List.of(1L, 2L, 3L, 4L, 5L))
+                .build();
 
-        when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType))
-                .thenReturn(Optional.of(1L));
-        when(buyOutSurplusQueryService.getBuyOutSurplusTransactionByPerformanceData(performanceDataId))
-                .thenReturn(Optional.empty());
+        final Set<Long> facilityIds = Set.of(1L, 2L, 3L);
+
+        when(facilityCertificationRunResourceTypeDelegatorService.getFacilitiesEligibleForCertification(certificationPeriod, accountState))
+                .thenReturn(facilityIds);
 
         // Invoke
-        facilityCertificationAccountProcessingService.doProcess(requestId, accountState);
+        facilityCertificationAccountProcessingService.doProcess(request, accountState);
 
         // Verify
         assertThat(accountState.getFacilitiesCertified()).isEqualTo(3L);
-        verify(requestService, times(1)).findRequestById(requestId);
-        verify(buyOutSurplusProcessedDataQueryService, times(1))
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
-        verify(buyOutSurplusQueryService, times(1))
-                .getBuyOutSurplusTransactionByPerformanceData(performanceDataId);
+        verify(facilityCertificationRunResourceTypeDelegatorService, times(1))
+                .getFacilitiesEligibleForCertification(certificationPeriod, accountState);
         verify(facilityCertificationService, times(1))
-                .certifyFacilities(new HashSet<>(facilityIds), certificationPeriod.getId(), certificationPeriod.getStartDate());
+                .certifyFacilities(facilityIds, certificationPeriod.getId(), certificationPeriod.getStartDate());
     }
 
     @Test
-    void doProcess_paid() throws BpmnExecutionException {
-        final String requestId = "requestId";
-        final List<Long> facilityIds = List.of(1L, 2L, 3L);
-        final long performanceDataId = 10L;
-        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
-        final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
-                .lastPerformanceDataId(performanceDataId)
-                .facilityIds(facilityIds)
-                .build();
-
-        final BuyOutSurplusTransactionInfoDTO info = BuyOutSurplusTransactionInfoDTO.builder()
-                .paymentStatus(BuyOutSurplusPaymentStatus.PAID)
-                .build();
+    void doProcess_no_certified() throws BpmnExecutionException {
         final CertificationPeriodDTO certificationPeriod = CertificationPeriodDTO.builder()
                 .id(1L)
                 .startDate(LocalDate.of(2025, 7, 1))
                 .build();
         final Request request = Request.builder()
-                .id(requestId)
                 .metadata(FacilityCertificationAccountProcessingRequestMetadata.builder()
                         .certificationPeriodDetails(certificationPeriod)
                         .build())
                 .build();
-
-        when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType))
-                .thenReturn(Optional.of(1L));
-        when(buyOutSurplusQueryService.getBuyOutSurplusTransactionByPerformanceData(performanceDataId))
-                .thenReturn(Optional.of(info));
-
-        // Invoke
-        facilityCertificationAccountProcessingService.doProcess(requestId, accountState);
-
-        // Verify
-        assertThat(accountState.getFacilitiesCertified()).isEqualTo(3L);
-        verify(requestService, times(1)).findRequestById(requestId);
-        verify(buyOutSurplusProcessedDataQueryService, times(1))
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
-        verify(buyOutSurplusQueryService, times(1))
-                .getBuyOutSurplusTransactionByPerformanceData(performanceDataId);
-        verify(facilityCertificationService, times(1))
-                .certifyFacilities(new HashSet<>(facilityIds), certificationPeriod.getId(), certificationPeriod.getStartDate());
-    }
-
-    @Test
-    void doProcess_await_payment() throws BpmnExecutionException {
-        final String requestId = "requestId";
-        final List<Long> facilityIds = List.of(1L, 2L, 3L);
-        final long performanceDataId = 10L;
-        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
-                .lastPerformanceDataId(performanceDataId)
-                .facilityIds(facilityIds)
+                .facilityIds(List.of(1L, 2L, 3L, 4L, 5L))
                 .build();
 
-        final BuyOutSurplusTransactionInfoDTO info = BuyOutSurplusTransactionInfoDTO.builder()
-                .paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT)
-                .build();
-        final CertificationPeriodDTO certificationPeriod = CertificationPeriodDTO.builder()
-                .id(1L)
-                .startDate(LocalDate.of(2025, 7, 1))
-                .build();
-        final Request request = Request.builder()
-                .id(requestId)
-                .metadata(FacilityCertificationAccountProcessingRequestMetadata.builder()
-                        .certificationPeriodDetails(certificationPeriod)
-                        .build())
-                .build();
-
-        when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType))
-                .thenReturn(Optional.of(1L));
-        when(buyOutSurplusQueryService.getBuyOutSurplusTransactionByPerformanceData(performanceDataId))
-                .thenReturn(Optional.of(info));
+        when(facilityCertificationRunResourceTypeDelegatorService.getFacilitiesEligibleForCertification(certificationPeriod, accountState))
+                .thenReturn(Set.of());
 
         // Invoke
-        facilityCertificationAccountProcessingService.doProcess(requestId, accountState);
+        facilityCertificationAccountProcessingService.doProcess(request, accountState);
 
         // Verify
         assertThat(accountState.getFacilitiesCertified()).isZero();
-        verify(requestService, times(1)).findRequestById(requestId);
-        verify(buyOutSurplusProcessedDataQueryService, times(1))
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
-        verify(buyOutSurplusQueryService, times(1))
-                .getBuyOutSurplusTransactionByPerformanceData(performanceDataId);
+        verify(facilityCertificationRunResourceTypeDelegatorService, times(1))
+                .getFacilitiesEligibleForCertification(certificationPeriod, accountState);
         verifyNoInteractions(facilityCertificationService);
     }
 
     @Test
-    void doProcess_no_buyout_surplus() throws BpmnExecutionException {
-        final String requestId = "requestId";
-        final List<Long> facilityIds = List.of(1L, 2L, 3L);
-        final long performanceDataId = 10L;
-        final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
-        final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
-                .lastPerformanceDataId(performanceDataId)
-                .facilityIds(facilityIds)
-                .build();
-
-        final CertificationPeriodDTO certificationPeriod = CertificationPeriodDTO.builder()
-                .id(1L)
-                .startDate(LocalDate.of(2025, 7, 1))
-                .build();
-        final Request request = Request.builder()
-                .id(requestId)
-                .metadata(FacilityCertificationAccountProcessingRequestMetadata.builder()
-                        .certificationPeriodDetails(certificationPeriod)
-                        .build())
-                .build();
-
-        when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(buyOutSurplusProcessedDataQueryService.getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType))
-                .thenReturn(Optional.empty());
-
-        // Invoke
-        facilityCertificationAccountProcessingService.doProcess(requestId, accountState);
-
-        // Verify
-        assertThat(accountState.getFacilitiesCertified()).isZero();
-        verify(requestService, times(1)).findRequestById(requestId);
-        verify(buyOutSurplusProcessedDataQueryService, times(1))
-                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
-        verifyNoInteractions(buyOutSurplusQueryService, facilityCertificationService);
-    }
-
-    @Test
     void doProcess_empty_facilities() {
-        final String requestId = "requestId";
+        final Request request = Request.builder().id("requestId").build();
         final long performanceDataId = 10L;
         final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
                 .lastPerformanceDataId(performanceDataId)
@@ -229,12 +114,86 @@ class FacilityCertificationAccountProcessingServiceTest {
 
         // Invoke
         BpmnExecutionException ex = assertThrows(BpmnExecutionException.class,
-                () -> facilityCertificationAccountProcessingService.doProcess(requestId, accountState));
+                () -> facilityCertificationAccountProcessingService.doProcess(request, accountState));
 
         // Verify
         assertThat(ex.getErrors()).containsExactly(CcaErrorCode.NO_FACILITIES_FOR_ACCOUNT.getMessage());
         assertThat(accountState.getFacilitiesCertified()).isZero();
-        verifyNoInteractions(requestService, buyOutSurplusProcessedDataQueryService,
-                buyOutSurplusQueryService, facilityCertificationService);
+        verifyNoInteractions(requestService, facilityCertificationRunResourceTypeDelegatorService, facilityCertificationService);
+    }
+
+    @Test
+    void complete() {
+        final String requestId = "requestId";
+        final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
+                .accountId(1L)
+                .facilitiesCertified(10L)
+                .build();
+
+        final String parentRequestId = "parentRequestId";
+        final Request request = Request.builder()
+                .id(requestId)
+                .metadata(FacilityCertificationAccountProcessingRequestMetadata.builder()
+                        .parentRequestId(parentRequestId)
+                        .build())
+                .build();
+        FacilityCertificationRunRequestPayload runRequestPayload = FacilityCertificationRunRequestPayload.builder()
+                .facilityCertificationAccountStates(new HashMap<>())
+                .build();
+        final Request parentRequest = Request.builder()
+                .id(requestId)
+                .payload(runRequestPayload)
+                .build();
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+        when(requestService.findRequestById(parentRequestId)).thenReturn(parentRequest);
+
+        // Invoke
+        facilityCertificationAccountProcessingService.complete(requestId, accountState);
+
+        // Verify
+        assertThat(runRequestPayload.getFacilityCertificationAccountStates()).isNotEmpty().containsKey(1L);
+        assertThat(runRequestPayload.getFacilityCertificationAccountStates().get(1L).isSucceeded()).isTrue();
+        assertThat(runRequestPayload.getFacilityCertificationAccountStates().get(1L).getFacilitiesCertified()).isEqualTo(10L);
+        verify(requestService, times(1)).findRequestById(requestId);
+        verify(requestService, times(1)).findRequestById(parentRequestId);
+    }
+
+    @Test
+    void complete_with_errors() {
+        final String requestId = "requestId";
+        final FacilityCertificationAccountState accountState = FacilityCertificationAccountState.builder()
+                .accountId(1L)
+                .facilitiesCertified(10L)
+                .errors(List.of("error1", "error2"))
+                .build();
+
+        final String parentRequestId = "parentRequestId";
+        final Request request = Request.builder()
+                .id(requestId)
+                .metadata(FacilityCertificationAccountProcessingRequestMetadata.builder()
+                        .parentRequestId(parentRequestId)
+                        .build())
+                .build();
+        FacilityCertificationRunRequestPayload runRequestPayload = FacilityCertificationRunRequestPayload.builder()
+                .facilityCertificationAccountStates(new HashMap<>())
+                .build();
+        final Request parentRequest = Request.builder()
+                .id(requestId)
+                .payload(runRequestPayload)
+                .build();
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+        when(requestService.findRequestById(parentRequestId)).thenReturn(parentRequest);
+
+        // Invoke
+        facilityCertificationAccountProcessingService.complete(requestId, accountState);
+
+        // Verify
+        assertThat(runRequestPayload.getFacilityCertificationAccountStates()).isNotEmpty().containsKey(1L);
+        assertThat(runRequestPayload.getFacilityCertificationAccountStates().get(1L).isSucceeded()).isFalse();
+        assertThat(runRequestPayload.getFacilityCertificationAccountStates().get(1L).getFacilitiesCertified()).isZero();
+        verify(requestService, times(1)).findRequestById(requestId);
+        verify(requestService, times(1)).findRequestById(parentRequestId);
     }
 }

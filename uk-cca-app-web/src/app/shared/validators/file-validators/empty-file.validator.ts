@@ -1,10 +1,10 @@
-import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Checks if filesize is 0
  */
 export function emptyFileValidator(message: string): ValidatorFn {
-  return (control: FormControl): ValidationErrors | null => {
+  return (control: AbstractControl): ValidationErrors | null => {
     const file = control.value;
 
     if (file && file.size === 0) {

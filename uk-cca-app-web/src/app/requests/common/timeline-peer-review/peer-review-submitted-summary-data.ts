@@ -1,7 +1,7 @@
-import { PeerReviewDecisionPipe } from '@requests/common';
 import { SummaryFactory } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
+import { PeerReviewDecisionPipe } from './peer-review-decision-pipe';
 import { PeerReviewDecisionActionPayload } from './peer-review-submitted.component.selectors';
 
 export function toPeerReviewSummaryData(payload: PeerReviewDecisionActionPayload, submitter: string) {

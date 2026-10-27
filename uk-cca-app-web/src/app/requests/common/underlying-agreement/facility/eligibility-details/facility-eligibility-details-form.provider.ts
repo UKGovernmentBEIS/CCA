@@ -4,12 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { underlyingAgreementQuery, UPLOAD_SECTION_ATTACHMENT_TYPE } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 import { facilityIDValidators } from '@shared/validators';
 
 import { EligibilityDetailsAndAuthorisation } from 'cca-api';
+
+import { underlyingAgreementQuery } from '../../+state/underlying-agreement.selectors';
+import { getAttachmentType, UPLOAD_SECTION_ATTACHMENT_TYPE } from '../../types';
 
 export type FacilityEligibilityFormModel = {
   name: FormControl<string>;
@@ -77,7 +79,7 @@ export const FacilityEligibilityDetailsFormProvider: Provider = {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         facility?.eligibilityDetailsAndAuthorisation?.permitFile,
         attachments,
-        UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+        getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
         true,
         false,
       ),

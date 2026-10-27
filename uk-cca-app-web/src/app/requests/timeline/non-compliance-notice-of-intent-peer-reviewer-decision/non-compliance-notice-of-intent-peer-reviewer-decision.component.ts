@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,7 +11,6 @@ import { toNonCompliancePeerReviewDecisionSummaryData } from '../non-compliance-
   selector: 'cca-non-compliance-notice-of-intent-peer-reviewer-decision',
   template: `<cca-summary [data]="summaryData()" />`,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NonComplianceNoticeOfIntentPeerReviewerDecisionComponent {
   private readonly store = inject(RequestActionStore);

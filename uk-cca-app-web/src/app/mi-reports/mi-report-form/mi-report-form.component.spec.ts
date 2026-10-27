@@ -1,9 +1,9 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
 import { Mocked } from 'vitest';
@@ -42,7 +42,7 @@ describe('MiReportFormComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MiReportFormComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideRouter([]),
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
@@ -80,6 +80,37 @@ describe('MiReportFormComponent', () => {
       expect(component['form'].controls.queryDefinition.value).toBeNull();
     });
 
+    it('should validate the query maximum length', () => {
+      const queryDefinition = component['form'].controls.queryDefinition;
+
+      queryDefinition.setValue('a'.repeat(50000));
+      expect(queryDefinition.valid).toBe(true);
+
+      queryDefinition.setValue('a'.repeat(50001));
+      expect(queryDefinition.invalid).toBe(true);
+    });
+
+    it.each([
+      {
+        field: 'reportName' as const,
+        maximumLength: 255,
+        errorMessage: 'The report name should not be more than 255 characters',
+      },
+      {
+        field: 'description' as const,
+        maximumLength: 10000,
+        errorMessage: 'The description should not be more than 10000 characters',
+      },
+    ])('should validate the $field maximum length', ({ field, maximumLength, errorMessage }) => {
+      const control = component['form'].controls[field];
+
+      control.setValue('a'.repeat(maximumLength));
+      expect(control.valid).toBe(true);
+
+      control.setValue('a'.repeat(maximumLength + 1));
+      expect(control.errors).toEqual({ maxlength: errorMessage });
+    });
+
     it('should display create mode heading', () => {
       const compiled = fixture.nativeElement;
 
@@ -113,6 +144,30 @@ describe('MiReportFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['..'], {
         relativeTo: expect.anything(),
       });
+    });
+
+    it('should display a query validation error when the request returns FORM1001', () => {
+      miReportsUserDefinedService.createMiReportUserDefined.mockReturnValue(
+        throwError(
+          () =>
+            new HttpErrorResponse({
+              status: 400,
+              error: { code: 'FORM1001' },
+            }),
+        ),
+      );
+      component['form'].patchValue({
+        reportName: 'Test Report',
+        queryDefinition: 'SELECT * FROM test',
+      });
+
+      component.onSubmit();
+
+      expect(component['form'].controls.queryDefinition.errors).toEqual({
+        apiError: 'Form validation failed. Please review the form fields and ensure the query definition is valid.',
+      });
+      expect(component['isErrorSummaryDisplayed']()).toBe(true);
+      expect(router.navigate).not.toHaveBeenCalled();
     });
 
     it('should have Save and confirm button', () => {

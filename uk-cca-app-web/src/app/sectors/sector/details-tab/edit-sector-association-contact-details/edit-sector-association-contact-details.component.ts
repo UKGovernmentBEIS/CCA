@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -22,6 +22,7 @@ import {
 @Component({
   selector: 'cca-edit-sector-association-contact-details',
   templateUrl: './edit-sector-association-contact-details.component.html',
+  providers: [SectorAssociationContactDetailsFormProvider],
   imports: [
     RouterLink,
     PageHeadingComponent,
@@ -32,8 +33,6 @@ import {
     CountyAddressInputComponent,
     PendingButtonDirective,
   ],
-  providers: [SectorAssociationContactDetailsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditSectorAssociationContactDetailsComponent {
   private readonly sectorAssociationDetailsUpdateService = inject(SectorAssociationDetailsUpdateService);

@@ -121,9 +121,8 @@
                     [routerLink]="['mark-facilities', 'history', row['moaFacilityId']]"
                     [relativeTo]="activatedRoute"
                     class="govuk-link"
+                    >View history<span class="govuk-visually-hidden"> for {{ row['facilityBusinessId'] }}</span></a
                   >
-                    View history
-                  </a>
                 }
               }
             }

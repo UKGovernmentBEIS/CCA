@@ -22,9 +22,17 @@ export const MiReportFormProvider: Provider = {
     const query = route.snapshot.data['query'] as MiReportUserDefinedDTO | undefined;
 
     return fb.group({
-      reportName: fb.control<string>(query?.reportName ?? null, [GovukValidators.required('Enter a report name')]),
-      description: fb.control<string>(query?.description ?? null),
-      queryDefinition: fb.control<string>(query?.queryDefinition ?? null, [GovukValidators.required('Enter a query')]),
+      reportName: fb.control<string>(query?.reportName ?? null, [
+        GovukValidators.required('Enter a report name'),
+        GovukValidators.maxLength(255, 'The report name should not be more than 255 characters'),
+      ]),
+      description: fb.control<string>(query?.description ?? null, [
+        GovukValidators.maxLength(10000, 'The description should not be more than 10000 characters'),
+      ]),
+      queryDefinition: fb.control<string>(query?.queryDefinition ?? null, [
+        GovukValidators.required('Enter a query'),
+        GovukValidators.maxLength(50000, 'The query should not be more than 50000 characters'),
+      ]),
     });
   },
 };

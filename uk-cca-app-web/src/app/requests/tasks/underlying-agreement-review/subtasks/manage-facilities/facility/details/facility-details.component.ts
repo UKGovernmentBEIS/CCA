@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -29,9 +29,8 @@ import { resetDetermination } from '../../../../utils';
 @Component({
   selector: 'cca-facility-details',
   template: `<cca-facility-details-form (submitChange)="onSubmit($event)" />`,
-  imports: [FacilityDetailsFormComponent],
   providers: [FacilityDetailsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FacilityDetailsFormComponent],
 })
 export class FacilityDetailsComponent {
   private readonly store = inject(RequestTaskStore);

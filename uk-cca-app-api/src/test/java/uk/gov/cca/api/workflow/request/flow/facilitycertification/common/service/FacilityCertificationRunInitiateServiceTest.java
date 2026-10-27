@@ -7,12 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.common.exception.CcaErrorCode;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.AccountPerformanceDataInfo;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.CertificationPeriodService;
-import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
@@ -58,7 +55,7 @@ class FacilityCertificationRunInitiateServiceTest {
     private StartProcessRequestService startProcessRequestService;
 
     @Mock
-    private AccountPerformanceDataStatusQueryService accountPerformanceDataStatusQueryService;
+    private FacilityCertificationRunResourceTypeDelegatorService facilityCertificationRunResourceTypeDelegatorService;
 
     @Test
     void isValidForFacilityCertificationRun() {
@@ -78,24 +75,16 @@ class FacilityCertificationRunInitiateServiceTest {
     }
 
     @Test
-    void createFacilityCertificationRun_manually() {
-        final List<String> providedAccountIds = List.of("1", "2");
+    void createFacilityCertificationRun() {
         final CertificationPeriodType certificationPeriodType = CertificationPeriodType.CP7;
-        final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
 
         final RequestCreateActionEmptyPayload requestCreateActionEmptyPayload = RequestCreateActionEmptyPayload.builder().build();
-        final Set<Long> accountIds = Set.of(1L, 2L);
-        final List<AccountPerformanceDataInfo> accounts = List.of(
-                AccountPerformanceDataInfo.builder().accountId(1L).accountBusinessId("accountId1").lastPerformanceDataId(11L).build(),
-                AccountPerformanceDataInfo.builder().accountId(2L).accountBusinessId("accountId2").lastPerformanceDataId(22L).build()
-        );
         final Map<Long, FacilityCertificationAccountState> accountStates = Map.of(
                 1L, FacilityCertificationAccountState.builder().accountId(1L).accountBusinessId("accountId1").lastPerformanceDataId(11L).build(),
                 2L, FacilityCertificationAccountState.builder().accountId(2L).accountBusinessId("accountId2").lastPerformanceDataId(22L).build()
         );
         final CertificationPeriodDTO certificationPeriod = CertificationPeriodDTO.builder()
                 .certificationPeriodType(certificationPeriodType)
-                .targetPeriodType(targetPeriodType)
                 .build();
         final CcaRequestParams requestParams = CcaRequestParams.builder()
                 .type(CcaRequestType.FACILITY_CERTIFICATION_RUN)
@@ -109,69 +98,13 @@ class FacilityCertificationRunInitiateServiceTest {
                         .type(CcaRequestMetadataType.FACILITY_CERTIFICATION_RUN)
                         .certificationPeriodType(certificationPeriodType)
                         .build())
-                .processVars(Map.of(
-                        CcaBpmnProcessConstants.ACCOUNT_IDS, accountIds,
-                        CcaBpmnProcessConstants.NUMBER_OF_ACCOUNTS_COMPLETED, 0))
+                .processVars(Map.of(CcaBpmnProcessConstants.ACCOUNT_IDS, Set.of(1L, 2L)))
                 .build();
 
         when(facilityCertificationCreateValidator.validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
-        when(accountPerformanceDataStatusQueryService.findAccountsWithPerformanceDataForTargetPeriod(targetPeriodType, accountIds))
-                .thenReturn(accounts);
-        when(certificationPeriodService.getCertificationPeriodByType(certificationPeriodType))
-                .thenReturn(certificationPeriod);
-
-        // Invoke
-        facilityCertificationRunInitiateService.createFacilityCertificationRun(providedAccountIds, certificationPeriodType);
-
-        // Verify
-        verify(facilityCertificationCreateValidator, times(1))
-                .validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload);
-        verify(accountPerformanceDataStatusQueryService, times(1))
-                .findAccountsWithPerformanceDataForTargetPeriod(targetPeriodType, accountIds);
-        verify(certificationPeriodService, times(1)).getCertificationPeriodByType(certificationPeriodType);
-        verify(startProcessRequestService, times(1)).startProcess(requestParams);
-    }
-
-    @Test
-    void createFacilityCertificationRun_automatically() {
-        final CertificationPeriodType certificationPeriodType = CertificationPeriodType.CP7;
-        final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
-
-        final RequestCreateActionEmptyPayload requestCreateActionEmptyPayload = RequestCreateActionEmptyPayload.builder().build();
-        final List<AccountPerformanceDataInfo> accounts = List.of(
-                AccountPerformanceDataInfo.builder().accountId(1L).accountBusinessId("accountId1").lastPerformanceDataId(11L).build(),
-                AccountPerformanceDataInfo.builder().accountId(2L).accountBusinessId("accountId2").lastPerformanceDataId(22L).build()
-        );
-        final Map<Long, FacilityCertificationAccountState> accountStates = Map.of(
-                1L, FacilityCertificationAccountState.builder().accountId(1L).accountBusinessId("accountId1").lastPerformanceDataId(11L).build(),
-                2L, FacilityCertificationAccountState.builder().accountId(2L).accountBusinessId("accountId2").lastPerformanceDataId(22L).build()
-        );
-        final CertificationPeriodDTO certificationPeriod = CertificationPeriodDTO.builder()
-                .certificationPeriodType(certificationPeriodType)
-                .targetPeriodType(targetPeriodType)
-                .build();
-        final CcaRequestParams requestParams = CcaRequestParams.builder()
-                .type(CcaRequestType.FACILITY_CERTIFICATION_RUN)
-                .requestResources(Map.of(ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name()))
-                .requestPayload(FacilityCertificationRunRequestPayload.builder()
-                        .payloadType(CcaRequestPayloadType.FACILITY_CERTIFICATION_RUN_REQUEST_PAYLOAD)
-                        .certificationPeriodDetails(certificationPeriod)
-                        .facilityCertificationAccountStates(accountStates)
-                        .build())
-                .requestMetadata(FacilityCertificationRunRequestMetadata.builder()
-                        .type(CcaRequestMetadataType.FACILITY_CERTIFICATION_RUN)
-                        .certificationPeriodType(certificationPeriodType)
-                        .build())
-                .processVars(Map.of(
-                        CcaBpmnProcessConstants.ACCOUNT_IDS, Set.of(1L, 2L),
-                        CcaBpmnProcessConstants.NUMBER_OF_ACCOUNTS_COMPLETED, 0))
-                .build();
-
-        when(facilityCertificationCreateValidator.validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload))
-                .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
-        when(accountPerformanceDataStatusQueryService.findAccountsWithPerformanceDataForTargetPeriod(targetPeriodType))
-                .thenReturn(accounts);
+        when(facilityCertificationRunResourceTypeDelegatorService.getEligibleAccounts(certificationPeriod))
+                .thenReturn(accountStates);
         when(certificationPeriodService.getCertificationPeriodByTriggerDate(any()))
                 .thenReturn(certificationPeriod);
 
@@ -181,7 +114,7 @@ class FacilityCertificationRunInitiateServiceTest {
         // Verify
         verify(facilityCertificationCreateValidator, times(1))
                 .validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload);
-        verify(accountPerformanceDataStatusQueryService, times(1)).findAccountsWithPerformanceDataForTargetPeriod(targetPeriodType);
+        verify(facilityCertificationRunResourceTypeDelegatorService, times(1)).getEligibleAccounts(certificationPeriod);
         verify(certificationPeriodService, times(1)).getCertificationPeriodByTriggerDate(any());
         verify(startProcessRequestService, times(1)).startProcess(requestParams);
     }
@@ -201,6 +134,6 @@ class FacilityCertificationRunInitiateServiceTest {
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.FACILITY_CERTIFICATION_RUN_EXIST);
         verify(facilityCertificationCreateValidator, times(1))
                 .validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload);
-        verifyNoInteractions(accountPerformanceDataStatusQueryService, certificationPeriodService, startProcessRequestService);
+        verifyNoInteractions(facilityCertificationRunResourceTypeDelegatorService, certificationPeriodService, startProcessRequestService);
     }
 }

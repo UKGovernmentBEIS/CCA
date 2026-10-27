@@ -16,6 +16,12 @@
   data-testid="baseline-exists-form"
 >
   <div formControlName="exist" govuk-radio>
+    <ng-container govukLegend>
+      <span class="govuk-visually-hidden"
+        >Are you providing baseline and target information for TP5 (2021 to 2022)?</span
+      >
+    </ng-container>
+
     <govuk-radio-option [value]="true" [label]="'Yes'" />
     <govuk-radio-option [value]="false" [label]="'No'" />
   </div>

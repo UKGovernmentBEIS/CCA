@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 import { map, Observable } from 'rxjs';
 
@@ -9,7 +9,10 @@ import { AuthService, LatestTermsStore } from '@shared/services';
 import { selectIsFeatureEnabled } from '../config/config.selectors';
 import { ConfigStore } from '../config/config.store';
 
-export function TermsAndConditionsGuard(_, state: RouterStateSnapshot): Observable<true | UrlTree> {
+export function TermsAndConditionsGuard(
+  _: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+): Observable<true | UrlTree> {
   const router = inject(Router);
   const authService = inject(AuthService);
   const authStore = inject(AuthStore);

@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 
-import { ItemActionTypePipe, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
+import { getItemActionHeader, ItemActionTypePipe, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
 import {
   getRequestActionPageCanActivateGuard,
   getRequestActionPageCanDeactivateGuard,
@@ -26,26 +26,19 @@ const actionTypeToReturnText = (type: RequestActionDTO['type']): string => {
 
 export const TIMELINE_ROUTES: Routes = [
   {
+    title: () => getItemActionHeader(inject(RequestActionStore).select(requestActionQuery.selectAction)()),
     path: ':actionId',
+    canActivate: [getRequestActionPageCanActivateGuard()],
+    canDeactivate: [getRequestActionPageCanDeactivateGuard()],
     data: {
-      breadcrumb: ({ requestAction, isTaskTimeline }) =>
+      breadcrumb: ({ requestAction, isTaskTimeline }: { requestAction: RequestActionDTO; isTaskTimeline: boolean }) =>
         isTaskTimeline ? false : new ActionTypeToBreadcrumbPipe().transform(requestAction),
-      backlink: ({ isTaskTimeline }) => (isTaskTimeline ? '../..' : false),
+      backlink: ({ isTaskTimeline }: { isTaskTimeline: boolean }) => (isTaskTimeline ? '../..' : false),
     },
-    title: () =>
-      new ActionTypeToBreadcrumbPipe().transform(inject(RequestActionStore).select(requestActionQuery.selectAction)()),
     resolve: {
       requestAction: () => inject(RequestActionStore).select(requestActionQuery.selectAction)(),
       isTaskTimeline: (route: ActivatedRouteSnapshot) => !!route.params.taskId,
     },
-    providers: [
-      { provide: REQUEST_ACTION_PAGE_CONTENT, useValue: timelineContent },
-      { provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap },
-      { provide: TYPE_AWARE_STORE, useExisting: RequestActionStore },
-      { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: actionTypeToReturnText },
-    ],
-    canActivate: [getRequestActionPageCanActivateGuard()],
-    canDeactivate: [getRequestActionPageCanDeactivateGuard()],
     children: [
       {
         path: '',
@@ -91,6 +84,11 @@ export const TIMELINE_ROUTES: Routes = [
         loadChildren: () => import('./cca3-migration/cca3-migration.routes').then((r) => r.CCA3_MIGRATION_ROUTES),
       },
       {
+        path: 'cca3-buyout-surplus',
+        loadChildren: () =>
+          import('./cca3-buyout-surplus/cca3-buyout-surplus.routes').then((r) => r.CCA3_BUYOUT_SURPLUS_ROUTES),
+      },
+      {
         path: 'pre-audit-review',
         loadChildren: () =>
           import('./facility-audit/pre-audit-review-completed/pre-audit-review-completed.routes').then(
@@ -119,6 +117,13 @@ export const TIMELINE_ROUTES: Routes = [
           ),
       },
       {
+        path: 'facility-pat-reporting-submitted',
+        loadChildren: () =>
+          import('./facility-pat-reporting-submitted/facility-pat-reporting-submitted.routes').then(
+            (r) => r.FACILITY_PAT_REPORTING_SUBMITTED_ROUTES,
+          ),
+      },
+      {
         path: 'file-download/:uuid',
         loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },
@@ -126,6 +131,12 @@ export const TIMELINE_ROUTES: Routes = [
         path: 'file-download/:fileType/:uuid',
         loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },
+    ],
+    providers: [
+      { provide: REQUEST_ACTION_PAGE_CONTENT, useValue: timelineContent },
+      { provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap },
+      { provide: TYPE_AWARE_STORE, useExisting: RequestActionStore },
+      { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: actionTypeToReturnText },
     ],
   },
 ];

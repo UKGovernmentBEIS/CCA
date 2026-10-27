@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -12,14 +12,13 @@ import {
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 import { CountryService } from '@shared/services';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-facility-summary',
   templateUrl: './facility-summary.component.html',
   imports: [SummaryComponent, PageHeadingComponent, HighlightDiffComponent, NgTemplateOutlet, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FacilitySummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -41,8 +40,8 @@ export default class FacilitySummaryComponent {
 
   private readonly schemeVersion = computed(() =>
     isCCA3Scheme(this.facility()?.facilityDetails?.participatingSchemeVersions)
-      ? SchemeVersion.CCA_3
-      : SchemeVersion.CCA_2,
+      ? SchemeVersionEnum.CCA_3
+      : SchemeVersionEnum.CCA_2,
   );
 
   private readonly sectorSchemeData = computed(() =>

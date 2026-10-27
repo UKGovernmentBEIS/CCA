@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -38,7 +38,6 @@ import { generateDownloadUrl } from '@shared/utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AuthorisationAdditionalEvidenceSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

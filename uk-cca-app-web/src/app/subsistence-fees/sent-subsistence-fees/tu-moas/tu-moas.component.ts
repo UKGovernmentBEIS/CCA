@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -29,7 +29,6 @@ type TargetUnitMoasState = {
   selector: 'cca-tu-moas',
   templateUrl: './tu-moas.component.html',
   imports: [TableComponent, PaginationComponent, TagComponent, RouterLink, DecimalPipe, StatusColorPipe, StatusPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TuMoasComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

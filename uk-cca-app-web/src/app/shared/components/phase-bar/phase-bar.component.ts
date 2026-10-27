@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserProfile } from '@netz/common/auth';
@@ -15,12 +15,11 @@ import { PhaseBannerComponent } from '@netz/govuk-components';
 
       @if (userProfile(); as user) {
         <span style="float: right">
-          You are logged in as: <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+          You are signed in as: <strong>{{ user.firstName }} {{ user.lastName }}</strong>
         </span>
       }
     </govuk-phase-banner>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PhaseBannerComponent, RouterLink],
 })
 export class PhaseBarComponent {

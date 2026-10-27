@@ -1,6 +1,6 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h3 class="govuk-heading-m">Details</h3>
+    <h2 class="govuk-heading-m">Details</h2>
   </div>
 
   <div class="govuk-grid-column-one-third">
@@ -42,7 +42,7 @@
       <div govukSummaryListRow>
         <dt govukSummaryListRowKey>Operator name</dt>
         <dd govukSummaryListRowValue>
-          <span [class]="getDiffClass(fieldDiffs()?.name)">
+          <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.name))">
             {{ tuDetails().name }}
           </span>
         </dd>
@@ -52,7 +52,7 @@
       <div govukSummaryListRow>
         <dt govukSummaryListRowKey>Operator type</dt>
         <dd govukSummaryListRowValue>
-          <span [class]="getDiffClass(fieldDiffs()?.operatorType)">
+          <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.operatorType))">
             {{ tuDetails().operatorType | operatorType }}
           </span>
         </dd>
@@ -62,7 +62,7 @@
       <div govukSummaryListRow>
         <dt govukSummaryListRowKey>Company number</dt>
         <dd govukSummaryListRowValue>
-          <span [class]="getDiffClass(fieldDiffs()?.companyRegistrationNumber)">{{
+          <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.companyRegistrationNumber))">{{
             tuDetails().companyRegistrationNumber ?? 'Not provided'
           }}</span>
         </dd>
@@ -76,7 +76,9 @@
             <span>{{ tuDetails().registrationNumberMissingReason }}</span>
           </dd>
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/details'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/details'">
+              Change<span class="govuk-visually-hidden"> reason for not having a registration number</span>
+            </a>
           </dd>
         </div>
       }
@@ -84,11 +86,15 @@
       <div govukSummaryListRow>
         <dt govukSummaryListRowKey>Standard industrial classification (SIC) codes</dt>
         <dd govukSummaryListRowValue>
-          <span [class]="getDiffClass(fieldDiffs()?.sicCodes)">{{ tuDetails().sicCodes }}</span>
+          <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.sicCodes))">{{
+            tuDetails().sicCodes
+          }}</span>
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/details'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/details'">
+              Change<span class="govuk-visually-hidden"> standard industrial classification (SIC) codes</span>
+            </a>
           </dd>
         }
       </div>
@@ -110,13 +116,15 @@
           <dl govuk-summary-list [attr.data-testid]="'companies-house-target-unit-details'">
             <div govukSummaryListRow>
               <dd govukSummaryListRowValue>
-                <span [class]="getDiffClass(fieldDiffs()?.name)">{{ companiesHouseState().details?.name }}</span>
+                <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.name))">{{
+                  companiesHouseState().details?.name
+                }}</span>
               </dd>
             </div>
 
             <div govukSummaryListRow>
               <dd govukSummaryListRowValue>
-                <span [class]="getDiffClass(fieldDiffs()?.operatorType)">{{
+                <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.operatorType))">{{
                   companiesHouseState().details?.operatorType
                 }}</span>
               </dd>
@@ -124,7 +132,7 @@
 
             <div govukSummaryListRow>
               <dd govukSummaryListRowValue>
-                <span [class]="getDiffClass(fieldDiffs()?.companyRegistrationNumber)">{{
+                <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.companyRegistrationNumber))">{{
                   companiesHouseState().details?.registrationNumber
                 }}</span>
               </dd>
@@ -132,7 +140,7 @@
 
             <div govukSummaryListRow>
               <dd govukSummaryListRowValue>
-                <span [class]="getDiffClass(fieldDiffs()?.sicCodes)">{{
+                <span [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.sicCodes))">{{
                   companiesHouseState().details?.sicCodes
                 }}</span>
               </dd>
@@ -162,7 +170,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/financial-independence'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/financial-independence'">
+              Change<span class="govuk-visually-hidden"> financial independence status</span>
+            </a>
           </dd>
         }
       </div>
@@ -178,7 +188,11 @@
     <dl govuk-summary-list [attr.data-testid]="'operator-address'">
       <div govukSummaryListRow>
         <dt govukSummaryListRowKey>Address</dt>
-        <dd govukSummaryListRowValue class="pre-line" [class]="getDiffClass(fieldDiffs()?.address)">
+        <dd
+          govukSummaryListRowValue
+          class="pre-line"
+          [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.address))"
+        >
           {{ addresses().operator }}
         </dd>
         <dd govukSummaryListRowActions></dd>
@@ -191,7 +205,11 @@
       <cca-utility-panel heading="Companies House details" [isFullBackground]="true">
         <dl govuk-summary-list [attr.data-testid]="'companies-house-operator-address'">
           <div govukSummaryListRow>
-            <dd govukSummaryListRowValue class="pre-line" [class]="getDiffClass(fieldDiffs()?.address)">
+            <dd
+              govukSummaryListRowValue
+              class="pre-line"
+              [class]="getDiffClass($safeNavigationMigration(fieldDiffs()?.address))"
+            >
               {{ companiesHouseState().address }}
             </dd>
           </div>
@@ -230,7 +248,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/responsible-person'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/responsible-person'">
+              Change<span class="govuk-visually-hidden"> responsible person job title</span>
+            </a>
           </dd>
         }
       </div>
@@ -250,7 +270,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/responsible-person'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/responsible-person'">
+              Change<span class="govuk-visually-hidden"> responsible person phone number</span>
+            </a>
           </dd>
         }
       </div>
@@ -279,7 +301,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact first name</span>
+            </a>
           </dd>
         }
       </div>
@@ -291,7 +315,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact last name</span>
+            </a>
           </dd>
         }
       </div>
@@ -303,7 +329,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact job title</span>
+            </a>
           </dd>
         }
       </div>
@@ -315,7 +343,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact email address</span>
+            </a>
           </dd>
         }
       </div>
@@ -327,7 +357,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact phone number</span>
+            </a>
           </dd>
         }
       </div>
@@ -339,7 +371,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact address</span>
+            </a>
           </dd>
         }
       </div>

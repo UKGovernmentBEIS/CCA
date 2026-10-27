@@ -26,7 +26,7 @@ describe('StatusColorPipe', () => {
     expect(pipe.transform('cancelled')).toEqual('red');
     expect(pipe.transform('expired')).toEqual('red');
 
-    expect(pipe.transform('refunded')).toEqual('turquoise');
+    expect(pipe.transform('refunded')).toEqual('teal');
 
     expect(pipe.transform('awaiting_payment')).toEqual('yellow');
 

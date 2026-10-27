@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 
 import { ButtonDirective, GovukValidators, TextInputComponent } from '@netz/govuk-components';
@@ -17,8 +17,8 @@ export class SubmitEmailComponent {
   private readonly forgotPasswordService = inject(ForgotPasswordService);
   private readonly fb = inject(UntypedFormBuilder);
 
-  protected isSummaryDisplayed: boolean;
-  protected isEmailSent: boolean;
+  protected readonly isSummaryDisplayed = signal<boolean>(false);
+  protected readonly isEmailSent = signal<boolean>(false);
 
   protected readonly form = this.fb.group({
     email: [
@@ -34,14 +34,14 @@ export class SubmitEmailComponent {
   onSubmit(): void {
     if (this.form.valid) {
       this.forgotPasswordService.sendResetPasswordEmail({ email: this.form.get('email').value }).subscribe(() => {
-        this.isEmailSent = true;
+        this.isEmailSent.set(true);
       });
     } else {
-      this.isSummaryDisplayed = true;
+      this.isSummaryDisplayed.set(true);
     }
   }
 
   retryResetPassword() {
-    this.isEmailSent = false;
+    this.isEmailSent.set(false);
   }
 }

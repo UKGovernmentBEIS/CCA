@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -31,7 +31,6 @@ import { OperatorUserInvitationStore } from '../store';
     PendingButtonDirective,
     PhoneInputComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorUserInvitationComponent implements OnInit {
   private readonly breadcrumbsService = inject(BreadcrumbService);

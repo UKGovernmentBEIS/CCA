@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, isDevMode } from '@angular/core';
+import { Component, inject, isDevMode } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -37,7 +37,6 @@ interface ViewModel {
 @Component({
   selector: 'netz-change-assignee',
   templateUrl: './change-assignee.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UserFullNamePipe],
   imports: [
     AsyncPipe,

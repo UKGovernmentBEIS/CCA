@@ -14,33 +14,33 @@ export const AUTHORISATION_ADDITIONAL_EVIDENCE_ROUTES: Routes = [
         children: [],
       },
       {
-        path: 'decision',
         title: 'Authorisation and additional evidence decision',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'decision',
         loadComponent: () =>
           import('./decision/authorisation-additional-evidence-decision.component').then(
             (c) => c.AuthorisationAdditionalEvidenceDecisionComponent,
           ),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: 'summary',
         title: 'Summary',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'summary',
         loadComponent: () => import('./summary/authorisation-additional-evidence-summary.component'),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: 'check-your-answers',
         title: 'Check your answers',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'check-your-answers',
         loadComponent: () =>
           import('./check-your-answers/authorisation-additional-evidence-check-your-answers.component'),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: AuthorisationAdditionalEvidenceWizardStep.PROVIDE_EVIDENCE,
         title: 'Provide additional evidence',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: AuthorisationAdditionalEvidenceWizardStep.PROVIDE_EVIDENCE,
         loadComponent: () =>
           import('./provide-evidence/provide-evidence.component').then((c) => c.ProvideEvidenceComponent),
+        data: { backlink: '../../../', breadcrumb: false },
       },
     ],
   },

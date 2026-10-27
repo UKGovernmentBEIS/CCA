@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { CancelConfirmationComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -20,7 +20,6 @@ import { UnderlyingAgreementVariationConfirmationComponent } from './underlying-
     Cca3MigrationAccountActivationCancelConfirmationComponent,
     CancelConfirmationComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CancelTaskConfirmationComponent {
   private readonly store = inject(RequestTaskStore);

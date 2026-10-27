@@ -1,5 +1,7 @@
 package uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
@@ -8,9 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -19,10 +18,7 @@ import java.math.BigDecimal;
 public class SurplusCreate {
 
     @NotNull
-    private Long accountId;
-
-    @NotNull
-    private TargetPeriodType targetPeriodType;
+    private Long resourceId;
 
     @NotNull
     @Digits(integer = Integer.MAX_VALUE, fraction = 0)

@@ -13,7 +13,7 @@
                   <p>
                     <span
                       >Check the data in column '{{ errorItem?.columns }}' on rows
-                      {{ getRowIndexes(errorItem?.rows).join(', ') }}
+                      {{ getRowIndexes($safeNavigationMigration(errorItem?.rows)).join(', ') }}
                     </span>
                   </p>
                 </govuk-details>

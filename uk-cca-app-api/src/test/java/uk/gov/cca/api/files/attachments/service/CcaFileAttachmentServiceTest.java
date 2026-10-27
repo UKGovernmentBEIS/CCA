@@ -15,7 +15,6 @@ import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,19 +60,19 @@ class CcaFileAttachmentServiceTest {
     }
 
     @Test
-    void createSystemFileAttachment() throws IOException {
+    void createSystemFileAttachment() {
         byte[] fileContent = "fileContent".getBytes();
         final FileDTO fileDTO = FileDTO.builder()
                 .fileName("test")
                 .fileContent(fileContent)
                 .fileType("text/plain")
                 .fileSize(fileContent.length)
+                .createdBy("createdBy")
                 .build();
         final FileStatus status = FileStatus.SUBMITTED;
-        final String createdBy = "createdBy";
 
         // Invoke
-        String result = ccaFileAttachmentService.createSystemFileAttachment(fileDTO, status, createdBy);
+        String result = ccaFileAttachmentService.createSystemFileAttachment(fileDTO, status);
 
         // Verify
         assertThat(result).isNotNull();
@@ -81,13 +80,14 @@ class CcaFileAttachmentServiceTest {
     }
 
     @Test
-    void createSystemFileAttachments() throws IOException {
+    void createSystemFileAttachments() {
         final List<FileInfoDTO> files = List.of(FileInfoDTO.builder().uuid("uuid").build());
         final FileDTO fileDTO = FileDTO.builder()
                 .fileName("name")
                 .fileType("type")
                 .fileContent("test".getBytes())
                 .fileSize("test".length())
+                .createdBy("createdBy")
                 .build();
         final FileStatus status = FileStatus.SUBMITTED;
 
@@ -98,7 +98,7 @@ class CcaFileAttachmentServiceTest {
                 .fileContent("test".getBytes())
                 .fileSize("test".length())
                 .status(status)
-                .createdBy("System")
+                .createdBy("system")
                 .build();
 
         // Invoke

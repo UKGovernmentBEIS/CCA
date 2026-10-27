@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { catchError, throwError } from 'rxjs';
@@ -32,7 +32,6 @@ import { UnderlyingAgreementVariationPeerReviewStore } from '../+state/underlyin
     >
   `,
   imports: [SummaryComponent, ButtonDirective, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckYourAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

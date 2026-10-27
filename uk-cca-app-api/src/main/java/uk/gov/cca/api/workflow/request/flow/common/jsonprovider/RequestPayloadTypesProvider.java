@@ -9,6 +9,7 @@ import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA2_EXTENSION_NOTICE_RUN_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_RUN_REQUEST_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.EMISSIONS_TRADING_SCHEME_DATA_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_AUDIT_REQUEST_PAYLOAD;
@@ -48,6 +49,7 @@ import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.common.domain.Cc
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.domain.FacilityPerformanceAccountTemplateDataProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestPayload;
@@ -126,7 +128,9 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
 				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_PAYLOAD),
 				
 				new NamedType(BuyOutSurplusFacilityRunRequestPayload.class, BUY_OUT_SURPLUS_FACILITY_RUN_REQUEST_PAYLOAD),
-				new NamedType(BuyOutSurplusFacilityAccountProcessingRequestPayload.class, BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_PAYLOAD)
+				new NamedType(BuyOutSurplusFacilityAccountProcessingRequestPayload.class, BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_PAYLOAD),
+
+				new NamedType(EmissionsTradingSchemeDataRequestPayload.class, EMISSIONS_TRADING_SCHEME_DATA_PAYLOAD)
 		);
 	}
 

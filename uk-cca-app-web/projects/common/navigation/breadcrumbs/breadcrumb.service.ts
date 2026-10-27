@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 
 export type Link = {
   text: string;
@@ -9,9 +9,7 @@ export type Link = {
 
 export type BreadcrumbRouteData = Array<Link | (() => Link)>;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class BreadcrumbService {
   readonly links = signal<Link[]>([]);
   readonly inverse = signal<boolean>(false);

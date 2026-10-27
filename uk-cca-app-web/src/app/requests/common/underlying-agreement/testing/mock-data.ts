@@ -1,4 +1,5 @@
 import { RequestTaskState } from '@netz/common/store';
+import { SchemeVersionEnum } from '@shared/types';
 
 import { Facility, RequestTaskItemDTO, TargetUnitAccountDetails, UnderlyingAgreementPayload } from 'cca-api';
 
@@ -14,7 +15,7 @@ export const facilities: Facility[] = [
     status: 'NEW',
     facilityDetails: {
       name: 'Facility 1',
-      participatingSchemeVersions: ['CCA_2'],
+      participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
       facilityAddress: {
         city: 'Facility City',
         line1: 'Facility Line1',
@@ -70,7 +71,7 @@ export const facilities: Facility[] = [
     status: 'LIVE',
     facilityDetails: {
       name: 'Facility 2',
-      participatingSchemeVersions: ['CCA_2'],
+      participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
       facilityAddress: {
         city: 'Facility City',
         line1: 'Facility Line1',
@@ -525,7 +526,7 @@ export const mockUnaRequestTaskPayload: UNAApplicationRequestTaskPayload = {
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },
@@ -598,7 +599,7 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_1',
       schemeDataMap: {
-        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },
@@ -635,7 +636,7 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
         status: 'NEW',
         facilityDetails: {
           name: 'Facility 1',
-          participatingSchemeVersions: ['CCA_2'],
+          participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
           facilityAddress: {
             city: 'Facility City',
             line1: 'Facility Line1',
@@ -691,7 +692,7 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
         facilityId: 'ADS_53-F00007',
         facilityDetails: {
           name: 'Facility 1',
-          participatingSchemeVersions: ['CCA_2'],
+          participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
           isCoveredByUkets: false,
           applicationReason: 'NEW_AGREEMENT',
           facilityAddress: {
@@ -850,7 +851,7 @@ export const mockUnaRequestTaskPayloadNOVEM: UNAApplicationRequestTaskPayload = 
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },
@@ -874,7 +875,7 @@ export const mockUnaRequestTaskPayloadABSOLUTE: UNAApplicationRequestTaskPayload
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
+        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
       },
     },
   },
@@ -898,7 +899,7 @@ export const mockUnaRequestTaskPayloadABSOLUTENoMeasurement: UNAApplicationReque
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },

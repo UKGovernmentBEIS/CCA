@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -23,7 +23,6 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
   selector: 'cca-facility-item-delete',
   templateUrl: './facility-item-delete.component.html',
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, PendingButtonDirective, WarningTextComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityItemDeleteComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

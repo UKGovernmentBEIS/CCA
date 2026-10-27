@@ -1,66 +1,46 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRouteSnapshot, Data, NavigationEnd, Router } from '@angular/router';
+import { Component, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
 
-import { BehaviorSubject, filter } from 'rxjs';
+import { filter, map } from 'rxjs';
 
 import { BackLinkComponent as GovukBackLinkComponent } from '@netz/govuk-components';
 
-import { RouteBacklink } from './backlink.interface';
+import { resolveBacklink } from './resolve-backlink';
 
 @Component({
   selector: 'netz-back-link',
   template: `
-    @if (backlink$ | async; as backlink) {
-      <govuk-back-link [link]="backlink.link" [route]="backlink.route" [inverse]="inverse()" />
+    @if (backlink(); as backlink) {
+      <govuk-back-link
+        [link]="backlink.link"
+        [fragment]="backlink.fragment!"
+        [queryParams]="backlink.queryParams!"
+        [route]="backlink.route"
+        [inverse]="inverse()"
+      />
     }
   `,
-  imports: [GovukBackLinkComponent, AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [GovukBackLinkComponent],
 })
 export class BackLinkComponent {
   private readonly router = inject(Router);
 
   readonly inverse = input(false);
 
-  protected readonly backlink$ = new BehaviorSubject<{ link: string; route: ActivatedRouteSnapshot } | null>(null);
-
-  constructor() {
-    this.router.events
-      .pipe(
-        takeUntilDestroyed(),
-        filter((event) => event instanceof NavigationEnd),
-      )
-      .subscribe(() => {
+  protected readonly backlink = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => {
         let activeRoute = this.router.routerState.snapshot.root;
         while (activeRoute.firstChild) {
           activeRoute = activeRoute.firstChild;
         }
 
-        if (this.hasBackLink(activeRoute.data)) {
-          this.backlink$.next({ link: this.getLink(activeRoute), route: activeRoute });
-        } else {
-          this.backlink$.next(null);
-        }
-      });
-  }
-
-  private getLink(route: ActivatedRouteSnapshot): string {
-    switch (typeof route.data.backlink) {
-      case 'function':
-        return route.data.backlink(route.data);
-      case 'string':
-      default:
-        return route.data.backlink;
-    }
-  }
-
-  private hasBackLink(routeData: Data): boolean {
-    if (!routeData) return false;
-    const backlink: RouteBacklink = routeData.backlink;
-    if (typeof backlink === 'boolean' || typeof backlink === 'string') return !!backlink;
-    if (typeof backlink === 'function') return !!backlink(routeData);
-    return false;
-  }
+        const backlink = resolveBacklink(activeRoute);
+        return backlink ? { ...backlink, route: activeRoute } : null;
+      }),
+    ),
+    { initialValue: null },
+  );
 }

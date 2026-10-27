@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { GovukDatePipe, ItemActionHeaderPipe } from '@netz/common/pipes';
@@ -14,11 +14,19 @@ import { RequestActionInfoDTO } from 'cca-api';
     }
 
     @if (link()) {
-      <span><a [routerLink]="link()" [relativeTo]="route" [state]="state()" class="govuk-link">View details</a></span>
+      <span
+        ><a [routerLink]="link()" [relativeTo]="route" [state]="state()" class="govuk-link"
+          >View details
+          @if (action(); as item) {
+            <span class="govuk-visually-hidden">
+              of {{ item | itemActionHeader }}, {{ item.creationDate | govukDate: 'datetime' }}</span
+            >
+          }
+        </a></span
+      >
     }
     <hr class="govuk-!-margin-top-6" />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ItemActionHeaderPipe, GovukDatePipe, RouterLink],
 })
 export class TimelineItemComponent {

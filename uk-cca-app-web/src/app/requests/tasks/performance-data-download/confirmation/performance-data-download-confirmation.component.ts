@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -10,7 +10,6 @@ import { performanceDataDownloadQuery } from '../+state/performance-data-downloa
   selector: 'cca-performance-data-download-confirmation',
   templateUrl: './performance-data-download-confirmation.component.html',
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataDownloadConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

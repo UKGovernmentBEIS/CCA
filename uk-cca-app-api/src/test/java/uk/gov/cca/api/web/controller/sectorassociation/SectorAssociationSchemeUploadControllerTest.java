@@ -95,11 +95,12 @@ class SectorAssociationSchemeUploadControllerTest {
                 .fileType(documentContentType)
                 .fileContent(documentContent)
                 .fileSize(documentFile.getSize())
+                .createdBy("id")
                 .build();
         final UUID documentUuid = UUID.randomUUID();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
-        when(sectorAssociationSchemeDocumentService.createSectorAssociationSchemeDocument(fileDTO, authUser))
+        when(sectorAssociationSchemeDocumentService.createSectorAssociationSchemeDocument(fileDTO))
                 .thenReturn(documentUuid.toString());
 
         mockMvc.perform(
@@ -111,6 +112,6 @@ class SectorAssociationSchemeUploadControllerTest {
                 .andExpect(jsonPath("$.uuid").value(documentUuid.toString()));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(sectorAssociationSchemeDocumentService, times(1)).createSectorAssociationSchemeDocument(fileDTO, authUser);
+        verify(sectorAssociationSchemeDocumentService, times(1)).createSectorAssociationSchemeDocument(fileDTO);
     }
 }

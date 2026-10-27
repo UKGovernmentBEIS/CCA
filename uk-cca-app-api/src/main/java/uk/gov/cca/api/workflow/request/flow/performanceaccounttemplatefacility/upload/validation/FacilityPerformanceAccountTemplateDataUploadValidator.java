@@ -70,8 +70,7 @@ public class FacilityPerformanceAccountTemplateDataUploadValidator {
                 boolean submissionDateValidForReportingPeriod =
                         isSubmissionDateValidForReportingPeriod(performanceAccountTemplateDataUpload.getTargetYear(), submissionDate);
                 if (!submissionDateValidForReportingPeriod) {
-                    violations.add(new FacilityPerformanceAccountTemplateDataViolation(FacilityPerformanceAccountTemplateDataUpload.class.getName(),
-                            FacilityPerformanceAccountTemplateDataViolation.FacilityPerformanceAccountTemplateDataViolationMessage.PERFORMANCE_ACCOUNT_TEMPLATE_SUBMISSION_DATE_HAS_EXPIRED));
+                    throw new BusinessException(CcaErrorCode.EXPIRED_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_SUBMISSION_DATE);
                 }
             }
 

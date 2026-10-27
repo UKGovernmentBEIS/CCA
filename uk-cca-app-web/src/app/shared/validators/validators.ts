@@ -1,13 +1,16 @@
-import { AbstractControl, FormArray, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { GovukValidators, MessageValidatorFn } from '@netz/govuk-components';
 
 export function requiredFieldsValidator(): ValidatorFn {
-  return GovukValidators.builder('You must fill all required values', (group: UntypedFormGroup) =>
-    Object.keys(group.controls).find((key) => group.controls[key].hasError('required'))
+  return GovukValidators.builder('You must fill all required values', (control: AbstractControl) => {
+    if (!(control instanceof FormGroup)) return null;
+
+    const group = control as UntypedFormGroup;
+    return Object.keys(group.controls).find((key) => group.controls[key].hasError('required'))
       ? { emptyRequiredFields: true }
-      : null,
-  );
+      : null;
+  });
 }
 
 /** Add **required** and **max length** validators to the given field name. */

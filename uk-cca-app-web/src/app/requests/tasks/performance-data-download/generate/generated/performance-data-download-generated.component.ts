@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -30,7 +30,6 @@ import { SectorAssociationInfoSummaryComponent } from '../sector-association-inf
     ReactiveFormsModule,
     SectorAssociationInfoSummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataDownloadGeneratedComponent {
   private readonly router = inject(Router);

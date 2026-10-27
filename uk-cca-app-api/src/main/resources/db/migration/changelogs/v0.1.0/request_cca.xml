@@ -3396,5 +3396,33 @@
             </sql>
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_ADD_EMISSIONS_TRADING_SCHEME_DATA" author="P70311">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'EMISSIONS_TRADING_SCHEME_DATA', 'Emissions trading scheme data process', 'PROCESS_EMISSIONS_TRADING_SCHEME_DATA', 'FACILITY', false, true, false, true, 'FACILITY');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'EMISSIONS_TRADING_SCHEME_DATA';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_EMISSIONS_TRADING_SCHEME_DATA_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'EMISSIONS_TRADING_SCHEME_DATA_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'EMISSIONS_TRADING_SCHEME_DATA'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'EMISSIONS_TRADING_SCHEME_DATA_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
     
 </databaseChangeLog>

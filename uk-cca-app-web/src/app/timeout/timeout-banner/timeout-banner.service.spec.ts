@@ -80,6 +80,40 @@ describe('TimeoutBannerService', () => {
     expect(service.countDownTime()).toBeGreaterThanOrEqual(0);
   });
 
+  it('should schedule the banner before the refresh token expires', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2030-01-01T00:00:00Z'));
+    const exp = Math.floor(Date.now() / 1000) + 300;
+    Object.assign(keycloakService, {
+      keycloakInstance: { refreshTokenParsed: { iat: exp - 1800, exp }, timeSkew: 0 },
+    });
+
+    keycloakEvents.set({ type: KeycloakEventType.OnAuthRefreshSuccess });
+    TestBed.tick();
+
+    expect(service.countDownTime()).toBe((300 - service.timeOffsetSeconds) * 1000);
+
+    vi.advanceTimersByTime(service.countDownTime());
+
+    expect(service.isVisible()).toBe(true);
+  });
+
+  it('should account for keycloak clock skew when calculating the countdown', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2030-01-01T00:00:00Z'));
+    const exp = Math.floor(Date.now() / 1000) + 300;
+    Object.assign(keycloakService, {
+      keycloakInstance: { refreshTokenParsed: { iat: exp - 1800, exp }, timeSkew: 60 },
+    });
+
+    keycloakEvents.set({ type: KeycloakEventType.OnAuthRefreshSuccess });
+    TestBed.tick();
+
+    // Positive skew means the local clock runs ahead of the server, so the token has more time left
+    // than naive local time would suggest (keycloak-js: remaining = exp - now + timeSkew).
+    expect(service.countDownTime()).toBe((300 - service.timeOffsetSeconds + 60) * 1000);
+  });
+
   it('should cleanup on destroy', () => {
     vi.useFakeTimers();
     keycloakEvents.set({ type: KeycloakEventType.OnAuthRefreshSuccess });

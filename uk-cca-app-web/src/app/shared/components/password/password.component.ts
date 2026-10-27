@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  inject,
-  input,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 
@@ -18,9 +9,8 @@ import { PasswordStrengthMeterComponent } from '../password-strength-meter/passw
 @Component({
   selector: 'cca-password',
   templateUrl: './password.component.html',
-  imports: [TextInputComponent, ReactiveFormsModule, TagComponent, ButtonDirective, PasswordStrengthMeterComponent],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TextInputComponent, ReactiveFormsModule, TagComponent, ButtonDirective, PasswordStrengthMeterComponent],
 })
 export class PasswordComponent implements OnInit {
   protected readonly formGroupDirective = inject(FormGroupDirective);

@@ -12,9 +12,13 @@ import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaFileDocumentGeneratorService;
+import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaFileDocumentUnprocessedGeneratorService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaOfficialNoticeSendService;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
+import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +37,9 @@ class BuyOutSurplusAccountProcessingOfficialNoticeServiceTest {
 
     @Mock
     private CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
+
+    @Mock
+    private CcaFileDocumentUnprocessedGeneratorService ccaFileDocumentUnprocessedGeneratorService;
 
     @Test
     void generateOfficialNotice_PRIMARY_AWAITING_PAYMENT() {
@@ -106,6 +113,11 @@ class BuyOutSurplusAccountProcessingOfficialNoticeServiceTest {
                 .payload(BuyOutSurplusAccountProcessingRequestPayload.builder()
                         .submitterId("regulator")
                         .build())
+                .requestResources(List.of(
+                    RequestResource.builder()
+                            .resourceType(ResourceType.CA)
+                            .resourceId(CompetentAuthorityEnum.ENGLAND.name())
+                            .build()))
                 .build();
 
         // Invoke
@@ -113,9 +125,9 @@ class BuyOutSurplusAccountProcessingOfficialNoticeServiceTest {
                 .generateRefundOfficialNotice(request);
 
         // Verify
-        verify(ccaFileDocumentGeneratorService, times(1)).generate(request, "regulator",
-                CcaDocumentTemplateGenerationContextActionType.BUY_OUT_SURPLUS_NOTICE,
+        verify(ccaFileDocumentUnprocessedGeneratorService, times(1)).copyTemplateAndSaveFileDocument(
                 CcaDocumentTemplateType.REFUND_CLAIM_FORM_BUY_OUT,
+                CompetentAuthorityEnum.valueOf(request.getRequestResourcesMap().get(ResourceType.CA)),
                 "Buyout Refund Claim Form.docx");
     }
 

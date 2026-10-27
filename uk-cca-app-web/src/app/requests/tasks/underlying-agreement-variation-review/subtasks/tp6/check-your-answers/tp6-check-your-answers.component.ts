@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -9,6 +9,7 @@ import { ButtonDirective } from '@netz/govuk-components';
 import {
   areEntitiesIdentical,
   BaselineAndTargetPeriodsSubtasks,
+  BaselineAndTargetsSummaryMetadata,
   TaskItemStatus,
   TasksApiService,
   toBaselineAndTargetsSummaryDataWithDecision,
@@ -18,7 +19,7 @@ import {
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -36,7 +37,6 @@ import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } 
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TP6CheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -47,7 +47,7 @@ export class TP6CheckYourAnswersComponent {
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
 
   private readonly sectorAssociationDetailsSchemeData = this.requestTaskStore.select(
-    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
+    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
   )();
 
   private readonly originalTargetPeriodDetails = this.requestTaskStore.select(
@@ -79,7 +79,7 @@ export class TP6CheckYourAnswersComponent {
     underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_PERIOD6_DETAILS'),
   )();
 
-  private readonly summaryOriginalMetadata = {
+  private readonly summaryOriginalMetadata: BaselineAndTargetsSummaryMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: generateDownloadUrl(this.taskId),
@@ -87,7 +87,7 @@ export class TP6CheckYourAnswersComponent {
     attachments: { submit: this.originalSubmitAttachments, review: this.reviewAttachments },
   };
 
-  private readonly summaryCurrentMetadata = {
+  private readonly summaryCurrentMetadata: BaselineAndTargetsSummaryMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: generateDownloadUrl(this.taskId),

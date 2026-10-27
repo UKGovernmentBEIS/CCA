@@ -21,7 +21,10 @@ export const PERFORMANCE_DATA_REPORT_FORM = new InjectionToken<PerformanceDataRe
   'Performance data report form',
 );
 
-export const performanceDataInitialValues = {
+export const performanceDataInitialValues: Partial<PerformanceDataCriteria> & {
+  pageNumber: number;
+  pageSize: number;
+} = {
   targetUnitAccountBusinessId: null,
   targetPeriodType: 'TP6' as TargetPeriodType,
   performanceOutcome: null,

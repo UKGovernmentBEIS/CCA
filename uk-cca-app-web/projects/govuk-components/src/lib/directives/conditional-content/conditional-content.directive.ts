@@ -6,7 +6,7 @@ export class ConditionalContentDirective {
   private readonly childControls = contentChildren(NgControl, { descendants: true });
   private readonly childContainers = contentChildren(ControlContainer, { descendants: true });
 
-  private readonly childConditionals = contentChildren(
+  private readonly childConditionals = contentChildren<ConditionalContentDirective>(
     forwardRef(() => ConditionalContentDirective),
     { descendants: true },
   );

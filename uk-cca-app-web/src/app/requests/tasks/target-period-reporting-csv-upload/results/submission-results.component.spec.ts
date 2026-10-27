@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -30,7 +30,7 @@ describe('SubmissionResultsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SubmissionResultsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -96,7 +96,7 @@ describe('SubmissionResultsComponent', () => {
     expect(values[1]).toBe('1');
     expect(values[2]).toBe('0');
     expect(values[3]).toBe('1');
-    expect(values[4]).toBe('Upload_Summary.csv');
+    expect(values[4]).toBe('Upload_Summary.csv (opens in a new tab)');
   });
 
   it('should display an error message when errorMessage exists', async () => {

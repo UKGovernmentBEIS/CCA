@@ -5,15 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransactionAmountChangedHistoryPayload;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionHistoryDTO;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.netz.api.common.exception.BusinessException;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,33 +24,22 @@ class BuyOutSurplusTransactionFileEvidenceTokenServiceTest {
     private BuyOutSurplusTransactionFileEvidenceTokenService fileEvidenceTokenService;
 
     @Mock
-    private BuyOutSurplusQueryService buyOutSurplusQueryService;
+    private BuyOutSurplusTransactionQueryService buyOutSurplusTransactionQueryService;
 
     @Test
     void validateFileEvidenceResource() {
         final Long resourceId = 1L;
         final UUID fileEvidenceUuid = UUID.randomUUID();
 
-        final List<BuyOutSurplusTransactionHistoryDTO> transactionHistories = List.of(
-                BuyOutSurplusTransactionHistoryDTO.builder()
-                        .payload(BuyOutSurplusTransactionAmountChangedHistoryPayload.builder()
-                                .evidenceFiles(Map.of(fileEvidenceUuid, "test1", UUID.randomUUID(), "test2"))
-                                .build())
-                        .build(),
-                BuyOutSurplusTransactionHistoryDTO.builder()
-                        .payload(BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload.builder()
-                                .evidenceFiles(Map.of(UUID.randomUUID(), "test11", UUID.randomUUID(), "test12", UUID.randomUUID(), "test13"))
-                                .build())
-                        .build()
-        );
-
-        when(buyOutSurplusQueryService.getBuyOutSurplusTransactionHistory(resourceId)).thenReturn(transactionHistories);
+        when(buyOutSurplusTransactionQueryService.getBuyOutSurplusTransactionHistoryEvidenceFiles(resourceId))
+                .thenReturn(Set.of(fileEvidenceUuid, UUID.randomUUID()));
 
         // Invoke
         fileEvidenceTokenService.validateFileEvidenceResource(resourceId, fileEvidenceUuid);
 
         // Verify
-        verify(buyOutSurplusQueryService, times(1)).getBuyOutSurplusTransactionHistory(resourceId);
+        verify(buyOutSurplusTransactionQueryService, times(1))
+                .getBuyOutSurplusTransactionHistoryEvidenceFiles(resourceId);
     }
 
     @Test
@@ -63,20 +47,8 @@ class BuyOutSurplusTransactionFileEvidenceTokenServiceTest {
         final Long resourceId = 1L;
         final UUID fileEvidenceUuid = UUID.randomUUID();
 
-        final List<BuyOutSurplusTransactionHistoryDTO> transactionHistories = List.of(
-                BuyOutSurplusTransactionHistoryDTO.builder()
-                        .payload(BuyOutSurplusTransactionAmountChangedHistoryPayload.builder()
-                                .evidenceFiles(Map.of(UUID.randomUUID(), "test1", UUID.randomUUID(), "test2"))
-                                .build())
-                        .build(),
-                BuyOutSurplusTransactionHistoryDTO.builder()
-                        .payload(BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload.builder()
-                                .evidenceFiles(Map.of(UUID.randomUUID(), "test11", UUID.randomUUID(), "test12", UUID.randomUUID(), "test13"))
-                                .build())
-                        .build()
-        );
-
-        when(buyOutSurplusQueryService.getBuyOutSurplusTransactionHistory(resourceId)).thenReturn(transactionHistories);
+        when(buyOutSurplusTransactionQueryService.getBuyOutSurplusTransactionHistoryEvidenceFiles(resourceId))
+                .thenReturn(Set.of(UUID.randomUUID(), UUID.randomUUID()));
 
         // Invoke
         BusinessException ex = assertThrows(BusinessException.class,
@@ -84,6 +56,7 @@ class BuyOutSurplusTransactionFileEvidenceTokenServiceTest {
 
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.FILE_EVIDENCE_IS_NOT_RELATED_TO_TRANSACTION);
-        verify(buyOutSurplusQueryService, times(1)).getBuyOutSurplusTransactionHistory(resourceId);
+        verify(buyOutSurplusTransactionQueryService, times(1))
+                .getBuyOutSurplusTransactionHistoryEvidenceFiles(resourceId);
     }
 }

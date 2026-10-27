@@ -10,8 +10,8 @@ describe('PanelComponent', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    imports: [PanelComponent],
     template: ` <govuk-panel [title]="title"></govuk-panel> `,
+    imports: [PanelComponent],
   })
   class TestComponent {
     title = 'Something is going on';

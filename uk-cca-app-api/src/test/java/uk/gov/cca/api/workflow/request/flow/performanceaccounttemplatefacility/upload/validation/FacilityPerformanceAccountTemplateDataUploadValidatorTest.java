@@ -219,4 +219,31 @@ class FacilityPerformanceAccountTemplateDataUploadValidatorTest {
         verify(fileAttachmentsExistenceValidator, times(1)).valid(Set.of(file), Set.of(file));
     }
 
+    @Test
+    void validate_submission_date_not_valid() {
+        final LocalDate submissionDate = LocalDate.of(2027, 1, 1);
+        final Year targetYear = Year.of(submissionDate.getYear());
+        final UUID file = UUID.randomUUID();
+        final FacilityPerformanceAccountTemplateDataUpload performanceAccountTemplateDataUpload = FacilityPerformanceAccountTemplateDataUpload.builder()
+                .targetYear(targetYear)
+                .files(Set.of(file))
+                .build();
+        final FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload requestTaskPayload = FacilityPerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.builder()
+                .performanceAccountTemplateDataUpload(performanceAccountTemplateDataUpload)
+                .processingStatus(FacilityPerformanceAccountTemplateDataUploadProcessingStatus.NOT_STARTED_YET)
+                .uploadAttachments(Map.of(file, "csv"))
+                .build();
+
+
+        when(dataValidator.validate(performanceAccountTemplateDataUpload)).thenReturn(Optional.empty());
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class, () -> validator.validate(requestTaskPayload, submissionDate));
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.EXPIRED_FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_SUBMISSION_DATE);
+        verify(dataValidator, times(1)).validate(performanceAccountTemplateDataUpload);
+        verify(fileAttachmentsExistenceValidator, never()).valid(Set.of(file), Set.of(file));
+    }
+
 }

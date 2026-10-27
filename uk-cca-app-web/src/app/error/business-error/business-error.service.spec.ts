@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 
 import { firstValueFrom } from 'rxjs';
 
@@ -14,10 +13,7 @@ describe('BusinessErrorService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([{ path: 'error/business', component: RouterStubComponent }]),
-        RouterStubComponent,
-      ],
+      providers: [provideRouter([{ path: 'error/business', component: RouterStubComponent }])],
     });
     service = TestBed.inject(BusinessErrorService);
   });

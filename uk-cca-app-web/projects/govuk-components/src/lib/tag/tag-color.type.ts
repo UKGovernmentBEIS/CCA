@@ -1,2 +1,1 @@
-export type TagColor =
-  'grey' | 'green' | 'turquoise' | 'blue' | 'light-blue' | 'purple' | 'pink' | 'red' | 'orange' | 'yellow';
+export type TagColor = 'grey' | 'green' | 'teal' | 'blue' | 'purple' | 'magenta' | 'red' | 'orange' | 'yellow';

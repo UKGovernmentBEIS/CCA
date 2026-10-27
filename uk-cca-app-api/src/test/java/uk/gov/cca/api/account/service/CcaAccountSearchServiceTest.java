@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,13 +19,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import uk.gov.cca.api.account.domain.TargetUnitAccount;
-import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.account.domain.CcaAccountContactType;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoDTO;
 import uk.gov.cca.api.account.repository.TargetUnitAccountSearchRepository;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria.SortBy;
-import uk.gov.netz.api.account.domain.dto.AccountSearchResultInfoDTO;
-import uk.gov.netz.api.account.domain.dto.AccountSearchResults;
 import uk.gov.netz.api.common.domain.PagingRequest;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,37 +34,62 @@ class CcaAccountSearchServiceTest {
 
     @Mock
     private TargetUnitAccountSearchRepository targetUnitAccountSearchRepository;
-	
+
 	@Test
-	void searchAccounts() {
-		List<Long> sectorAssociationIds = List.of(1L, 2L);
-		AccountSearchCriteria accountSearchCriteria = AccountSearchCriteria.builder()
-				.paging(PagingRequest.builder().pageNumber(0).pageSize(10).build())
-				.sortBy(SortBy.ACCOUNT_BUSINESS_ID)
-				.direction(Direction.DESC)
-				.term("term ").build();
-		
-		Page<TargetUnitAccount> pageResult = new PageImpl<>(List.of(
-				TargetUnitAccount.builder().id(1L).name("name1").businessId("bus1").status(TargetUnitAccountStatus.TERMINATED).build(),
-				TargetUnitAccount.builder().id(2L).name("name2").businessId("bus2").status(TargetUnitAccountStatus.LIVE).build()
-				));
-		
-		PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("businessId").descending());
-		
-		when(targetUnitAccountSearchRepository.searchAccounts(pageRequest, sectorAssociationIds, "term"))
-			.thenReturn(pageResult);
-		
-		AccountSearchResults result = cut.searchAccounts(sectorAssociationIds, accountSearchCriteria);
-		
-		assertThat(result).isEqualTo(AccountSearchResults.builder()
-				.total(2L)
-				.accounts(List.of(
-					new AccountSearchResultInfoDTO(1L, "name1", "bus1", TargetUnitAccountStatus.TERMINATED),
-	        		new AccountSearchResultInfoDTO(2L, "name2", "bus2", TargetUnitAccountStatus.LIVE)
-	        		))
-				.build());
-		
-		verify(targetUnitAccountSearchRepository, times(1)).searchAccounts(pageRequest, sectorAssociationIds, "term");
-		
+	void searchAccountsWithSiteContact() {
+        final Long sectorAssociationId = 1L;
+        final String contactType = CcaAccountContactType.TU_SITE_CONTACT;
+        final AccountSearchCriteria accountSearchCriteria = AccountSearchCriteria.builder()
+                .paging(PagingRequest.builder().pageNumber(0).pageSize(10).build())
+                .sortBy(SortBy.ACCOUNT_BUSINESS_ID)
+                .direction(Direction.DESC)
+                .term("term ").build();
+
+        final PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("businessId").descending());
+        final Page<TargetUnitAccountInfoDTO> pageResult = new PageImpl<>(List.of(
+                TargetUnitAccountInfoDTO.builder().accountId(1L).build(),
+                TargetUnitAccountInfoDTO.builder().accountId(2L).build()
+        ));
+
+        when(targetUnitAccountSearchRepository.searchAccountsWithSiteContact(pageRequest, sectorAssociationId, contactType))
+                .thenReturn(pageResult);
+
+        // Invoke
+        Page<TargetUnitAccountInfoDTO> result = cut.searchAccountsWithSiteContact(sectorAssociationId, contactType, accountSearchCriteria);
+
+        // Verify
+        assertThat(result).isEqualTo(pageResult);
+        verify(targetUnitAccountSearchRepository, times(1))
+                .searchAccountsWithSiteContact(pageRequest, sectorAssociationId, contactType);
 	}
+
+    @Test
+    void searchAccountsWithSiteContactAndAccountsIds() {
+        final Long sectorAssociationId = 1L;
+        final Set<Long> accountsIds = Set.of(1L, 2L);
+        final String contactType = CcaAccountContactType.TU_SITE_CONTACT;
+        final AccountSearchCriteria accountSearchCriteria = AccountSearchCriteria.builder()
+                .paging(PagingRequest.builder().pageNumber(0).pageSize(10).build())
+                .sortBy(SortBy.ACCOUNT_BUSINESS_ID)
+                .direction(Direction.DESC)
+                .term("term ").build();
+
+        final PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("businessId").descending());
+        final Page<TargetUnitAccountInfoDTO> pageResult = new PageImpl<>(List.of(
+                TargetUnitAccountInfoDTO.builder().accountId(1L).build(),
+                TargetUnitAccountInfoDTO.builder().accountId(2L).build()
+        ));
+
+        when(targetUnitAccountSearchRepository.searchAccountsWithSiteContactAndAccountsIds(pageRequest, sectorAssociationId, accountsIds, contactType))
+                .thenReturn(pageResult);
+
+        // Invoke
+        Page<TargetUnitAccountInfoDTO> result = cut
+                .searchAccountsWithSiteContactAndAccountsIds(sectorAssociationId, accountsIds, contactType, accountSearchCriteria);
+
+        // Verify
+        assertThat(result).isEqualTo(pageResult);
+        verify(targetUnitAccountSearchRepository, times(1))
+                .searchAccountsWithSiteContactAndAccountsIds(pageRequest, sectorAssociationId, accountsIds, contactType);
+    }
 }

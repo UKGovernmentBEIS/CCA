@@ -1,28 +1,34 @@
 <cca-utility-panel heading="Filters">
   <form [formGroup]="filtersForm" (ngSubmit)="apply()">
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row row-flex flex-wrap align-items-end">
       <div class="govuk-grid-column-one-half">
         <div
           govuk-text-input
           formControlName="searchTerm"
+          label="Search"
           hint="Target unit ID, target unit name, facility ID, site name or sector ID"
           widthClass="govuk-!-width-full"
         ></div>
       </div>
 
       <div class="govuk-grid-column-one-quarter">
-        <div class="govuk-hint govuk-!-margin-bottom-1">Filter by workflow</div>
         <div
           govuk-select
           formControlName="requestType"
+          label="Filter by workflow"
           [options]="workflowOptions()"
           widthClass="govuk-!-width-full"
         ></div>
       </div>
 
       <div class="govuk-grid-column-one-quarter">
-        <div class="govuk-hint govuk-!-margin-bottom-1">Sort by</div>
-        <div govuk-select formControlName="orderBy" [options]="sortOptions" widthClass="govuk-!-width-full"></div>
+        <div
+          govuk-select
+          formControlName="orderBy"
+          label="Sort by"
+          [options]="sortOptions"
+          widthClass="govuk-!-width-full"
+        ></div>
       </div>
     </div>
 

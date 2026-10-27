@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
@@ -26,7 +26,6 @@ import { SummaryData, SummarySection } from './type';
     SummaryQueryParamsPipe,
     SummaryDownloadFilesComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SummaryComponent {
   protected readonly data = input.required<SummaryData>();

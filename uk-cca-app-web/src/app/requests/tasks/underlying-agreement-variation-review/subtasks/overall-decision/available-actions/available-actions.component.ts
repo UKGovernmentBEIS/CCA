@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -19,7 +19,6 @@ import { createSaveDeterminationActionDTO } from '../../../transform';
 @Component({
   selector: 'cca-underlying-agreement-available-actions',
   templateUrl: './available-actions.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PageHeadingComponent, ButtonDirective, WarningTextComponent, ReturnToTaskOrActionPageComponent],
 })
 export class AvailableActionsComponent {

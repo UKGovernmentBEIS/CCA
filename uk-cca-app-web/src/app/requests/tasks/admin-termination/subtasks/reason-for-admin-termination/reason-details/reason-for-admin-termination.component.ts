@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,6 +28,7 @@ import {
 @Component({
   selector: 'cca-reason-for-admin-termination',
   templateUrl: './reason-for-admin-termination.component.html',
+  providers: [ReasonForAdminTerminationFormProvider],
   imports: [
     WizardStepComponent,
     TextareaComponent,
@@ -37,8 +38,6 @@ import {
     MultipleFileInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [ReasonForAdminTerminationFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ReasonForAdminTerminationComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

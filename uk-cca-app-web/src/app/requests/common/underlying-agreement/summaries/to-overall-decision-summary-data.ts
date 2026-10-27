@@ -1,8 +1,9 @@
-import { OverallDecisionWizardStep } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
 import { VariationDetermination } from 'cca-api';
+
+import { OverallDecisionWizardStep } from '../types';
 
 type ToOverallDecisionSummaryDataArgs = {
   determination: VariationDetermination;

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -18,7 +18,7 @@ const initialState: DetailsStoreType = {
   isAdd: false,
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class DetailsStore extends SignalStore<DetailsStoreType> {
   constructor() {
     super(initialState);

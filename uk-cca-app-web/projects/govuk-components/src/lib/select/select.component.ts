@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, input, computed, model } from '@angular/core';
+import { booleanAttribute, Component, input, computed, model } from '@angular/core';
 import { ControlValueAccessor, ReactiveFormsModule } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
@@ -21,8 +21,10 @@ export class SelectComponent extends FormInput implements ControlValueAccessor {
   readonly options = model<GovukSelectOption[]>();
   readonly widthClass = input<GovukTextWidthClass>();
   readonly label = input<string>();
+  readonly labelHidden = input(false, { transform: booleanAttribute });
+  readonly hint = input<string>();
 
-  readonly isLabelHidden = computed(() => (this.label() ? false : true));
+  readonly isLabelHidden = computed(() => this.labelHidden() || !this.label());
   readonly currentLabel = computed(() => this.label() ?? 'Select');
 
   constructor() {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
@@ -10,7 +10,6 @@ import { CaExternalContactDTO, CaExternalContactsService } from 'cca-api';
   selector: 'cca-external-contacts',
   templateUrl: './external-contacts.component.html',
   imports: [RouterLink, ButtonDirective, TableComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExternalContactsComponent {
   private readonly externalContactsService = inject(CaExternalContactsService);
@@ -29,7 +28,7 @@ export class ExternalContactsComponent {
     { field: 'name', header: 'Displayed name', isSortable: true, isHeader: true },
     { field: 'email', header: 'Email address', isSortable: true },
     { field: 'description', header: 'Description' },
-    { field: null, header: null },
+    { field: null, header: 'Actions' },
   ];
 
   protected readonly nonEditableColumns = this.editableColumns.slice(0, 3);

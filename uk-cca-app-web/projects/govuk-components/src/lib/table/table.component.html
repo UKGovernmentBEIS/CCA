@@ -1,4 +1,4 @@
-<table class="govuk-table">
+<table class="govuk-table" [class.govuk-table--header-hint]="hasHeaderHint()">
   @if (caption()) {
     <caption class="govuk-table__caption">
       {{
@@ -13,13 +13,22 @@
         <th
           [attr.aria-sort]="!column.isSortable ? null : sortedField === column.field ? sortingDirection : 'none'"
           [class.govuk-table__header]="true"
+          [class.govuk-table__header--numeric]="column.isNumeric"
           [class]="column.widthClass"
           scope="col"
         >
           @if (!column.isSortable) {
             {{ column.header }}
+            @if (column.headerHint) {
+              <span class="govuk-!-display-block govuk-!-font-weight-regular">{{ column.headerHint }}</span>
+            }
           } @else {
-            <button (click)="sortBy(column.field)" type="button">{{ column.header }}</button>
+            <button (click)="sortBy(column.field)" type="button">
+              {{ column.header }}
+              @if (column.headerHint) {
+                <span class="govuk-!-display-block govuk-!-font-weight-regular">{{ column.headerHint }}</span>
+              }
+            </button>
           }
         </th>
       }
@@ -31,12 +40,12 @@
       <tr class="govuk-table__row">
         @for (column of columns(); track column.field) {
           @if (column.isHeader) {
-            <th class="govuk-table__header" scope="row">
+            <th class="govuk-table__header" [class.govuk-table__header--numeric]="column.isNumeric" scope="row">
               <ng-container *ngTemplateOutlet="cell" />
             </th>
           } @else {
             <td
-              [class.govuk-table__cell--numeric]="getTypeof(row[column.field]) === 'number'"
+              [class.govuk-table__cell--numeric]="column.isNumeric || getTypeof(row[column.field]) === 'number'"
               class="govuk-table__cell"
             >
               <ng-container *ngTemplateOutlet="cell" />
@@ -45,7 +54,7 @@
 
           <ng-template #td>
             <td
-              [class.govuk-table__cell--numeric]="getTypeof(row[column.field]) === 'number'"
+              [class.govuk-table__cell--numeric]="column.isNumeric || getTypeof(row[column.field]) === 'number'"
               class="govuk-table__cell"
             >
               <ng-container *ngTemplateOutlet="cell" />

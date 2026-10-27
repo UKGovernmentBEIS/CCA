@@ -33,14 +33,6 @@ public class FacilityCertificationRunService {
     }
 
     @Transactional
-    public void accountProcessingCompleted(final String requestId, final Long accountId, final FacilityCertificationAccountState accountState) {
-        final Request request = requestService.findRequestById(requestId);
-        final FacilityCertificationRunRequestPayload requestPayload = (FacilityCertificationRunRequestPayload) request.getPayload();
-
-        requestPayload.getFacilityCertificationAccountStates().put(accountId, accountState);
-    }
-
-    @Transactional
     public void complete(final String requestId) {
         final Request request = requestService.findRequestById(requestId);
         FacilityCertificationRunRequestPayload requestPayload = (FacilityCertificationRunRequestPayload) request.getPayload();

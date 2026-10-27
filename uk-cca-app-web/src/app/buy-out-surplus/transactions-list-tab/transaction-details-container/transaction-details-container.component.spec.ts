@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
@@ -6,7 +6,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 
 import { TransactionDetailsContainerComponent } from './transaction-details-container.component';
-import { mockTransactionDetails } from './transcation-details-tab/testing/mock-data';
+import { mockTransactionDetails } from './transaction-details-tab/testing/mock-data';
 
 describe('TransactionDetailsContainerComponent', () => {
   let component: TransactionDetailsContainerComponent;
@@ -32,7 +32,7 @@ describe('TransactionDetailsContainerComponent', () => {
       imports: [TransactionDetailsContainerComponent],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
       ],
     }).compileComponents();

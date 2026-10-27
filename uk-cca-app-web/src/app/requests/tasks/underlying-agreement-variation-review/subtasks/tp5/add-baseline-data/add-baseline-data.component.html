@@ -72,9 +72,11 @@
     <div
       widthClass="govuk-!-width-one-quarter"
       formControlName="energy"
-      [suffix]="targetComposition?.measurementType | measurementTypeToUnit"
+      [suffix]="$safeNavigationMigration(targetComposition?.measurementType) | measurementTypeToUnit"
       [label]="
-        'Enter the baseline ' + (targetComposition?.measurementType | measurementTypeToUnit) + ' for the target unit'
+        'Enter the baseline ' +
+        ($safeNavigationMigration(targetComposition?.measurementType) | measurementTypeToUnit) +
+        ' for the target unit'
       "
       hint="Enter a number up to 7 decimals, without alpha or special characters"
       inputType="number"
@@ -97,7 +99,7 @@
     <div
       widthClass="govuk-!-width-one-quarter"
       formControlName="throughput"
-      [suffix]="targetComposition?.throughputUnit"
+      [suffix]="$safeNavigationMigration(targetComposition?.throughputUnit)"
       [label]="'Enter the baseline throughput ' + (targetComposition?.throughputUnit ?? '')"
       hint="Not applicable for novem targets. Enter a number up to 7 decimals, without alpha or special characters"
       inputType="number"

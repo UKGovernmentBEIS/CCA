@@ -12,6 +12,8 @@ import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.commo
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.EnergyConsumptionOrCarbonEmissionsImpactedType;
 import uk.gov.netz.api.common.validation.SpELExpression;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -19,14 +21,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SpELExpression(expression = "{( (#actionCategoryType ne 'NO_ACTION') && (#supplyDemandSideMeasure != null) && (#savingActionsImplemented != null) " +
+@SpELExpression(expression = "{(#actionCategoryType == null) " +
+        "|| ( (#actionCategoryType ne 'NO_ACTION') && (#supplyDemandSideMeasure != null) && (#savingActionsImplemented != null) " +
         "&& (#reasonsForImplementation != null) && (#implementationDate != null) && (#fixedEnergyConsumptionOrCarbonEmissionsImpacted != null) " +
         "&& (#energyConsumptionOrCarbonEmissionsImpactedPercentage != null) && (#expectedExtentOfChangeImplementedPercentage != null) && (#expectedSavingsFromTheChangeImplementedPercentage != null) )" +
         "|| ( (#actionCategoryType eq 'NO_ACTION') && (#supplyDemandSideMeasure == null) && (#savingActionsImplemented == null) " +
         "&& (#reasonsForImplementation == null) && (#implementationDate == null) && (#fixedEnergyConsumptionOrCarbonEmissionsImpacted == null) " +
         "&& (#energyConsumptionOrCarbonEmissionsImpactedPercentage == null) && (#expectedExtentOfChangeImplementedPercentage == null) && (#expectedSavingsFromTheChangeImplementedPercentage == null) && (#notes != null) )}",
-        message = "performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.typeMismatch")
-public class FacilityPerformanceAccountTemplateSavingAction {
+        message = "performanceaccounttemplatedata.facility.facilityPerformanceAccountTemplateSavingAction.mandatoryFieldsIncomplete")
+public class FacilityPerformanceAccountTemplateSavingAction implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @NotNull
     private ActionCategoryType actionCategoryType;
@@ -43,12 +49,12 @@ public class FacilityPerformanceAccountTemplateSavingAction {
 
     @DecimalMax(value = "100")
     @DecimalMin(value = "0")
-    @Digits(integer = 2, fraction = 7)
+    @Digits(integer = 3, fraction = 7)
     private BigDecimal energyConsumptionOrCarbonEmissionsImpactedPercentage;
 
     @DecimalMax(value = "100")
     @DecimalMin(value = "0")
-    @Digits(integer = 2, fraction = 7)
+    @Digits(integer = 3, fraction = 7)
     private BigDecimal expectedExtentOfChangeImplementedPercentage;
 
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)

@@ -373,4 +373,12 @@ public final class SwaggerApiInfo {
     public static final String UPDATE_TARGET_PERIOD_BUY_OUT_COST_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
             "FORM1001 | Form validation failed \t\n " +
             "TPR1002 | Target period scheme version is not updatable";
+    public static final String UPDATE_BUY_OUT_SURPLUS_TRANSACTION_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "BS1004 | Updates are not allowed while the buy-out batch run is in progress \t\n " +
+            "FORM1001 | Form validation failed";
+    public static final String UPDATE_BUY_OUT_SURPLUS_TRANSACTION_RECEIVED_AMOUNT_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "BS1004 | Updates are not allowed while the buy-out batch run is in progress \t\n " +
+            "BS1005 | Negative transaction received amount is not permitted \t\n" +
+            "BS1006 | Invalid transaction charge type \t\n" +
+            "FORM1001 | Form validation failed";
 }

@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 
 import { produce } from 'immer';
 
@@ -11,7 +11,7 @@ export interface BaselineEnergyDraft {
   products: ProductVariableEnergyConsumptionData[];
 }
 
-@Injectable()
+@Service({ autoProvided: false })
 export class BaselineEnergyDraftService {
   private readonly _draft = signal<BaselineEnergyDraft | null>(null);
 

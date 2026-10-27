@@ -15,6 +15,7 @@ import { nonComplianceDetailsTaskContent } from './non-compliance-details/non-co
 import { noticeOfIntentTaskContent } from './notice-of-intent/notice-of-intent-task-content';
 import { noticeOfIntentPeerReviewTaskContent } from './notice-of-intent-peer-review/notice-of-intent-peer-review-task-content';
 import { noticeOfIntentWaitForPeerReviewTaskContent } from './notice-of-intent-wait-for-peer-review/notice-of-intent-wait-for-peer-review-task-content';
+import { patCsvUploadTaskContent } from './performance-account-template-csv-upload/performance-account-template-csv-upload-task-content';
 import { patUploadTaskContent } from './performance-account-template-upload/pat-upload-task-content';
 import { performanceDataDownloadTaskContent } from './performance-data-download/performance-data-download-task-content';
 import { performanceDataUploadTaskContent } from './performance-data-upload/performance-data-upload-task-content';
@@ -72,6 +73,7 @@ export const tasksContent: RequestTaskPageContentFactoryMap = {
   PERFORMANCE_DATA_UPLOAD_SUBMIT: performanceDataUploadTaskContent,
   PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT: patUploadTaskContent,
   PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_SUBMIT: tprCSVUploadTaskContent,
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT: patCsvUploadTaskContent,
 
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION: cca3MigrationAccountActivationTaskContent,
 

@@ -3,12 +3,18 @@ import { UNAVariationReviewRequestTaskPayload, underlyingAgreementQuery } from '
 
 import { canAcceptVariationPayload, canRejectVariationPayload, validFacilityExists } from '../utils';
 
-const selectCanAccept = createDescendingSelector(underlyingAgreementQuery.selectPayload, canAcceptVariationPayload);
+const selectCanAccept = createDescendingSelector(
+  underlyingAgreementQuery.selectVariationReviewPayload,
+  canAcceptVariationPayload,
+);
 
-const selectCanReject = createDescendingSelector(underlyingAgreementQuery.selectPayload, canRejectVariationPayload);
+const selectCanReject = createDescendingSelector(
+  underlyingAgreementQuery.selectVariationReviewPayload,
+  canRejectVariationPayload,
+);
 
 const selectRejectionWarning = createDescendingSelector(
-  underlyingAgreementQuery.selectPayload,
+  underlyingAgreementQuery.selectVariationReviewPayload,
   (payload: UNAVariationReviewRequestTaskPayload) => !validFacilityExists(payload),
 );
 

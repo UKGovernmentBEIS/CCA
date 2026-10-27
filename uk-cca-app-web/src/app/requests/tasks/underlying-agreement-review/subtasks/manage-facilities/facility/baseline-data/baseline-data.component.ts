@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -35,6 +35,7 @@ import { resetDetermination } from '../../../../utils';
 @Component({
   selector: 'cca-baseline-data',
   templateUrl: './baseline-data.component.html',
+  providers: [FacilityBaselineDataFormProvider],
   imports: [
     RadioComponent,
     RadioOptionComponent,
@@ -46,8 +47,6 @@ import { resetDetermination } from '../../../../utils';
     RouterLink,
     WizardStepComponent,
   ],
-  providers: [FacilityBaselineDataFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaselineDataComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

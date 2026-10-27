@@ -29,15 +29,15 @@ public class AdminTerminationSubmitOfficialNoticeService extends AdminTerminatio
     public FileInfoDTO generateOfficialNotice(final Request request) {
         final AdminTerminationRequestPayload requestPayload = (AdminTerminationRequestPayload) request.getPayload();
         final CcaDecisionNotification decisionNotification = requestPayload.getDecisionNotification();
-        final Boolean isRegulatory = requestPayload.getAdminTerminationReasonDetails()
+        final boolean isRegulatory = requestPayload.getAdminTerminationReasonDetails()
                 .getReason().getCategory().equals(AdminTerminationReasonCategory.REGULATORY);
 
         return ccaFileDocumentGeneratorService.generate(request,
                 decisionNotification,
                 CcaDocumentTemplateGenerationContextActionType.ADMIN_TERMINATION_FINALISED,
-                Boolean.TRUE.equals(isRegulatory) ? CcaDocumentTemplateType.ADMIN_TERMINATION_REGULATORY_SUBMITTED
+                isRegulatory ? CcaDocumentTemplateType.ADMIN_TERMINATION_REGULATORY_SUBMITTED
                         : CcaDocumentTemplateType.ADMIN_TERMINATION_ADMINISTRATIVE_SUBMITTED,
-                Boolean.TRUE.equals(isRegulatory) ? "Notice of intent to terminate agreement.pdf"
+                isRegulatory ? "Notice of intent to terminate agreement.pdf"
                         : "Termination notice.pdf");
     }
 }
