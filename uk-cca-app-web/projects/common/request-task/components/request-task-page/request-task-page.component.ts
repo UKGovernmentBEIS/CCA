@@ -1,5 +1,6 @@
 import { NgComponentOutlet } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -50,7 +51,6 @@ type ViewModel = {
 @Component({
   selector: 'netz-request-task-page',
   templateUrl: './request-task-page.component.html',
-  encapsulation: ViewEncapsulation.None,
   imports: [
     PageHeadingComponent,
     TaskHeaderInfoComponent,
@@ -62,6 +62,8 @@ type ViewModel = {
     TaskListComponent,
     TimelineItemLinkPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class RequestTaskPageComponent {
   private readonly store = inject(RequestTaskStore);

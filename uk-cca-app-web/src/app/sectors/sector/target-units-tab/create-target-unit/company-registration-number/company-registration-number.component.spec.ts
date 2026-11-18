@@ -1,6 +1,7 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByLabelText, getByText } from '@testing';
@@ -18,13 +19,8 @@ describe('CompanyRegistrationNumberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CompanyRegistrationNumberComponent],
-      providers: [
-        provideRouter([]),
-        { provide: ActivatedRoute, useValue: route },
-        provideHttpClient(withXhr()),
-        CreateTargetUnitStore,
-      ],
+      imports: [CompanyRegistrationNumberComponent, RouterTestingModule],
+      providers: [{ provide: ActivatedRoute, useValue: route }, provideHttpClient(), CreateTargetUnitStore],
     }).compileComponents();
 
     router = TestBed.inject(Router);

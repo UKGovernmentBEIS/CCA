@@ -7,6 +7,7 @@ import { ProvideAppealDetailsStore } from './+state';
 export const PROVIDE_APPEAL_DETAILS_ROUTES: Routes = [
   {
     path: '',
+    providers: [ProvideAppealDetailsStore],
     canDeactivate: [
       () => {
         inject(ProvideAppealDetailsStore).reset();
@@ -20,18 +21,16 @@ export const PROVIDE_APPEAL_DETAILS_ROUTES: Routes = [
         redirectTo: 'provide-details',
       },
       {
-        title: 'Provide appeal details',
         path: 'provide-details',
-        loadComponent: () =>
-          import('./provide-details/provide-details.component').then((c) => c.ProvideAppealDetailsComponent),
+        title: 'Provide appeal details',
         canActivate: [nonComplianceConclusionEditableGuard],
         data: { backlink: '../../../', breadcrumb: false },
+        loadComponent: () =>
+          import('./provide-details/provide-details.component').then((c) => c.ProvideAppealDetailsComponent),
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
-        loadComponent: () =>
-          import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
+        title: 'Check your answers',
         canActivate: [
           nonComplianceConclusionEditableGuard,
           (route: ActivatedRouteSnapshot) =>
@@ -40,14 +39,14 @@ export const PROVIDE_APPEAL_DETAILS_ROUTES: Routes = [
               : createUrlTreeFromSnapshot(route, ['../provide-details']),
         ],
         data: { backlink: '../provide-details', breadcrumb: false },
+        loadComponent: () =>
+          import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
       },
       {
-        title: 'Appeal registration details submitted',
         path: 'confirmation',
-        loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
         data: { backlink: false, breadcrumb: false },
+        loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
       },
     ],
-    providers: [ProvideAppealDetailsStore],
   },
 ];

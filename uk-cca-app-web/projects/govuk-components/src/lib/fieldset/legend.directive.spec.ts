@@ -11,6 +11,7 @@ describe('LegendDirective', () => {
   let element: HTMLElement;
 
   @Component({
+    imports: [FieldsetDirective, LegendDirective],
     template: `
       <fieldset govukFieldset>
         <legend govukLegend>Legend</legend>
@@ -21,7 +22,6 @@ describe('LegendDirective', () => {
         </legend>
       </fieldset>
     `,
-    imports: [FieldsetDirective, LegendDirective],
   })
   class TestComponent {}
 

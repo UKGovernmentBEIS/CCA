@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,6 +11,7 @@ import { toSurplusCalculatedSummaryData } from './surplus-calculated-summary';
   selector: 'cca-surplus-calculated',
   template: `<cca-summary [data]="data" />`,
   imports: [SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SurplusCalculatedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -16,7 +16,6 @@ import { CLOSE_TASK_FORM, CloseTaskFormModel, CloseTaskFormProvider } from './cl
 @Component({
   selector: 'cca-non-compliance-conclusion-close-task',
   templateUrl: './close-task.component.html',
-  providers: [CloseTaskFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -25,6 +24,8 @@ import { CLOSE_TASK_FORM, CloseTaskFormModel, CloseTaskFormProvider } from './cl
     WarningTextComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [CloseTaskFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CloseTaskComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

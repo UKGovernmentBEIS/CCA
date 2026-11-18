@@ -7,11 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusChargeType;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusContainer;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -25,11 +22,6 @@ public class BuyOutSurplusResult {
     @NotNull
     @Valid
     private BuyOutSurplusContainer buyOutSurplusContainer;
-
-    private LocalDate invoicedPaymentDeadline;
-
-    @NotNull
-    private BuyOutSurplusChargeType chargeType;
 
     private String transactionCode;
 

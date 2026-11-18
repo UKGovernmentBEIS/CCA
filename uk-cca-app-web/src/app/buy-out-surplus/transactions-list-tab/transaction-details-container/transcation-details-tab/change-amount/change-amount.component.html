@@ -1,0 +1,53 @@
+@if (transactionDetails.paymentStatus !== 'TERMINATED') {
+  <cca-wizard-step [formGroup]="form" heading="Amount" caption="Change" (formSubmit)="onSubmit()" submitText="Confirm">
+    <div class="govuk-grid-row govuk-!-margin-top-3">
+      <div class="govuk-grid-column-two-thirds">
+        <cca-summary [data]="summaryData" />
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-3">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-label">New current amount (GBP)</div>
+        <span class="govuk-hint">
+          You must only enter a new amount in this field if the amount in the buy-out fee notice was incorrect and you
+          have agreed with the operator that they need to pay a different amount.
+          <b> Do not use this field to reflect partial payment amounts received from the operator. </b>
+        </span>
+
+        <div
+          class="govuk-!-margin-top-3"
+          widthClass="govuk-!-width-two-thirds"
+          formControlName="amount"
+          inputType="number"
+          cca-text-input
+        ></div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-3">
+      <div class="govuk-grid-column-two-thirds">
+        <div
+          class="govuk-!-width-two-thirds"
+          formControlName="comments"
+          govuk-textarea
+          label="Comments"
+          labelSize="normal"
+        ></div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <cca-multiple-file-input
+          [baseDownloadUrl]="'../file-evidences-download/attachment/'"
+          [listTitle]="'Uploaded files'"
+          label="Upload evidence (optional)"
+          formControlName="evidenceFiles"
+        />
+      </div>
+    </div>
+  </cca-wizard-step>
+} @else {
+  <cca-terminated-transaction [transactionDetails]="transactionDetails" heading="Current amount" />
+}

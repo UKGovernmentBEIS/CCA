@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
@@ -38,6 +38,7 @@ import {
     SummaryListRowValueDirective,
     SummaryListRowActionsDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergyFuelAmountSummaryComponent {
   readonly energyFuelDetails = input<PerformanceDataFacilityInputEnergyFuelDetails>();

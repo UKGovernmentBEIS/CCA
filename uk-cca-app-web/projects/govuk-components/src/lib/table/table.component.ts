@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   TemplateRef,
@@ -15,9 +16,10 @@ import { GovukTableColumn, SortEvent } from './table.interface';
 
 @Component({
   selector: 'govuk-table',
+  imports: [NgTemplateOutlet],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
-  imports: [NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent<T> {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -36,7 +38,7 @@ export class TableComponent<T> {
   sortedColumn: GovukTableColumn<T>['header'];
   sortingDirection: 'ascending' | 'descending';
 
-  getTypeof(value: unknown): string {
+  getTypeof(value): string {
     return typeof value;
   }
 

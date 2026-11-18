@@ -1,14 +1,11 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 
-import {
-  BaselineAndTargetsSummaryMetadata,
-  toBaselineAndTargetsSummaryDataWithDecision,
-} from '../../underlying-agreement';
+import { toBaselineAndTargetsSummaryDataWithDecision } from '../../underlying-agreement';
 import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agreement-variation-peer-review.selectors';
 
 @Component({
@@ -21,11 +18,12 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetPeriod6Component {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
-  private readonly summaryMetadata: BaselineAndTargetsSummaryMetadata = {
+  private readonly summaryMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: '../../file-download',
@@ -41,7 +39,7 @@ export class TargetPeriod6Component {
   protected readonly summaryData = computed(() =>
     toBaselineAndTargetsSummaryDataWithDecision({
       sectorSchemeData: this.requestTaskStore.select(
-        underlyingAgreementVariationPeerReviewQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
+        underlyingAgreementVariationPeerReviewQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
       )(),
       targetPeriodDetails: this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectTargetPeriod6,

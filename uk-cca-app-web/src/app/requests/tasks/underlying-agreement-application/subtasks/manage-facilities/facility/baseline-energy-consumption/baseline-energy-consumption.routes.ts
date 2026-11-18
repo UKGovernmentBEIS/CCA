@@ -6,6 +6,7 @@ import { BaselineEnergyDraftService, FacilityWizardStep } from '@requests/common
 export const BASELINE_ENERGY_CONSUMPTION_ROUTES: Routes = [
   {
     path: '',
+    providers: [BaselineEnergyDraftService],
     canDeactivate: [
       () => {
         inject(BaselineEnergyDraftService).clear();
@@ -14,25 +15,24 @@ export const BASELINE_ENERGY_CONSUMPTION_ROUTES: Routes = [
     ],
     children: [
       {
-        title: 'Baseline energy consumption',
         path: '',
+        title: 'Baseline energy consumption',
+        data: { backlink: `../${FacilityWizardStep.BASELINE_DATA}`, breadcrumb: false },
         loadComponent: () =>
           import('./baseline-energy-consumption.component').then((c) => c.BaselineEnergyConsumptionComponent),
-        data: { backlink: `../${FacilityWizardStep.BASELINE_DATA}`, breadcrumb: false },
       },
       {
-        title: 'Add product',
         path: 'add-product',
-        loadComponent: () => import('./add-product/add-product.component').then((c) => c.AddProductComponent),
+        title: 'Add product',
         data: { backlink: '../', breadcrumb: false },
+        loadComponent: () => import('./add-product/add-product.component').then((c) => c.AddProductComponent),
       },
       {
-        title: 'Delete product',
         path: 'delete-product/:productName',
-        loadComponent: () => import('./delete-product/delete-product.component').then((c) => c.DeleteProductComponent),
+        title: 'Delete product',
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () => import('./delete-product/delete-product.component').then((c) => c.DeleteProductComponent),
       },
     ],
-    providers: [BaselineEnergyDraftService],
   },
 ];

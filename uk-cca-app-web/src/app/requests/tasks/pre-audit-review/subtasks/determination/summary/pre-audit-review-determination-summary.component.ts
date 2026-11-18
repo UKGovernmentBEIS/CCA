@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -17,6 +17,7 @@ import { preAuditReviewQuery } from '../../../pre-audit-review.selectors';
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, ReturnToTaskOrActionPageComponent, SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreAuditReviewDeterminationSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

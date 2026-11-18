@@ -1,7 +1,7 @@
 package uk.gov.cca.api.web.controller.buyoutsurplus;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,19 +13,19 @@ import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.framework.DefaultAopProxyFactory;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionMarkPaymentStatusDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionUpdateAmountDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionUpdatePaymentStatusDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionUpdateReceivedAmountDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusTransactionService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.buyoutsurplus.service.BuyOutSurplusTransactionUpdateServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.constants.RoleTypeConstants;
@@ -34,148 +34,156 @@ import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
+import java.time.LocalDate;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @EnableWebMvc
 class BuyOutSurplusTransactionUpdateControllerTest {
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
-    private static final String CONTROLLER_PATH = "/v1.0/buy-out-surplus/transactions/{id}/update";
+	private MockMvc mockMvc;
 
-    @InjectMocks
-    private BuyOutSurplusTransactionUpdateController controller;
+	private ObjectMapper mapper;
 
-    @Mock
-    private BuyOutSurplusTransactionUpdateServiceOrchestrator buyOutSurplusTransactionUpdateServiceOrchestrator;
+	private static final String CONTROLLER_PATH = "/v1.0/buy-out-surplus/transactions/{id}/update";
 
-    @Mock
-    private AppSecurityComponent appSecurityComponent;
+	@InjectMocks
+	private BuyOutSurplusTransactionUpdateController controller;
 
-    @Mock
-    private AppUserAuthorizationService appUserAuthorizationService;
+	@Mock
+	private BuyOutSurplusTransactionService transactionService;
 
-    @BeforeEach
-    void setUp() {
-        AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
-        AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
+	@Mock
+	private AppSecurityComponent appSecurityComponent;
 
-        AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(controller);
-        aspectJProxyFactory.addAspect(aspect);
+	@Mock
+	private AppUserAuthorizationService appUserAuthorizationService;
 
-        DefaultAopProxyFactory proxyFactory = new DefaultAopProxyFactory();
-        AopProxy aopProxy = proxyFactory.createAopProxy(aspectJProxyFactory);
-        controller = (BuyOutSurplusTransactionUpdateController) aopProxy.getProxy();
 
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
+	@BeforeEach
+	void setUp() {
 
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
+		AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
+		AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 
-        FormattingConversionService conversionService = new FormattingConversionService();
+		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(controller);
+		aspectJProxyFactory.addAspect(aspect);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
-                .setControllerAdvice(new ExceptionControllerAdvice())
-                .setConversionService(conversionService)
-                .setMessageConverters(mappingJackson2HttpMessageConverter)
-                .build();
-    }
+		DefaultAopProxyFactory proxyFactory = new DefaultAopProxyFactory();
+		AopProxy aopProxy = proxyFactory.createAopProxy(aspectJProxyFactory);
+		controller = (BuyOutSurplusTransactionUpdateController) aopProxy.getProxy();
 
-    @Test
-    void updateBuyOutSurplusTransactionDetailsPaymentStatus() throws Exception {
-        final Long transactionId = 99L;
-        final AppUser appUser = AppUser.builder()
-                .userId("submitterId")
-                .firstName("sub")
-                .lastName("mitter")
-                .roleType(RoleTypeConstants.REGULATOR)
-                .build();
-        final BuyOutSurplusTransactionUpdatePaymentStatusDTO statusUpdateDTO = BuyOutSurplusTransactionUpdatePaymentStatusDTO.builder()
-                .status(BuyOutSurplusPaymentStatus.PAID)
-                .comments("comments")
-                .paymentDate(LocalDate.of(2025, 5, 15))
-                .detailIds(Set.of(1L))
-                .build();
+		mapper = new ObjectMapper();
 
-        when(appSecurityComponent.getAuthenticatedUser())
-                .thenReturn(appUser);
+		FormattingConversionService conversionService = new FormattingConversionService();
 
-        mockMvc.perform(MockMvcRequestBuilders.post(CONTROLLER_PATH + "/payment-status", transactionId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(statusUpdateDTO)))
-                .andExpect(status().isNoContent());
+		mockMvc = MockMvcBuilders.standaloneSetup(controller)
+				.setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
+				.setControllerAdvice(new ExceptionControllerAdvice())
+				.setConversionService(conversionService)
+				.build();
+	}
 
-        verify(buyOutSurplusTransactionUpdateServiceOrchestrator, times(1))
-                .updateTransactionDetailsPaymentStatus(transactionId, statusUpdateDTO, appUser);
+	@Test
+	void updateBuyOutSurplusTransactionPaymentStatus() throws Exception {
+		final Long transactionId = 99L;
 
-    }
+		final String POST = CONTROLLER_PATH.replace("{id}", transactionId.toString()) + "/payment-status";
 
-    @Test
-    void markAllBuyOutSurplusTransactionDetailsPaymentStatus() throws Exception {
-        final Long transactionId = 99L;
-        final AppUser appUser = AppUser.builder()
-                .userId("submitterId")
-                .firstName("sub")
-                .lastName("mitter")
-                .roleType(RoleTypeConstants.REGULATOR)
-                .build();
-        final BuyOutSurplusTransactionMarkPaymentStatusDTO markPaymentStatusDTO = BuyOutSurplusTransactionMarkPaymentStatusDTO.builder()
-                .status(BuyOutSurplusPaymentStatus.PAID)
-                .comments("comments")
-                .paymentDate(LocalDate.of(2025, 5, 15))
-                .build();
+		final AppUser appUser = AppUser.builder()
+				.userId("submitterId")
+				.firstName("sub")
+				.lastName("mitter")
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
 
-        when(appSecurityComponent.getAuthenticatedUser())
-                .thenReturn(appUser);
+		final BuyOutSurplusTransactionUpdatePaymentStatusDTO statusUpdateDTO = BuyOutSurplusTransactionUpdatePaymentStatusDTO.builder()
+				.status(BuyOutSurplusPaymentStatus.PAID)
+				.comments("comments")
+				.paymentDate(LocalDate.of(2025,5,15))
+				.build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post(CONTROLLER_PATH + "/payment-status/mark-all", transactionId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(markPaymentStatusDTO)))
-                .andExpect(status().isNoContent());
+		JSONObject statusUpdateJson = new JSONObject();
+		statusUpdateJson.put("status", "PAID");
+		statusUpdateJson.put("comments", "comments");
+		statusUpdateJson.put("paymentDate", "2025-05-15");
 
-        verify(buyOutSurplusTransactionUpdateServiceOrchestrator, times(1))
-                .markTransactionDetailsPaymentStatus(transactionId, markPaymentStatusDTO, appUser);
-    }
+		when(appSecurityComponent.getAuthenticatedUser())
+				.thenReturn(appUser);
 
-    @Test
-    void updateBuyOutSurplusTransactionReceivedAmount() throws Exception {
-        final Long transactionId = 99L;
-        final BigDecimal adjustmentAmount = BigDecimal.valueOf(150);
-        final LocalDate paymentDate = LocalDate.of(2026, 5, 25);
-        final String comments = "bla bla";
-        final Map<UUID, String> evidenceFiles = Map.of(UUID.randomUUID(), "fileName");
-        final AppUser appUser = AppUser.builder()
-                .userId("userId")
-                .lastName("last")
-                .firstName("first")
-                .build();
-        final BuyOutSurplusTransactionUpdateReceivedAmountDTO updateReceivedAmountDTO = BuyOutSurplusTransactionUpdateReceivedAmountDTO.builder()
-                .adjustmentAmount(adjustmentAmount)
-                .comments(comments)
-                .paymentDate(paymentDate)
-                .evidenceFiles(evidenceFiles)
-                .build();
+		mockMvc.perform(
+						MockMvcRequestBuilders.post(POST)
+								.contentType(MediaType.APPLICATION_JSON)
+								.param("id", transactionId.toString())
+								.content(statusUpdateJson.toString())
+				)
+				.andDo(print())
+				.andExpect(status().isNoContent());
 
-        when(appSecurityComponent.getAuthenticatedUser())
-                .thenReturn(appUser);
+		verify(transactionService, times(1))
+				.updateTransactionPaymentStatus(transactionId, statusUpdateDTO, appUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(CONTROLLER_PATH + "/received-amount", transactionId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateReceivedAmountDTO)))
-                .andExpect(status().isNoContent());
+	}
 
-        verify(buyOutSurplusTransactionUpdateServiceOrchestrator, times(1))
-                .updateTransactionReceivedAmount(transactionId, updateReceivedAmountDTO, appUser);
-    }
+	@Test
+	void updateBuyOutSurplusTransactionAmount() throws Exception {
+		final Long transactionId = 99L;
+		final String POST = CONTROLLER_PATH.replace("{id}", transactionId.toString()) + "/amount";
+
+		final BuyOutSurplusTransactionUpdateAmountDTO buyOutFeeUpdateDTO = BuyOutSurplusTransactionUpdateAmountDTO.builder()
+				.amount(BigDecimal.valueOf(10.53))
+				.comments("comments")
+				.build();
+		final AppUser appUser = AppUser.builder()
+				.userId("submitterId")
+				.firstName("sub")
+				.lastName("mitter")
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
+		when(appSecurityComponent.getAuthenticatedUser())
+				.thenReturn(appUser);
+
+		mockMvc.perform(MockMvcRequestBuilders.post(POST)
+						.contentType(MediaType.APPLICATION_JSON)
+						.param("id", transactionId.toString())
+				.content(mapper.writeValueAsString(buyOutFeeUpdateDTO)))
+				.andDo(print())
+				.andExpect(MockMvcResultMatchers.status().isNoContent());
+
+		verify(transactionService, times(1))
+				.updateTransactionAmount(transactionId, buyOutFeeUpdateDTO, appUser);
+	}
+
+	@Test
+	void updateBuyOutSurplusTransactionPaymentStatus_SpELExpression_throw() throws Exception{
+		final Long transactionId = 99L;
+
+		final String POST = CONTROLLER_PATH.replace("{id}", transactionId.toString()) + "/payment-status";
+
+		JSONObject statusUpdateJson = new JSONObject();
+		statusUpdateJson.put("status", "PAID");
+		statusUpdateJson.put("comments", "comments");
+
+		Exception exception = mockMvc.perform(
+						MockMvcRequestBuilders.post(POST)
+								.contentType(MediaType.APPLICATION_JSON)
+								.param("id", transactionId.toString())
+								.content(statusUpdateJson.toString())
+				)
+				.andDo(print())
+				.andExpect(status().isBadRequest())
+				.andReturn().getResolvedException();
+
+		assertThat(exception.getClass())
+				.isEqualTo(MethodArgumentNotValidException.class);
+		Assertions.assertTrue(exception.getMessage().contains("buyOutSurplusTransaction.paymentDate"));
+		Assertions.assertTrue(exception.getMessage().contains("SpELExpression"));
+	}
 }

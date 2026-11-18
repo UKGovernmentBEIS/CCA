@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { combineLatest, from, map, type Observable, of, switchMap, tap } from 'rxjs';
@@ -18,9 +18,8 @@ import {
 
 import { selectIsFeatureEnabled } from '../config/config.selectors';
 import { ConfigStore } from '../config/config.store';
-import { SignInTrackingService } from './sign-in-tracking.service';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly authStore = inject(AuthStore);
   private readonly configStore = inject(ConfigStore);
@@ -29,34 +28,12 @@ export class AuthService {
   private readonly authorityService = inject(AuthoritiesService);
   private readonly termsAndConditionsService = inject(TermsAndConditionsService);
   private readonly route = inject(ActivatedRoute);
-  private readonly signInTrackingService = inject(SignInTrackingService);
 
-  /**
-   * Starts a sign-in the user chose, from a sign-in button or link. Only these sign-ins are reported as completed
-   * sign-ins, so this marks the sign-in as started. Automatic re-authentication uses {@link reauthenticate} instead.
-   */
-  async login(options?: KeycloakLoginOptions): Promise<void> {
-    const loginOptions = this.getLoginOptions(options);
-
-    this.signInTrackingService.markSignInStarted();
-
-    try {
-      await this.keycloakService.login(loginOptions);
-    } catch (error) {
-      this.signInTrackingService.clearSignInStarted();
-      throw error;
-    }
-  }
-
-  /**
-   * Starts a Keycloak sign-in for a session that expired or was rejected by the API. The user did not choose to sign
-   * in, so this sign-in is never reported as a completed sign-in.
-   */
-  reauthenticate(options?: KeycloakLoginOptions): Promise<void> {
+  login(options?: KeycloakLoginOptions): Promise<void> {
     return this.keycloakService.login(this.getLoginOptions(options));
   }
 
-  createLoginUrl(options?: KeycloakLoginOptions): Promise<string> {
+  createLoginUrl(options?: KeycloakLoginOptions): string {
     return this.keycloakService.createLoginUrl(this.getLoginOptions(options));
   }
 
@@ -94,7 +71,7 @@ export class AuthService {
           ? of(null)
           : combineLatest([this.loadUserState(), this.loadUserTerms(), this.loadUser(), this.loadUserProfile()]),
       ),
-      map((): null => null),
+      map(() => null),
     );
   }
 

@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -47,7 +47,6 @@ import {
 @Component({
   selector: 'cca-baseline-energy-consumption',
   templateUrl: './baseline-energy-consumption.component.html',
-  providers: [FacilityBaselineEnergyConsumptionFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -59,6 +58,8 @@ import {
     SplitByProductTableComponent,
     MeasurementTypeToUnitPipe,
   ],
+  providers: [FacilityBaselineEnergyConsumptionFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaselineEnergyConsumptionComponent {
   private readonly decimalPipe = new DecimalPipe('en-GB');

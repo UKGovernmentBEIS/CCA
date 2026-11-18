@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -35,6 +35,7 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

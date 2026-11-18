@@ -1,0 +1,89 @@
+@if (transactionDetails.paymentStatus !== 'TERMINATED') {
+  <cca-wizard-step [formGroup]="form" heading="Status" caption="Change" (formSubmit)="onSubmit()">
+    <cca-summary [data]="transactionSummary" />
+
+    <div govuk-radio formControlName="status">
+      @if (transactionDetails.chargeType === 'FEE') {
+        <govuk-radio-option label="Awaiting payment" value="AWAITING_PAYMENT">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div formControlName="awaitingPaymentComments" govuk-textarea label="Comments (optional)"></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+
+        <govuk-radio-option label="Under appeal" value="UNDER_APPEAL">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div formControlName="appealComments" govuk-textarea label="Comments"></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+      } @else {
+        <govuk-radio-option label="Awaiting refund" value="AWAITING_REFUND">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div formControlName="awaitingRefundComments" govuk-textarea label="Comments (optional)"></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+      }
+      <govuk-radio-option label="Not Required" value="NOT_REQUIRED">
+        <ng-container govukConditionalContent>
+          <div class="govuk-grid-row govuk-!-margin-top-3">
+            <div class="govuk-grid-column-two-thirds">
+              <div formControlName="notRequiredComments" govuk-textarea label="Comments"></div>
+            </div>
+          </div>
+        </ng-container>
+      </govuk-radio-option>
+
+      @if (transactionDetails.chargeType === 'FEE') {
+        <govuk-radio-option label="Paid" value="PAID">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div
+                  formControlName="paymentDate"
+                  govuk-date-input
+                  text="Enter the date when the payment was received in the bank account"
+                ></div>
+              </div>
+            </div>
+
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div formControlName="paidComments" govuk-textarea label="Comments (optional)"></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+      } @else {
+        <govuk-radio-option label="Refunded" value="REFUNDED">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div formControlName="refundedComments" govuk-textarea label="Comments (optional)"></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+      }
+    </div>
+
+    <cca-multiple-file-input
+      [baseDownloadUrl]="'../file-evidences-download/attachment/'"
+      [listTitle]="'Uploaded files'"
+      label="Upload evidence (optional)"
+      formControlName="evidenceFiles"
+    />
+  </cca-wizard-step>
+} @else {
+  <cca-terminated-transaction [transactionDetails]="transactionDetails" heading="Status" />
+}

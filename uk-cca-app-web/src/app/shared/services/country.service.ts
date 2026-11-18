@@ -1,4 +1,4 @@
-import { computed, inject, Service, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { catchError, map, Observable, of, tap } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { logger } from '../utils/logger';
 
 export const UK_COUNTRY_CODES = ['GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS'];
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class CountryService {
   private readonly referenceDataService = inject(ReferenceDataService);
 

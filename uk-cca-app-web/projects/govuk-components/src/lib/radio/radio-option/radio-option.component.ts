@@ -1,12 +1,22 @@
-import { ChangeDetectorRef, Component, TemplateRef, input, contentChild, viewChild, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  input,
+  contentChild,
+  viewChild,
+  inject,
+} from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 import { ConditionalContentDirective } from '../../directives';
 
 @Component({
   selector: 'govuk-radio-option',
-  templateUrl: './radio-option.component.html',
   imports: [],
+  templateUrl: './radio-option.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioOptionComponent<T> implements ControlValueAccessor {
   readonly changeDetectorRef = inject(ChangeDetectorRef);

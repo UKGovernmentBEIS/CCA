@@ -1,11 +1,10 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { ButtonDirective, GovukSelectOption, SelectComponent, TextInputComponent } from '@netz/govuk-components';
 import { UtilityPanelComponent } from '@shared/components';
-import { facilityPerformanceReportStatusLabels } from '@shared/utils';
 
 import {
   FACILITY_PERFORMANCE_DATA_REPORT_FORM,
@@ -23,22 +22,23 @@ type SubType = FacilityPerformanceDataCriteria['subType'];
 
 const FINAL_REPORT_STATUS_OPTIONS: GovukSelectOption<ReportStatus>[] = [
   { value: null, text: 'All' },
-  { value: 'TARGET_MET', text: facilityPerformanceReportStatusLabels.TARGET_MET },
-  { value: 'TARGET_NOT_MET', text: facilityPerformanceReportStatusLabels.TARGET_NOT_MET },
-  { value: 'OUTSTANDING', text: facilityPerformanceReportStatusLabels.OUTSTANDING },
+  { value: 'TARGET_MET', text: 'Target met' },
+  { value: 'TARGET_NOT_MET', text: 'Target not met' },
+  { value: 'OUTSTANDING', text: 'Outstanding' },
 ];
 
 const INTERIM_REPORT_STATUS_OPTIONS: GovukSelectOption<ReportStatus>[] = [
   { value: null, text: 'All' },
-  { value: 'SUBMITTED', text: facilityPerformanceReportStatusLabels.SUBMITTED },
-  { value: 'OUTSTANDING', text: facilityPerformanceReportStatusLabels.OUTSTANDING },
+  { value: 'SUBMITTED', text: 'Submitted' },
+  { value: 'OUTSTANDING', text: 'Outstanding' },
 ];
 
 @Component({
   selector: 'cca-facility-performance-report-filters',
   templateUrl: './facility-performance-report-filters.component.html',
-  providers: [FacilityPerformanceDataReportFormProvider],
   imports: [SelectComponent, ButtonDirective, ReactiveFormsModule, UtilityPanelComponent, TextInputComponent],
+  providers: [FacilityPerformanceDataReportFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityPerformanceReportFiltersComponent {
   private readonly router = inject(Router);

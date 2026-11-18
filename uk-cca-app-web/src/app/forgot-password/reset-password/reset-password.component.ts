@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -20,8 +20,9 @@ import { ResetPasswordStore } from '../+store/reset-password.store';
       </div>
     </cca-wizard-step>
   `,
-  providers: [passwordFormFactory],
   imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
+  providers: [passwordFormFactory],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent implements OnInit {
   private readonly router = inject(Router);
@@ -42,12 +43,12 @@ export class ResetPasswordComponent implements OnInit {
         map((emailDTO) => {
           this.resetPasswordStore.setState({ ...this.resetPasswordStore.state, email: emailDTO.email });
         }),
-        map<unknown, { url: string; code?: string }>(() => ({ url: 'success', code: undefined })),
+        map(() => ({ url: 'success' })),
         catchBadRequest([ErrorCodes.EMAIL1001, ErrorCodes.TOKEN1001], (res) =>
           of({ url: 'invalid-link', code: res.error.code }),
         ),
       )
-      .subscribe(({ code, url }) => {
+      .subscribe(({ code, url }: { url: string; code: string }) => {
         if (url !== 'success') {
           code === ErrorCodes.TOKEN1001
             ? this.router.navigate(['error', '404'])

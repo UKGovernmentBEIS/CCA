@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot, convertToParamMap, Router, RouterStateSnapshot,
 
 import { firstValueFrom, Observable, of } from 'rxjs';
 
-import { SchemeVersionEnum } from '@shared/types';
 import { Mocked } from 'vitest';
 
 import { SectorAssociationSchemesDTO, SectorAssociationSchemeService } from 'cca-api';
@@ -69,10 +68,10 @@ describe('canEditAdvancedDetailsGuard', () => {
   function createSectorScheme(editable: boolean): SectorAssociationSchemesDTO {
     return {
       sectorAssociationSchemeMap: {
-        [SchemeVersionEnum.CCA_3]: {
+        CCA_3: {
           id: 1,
           umbrellaAgreement: null,
-          schemeVersion: SchemeVersionEnum.CCA_3,
+          schemeVersion: 'CCA_3',
           editable,
         },
       },

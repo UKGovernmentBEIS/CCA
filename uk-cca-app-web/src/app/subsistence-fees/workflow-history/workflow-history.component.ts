@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
@@ -25,6 +25,7 @@ import { WorkflowHistoryDetailsResponse } from '../../buy-out-surplus/workflow-h
     TimelineItemComponent,
     WorkflowNotesComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowHistoryComponent {
   private readonly router = inject(Router);

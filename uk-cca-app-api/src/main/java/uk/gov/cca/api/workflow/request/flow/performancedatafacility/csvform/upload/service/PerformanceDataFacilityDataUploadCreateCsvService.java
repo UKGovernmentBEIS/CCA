@@ -30,10 +30,11 @@ public class PerformanceDataFacilityDataUploadCreateCsvService {
             // Write CSV
             if (!facilityReports.isEmpty() || !taskPayload.getCsvRowErrors().isEmpty()) {
                 final FileDTO csvFileDTO = PerformanceDataFacilityDataUploadUtility
-                        .createCsvFile(facilityReports.values().stream().toList(), taskPayload.getCsvRowErrors(), requestTask.getAssignee());
+                        .createCsvFile(facilityReports.values().stream().toList(), taskPayload.getCsvRowErrors());
 
                 // Save to DB
-                final String uuid = ccaFileAttachmentService.createSystemFileAttachment(csvFileDTO, FileStatus.PENDING);
+                final String uuid = ccaFileAttachmentService.createSystemFileAttachment(
+                        csvFileDTO, FileStatus.PENDING, requestTask.getAssignee());
 
                 // Save to task
                 taskPayload.getResults().setUploadSummaryFile(UUID.fromString(uuid));

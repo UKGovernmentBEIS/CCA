@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -18,6 +18,7 @@ import { RequestsService } from 'cca-api';
     </div>
   `,
   imports: [PageHeadingComponent, ButtonDirective, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewSubsistenceFeesPaymentRequestComponent {
   private readonly router = inject(Router);

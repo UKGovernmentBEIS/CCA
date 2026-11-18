@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
@@ -15,6 +15,7 @@ import { unaRegulatorLedVariationPeerReviewQuery } from '../underlying-agreement
     </div>
   `,
   imports: [PageHeadingComponent, FacilityItemListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegulatorLedPeerReviewManageFacilitiesComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

@@ -1,4 +1,6 @@
-<netz-page-heading size="xl" caption="{{ targetUnitBusinessId }}">Surplus gained change history</netz-page-heading>
+<netz-page-heading size="xl" caption="{{ targetUnitBusinessId }}"
+  >{{ targetPeriod }} surplus gained change history
+</netz-page-heading>
 
 <govuk-accordion data-testid="history">
   @for (history of surplusHistory(); track history) {
@@ -8,7 +10,7 @@
     >
       <dl govuk-summary-list>
         <div govukSummaryListRow>
-          <dt govukSummaryListRowKey>Surplus gained (tCO2e)</dt>
+          <dt govukSummaryListRowKey>{{ targetPeriod }} surplus gained (tCO2e)</dt>
           <dd govukSummaryListRowValue>{{ history.surplusGained | number }}</dd>
         </div>
 

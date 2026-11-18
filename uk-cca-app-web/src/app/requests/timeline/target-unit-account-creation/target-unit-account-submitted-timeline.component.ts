@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,6 +11,7 @@ import { targetUnitCreationTimelineQuery } from './+state/target-unit-account-su
   selector: 'cca-target-unit-account-submitted-timeline',
   template: `<cca-summary [data]="data()" />`,
   imports: [SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitAccountSubmittedTimelineComponent {
   private readonly requestActionStore = inject(RequestActionStore);

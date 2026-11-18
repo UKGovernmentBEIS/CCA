@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -13,7 +13,6 @@ import {
   CheckboxComponent,
   CheckboxesComponent,
   GovukValidators,
-  LegendContentDirective,
 } from '@netz/govuk-components';
 import { AuthService, LatestTermsStore } from '@shared/services';
 
@@ -27,12 +26,12 @@ import { TermsAndConditionsService } from 'cca-api';
     ReactiveFormsModule,
     CheckboxComponent,
     CheckboxesComponent,
-    LegendContentDirective,
     PendingButtonDirective,
     ButtonDirective,
     AccordionComponent,
     AccordionItemComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermsAndConditionsComponent {
   private readonly router = inject(Router);

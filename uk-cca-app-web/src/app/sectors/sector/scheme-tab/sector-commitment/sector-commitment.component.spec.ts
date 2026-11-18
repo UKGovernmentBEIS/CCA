@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { SchemeVersionEnum } from '@shared/types';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Mocked } from 'vitest';
 
@@ -28,12 +27,12 @@ describe('SectorCommitmentComponent', () => {
 
   const sectorScheme: SectorAssociationSchemesDTO = {
     sectorAssociationSchemeMap: {
-      [SchemeVersionEnum.CCA_3]: {
+      CCA_3: {
         id: 20,
         umbrellaAgreement: null,
         umaDate: '2026-01-01',
         sectorDefinition: 'Definition',
-        schemeVersion: SchemeVersionEnum.CCA_3,
+        schemeVersion: 'CCA_3',
         editable: true,
         targetSet: {
           id: 30,
@@ -52,7 +51,7 @@ describe('SectorCommitmentComponent', () => {
   const subSector: SubsectorAssociationSchemesDTO = {
     name: 'Subsector',
     subsectorAssociationSchemeMap: {
-      [SchemeVersionEnum.CCA_3]: {
+      CCA_3: {
         id: 200,
         editable: true,
         targetSet: {
@@ -109,12 +108,12 @@ describe('SectorCommitmentComponent', () => {
   });
 
   it('should prefill whole-number percentages without floating point precision artifacts', async () => {
-    const cca3Scheme = sectorScheme.sectorAssociationSchemeMap[SchemeVersionEnum.CCA_3];
+    const cca3Scheme = sectorScheme.sectorAssociationSchemeMap.CCA_3;
 
     await createComponent({
       sectorScheme: {
         sectorAssociationSchemeMap: {
-          [SchemeVersionEnum.CCA_3]: {
+          CCA_3: {
             ...cca3Scheme,
             targetSet: {
               ...cca3Scheme.targetSet!,

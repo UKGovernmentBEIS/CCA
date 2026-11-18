@@ -10,12 +10,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.common.domain.FacilityUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.service.PerformanceDataFacilityProcessingService;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.service.TerminateOpenFacilityWorkflowsService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
 import java.util.List;
 
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -29,9 +27,6 @@ class PerformanceDataFacilityProcessingMarkAsCompletedHandlerFlowableTest {
 
     @Mock
     private PerformanceDataFacilityProcessingService performanceDataFacilityProcessingService;
-
-    @Mock
-    private TerminateOpenFacilityWorkflowsService terminateOpenFacilityWorkflowsService;
 
     @Mock
     private DelegateExecution execution;
@@ -51,7 +46,6 @@ class PerformanceDataFacilityProcessingMarkAsCompletedHandlerFlowableTest {
         verify(execution, times(1)).getVariable(BpmnProcessConstants.REQUEST_ID);
         verify(execution, times(1)).getVariable(CcaBpmnProcessConstants.FACILITY_REPORT);
         verify(performanceDataFacilityProcessingService, times(1)).markAsCompleted(requestId, facilityReport);
-        verify(terminateOpenFacilityWorkflowsService, times(1)).terminateOpenWorkflows(requestId);
         verifyNoMoreInteractions(execution);
     }
 
@@ -73,7 +67,6 @@ class PerformanceDataFacilityProcessingMarkAsCompletedHandlerFlowableTest {
         verify(execution, times(1)).getVariable(BpmnProcessConstants.REQUEST_ID);
         verify(execution, times(1)).getVariable(CcaBpmnProcessConstants.FACILITY_REPORT);
         verify(performanceDataFacilityProcessingService, times(1)).markAsCompleted(requestId, facilityReport);
-        verify(terminateOpenFacilityWorkflowsService, never()).terminateOpenWorkflows(requestId);
         verify(execution, times(1)).setVariable(BpmnProcessConstants.REQUEST_DELETE_UPON_TERMINATE, true);
     }
 }

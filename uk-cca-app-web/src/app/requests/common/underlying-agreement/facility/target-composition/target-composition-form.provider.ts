@@ -5,12 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { FileType, FileValidators } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 
 import { underlyingAgreementQuery } from '../../+state/underlying-agreement.selectors';
 import { FacilityTargetCompositionFormModel } from '../../target-periods/types';
 import { measurementTypeValidator } from '../../target-periods/validators';
-import { getAttachmentType, UPLOAD_SECTION_ATTACHMENT_TYPE } from '../../types';
+import { UPLOAD_SECTION_ATTACHMENT_TYPE } from '../../types';
 
 export const TARGET_COMPOSITION_FORM = new InjectionToken<FacilityTargetCompositionFormModel>(
   'Facility target composition form',
@@ -39,9 +39,7 @@ export const TargetCompositionFormProvider: Provider = {
 
     const sectorSchemeData = requestTaskStore.select(
       underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(
-        participatingSchemeVersions.some((s) => s === SchemeVersionEnum.CCA_3)
-          ? SchemeVersionEnum.CCA_3
-          : SchemeVersionEnum.CCA_2,
+        participatingSchemeVersions.some((s) => s === 'CCA_3') ? SchemeVersion.CCA_3 : SchemeVersion.CCA_2,
       ),
     )();
 
@@ -51,7 +49,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.calculatorFile,
       attachments,
-      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
+      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
       true,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

@@ -1,7 +1,7 @@
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer } from '@angular/forms';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { BasePage } from '@netz/common/testing';
 
@@ -21,7 +21,8 @@ describe('ConfirmationSharedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideRouter([]), ControlContainer],
+      imports: [RouterTestingModule],
+      providers: [ControlContainer],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfirmationSharedComponent);

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -54,7 +54,6 @@ import {
 @Component({
   selector: 'cca-target-composition',
   templateUrl: './target-composition.component.html',
-  providers: [TargetCompositionFormProvider],
   imports: [
     FormsModule,
     RadioComponent,
@@ -70,6 +69,8 @@ import {
     CcaTextInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [TargetCompositionFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetCompositionComponent {
   private readonly tasksApiService = inject(TasksApiService);

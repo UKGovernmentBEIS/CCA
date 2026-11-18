@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -38,7 +38,6 @@ export type FacilityStatus = 'NEW' | 'LIVE' | 'EXCLUDED' | null;
 @Component({
   selector: 'cca-manage-facilities',
   templateUrl: './manage-facilities.component.html',
-  providers: [{ provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap }, StatusPipe],
   imports: [
     PageHeadingComponent,
     ReactiveFormsModule,
@@ -56,6 +55,8 @@ export type FacilityStatus = 'NEW' | 'LIVE' | 'EXCLUDED' | null;
     ErrorSummaryComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [{ provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap }, StatusPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageFacilitiesComponent {
   private readonly router = inject(Router);
@@ -168,8 +169,7 @@ export class ManageFacilitiesComponent {
 
   onSort(sortEvent: SortEvent): (fa: FacilityItemViewModel, fb: FacilityItemViewModel) => number {
     return (fa, fb) => {
-      const column = sortEvent.column as keyof FacilityItemViewModel;
-      const diff: number = String(fa[column] ?? '').localeCompare(String(fb[column] ?? ''), 'en-GB', {
+      const diff: number = fa[sortEvent.column].localeCompare(fb[sortEvent.column], 'en-GB', {
         numeric: true,
         sensitivity: 'base',
       });

@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.netz.api.common.domain.PagingRequest;
@@ -22,13 +20,11 @@ public class BuyOutSurplusTransactionsListSearchCriteria {
     
     @Size(min = 3, max = 255)
     private String term;
-
+    
     @NotNull
-    private SchemeVersion schemeVersion;
-
     private TargetPeriodType targetPeriodType;
     
-    private BuyOutSurplusPaymentStatus paymentStatus;
+    private BuyOutSurplusPaymentStatus buyOutSurplusPaymentStatus;
     
     @Valid
     @NotNull

@@ -19,12 +19,9 @@ export function toTPRCSVUploadCompletedSummary(
     .addSection('Details')
     .addRow('Reporting period', performanceDataUpload?.targetPeriodType)
     .addRow('Report type', titleCasePipe.transform(performanceDataUpload?.reportType) ?? '')
-    .addFileListRow(
+    .addTextAreaRow(
       'Uploaded files',
-      fileUtils.toDownloadableFiles(
-        fileUtils.extractAttachments(performanceDataUpload?.files, uploadAttachments),
-        './file-download',
-      ),
+      fileUtils.toFiles(performanceDataUpload?.files ?? [], uploadAttachments ?? {}).map((f) => f.file.name),
     )
 
     .addSection('Confirmed results')

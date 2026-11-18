@@ -1,14 +1,10 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-import {
-  BaselineAndTargetsSummaryMetadata,
-  toBaselineAndTargetsSummaryDataWithDecision,
-  underlyingAgreementRequestActionQuery,
-} from '@requests/common';
+import { toBaselineAndTargetsSummaryDataWithDecision, underlyingAgreementRequestActionQuery } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 
 import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+state/underlying-agreement-variation-reviewed-request-action.selectors';
 
@@ -21,11 +17,12 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
     </div>
   `,
   imports: [PageHeadingComponent, SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetPeriod5Component {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  private readonly summaryMetadata: BaselineAndTargetsSummaryMetadata = {
+  private readonly summaryMetadata = {
     isTp5Period: true,
     baselineExists: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectTargetPeriod5Details)()
       .exist,
@@ -37,12 +34,13 @@ export class TargetPeriod5Component {
         underlyingAgreementVariationReviewedRequestActionQuery.selectReviewAttachments,
       )(),
     },
+    areIdentical: null,
   };
 
   protected readonly summaryData = computed(() =>
     toBaselineAndTargetsSummaryDataWithDecision({
       sectorSchemeData: this.requestActionStore.select(
-        underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
+        underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
       )(),
       targetPeriodDetails: this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectTargetPeriod5Details,

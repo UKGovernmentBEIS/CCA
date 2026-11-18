@@ -1,4 +1,4 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -12,7 +12,7 @@ const initialState: BuyoutAndSurplusTabState = {
   surplusInfo: null,
 };
 
-@Service({ autoProvided: false })
+@Injectable()
 export class BuyoutAndSurplusTabStore extends SignalStore<BuyoutAndSurplusTabState> {
   constructor() {
     super(initialState);

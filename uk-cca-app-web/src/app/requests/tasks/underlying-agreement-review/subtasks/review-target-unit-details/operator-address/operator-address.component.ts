@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -37,8 +37,9 @@ import { UNA_OPERATOR_ADDRESS_FORM, UnaOperatorAddressFormProvider } from './una
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  providers: [UnaOperatorAddressFormProvider],
   imports: [ReactiveFormsModule, WizardStepComponent, AccountAddressInputComponent, ReturnToTaskOrActionPageComponent],
+  providers: [UnaOperatorAddressFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorAddressComponent {
   private readonly tasksApiService = inject(TasksApiService);

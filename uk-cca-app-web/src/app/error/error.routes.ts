@@ -1,20 +1,22 @@
 import { Routes } from '@angular/router';
 
+import { BusinessErrorComponent } from './business-error/business-error.component';
+import { InternalServerErrorComponent } from './internal-server-error/internal-server-error.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+
 export const ERROR_ROUTES: Routes = [
   {
-    title: 'Sorry, there is a problem with the service',
     path: '500',
-    loadComponent: () =>
-      import('./internal-server-error/internal-server-error.component').then((c) => c.InternalServerErrorComponent),
+    data: { pageTitle: 'Sorry, there is a problem with the service' },
+    component: InternalServerErrorComponent,
   },
   {
-    title: 'Business error',
     path: 'business',
-    loadComponent: () => import('./business-error/business-error.component').then((c) => c.BusinessErrorComponent),
+    component: BusinessErrorComponent,
   },
   {
-    title: 'Page not found',
     path: '404',
-    loadComponent: () => import('./page-not-found/page-not-found.component').then((c) => c.PageNotFoundComponent),
+    data: { pageTitle: 'Page not found' },
+    component: PageNotFoundComponent,
   },
 ];

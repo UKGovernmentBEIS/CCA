@@ -12,22 +12,19 @@
   </govuk-header>
 
   <govuk-service-navigation
-    serviceName="Manage your Climate Change Agreements"
+    serviceName="Manage your Climate Change Agreement"
     [serviceHomepage]="serviceHomepage()"
     [navigation]="navigation()"
   />
 </header>
 
 <div class="govuk-width-container">
-  <section aria-label="Task information">
-    <cca-workflow-task-header />
-  </section>
-
+  <cca-workflow-task-header />
   <netz-breadcrumbs />
   <netz-back-link />
 
-  <main class="govuk-main-wrapper" id="main-content" tabindex="-1">
-    <router-outlet ccaMainContentFocus />
+  <main class="govuk-main-wrapper" id="main-content" role="main" tabindex="0">
+    <router-outlet />
   </main>
 </div>
 

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   TemplateRef,
@@ -14,6 +15,7 @@ import { ConditionalContentDirective } from '../../directives';
 @Component({
   selector: 'govuk-checkbox',
   templateUrl: './checkbox.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxComponent<T> implements ControlValueAccessor {
   readonly changeDetectorRef = inject(ChangeDetectorRef);

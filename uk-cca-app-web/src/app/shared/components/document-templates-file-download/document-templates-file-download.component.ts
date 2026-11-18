@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewChecked, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { combineLatest, expand, map, Observable, of, switchMap, timer } from 'rxjs';
@@ -21,6 +21,7 @@ type EvidenceFileDownloadInfo = {
     <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
   imports: [AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentTemplatesFileDownloadComponent implements AfterViewChecked {
   private readonly activatedRoute = inject(ActivatedRoute);

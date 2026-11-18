@@ -1,6 +1,6 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -22,8 +22,9 @@ import { DecisionWithDateFormModel } from './type';
       <cca-decision />
     </form>
   `,
-  providers: [decisionFormProvider('AUTHORISATION_AND_ADDITIONAL_EVIDENCE')],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, DecisionComponent],
+  providers: [decisionFormProvider('AUTHORISATION_AND_ADDITIONAL_EVIDENCE')],
 })
 class TestComponent {
   form = inject<DecisionWithDateFormModel>(DECISION_FORM_PROVIDER);
@@ -40,7 +41,7 @@ describe('decision with date test', () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub({ taskId: '1' }) },

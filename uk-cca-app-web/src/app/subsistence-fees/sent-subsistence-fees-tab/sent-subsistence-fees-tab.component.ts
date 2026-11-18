@@ -1,5 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -27,6 +27,7 @@ const DEFAULT_PAGE_SIZE = 10;
     StatusColorPipe,
     StatusPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SentSubsistenceFeesTabComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

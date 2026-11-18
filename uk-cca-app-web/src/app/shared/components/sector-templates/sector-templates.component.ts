@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 import { GovukTableColumn, TableComponent } from '@netz/govuk-components';
 import { DownloadableFile } from '@shared/utils';
@@ -45,20 +45,15 @@ const SECTOR_TEMPLATES: SectorTemplate[] = [
         @if (column.field === 'process') {
           {{ row[column.field] }}
         } @else {
-          <a
-            [href]="$safeNavigationMigration(row[column.field]?.downloadUrl)"
-            class="govuk-link"
-            target="_blank"
-            rel="noreferrer noopener"
-            download
-          >
-            {{ row[column.field]?.fileName }}<span class="govuk-visually-hidden"> (opens in a new tab)</span>
+          <a [href]="row[column.field]?.downloadUrl" class="govuk-link" target="_blank" download>
+            {{ row[column.field]?.fileName }}
           </a>
         }
       </ng-template>
     </govuk-table>
   `,
   imports: [TableComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorTemplatesComponent {
   protected readonly templates = signal<SectorTemplate[]>(SECTOR_TEMPLATES);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -32,7 +32,6 @@ import {
 @Component({
   selector: 'cca-edit-operator-details',
   templateUrl: './edit-operator-details.component.html',
-  providers: [OperatorUserDetailsFormProvider],
   imports: [
     RouterLink,
     PageHeadingComponent,
@@ -45,6 +44,8 @@ import {
     RadioOptionComponent,
     PendingButtonDirective,
   ],
+  providers: [OperatorUserDetailsFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditOperatorDetailsComponent {
   private readonly businessErrorService = inject(BusinessErrorService);
@@ -84,11 +85,7 @@ export class EditOperatorDetailsComponent {
         );
 
     updateObs
-      .pipe(
-        catchBadRequest<never>([ErrorCodes.FORM1001], () =>
-          this.businessErrorService.showError(operatorUserUpdateError),
-        ),
-      )
+      .pipe(catchBadRequest([ErrorCodes.FORM1001], () => this.businessErrorService.showError(operatorUserUpdateError)))
       .subscribe((user: CcaOperatorUserDetailsDTO) => {
         this.store.updateState({ details: user });
         this.router.navigate(['..'], { relativeTo: this.activatedRoute, replaceUrl: true });

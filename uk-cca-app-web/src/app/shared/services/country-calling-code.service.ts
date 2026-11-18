@@ -1,8 +1,8 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { PhoneNumberUtil } from 'google-libphonenumber';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class CountryCallingCodeService {
   getCountryCallingCode(countryCode: string): number {
     return this.handleMissingCodes(countryCode) ?? PhoneNumberUtil.getInstance().getCountryCodeForRegion(countryCode);

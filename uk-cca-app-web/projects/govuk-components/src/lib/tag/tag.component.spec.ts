@@ -9,8 +9,8 @@ describe('TagComponent', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    template: ` <govuk-tag [color]="color"></govuk-tag> `,
     imports: [TagComponent],
+    template: ` <govuk-tag [color]="color"></govuk-tag> `,
   })
   class TestComponent {
     color = 'green' as TagColor;

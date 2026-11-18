@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.Year;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,10 +29,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.service.PerformanceAccountTemplateDataQueryService;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportItemDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facility.service.FacilityPerformanceAccountTemplateDataQueryService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportItemDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -63,10 +62,7 @@ class SectorAssociationPerformanceAccountTemplateDataReportControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @Mock
-    private PerformanceAccountTemplateDataQueryService performanceAccountTemplateDataQueryService;
-
-    @Mock
-    private FacilityPerformanceAccountTemplateDataQueryService facilityPerformanceAccountTemplateDataQueryService;
+    private PerformanceAccountTemplateDataQueryService dataQueryService;
 
     private ObjectMapper mapper;
     
@@ -97,19 +93,20 @@ class SectorAssociationPerformanceAccountTemplateDataReportControllerTest {
     }
     
     @Test
-    void getSectorAccountPerformanceAccountTemplateDataReportList() throws Exception {
+    void getSectorPerformanceAccountTemplateDataReportList() throws Exception {
         Long sectorAssociationId = 1L;
         
-        SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria.builder()
-                .targetPeriodYear(Year.of(2024))
+        SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
+				.builder()
 				.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
+				.targetPeriodType(TargetPeriodType.TP6)
 				.build();
         
         SectorPerformanceAccountTemplateDataReportListDTO listDTO = SectorPerformanceAccountTemplateDataReportListDTO.builder()
 				.items(List.of(SectorPerformanceAccountTemplateDataReportItemDTO.builder()
-                        .id(1L)
-						.businessId("targUBID")
-                        .name("opName")
+						.accountId(1L)
+						.targetUnitAccountBusinessId("targUBID")
+						.operatorName("opName")
 						.build()))
 				.total(1L)
 				.build();
@@ -118,109 +115,44 @@ class SectorAssociationPerformanceAccountTemplateDataReportControllerTest {
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(performanceAccountTemplateDataQueryService.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria))
-                .thenReturn(listDTO);
+        when(dataQueryService.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria)).thenReturn(listDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post(CONTROLLER_PATH.replace("{sectorAssociationId}", sectorAssociationId.toString()) + "/accounts")
+                        .post(CONTROLLER_PATH.replace("{sectorAssociationId}", sectorAssociationId.toString()))
                         .content(mapper.writeValueAsString(criteria))
                         .contentType(MediaType.APPLICATION_JSON))
                 		.andExpect(status().isOk())
                 		.andExpect(jsonPath("$.total").value(listDTO.getTotal()))
-                        .andExpect(jsonPath("$.items[0].id").value(listDTO.getItems().getFirst().getId()))
-                        .andExpect(jsonPath("$.items[0].businessId").value(listDTO.getItems().getFirst().getBusinessId()))
-                        .andExpect(jsonPath("$.items[0].name").value(listDTO.getItems().getFirst().getName()));
+                        .andExpect(jsonPath("$.items[0].accountId").value(listDTO.getItems().get(0).getAccountId()))
+                        .andExpect(jsonPath("$.items[0].targetUnitAccountBusinessId").value(listDTO.getItems().get(0).getTargetUnitAccountBusinessId()))
+                        .andExpect(jsonPath("$.items[0].operatorName").value(listDTO.getItems().get(0).getOperatorName()));
 
-        verify(performanceAccountTemplateDataQueryService, times(1))
-                .getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria);
+        verify(dataQueryService, times(1)).getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria);
     }
     
     @Test
-    void getSectorAccountPerformanceAccountTemplateDataReportList_forbidden() throws Exception {
+    void getSectorPerformanceAccountTemplateDataReportList_forbidden() throws Exception {
         Long sectorAssociationId = 1L;
         AppUser user = AppUser.builder().userId("user").build();
-        SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria.builder()
-                .targetPeriodYear(Year.of(2024))
+        SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
+				.builder()
 				.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
+				.targetPeriodType(TargetPeriodType.TP6)
 				.build();
         
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "getSectorAccountPerformanceAccountTemplateDataReportList", String.valueOf(sectorAssociationId), null, null);
+                .authorize(user, "getSectorPerformanceAccountTemplateDataReportList", String.valueOf(sectorAssociationId), null, null);
         
         mockMvc.perform(MockMvcRequestBuilders
-                        .post(CONTROLLER_PATH.replace("{sectorAssociationId}", sectorAssociationId.toString()) + "/accounts")
+                        .post(CONTROLLER_PATH.replace("{sectorAssociationId}", sectorAssociationId.toString()))
                         .content(mapper.writeValueAsString(criteria))
                         .contentType(MediaType.APPLICATION_JSON))
         				.andExpect(status().isForbidden());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verifyNoInteractions(performanceAccountTemplateDataQueryService);
+        verifyNoInteractions(dataQueryService);
     }
-
-    @Test
-    void getSectorFacilityPerformanceAccountTemplateDataReportList() throws Exception {
-        Long sectorAssociationId = 1L;
-
-        SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria.builder()
-                .targetPeriodYear(Year.of(2024))
-                .paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
-                .build();
-
-        SectorPerformanceAccountTemplateDataReportListDTO listDTO = SectorPerformanceAccountTemplateDataReportListDTO.builder()
-                .items(List.of(SectorPerformanceAccountTemplateDataReportItemDTO.builder()
-                        .id(1L)
-                        .parentId(22L)
-                        .businessId("facility")
-                        .name("facilityName")
-                        .build()))
-                .total(1L)
-                .build();
-        final AppUser user = AppUser.builder()
-                .roleType(RoleTypeConstants.REGULATOR)
-                .build();
-
-        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(facilityPerformanceAccountTemplateDataQueryService.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria))
-                .thenReturn(listDTO);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post(CONTROLLER_PATH.replace("{sectorAssociationId}", sectorAssociationId.toString()) + "/facilities")
-                        .content(mapper.writeValueAsString(criteria))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").value(listDTO.getTotal()))
-                .andExpect(jsonPath("$.items[0].id").value(listDTO.getItems().getFirst().getId()))
-                .andExpect(jsonPath("$.items[0].parentId").value(listDTO.getItems().getFirst().getParentId()))
-                .andExpect(jsonPath("$.items[0].businessId").value(listDTO.getItems().getFirst().getBusinessId()))
-                .andExpect(jsonPath("$.items[0].name").value(listDTO.getItems().getFirst().getName()));
-
-        verify(facilityPerformanceAccountTemplateDataQueryService, times(1))
-                .getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria);
-    }
-
-    @Test
-    void getSectorFacilityPerformanceAccountTemplateDataReportList_forbidden() throws Exception {
-        Long sectorAssociationId = 1L;
-        AppUser user = AppUser.builder().userId("user").build();
-        SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria.builder()
-                .targetPeriodYear(Year.of(2024))
-                .paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
-                .build();
-
-        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        doThrow(new BusinessException(ErrorCode.FORBIDDEN))
-                .when(appUserAuthorizationService)
-                .authorize(user, "getSectorFacilityPerformanceAccountTemplateDataReportList", String.valueOf(sectorAssociationId), null, null);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post(CONTROLLER_PATH.replace("{sectorAssociationId}", sectorAssociationId.toString()) + "/facilities")
-                        .content(mapper.writeValueAsString(criteria))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
-
-        verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verifyNoInteractions(facilityPerformanceAccountTemplateDataQueryService);
-    }
+    
 }

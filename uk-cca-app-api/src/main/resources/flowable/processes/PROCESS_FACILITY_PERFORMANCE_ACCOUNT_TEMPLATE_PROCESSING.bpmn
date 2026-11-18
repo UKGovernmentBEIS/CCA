@@ -33,7 +33,7 @@
         <design:stencilid><![CDATA[StartNoneEvent]]></design:stencilid>
       </extensionElements>
     </startEvent>
-    <endEvent id="EndNoneEvent_4" flowable:async="true">
+    <endEvent id="EndNoneEvent_4">
       <extensionElements>
         <design:stencilid><![CDATA[EndNoneEvent]]></design:stencilid>
       </extensionElements>

@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -7,7 +7,6 @@ import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { SchemeVersionEnum } from '@shared/types';
 import { MockInstance } from 'vitest';
 
 import { BuyOutAndSurplusInfoService } from 'cca-api';
@@ -28,7 +27,7 @@ describe('BuyoutAndSurplusTabComponent', () => {
     await TestBed.configureTestingModule({
       imports: [BuyoutAndSurplusTabComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         BuyoutAndSurplusTabStore,
         AuthStore,
@@ -96,7 +95,7 @@ describe('BuyoutAndSurplusTabComponent', () => {
       ...mockBuyoutInfo,
       surplusGainedDTOList: [
         {
-          schemeVersion: SchemeVersionEnum.CCA_2,
+          targetPeriod: 'TP6',
           surplusGained: '1.213',
           hasHistory: false,
         },
@@ -108,8 +107,8 @@ describe('BuyoutAndSurplusTabComponent', () => {
     fixture.detectChanges();
 
     const links = fixture.nativeElement.querySelectorAll('a.govuk-link');
-    const linkTexts = Array.from<HTMLAnchorElement>(links).map((a: HTMLAnchorElement) => a.textContent?.trim());
+    const linkTexts = Array.from(links).map((a: HTMLAnchorElement) => a.textContent?.trim());
 
-    expect(linkTexts.some((text) => text?.startsWith('View history'))).toBe(false);
+    expect(linkTexts).not.toContain('View history');
   });
 });

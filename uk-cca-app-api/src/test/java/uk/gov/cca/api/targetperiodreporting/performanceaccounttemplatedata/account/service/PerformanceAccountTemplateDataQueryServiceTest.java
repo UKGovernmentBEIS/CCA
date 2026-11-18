@@ -16,15 +16,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportItemDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.service.PerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataEntity;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.AccountPerformanceAccountTemplateDataReportDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.AccountPerformanceAccountTemplateDataReportInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportItemDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.repository.PerformanceAccountTemplateDataCustomRepository;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.repository.PerformanceAccountTemplateDataRepository;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -59,28 +60,29 @@ class PerformanceAccountTemplateDataQueryServiceTest {
 	
 	@Test
 	void getSectorAccountsDataReportList() {
-		final Long sectorAssociationId = 1L;
-		final Year targetPeriodYear = Year.of(2024);
-		final SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria.builder()
-				.targetPeriodYear(targetPeriodYear)
+		Long sectorAssociationId = 1L;
+		SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
+				.builder()
+				.targetPeriodType(TargetPeriodType.TP6)
 				.build();
+		Year targetPeriodYear = Year.of(2024);
 		
-		final SectorPerformanceAccountTemplateDataReportListDTO listDTO = SectorPerformanceAccountTemplateDataReportListDTO.builder()
+		SectorPerformanceAccountTemplateDataReportListDTO listDTO = SectorPerformanceAccountTemplateDataReportListDTO.builder()
 				.items(List.of(SectorPerformanceAccountTemplateDataReportItemDTO.builder()
-						.name("dfd")
+						.operatorName("dfd")
 						.build()))
 				.total(1L)
 				.build();
 		
-		when(customRepo.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria))
-				.thenReturn(listDTO);
+		when(customRepo.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria,
+				targetPeriodYear)).thenReturn(listDTO);
 
 		var result = cut.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria);
 		
 		assertThat(result).isEqualTo(listDTO);
 		
-		verify(customRepo, times(1))
-				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria);
+		verify(customRepo, times(1)).getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(
+				sectorAssociationId, criteria, targetPeriodYear);
 	}
 	
 	@Test

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -10,6 +10,7 @@ import { toReasonForAdminTerminationDetailsSummaryData } from './to-reason-for-a
   selector: 'cca-reason-for-admin-termination',
   template: `<cca-summary [data]="summaryData()" />`,
   imports: [SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReasonForAdminTerminationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

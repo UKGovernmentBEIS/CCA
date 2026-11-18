@@ -7,7 +7,7 @@ import { existingControlContainer } from '../../providers/control-container.fact
 @Component({
   selector: 'cca-county-address-input',
   templateUrl: './county-address-input.component.html',
-  viewProviders: [existingControlContainer],
   imports: [TextInputComponent, ReactiveFormsModule],
+  viewProviders: [existingControlContainer],
 })
 export class CountyAddressInputComponent {}

@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, computed, input } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { isRouterLink, resolveRel } from '../core/link';
@@ -23,9 +23,10 @@ import type { GovukFooterNavigation, GovukLinkItem } from '../types';
 @Component({
   selector: 'govuk-footer',
   templateUrl: './footer.component.html',
+  imports: [RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'govuk-footer' },
   styles: ':host { display: block; } .govuk-footer__meta-custom:empty { display: none; }',
-  imports: [RouterLink],
 })
 export class GovukFooterComponent {
   /** Columns of links shown above the meta row. */

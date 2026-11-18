@@ -13,7 +13,6 @@
         <th
           [attr.aria-sort]="!column.isSortable ? null : sortedField === column.field ? sortingDirection : 'none'"
           [class.govuk-table__header]="true"
-          [class.govuk-table__header--numeric]="column.isNumeric"
           [class]="column.widthClass"
           scope="col"
         >
@@ -40,12 +39,12 @@
       <tr class="govuk-table__row">
         @for (column of columns(); track column.field) {
           @if (column.isHeader) {
-            <th class="govuk-table__header" [class.govuk-table__header--numeric]="column.isNumeric" scope="row">
+            <th class="govuk-table__header" scope="row">
               <ng-container *ngTemplateOutlet="cell" />
             </th>
           } @else {
             <td
-              [class.govuk-table__cell--numeric]="column.isNumeric || getTypeof(row[column.field]) === 'number'"
+              [class.govuk-table__cell--numeric]="getTypeof(row[column.field]) === 'number'"
               class="govuk-table__cell"
             >
               <ng-container *ngTemplateOutlet="cell" />
@@ -54,7 +53,7 @@
 
           <ng-template #td>
             <td
-              [class.govuk-table__cell--numeric]="column.isNumeric || getTypeof(row[column.field]) === 'number'"
+              [class.govuk-table__cell--numeric]="getTypeof(row[column.field]) === 'number'"
               class="govuk-table__cell"
             >
               <ng-container *ngTemplateOutlet="cell" />

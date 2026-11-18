@@ -6,26 +6,24 @@ import { UnderlyingAgreementVariationPeerReviewStore } from './+state/underlying
 
 export const UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_ROUTES: Routes = [
   {
-    title: 'Peer review application for underlying agreement variation',
     path: '',
+    providers: [UnderlyingAgreementVariationPeerReviewStore],
     children: [
       {
-        title: 'Variation details',
         path: 'variation-details',
+        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewVariationDetailsComponent),
-        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        title: 'Target unit details',
         path: 'review-target-unit-details',
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetUnitDetailsComponent),
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetUnitDetailsComponent),
       },
       {
-        title: 'Manage facilities list',
         path: 'manage-facilities',
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewManageFacilitiesComponent),
+        title: 'Manage facilities list',
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewManageFacilitiesComponent),
       },
       {
         path: 'facility',
@@ -34,57 +32,52 @@ export const UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_ROUTES: Routes = [
             path: ':facilityId',
             children: [
               {
-                title: 'Facility',
                 path: '',
-                loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewFacilityComponent),
+                title: 'Facility',
                 data: { backlink: '../../manage-facilities', breadcrumb: false },
+                loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewFacilityComponent),
               },
               {
-                title: 'View Products',
                 path: 'products',
-                loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsPeerReviewComponent),
+                title: 'View Products',
                 data: { breadcrumb: false, backlink: '../' },
+                loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsPeerReviewComponent),
               },
             ],
           },
         ],
       },
       {
-        title: 'TP5 (2021-2022)',
         path: 'target-period-5',
+        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetPeriod5Component),
-        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        title: 'TP6 (2024)',
         path: 'target-period-6',
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetPeriod6Component),
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetPeriod6Component),
       },
       {
-        title: 'Authorisation and additional evidence',
         path: 'authorisation-additional-evidence',
+        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
           import('@requests/common').then((c) => c.UNAVariationPeerReviewAuthorisationAdditionalEvidenceComponent),
-        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        title: 'Overall decision',
         path: 'overall-decision',
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewOverallDecisionComponent),
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewOverallDecisionComponent),
       },
       {
         path: 'peer-review-decision',
         canActivate: [userIsAssigneeGuard],
         loadChildren: () =>
-          import('./peer-review-decision/peer-review-decision.routes').then((r) => r.PEER_REVIEW_DECISION_ROUTES),
+          import('./peer-review-decision/peer-review-decision.routes').then((m) => m.PEER_REVIEW_DECISION_ROUTES),
       },
       {
         path: '**',
         redirectTo: '/dashboard',
       },
     ],
-    providers: [UnderlyingAgreementVariationPeerReviewStore],
   },
 ];

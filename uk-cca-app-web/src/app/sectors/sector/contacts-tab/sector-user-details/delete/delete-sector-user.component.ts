@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { Observable, tap } from 'rxjs';
@@ -27,6 +27,7 @@ import { SectorRouteData } from '../../../types';
     RouterLink,
     PendingButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteSectorUserComponent {
   private readonly authStore = inject(AuthStore);

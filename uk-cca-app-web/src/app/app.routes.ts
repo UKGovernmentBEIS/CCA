@@ -9,55 +9,64 @@ import {
   TermsAndConditionsGuard,
 } from '@shared/guards';
 
+import { AccessibilityComponent } from './accessibility/accessibility.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
+import { DashboardPageComponent } from './dashboard/dashboard-page/dashboard-page.component';
 import { dashboardRequestTypeGuard } from './dashboard/dashboard-request-type.guard';
+import { FeedbackComponent } from './feedback/feedback.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LandingPageGuard } from './landing-page/landing-page.guard';
+import { LegislationComponent } from './legislation/legislation.component';
+import { PrivacyNoticeComponent } from './privacy-notice/privacy-notice.component';
+import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
+import { TimedOutComponent } from './timeout/timed-out/timed-out.component';
+import { VersionComponent } from './version/version.component';
 
 export const APP_ROUTES: Routes = [
   {
-    title: 'Manage your Climate Change Agreements (CCA)',
     path: 'landing',
-    loadComponent: () => import('./landing-page/landing-page.component').then((c) => c.LandingPageComponent),
+    data: { pageTitle: 'CCA', breadcrumb: 'Home' },
+    component: LandingPageComponent,
     canActivate: [LandingPageGuard],
-    data: { titleFullServiceName: true, breadcrumb: 'Home' },
   },
   {
     path: '',
-    pathMatch: 'full',
     redirectTo: 'landing',
+    pathMatch: 'full',
   },
   // unauthorized routes
   {
     path: '',
     children: [
       {
-        title: 'About',
         path: 'about',
-        loadComponent: () => import('./version/version.component').then((c) => c.VersionComponent),
+        data: { pageTitle: 'About' },
+        component: VersionComponent,
       },
       {
-        title: 'Privacy notice',
         path: 'privacy-notice',
-        loadComponent: () => import('./privacy-notice/privacy-notice.component').then((c) => c.PrivacyNoticeComponent),
+        data: { pageTitle: 'Privacy notice' },
+        component: PrivacyNoticeComponent,
       },
       {
-        title: 'Accessibility Statement',
         path: 'accessibility',
-        loadComponent: () => import('./accessibility/accessibility.component').then((c) => c.AccessibilityComponent),
+        data: { pageTitle: 'Accessibility Statement' },
+        component: AccessibilityComponent,
       },
       {
-        title: 'Contact us',
         path: 'contact-us',
-        loadComponent: () => import('./contact-us/contact-us.component').then((c) => c.ContactUsComponent),
+        data: { pageTitle: 'Contact us' },
+        component: ContactUsComponent,
       },
       {
-        title: 'CCA legislation',
         path: 'legislation',
-        loadComponent: () => import('./legislation/legislation.component').then((c) => c.LegislationComponent),
+        data: { pageTitle: 'CCA legislation' },
+        component: LegislationComponent,
       },
       {
-        title: 'Feedback',
         path: 'feedback',
-        loadComponent: () => import('./feedback/feedback.component').then((c) => c.FeedbackComponent),
+        data: { pageTitle: 'Feedback' },
+        component: FeedbackComponent,
         canDeactivate: [PendingRequestGuard],
       },
       {
@@ -89,10 +98,10 @@ export const APP_ROUTES: Routes = [
     loadChildren: () => import('./invitation/invitation.routes').then((r) => r.INVITATION_ROUTES),
   },
   {
-    title: 'Session Timeout',
     path: 'timed-out',
-    loadComponent: () => import('./timeout/timed-out/timed-out.component').then((c) => c.TimedOutComponent),
+    data: { pageTitle: 'Session Timeout' },
     canActivate: [NonAuthGuard],
+    component: TimedOutComponent,
   },
   // authorized routes
   {
@@ -101,12 +110,11 @@ export const APP_ROUTES: Routes = [
     data: { breadcrumb: 'Dashboard' },
     children: [
       {
-        title: 'Climate Change Agreements dashboard',
         path: 'dashboard',
-        loadComponent: () =>
-          import('./dashboard/dashboard-page/dashboard-page.component').then((c) => c.DashboardPageComponent),
+        data: { pageTitle: 'Climate Change Agreement dashboard' },
         canActivate: [AuthorizeGuard, dashboardRequestTypeGuard],
         runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+        component: DashboardPageComponent,
       },
       {
         path: 'user',
@@ -141,8 +149,8 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: 'subsistence-fees',
-        canActivate: [AuthorizeGuard],
         canMatch: [() => !isFeatureEnabled('subsistenceFeesHideMenu')()],
+        canActivate: [AuthorizeGuard],
         loadChildren: () => import('./subsistence-fees/subsistence-fees.routes').then((r) => r.SUBSISTENCE_FEES_ROUTES),
       },
       {
@@ -156,17 +164,15 @@ export const APP_ROUTES: Routes = [
         loadChildren: () => import('./templates/templates.routes').then((r) => r.TEMPLATES_ROUTES),
       },
       {
-        title: 'Templates',
         path: 'sector-templates',
+        canActivate: [AuthorizeGuard],
         loadComponent: () =>
           import('./templates/sector-templates-container.component').then((c) => c.SectorTemplatesContainerComponent),
-        canActivate: [AuthorizeGuard],
       },
       {
-        title: 'Accept terms and conditions',
         path: 'terms',
-        loadComponent: () =>
-          import('./terms-and-conditions/terms-and-conditions.component').then((c) => c.TermsAndConditionsComponent),
+        data: { pageTitle: 'Accept terms and conditions' },
+        component: TermsAndConditionsComponent,
         canActivate: [TermsAndConditionsGuard],
         canDeactivate: [PendingRequestGuard],
       },

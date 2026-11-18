@@ -5,21 +5,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityDataStatus;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataDetailsDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusGainedDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationDTO;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusUpdateDTO;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.service.FacilityCertificationService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
-import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.CertificationPeriodService;
+import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationDetailsDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -41,59 +39,60 @@ class FacilityInfoServiceOrchestratorTest {
     private FacilityDataQueryService facilityDataQueryService;
 
     @Mock
-    private SurplusQueryService surplusQueryService;
+    private CertificationPeriodService certificationPeriodService;
 
     @Test
     void getFacilityInfo() {
-        final String facilityBusinessId = "facilityId";
-        final Long facilityId = 1L;
-
-        final FacilityDataDetailsDTO facilityDataDetailsDTO = FacilityDataDetailsDTO.builder()
+        String facilityBusinessId = "facilityId";
+        Long facilityId = 1L;
+        Long certificationPeriodId = 2L;
+        LocalDate startDate = LocalDate.of(2020, 1, 1);
+        LocalDate endDate = LocalDate.of(2020, 2, 1);
+        FacilityDataDetailsDTO facilityDataDetailsDTO = FacilityDataDetailsDTO.builder()
                 .id(facilityId)
                 .facilityBusinessId(facilityBusinessId)
                 .siteName("siteName")
                 .status(FacilityDataStatus.LIVE)
                 .build();
-        final SurplusGainedDTO surplusGainedDTO = SurplusGainedDTO.builder()
-                .surplusGained(BigDecimal.valueOf(252))
-                .hasHistory(false)
-                .schemeVersion(SchemeVersion.CCA_3)
+
+        FacilityCertificationDTO facilityCertificationDTO = FacilityCertificationDTO.builder()
+                .facilityId(facilityId)
+                .certificationPeriodId(certificationPeriodId)
+                .certificationStatus(FacilityCertificationStatus.CERTIFIED)
+                .startDate(startDate)
+                .build();
+
+        FacilityCertificationDetailsDTO certificationDetailsDTO = FacilityCertificationDetailsDTO.builder()
+                .certificationPeriod(CertificationPeriodType.CP6)
+                .certificationPeriodStartDate(startDate)
+                .certificationPeriodEndDate(endDate)
+                .status(FacilityCertificationStatus.CERTIFIED)
+                .startDate(startDate)
+                .build();
+
+        CertificationPeriodDTO certificationPeriodDTO = CertificationPeriodDTO.builder()
+                .id(certificationPeriodId)
+                .certificationPeriodType(CertificationPeriodType.CP6)
+                .startDate(startDate)
+                .endDate(endDate)
                 .build();
 
         when(facilityDataQueryService.getFacilityData(facilityId)).thenReturn(facilityDataDetailsDTO);
-        when(surplusQueryService.getFacilitySurplusGainedWithHistoryFlag(facilityId)).thenReturn(surplusGainedDTO);
+        when(facilityCertificationService.getFacilityCertifications(facilityDataDetailsDTO.getId()))
+                .thenReturn(List.of(facilityCertificationDTO));
+        when(certificationPeriodService.getAllCertificationPeriods()).thenReturn(List.of(certificationPeriodDTO));
 
         // invoke
-        final FacilityInfoDTO result = orchestrator.getFacilityInfo(facilityId);
+        FacilityInfoDTO result = orchestrator.getFacilityInfo(facilityId);
 
         // verify
         verify(facilityDataQueryService, times(1)).getFacilityData(facilityId);
-        verify(surplusQueryService, times(1)).getFacilitySurplusGainedWithHistoryFlag(facilityId);
+        verify(facilityCertificationService, times(1)).getFacilityCertifications(facilityDataDetailsDTO.getId());
+        verify(certificationPeriodService, times(1)).getAllCertificationPeriods();
 
+        assertThat(result.getFacilityCertificationDetails()).hasSize(1);
         assertThat(result.getFacilityBusinessId()).isEqualTo(facilityBusinessId);
-        assertThat(result.getSurplusDetails()).isEqualTo(surplusGainedDTO);
-    }
-
-    @Test
-    void getFacilityCertifications() {
-        final Long facilityId = 1L;
-
-        final FacilityCertificationStatusDTO certificationDetailsDTO = FacilityCertificationStatusDTO.builder()
-                .certificationPeriod(CertificationPeriodType.CP6)
-                .certificationPeriodStartDate(LocalDate.of(2020, 1, 1))
-                .certificationPeriodEndDate(LocalDate.of(2020, 2, 1))
-                .status(FacilityCertificationStatus.CERTIFIED)
-                .startDate(LocalDate.of(2020, 1, 1))
-                .build();
-
-        when(facilityCertificationService.getFacilityCertifications(facilityId)).thenReturn(List.of(certificationDetailsDTO));
-
-        // Invoke
-        final List<FacilityCertificationStatusDTO> result = orchestrator.getFacilityCertifications(facilityId);
-
-        // Verify
-        assertThat(result).hasSize(1).containsExactly(certificationDetailsDTO);
-        verify(facilityCertificationService, times(1)).getFacilityCertifications(facilityId);
+        assertThat(result.getFacilityCertificationDetails().getFirst()).isEqualTo(certificationDetailsDTO);
     }
 
     @Test

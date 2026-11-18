@@ -1,4 +1,4 @@
-import { inject, Service, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
 import { catchError, map, Observable, of, tap } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { ReferenceDataService } from 'cca-api';
 
 import { logger } from '../utils/logger';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class CountyService {
   private readonly referenceDataService = inject(ReferenceDataService);
 

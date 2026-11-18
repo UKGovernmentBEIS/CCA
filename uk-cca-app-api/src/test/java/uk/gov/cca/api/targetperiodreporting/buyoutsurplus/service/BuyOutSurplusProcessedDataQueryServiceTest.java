@@ -7,15 +7,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusProcessedData;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.FacilityBuyOutSurplusProcessedDataInfo;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.repository.BuyOutSurplusProcessedDataRepository;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -32,7 +28,7 @@ class BuyOutSurplusProcessedDataQueryServiceTest {
     private BuyOutSurplusProcessedDataRepository buyOutSurplusProcessedDataRepository;
 
     @Test
-    void getAccountBuyOutSurplusProcessedDataByPerformanceData() {
+    void getBuyOutSurplusProcessedDataByPerformanceData() {
         final Long performanceDataId = 1L;
         final PerformanceDataResourceType resourceType = PerformanceDataResourceType.ACCOUNT;
         final BuyOutSurplusProcessedData entity = BuyOutSurplusProcessedData.builder()
@@ -48,34 +44,11 @@ class BuyOutSurplusProcessedDataQueryServiceTest {
 
         // Invoke
         Optional<Long> result = buyOutSurplusProcessedDataQueryService
-                .getAccountBuyOutSurplusProcessedDataByPerformanceData(performanceDataId);
+                .getBuyOutSurplusProcessedDataByPerformanceData(performanceDataId, resourceType);
 
         // Verify
         assertThat(result).isPresent().contains(expected);
         verify(buyOutSurplusProcessedDataRepository, times(1))
                 .findByPerformanceDataIdAndPerformanceDataResourceType(performanceDataId, resourceType);
-    }
-
-    @Test
-    void getFacilitiesBuyOutSurplusProcessedData() {
-        final Set<Long> facilityIds = Set.of(1L);
-        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
-
-        final FacilityBuyOutSurplusProcessedDataInfo info = FacilityBuyOutSurplusProcessedDataInfo.builder()
-                .facilityId(1L)
-                .performanceDataId(22L)
-                .build();
-
-        when(buyOutSurplusProcessedDataRepository.findLatestBuyOutSurplusProcessedFacilitiesPrimaryPerformanceDataByTargetPeriodType(facilityIds, targetPeriodType))
-                .thenReturn(List.of(info));
-
-        // Invoke
-        List<FacilityBuyOutSurplusProcessedDataInfo> result = buyOutSurplusProcessedDataQueryService
-                .getFacilitiesBuyOutSurplusProcessedData(facilityIds, targetPeriodType);
-
-        // Verify
-        assertThat(result).contains(info);
-        verify(buyOutSurplusProcessedDataRepository, times(1))
-                .findLatestBuyOutSurplusProcessedFacilitiesPrimaryPerformanceDataByTargetPeriodType(facilityIds, targetPeriodType);
     }
 }

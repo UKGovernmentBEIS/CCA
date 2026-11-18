@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -28,6 +28,7 @@ import { createSubmitActionDTO } from '../transform';
     <a class="govuk-link" routerLink="../.."> Return to: Track corrective actions {{ facilityInfo()?.businessId }} </a>
   `,
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompleteTaskComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

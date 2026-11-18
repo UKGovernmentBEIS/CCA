@@ -1,26 +1,23 @@
 package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaFileDocumentGeneratorService;
-import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaFileDocumentUnprocessedGeneratorService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaOfficialNoticeSendService;
-import uk.gov.netz.api.authorization.rules.domain.ResourceType;
-import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +25,6 @@ public class BuyOutSurplusAccountProcessingOfficialNoticeService {
 
     private final CcaFileDocumentGeneratorService ccaFileDocumentGeneratorService;
     private final CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
-    private final CcaFileDocumentUnprocessedGeneratorService ccaFileDocumentUnprocessedGeneratorService;
 
     @Transactional
     public FileInfoDTO generateOfficialNotice(final Request request, final PerformanceDataSubmissionType submissionType,
@@ -49,10 +45,7 @@ public class BuyOutSurplusAccountProcessingOfficialNoticeService {
 
     @Transactional
     public FileInfoDTO generateRefundOfficialNotice(final Request request) {
-        return ccaFileDocumentUnprocessedGeneratorService.copyTemplateAndSaveFileDocument(
-                CcaDocumentTemplateType.REFUND_CLAIM_FORM_BUY_OUT,
-                CompetentAuthorityEnum.valueOf(request.getRequestResourcesMap().get(ResourceType.CA)),
-                "Buyout Refund Claim Form.docx");
+        return generateOfficialNotice(request, CcaDocumentTemplateType.REFUND_CLAIM_FORM_BUY_OUT, "Buyout Refund Claim Form.docx");
     }
 
     public void sendOfficialNotice(Request request, FileInfoDTO... officialNotices) {

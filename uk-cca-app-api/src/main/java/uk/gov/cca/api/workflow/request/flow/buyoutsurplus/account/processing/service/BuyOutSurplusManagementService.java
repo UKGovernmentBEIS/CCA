@@ -5,10 +5,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.AccountBuyOutSurplusTransactionCreate;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDetailInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionCreateDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.SurplusCreate;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.SurplusCreateHistory;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusProcessedDataService;
@@ -19,13 +18,11 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusService
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.transform.BuyOutSurplusAccountProcessingMapper;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountProcessingBaseRequestMetadata;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -45,16 +42,16 @@ public class BuyOutSurplusManagementService {
             .getMapper(BuyOutSurplusAccountProcessingMapper.class);
 
     @Transactional
-    public void terminateAwaitingPayments(final List<BuyOutSurplusTransactionDetailInfoDTO> previousTransactions,
-                                       final BuyOutSurplusAccountProcessingBaseRequestMetadata requestMetadata) {
+    public void terminateAwaitPayments(final List<BuyOutSurplusTransactionInfoDTO> previousTransactions,
+                                       final BuyOutSurplusAccountProcessingRequestMetadata requestMetadata) {
         Set<Long> awaitingIds = previousTransactions.stream()
                 .filter(payment -> BuyOutSurplusPaymentStatus.getAwaitingPayments().contains(payment.getPaymentStatus()))
-                .map(BuyOutSurplusTransactionDetailInfoDTO::getId)
+                .map(BuyOutSurplusTransactionInfoDTO::getId)
                 .collect(Collectors.toSet());
 
         if(!awaitingIds.isEmpty()) {
             String submitter = "batch run ID " + requestMetadata.getParentRequestId();
-            this.buyOutSurplusTransactionService.terminateBuyOutSurplusTransactionDetails(awaitingIds, submitter);
+            this.buyOutSurplusTransactionService.terminateBuyOutSurplusTransactions(awaitingIds, submitter);
         }
     }
 
@@ -68,9 +65,9 @@ public class BuyOutSurplusManagementService {
                                   final BuyOutSurplusAccountProcessingRequestPayload requestPayload) {
         final TargetPeriodResultType resultType = requestPayload.getPerformanceData().getTpOutcome();
         final PerformanceDataSubmissionType submissionType = requestPayload.getPerformanceData().getSubmissionType();
-        final SchemeVersion schemeVersion = requestPayload.getTargetPeriodDetails().getSchemeVersion();
         final SurplusCreate surplusCreate = SurplusCreate.builder()
-                .resourceId(accountId)
+                .accountId(accountId)
+                .targetPeriodType(metadata.getTargetPeriodType())
                 .surplusGained(requestPayload.getBuyOutSurplus().getBuyOutSurplusContainer().getInvoicedSurplusGained())
                 .history(SurplusCreateHistory.builder()
                         .submitter("batch run ID " + metadata.getParentRequestId())
@@ -78,23 +75,23 @@ public class BuyOutSurplusManagementService {
                 .build();
 
         if(resultType.equals(TargetPeriodResultType.TARGET_MET)) {
-            surplusService.bankSurplus(surplusCreate, schemeVersion);
+            surplusService.bankSurplus(surplusCreate);
         } else if (resultType.equals(TargetPeriodResultType.BUY_OUT_REQUIRED)
                 && submissionType.equals(PerformanceDataSubmissionType.SECONDARY)) {
             // If the TPR results in “Buy-out” and there was a previously recorded positive Surplus Gained value
-            surplusQueryService.getSurplusByResourceIdAndSchemeVersion(accountId, schemeVersion).ifPresent(surplus -> {
+            surplusQueryService.getSurplusByAccountIdAndTargetPeriod(accountId, metadata.getTargetPeriodType()).ifPresent(surplus -> {
                 if(surplus.getSurplusGained().compareTo(BigDecimal.ZERO) > 0) {
-                    surplusService.bankSurplus(surplusCreate, schemeVersion);
+                    surplusService.bankSurplus(surplusCreate);
                 }
             });
         }
     }
 
     @Transactional
-    public void saveBuyOutSurplusTransaction(final BuyOutSurplusResult buyOutSurplus, final Long accountId, final TargetPeriodType targetPeriodType) {
+    public void saveBuyOutSurplusTransaction(final BuyOutSurplusResult buyOutSurplus) {
         // Persist Buy Out Surplus Transaction
-        AccountBuyOutSurplusTransactionCreate dto = MAPPER.toAccountBuyOutSurplusTransactionCreateDTO(buyOutSurplus, accountId, targetPeriodType);
-        buyOutSurplusTransactionService.createAccountBuyOutSurplusTransaction(dto);
+        BuyOutSurplusTransactionCreateDTO dto = MAPPER.toBuyOutSurplusTransactionCreateDTO(buyOutSurplus);
+        buyOutSurplusTransactionService.createBuyOutSurplusTransaction(dto);
     }
 
     @Transactional

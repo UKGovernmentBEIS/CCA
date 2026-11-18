@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -26,6 +26,7 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementVariationReviewPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,6 +12,7 @@ import { SubsistenceFeesMoAFacilityViewService } from 'cca-api';
   selector: 'cca-marking-history',
   templateUrl: './marking-history.component.html',
   imports: [PageHeadingComponent, GovukDatePipe, StatusPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkingHistoryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

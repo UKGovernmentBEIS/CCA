@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,6 +11,7 @@ import { toSectorMoaGeneratedSummaryData } from './sector-moa-generated-summary'
   selector: 'cca-sector-moa-generated',
   template: `<cca-summary [data]="data" />`,
   imports: [SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorMoaGeneratedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

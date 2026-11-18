@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -32,7 +32,6 @@ import { extractReviewProps } from '../../../utils';
 @Component({
   selector: 'cca-variation-details',
   templateUrl: './variation-details.component.html',
-  providers: [VariationDetailsFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -43,6 +42,8 @@ import { extractReviewProps } from '../../../utils';
     InsetTextDirective,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [VariationDetailsFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationDetailsComponent {
   protected readonly store = inject(RequestTaskStore);

@@ -5,7 +5,6 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import {
-  getAttachmentType,
   measurementTypeValidator,
   normaliseNumber,
   targetCompositionConditionallyRequiredFieldsValidator,
@@ -14,7 +13,7 @@ import {
 } from '@requests/common';
 import { FileType, FileValidators, UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 
 import { TargetComposition } from 'cca-api';
 
@@ -41,7 +40,7 @@ export const TargetCompositionFormProvider: Provider = {
     )();
 
     const sectorSchemeData = requestTaskStore.select(
-      underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
+      underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
     )();
 
     const requestTaskType = requestTaskStore.select(requestTaskQuery.selectRequestTaskType)();
@@ -51,7 +50,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.calculatorFile,
       attachments,
-      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
+      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
       true,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );
@@ -64,7 +63,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.conversionEvidences || [],
       attachments,
-      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
+      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
       false,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

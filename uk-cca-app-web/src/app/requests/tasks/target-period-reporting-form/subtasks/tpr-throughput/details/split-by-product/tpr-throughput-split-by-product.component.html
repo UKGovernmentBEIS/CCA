@@ -39,13 +39,7 @@
             <div [formGroupName]="index">
               @switch (column.field) {
                 @case ('throughput') {
-                  <div
-                    cca-text-input
-                    formControlName="actualThroughput"
-                    [label]="column.header"
-                    [labelHidden]="true"
-                    class="govuk-!-margin-bottom-0"
-                  ></div>
+                  <div cca-text-input formControlName="actualThroughput" class="govuk-!-margin-bottom-0"></div>
                 }
 
                 @case ('energy') {
@@ -54,23 +48,15 @@
                 }
 
                 @case ('improvementTarget') {
-                  {{
-                    $safeNavigationMigration(productCalculations()[index]?.improvementTarget?.toNumber())
-                      | percent: '1.0-3'
-                  }}
+                  {{ productCalculations()[index]?.improvementTarget?.toNumber() | percent: '1.0-3' }}
                 }
 
                 @case ('adjustedThroughput') {
-                  {{
-                    $safeNavigationMigration(productCalculations()[index]?.adjustedThroughput?.toNumber())
-                      | number: '1.0-3'
-                  }}
+                  {{ productCalculations()[index]?.adjustedThroughput?.toNumber() | number: '1.0-3' }}
                 }
 
                 @case ('targetEnergy') {
-                  {{
-                    $safeNavigationMigration(productCalculations()[index]?.targetEnergy?.toNumber()) | number: '1.0-3'
-                  }}
+                  {{ productCalculations()[index]?.targetEnergy?.toNumber() | number: '1.0-3' }}
                 }
 
                 @default {

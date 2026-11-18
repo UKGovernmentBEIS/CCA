@@ -1,8 +1,8 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, defer, finalize, MonoTypeOperatorFunction, Observable } from 'rxjs';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class PendingRequestService {
   private readonly trackedRequests = new Set<Observable<unknown>>();
   private readonly isRequestPending = new BehaviorSubject<boolean>(this.hasPendingRequests());

@@ -4,7 +4,6 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 
 export const UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ROUTES: Routes = [
   {
-    title: 'Vary the underlying agreement',
     path: '',
     children: [
       {
@@ -53,8 +52,8 @@ export const UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ROUTES: Routes = [
           ),
       },
       {
-        title: 'Notify operator of decision',
         path: 'notify-operator',
+        title: 'Notify operator of decision',
         canActivate: [isEditableGuard],
         loadChildren: () =>
           import('./notify-operator/notify-operator.routes').then(

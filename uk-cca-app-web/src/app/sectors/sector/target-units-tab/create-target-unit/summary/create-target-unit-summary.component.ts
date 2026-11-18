@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
@@ -19,6 +19,7 @@ import { CreateTargetUnitStore } from '../create-target-unit.store';
   selector: 'cca-target-unit-creation-summary',
   templateUrl: './create-target-unit-summary.component.html',
   imports: [PageHeadingComponent, SummaryComponent, ButtonDirective, RouterLink, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateTargetUnitSummaryComponent {
   private readonly ccaRequestsService = inject(CcaRequestsService);

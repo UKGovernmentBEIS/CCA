@@ -1,9 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 
 import { toBaselineAndTargetsSummaryDataWithDecision } from '../../underlying-agreement';
 import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agreement-variation-peer-review.selectors';
@@ -18,6 +18,7 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetPeriod5Component {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -42,7 +43,7 @@ export class TargetPeriod5Component {
     )();
     return toBaselineAndTargetsSummaryDataWithDecision({
       sectorSchemeData: this.requestTaskStore.select(
-        underlyingAgreementVariationPeerReviewQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
+        underlyingAgreementVariationPeerReviewQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
       )(),
       targetPeriodDetails: targetPeriod5?.details,
       decision: this.requestTaskStore.select(

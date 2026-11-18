@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
+
 import uk.gov.cca.api.common.domain.HistoryEntity;
 
 @Data
@@ -28,18 +29,18 @@ import uk.gov.cca.api.common.domain.HistoryEntity;
 @Table(name = "tpr_buy_out_surplus_transaction_history")
 public class BuyOutSurplusTransactionHistory extends HistoryEntity {
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buy_out_surplus_transaction_id", referencedColumnName = "id")
-    @NotNull
     private BuyOutSurplusTransaction transaction;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "change_type", updatable = false, insertable = false)
     private BuyOutSurplusTransactionChangeType changeType;
 
-    @Type(JsonType.class)
-    @Column(name = "payload", columnDefinition = "jsonb")
     @Valid
     @NotNull
+    @Type(JsonType.class)
+    @Column(name = "payload", columnDefinition = "jsonb")
     private BuyOutSurplusTransactionHistoryPayload payload;
 }

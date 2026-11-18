@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -36,7 +36,6 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
 @Component({
   selector: 'cca-target-unit-details',
   templateUrl: './target-unit-details.component.html',
-  providers: [TargetUnitDetailsSubmitFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -46,6 +45,8 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
     SelectComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [TargetUnitDetailsSubmitFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitDetailsComponent implements OnInit {
   private readonly store = inject(RequestTaskStore);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -24,6 +24,7 @@ import { PanelComponent } from '@netz/govuk-components';
     </div>
   `,
   imports: [PanelComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignmentSuccessComponent {
   private readonly store = inject(RequestTaskStore);

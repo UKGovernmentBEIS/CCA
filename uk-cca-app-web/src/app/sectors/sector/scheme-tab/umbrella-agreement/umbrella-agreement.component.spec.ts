@@ -4,8 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { FileType } from '@shared/components';
-import { SchemeVersionEnum } from '@shared/types';
+import { FileType, FileUploadEvent } from '@shared/components';
 import { Mocked } from 'vitest';
 
 import {
@@ -27,7 +26,7 @@ describe('UmbrellaAgreementComponent', () => {
 
   const sectorScheme: SectorAssociationSchemesDTO = {
     sectorAssociationSchemeMap: {
-      [SchemeVersionEnum.CCA_3]: {
+      CCA_3: {
         id: 10,
         umbrellaAgreement: {
           id: 1,
@@ -38,7 +37,7 @@ describe('UmbrellaAgreementComponent', () => {
         },
         umaDate: '2026-01-01',
         sectorDefinition: 'Current sector definition',
-        schemeVersion: SchemeVersionEnum.CCA_3,
+        schemeVersion: 'CCA_3',
         editable: true,
       },
     },
@@ -96,7 +95,7 @@ describe('UmbrellaAgreementComponent', () => {
 
     form.controls.file.setValue({
       file: new File(['text'], 'umbrella-agreement.txt', { type: 'text/plain' }),
-    });
+    } as FileUploadEvent);
     form.controls.file.updateValueAndValidity();
 
     expect(form.controls.file.errors).toEqual({

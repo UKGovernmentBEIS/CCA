@@ -1,6 +1,6 @@
-import { BuyOutSurplusTransactionDetailHistoryDTO } from 'cca-api';
+import { BuyOutSurplusTransactionHistoryDTO } from 'cca-api';
 
-export const mockTransactionHistory: BuyOutSurplusTransactionDetailHistoryDTO[] = [
+export const mockTransactionHistory: BuyOutSurplusTransactionHistoryDTO[] = [
   {
     id: 59,
     submitter: 'Regulator England',

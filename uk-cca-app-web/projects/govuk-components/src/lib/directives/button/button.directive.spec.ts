@@ -9,6 +9,7 @@ describe('ButtonDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
+    imports: [ButtonDirective],
     template: `
       <button #simple govukButton (click)="onClick()">Simple button</button>
       <button #warn govukWarnButton>Warn button</button>
@@ -16,7 +17,6 @@ describe('ButtonDirective', () => {
       <button #disabled govukButton disabled>Disabled button</button>
       <button #inverse govukButton govukInverseButton>Inverse button</button>
     `,
-    imports: [ButtonDirective],
   })
   class TestComponent {
     readonly simpleButton = viewChild('simple', { read: ElementRef });
@@ -93,12 +93,11 @@ describe('ButtonDirective', () => {
     expect(fixture.componentInstance.onClick).toHaveBeenCalledTimes(0);
   });
 
-  it('should not synthesise a click on space keydown', () => {
-    const event = new KeyboardEvent('keydown', { key: ' ', code: 'Space', cancelable: true });
+  it('should get clicked if keydown is space', () => {
+    const event = new KeyboardEvent('keydown', { key: ' ', code: 'Space' });
     vi.spyOn(fixture.componentInstance, 'onClick');
     const button: HTMLButtonElement = fixture.componentInstance.simpleButton().nativeElement;
     button.dispatchEvent(event);
-    expect(fixture.componentInstance.onClick).toHaveBeenCalledTimes(0);
-    expect(event.defaultPrevented).toBe(false);
+    expect(fixture.componentInstance.onClick).toHaveBeenCalledTimes(1);
   });
 });

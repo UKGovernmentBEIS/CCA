@@ -1,5 +1,5 @@
 import { mockTargetUnitDetails, transformAccountReferenceData } from '@requests/common';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 
 import { UnderlyingAgreementVariationReviewRequestTaskPayload } from 'cca-api';
 
@@ -33,8 +33,8 @@ const basePayload: UnderlyingAgreementVariationReviewRequestTaskPayload = {
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
-        [SchemeVersionEnum.CCA_3]: { sectorMeasurementType: 'ENERGY_KWH' },
+        [SchemeVersion.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
+        [SchemeVersion.CCA_3]: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },

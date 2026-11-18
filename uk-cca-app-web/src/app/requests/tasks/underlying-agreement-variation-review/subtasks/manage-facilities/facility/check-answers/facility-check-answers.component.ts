@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -20,7 +20,7 @@ import {
 import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 import { CountryService } from '@shared/services';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -39,6 +39,7 @@ import { resetDetermination } from '../../../../utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FacilityCheckAnswersComponent {
   private readonly store = inject(RequestTaskStore);
@@ -67,7 +68,7 @@ export default class FacilityCheckAnswersComponent {
   );
 
   private readonly schemeVersion = computed(() =>
-    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersionEnum.CCA_3 : SchemeVersionEnum.CCA_2,
+    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersion.CCA_3 : SchemeVersion.CCA_2,
   );
 
   private readonly sectorSchemeData = computed(() =>

@@ -44,12 +44,7 @@ export function extractSectorUsersFromUsersInfo(
   sectorUsers: CcaDecisionNotification['sectorUsers'],
 ): string[] {
   const users = sectorUsers?.map((su) => usersInfo[su]) ?? [];
-  return users.map((u) => {
-    const role = Object.hasOwn(SectorUserRoleCode, u.roleCode)
-      ? SectorUserRoleCode[u.roleCode as keyof typeof SectorUserRoleCode]
-      : u.roleCode;
-    return `${u.name}, ${role}`;
-  });
+  return users.map((u) => `${u.name}, ${SectorUserRoleCode[u.roleCode]}`);
 }
 
 export function extractOperatorUsersFromUsersInfo(

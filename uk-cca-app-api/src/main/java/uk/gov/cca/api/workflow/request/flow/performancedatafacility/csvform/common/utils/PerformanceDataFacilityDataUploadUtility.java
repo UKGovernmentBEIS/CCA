@@ -26,9 +26,7 @@ public class PerformanceDataFacilityDataUploadUtility {
     private static final String STATUS_ERROR = "Error";
     private static final String FACILITY_ERROR_MESSAGE = "%s: [%s]";
 
-    public FileDTO createCsvFile(List<FacilityUploadReport> facilityReports,
-                                 List<PerformanceDataFacilityCsvErrorEntry> csvRowErrors,
-                                 String createdBy) throws IOException {
+    public FileDTO createCsvFile(List<FacilityUploadReport> facilityReports, List<PerformanceDataFacilityCsvErrorEntry> csvRowErrors) throws IOException {
         // Create CSV
         try(StringWriter sw = new StringWriter();
             CSVPrinter csvPrinter = new CSVPrinter(sw, CSVFormat.DEFAULT.builder()
@@ -60,7 +58,7 @@ public class PerformanceDataFacilityDataUploadUtility {
 
             return FileDTO.builder()
                     .fileContent(generatedFile).fileName(CSV_RESULT).fileSize(generatedFile.length)
-                    .fileType(MimeTypeUtils.detect(generatedFile, CSV_RESULT)).createdBy(createdBy).build();
+                    .fileType(MimeTypeUtils.detect(generatedFile, CSV_RESULT)).build();
         }
     }
 

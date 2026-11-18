@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 
 import {
@@ -24,6 +24,7 @@ import { SectorEnergyEprFactorPipe } from '../pipes/sector-energy-epr-factor.pip
     RouterLink,
     SectorEnergyEprFactorPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorDetailsTabComponent {
   protected readonly sectorDetails = inject(ActiveSectorStore).state;

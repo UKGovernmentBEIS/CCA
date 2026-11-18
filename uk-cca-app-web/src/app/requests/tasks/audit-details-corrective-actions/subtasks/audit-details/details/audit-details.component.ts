@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -24,7 +24,6 @@ import {
 @Component({
   selector: 'cca-audit-details',
   templateUrl: './audit-details.component.html',
-  providers: [PreAuditReviewAuditReasonFormProvider],
   imports: [
     ReactiveFormsModule,
     ReturnToTaskOrActionPageComponent,
@@ -35,6 +34,8 @@ import {
     RadioComponent,
     MultipleFileInputComponent,
   ],
+  providers: [PreAuditReviewAuditReasonFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuditDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

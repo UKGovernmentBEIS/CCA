@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, throwError } from 'rxjs';
@@ -32,6 +32,7 @@ import { UnARegulatorLedVariationPeerReviewStore } from '../+state/underlying-ag
     <netz-return-to-task-or-action-page />
   `,
   imports: [SummaryComponent, ButtonDirective, ReturnToTaskOrActionPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckYourAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

@@ -2,9 +2,6 @@ package uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.faci
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor
@@ -15,10 +12,4 @@ public enum SupplyDemandSideMeasure {
 
     private final String description;
 
-    public static SupplyDemandSideMeasure fromDescription(String descr) {
-        return StringUtils.isBlank(descr) ? null : Arrays.stream(values())
-                .filter(ct -> ct.description.equalsIgnoreCase(descr.trim()))
-                .findFirst()
-                .orElse(null);
-    }
 }

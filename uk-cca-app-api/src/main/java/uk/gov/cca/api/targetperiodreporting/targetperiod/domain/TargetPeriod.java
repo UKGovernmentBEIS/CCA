@@ -11,11 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -94,7 +91,6 @@ public class TargetPeriod {
   private SchemeVersion schemeVersion;
   
   @Column(name = "buy_out_cost")
-  @Digits(integer = 18, fraction = 2)
-  private BigDecimal buyOutCost;
+  private Integer buyOutCost;
 }
 

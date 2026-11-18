@@ -4,7 +4,6 @@ import { appealOutcomeRedirectGuard } from './appeal-outcome.guard';
 
 export const APPEAL_OUTCOME_ROUTES: Routes = [
   {
-    title: 'Provide appeal outcome',
     path: '',
     children: [
       {
@@ -14,24 +13,23 @@ export const APPEAL_OUTCOME_ROUTES: Routes = [
         children: [],
       },
       {
-        title: 'Provide the appeal outcome details',
         path: 'provide-details',
+        title: 'Provide the appeal outcome details',
+        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
           import('./provide-details/provide-details.component').then((c) => c.ProvideDetailsComponent),
-        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
+        title: 'Check your answers',
+        data: { backlink: '../provide-details', breadcrumb: false },
         loadComponent: () =>
           import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
-        data: { backlink: '../provide-details', breadcrumb: false },
       },
       {
-        title: 'Appeal outcome completed',
         path: 'confirmation',
-        loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
         data: { breadcrumb: false, backlink: false },
+        loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
       },
     ],
   },

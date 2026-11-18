@@ -1,5 +1,4 @@
 import { createDescendingSelector, requestTaskQuery, RequestTaskState, StateSelector } from '@netz/common/store';
-import { SchemeVersion } from '@shared/types';
 
 import {
   AccountReferenceData,
@@ -79,7 +78,7 @@ const selectAccountReferenceDataSectorAssociationDetails: StateSelector<RequestT
     (accountReferenceData) => accountReferenceData?.sectorAssociationDetails,
   );
 
-const selectSectorAssociationDetailsSchemeData = (scheme: SchemeVersion) =>
+const selectSectorAssociationDetailsSchemeData = (scheme: string) =>
   createDescendingSelector(
     selectAccountReferenceDataSectorAssociationDetails,
     (details) => details?.schemeDataMap?.[scheme],

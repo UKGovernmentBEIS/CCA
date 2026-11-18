@@ -1,4 +1,13 @@
-import { Component, computed, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { switchMap, tap, timer } from 'rxjs';
@@ -12,6 +21,7 @@ import { FileToken, SectorAssociationSchemeDocumentsService, SectorAssociationSc
     <p>You should see your downloads in the downloads folder.</p>
     <a class="govuk-link" [href]="downloadURL()" download #anchor>Click to restart download if it fails</a>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorDocumentsDownloadComponent {
   private readonly anchor = viewChild<ElementRef>('anchor');

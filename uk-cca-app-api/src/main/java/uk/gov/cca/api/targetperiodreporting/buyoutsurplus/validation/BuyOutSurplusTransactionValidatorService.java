@@ -3,12 +3,11 @@ package uk.gov.cca.api.targetperiodreporting.buyoutsurplus.validation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.SetUtils;
 import org.springframework.stereotype.Service;
-
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusChargeType;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDetailInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusTransactionDetailQueryService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
@@ -20,35 +19,45 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BuyOutSurplusTransactionValidatorService {
 
-    private final BuyOutSurplusTransactionDetailQueryService buyOutSurplusTransactionDetailQueryService;
+    private final BuyOutSurplusQueryService buyOutSurplusQueryService;
 
     public void validateTerminateTransactions(final Set<Long> ids) {
-        final List<BuyOutSurplusTransactionDetailInfoDTO> transactions = buyOutSurplusTransactionDetailQueryService
-                .getBuyOutSurplusTransactionDetailsByIds(ids);
+        final List<BuyOutSurplusTransactionInfoDTO> transactions = buyOutSurplusQueryService.getAllTransactionInfoByIds(ids);
 
         // Validate if transactions are in await status
         List<Long> notAwaitingIds = transactions.stream()
                 .filter(t -> !BuyOutSurplusPaymentStatus.getAwaitingPayments().contains(t.getPaymentStatus()))
-                .map(BuyOutSurplusTransactionDetailInfoDTO::getId)
+                .map(BuyOutSurplusTransactionInfoDTO::getId)
                 .toList();
         if(!notAwaitingIds.isEmpty()) {
             throw new BusinessException(CcaErrorCode.INVALID_BUY_OUT_SURPLUS_TRANSACTION_PAYMENT_STATUS, notAwaitingIds);
         }
 
         // Validate if transactions exist
-        Set<Long> transactionIds = transactions.stream().map(BuyOutSurplusTransactionDetailInfoDTO::getId).collect(Collectors.toSet());
+        Set<Long> transactionIds = transactions.stream().map(BuyOutSurplusTransactionInfoDTO::getId).collect(Collectors.toSet());
         Set<Long> diffs = SetUtils.disjunction(ids, transactionIds);
         if(!diffs.isEmpty()) {
             throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, diffs);
         }
     }
 
-    public void validatePaymentStatus(BuyOutSurplusChargeType transactionChargeType, BuyOutSurplusPaymentStatus updatedPaymentStatus) {
+    public void validateBuyOutSurplusTransactionPaymentStatus(BuyOutSurplusChargeType transactionChargeType,
+                                                              BuyOutSurplusPaymentStatus currentPaymentStatus,
+                                                              BuyOutSurplusPaymentStatus updatedPaymentStatus ) {
+
+        validateBuyOutSurplusTransactionNotTerminated(currentPaymentStatus);
+
         final Set<BuyOutSurplusPaymentStatus> paymentStatuses = BuyOutSurplusPaymentStatus
                 .getPaymentStatusesByChargeType(transactionChargeType);
-
-        if(!paymentStatuses.contains(updatedPaymentStatus)) {
+        if (!paymentStatuses.contains(updatedPaymentStatus)) {
             throw new BusinessException(CcaErrorCode.INVALID_BUY_OUT_SURPLUS_TRANSACTION_PAYMENT_STATUS);
         }
     }
+
+    public void validateBuyOutSurplusTransactionNotTerminated(BuyOutSurplusPaymentStatus currentPaymentStatus ) {
+        if (currentPaymentStatus.equals(BuyOutSurplusPaymentStatus.TERMINATED)) {
+            throw new BusinessException(CcaErrorCode.TERMINATED_BUY_OUT_SURPLUS_TRANSACTION_PAYMENT_STATUS);
+        }
+    }
+
 }

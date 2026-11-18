@@ -1,6 +1,5 @@
 import { RequestTaskState } from '@netz/common/store';
 import { UNAApplicationRequestTaskPayload } from '@requests/common';
-import { SchemeVersionEnum } from '@shared/types';
 
 import { Facility, RequestTaskItemDTO, TargetUnitAccountDetails, UnderlyingAgreementPayload } from 'cca-api';
 
@@ -19,7 +18,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
+      participatingSchemeVersions: ['CCA_2'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -465,7 +464,7 @@ export const mockUnaRequestTaskPayload: UNAApplicationRequestTaskPayload = {
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },
@@ -495,7 +494,7 @@ export const mockUnaRequestTaskPayloadNOVEM: UNAApplicationRequestTaskPayload = 
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },
@@ -524,7 +523,7 @@ export const mockUnaRequestTaskPayloadABSOLUTE: UNAApplicationRequestTaskPayload
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
       },
     },
   },
@@ -553,7 +552,7 @@ export const mockUnaRequestTaskPayloadABSOLUTENoMeasurement: UNAApplicationReque
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },

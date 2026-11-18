@@ -1,4 +1,4 @@
-import { Component, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 import { of, switchMap } from 'rxjs';
@@ -10,6 +10,7 @@ import { FacilityHeaderInfoDTO, TargetUnitAccountHeaderInfoDTO, TasksService } f
 @Component({
   selector: 'cca-workflow-task-header',
   templateUrl: './workflow-task-header.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowTaskHeaderComponent {
   private readonly tasksService = inject(TasksService);

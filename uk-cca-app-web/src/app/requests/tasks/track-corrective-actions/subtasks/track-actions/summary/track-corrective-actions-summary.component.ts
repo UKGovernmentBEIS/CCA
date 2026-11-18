@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -23,6 +23,7 @@ import { trackCorrectiveActionsQuery } from '../../../track-corrective-actions.s
     </a>
   `,
   imports: [PageHeadingComponent, SummaryComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrackCorrectiveActionsSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

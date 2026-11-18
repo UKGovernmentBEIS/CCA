@@ -1,4 +1,14 @@
-import { Component, computed, effect, input, output, signal, contentChild, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  input,
+  output,
+  signal,
+  contentChild,
+  inject,
+} from '@angular/core';
 
 import { ACCORDION, Accordion, isSessionStorageAvailable } from '../accordion';
 import { AccordionItemSummaryDirective } from '../directives/accordion-item-summary.directive';
@@ -6,6 +16,7 @@ import { AccordionItemSummaryDirective } from '../directives/accordion-item-summ
 @Component({
   selector: 'govuk-accordion-item',
   templateUrl: './accordion-item.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionItemComponent {
   protected readonly accordion = inject<Accordion>(ACCORDION);

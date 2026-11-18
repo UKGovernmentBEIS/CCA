@@ -1,4 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -7,7 +8,7 @@ import { switchMap, tap } from 'rxjs';
 import { GovukDatePipe } from '@netz/common/pipes';
 import { GovukTableColumn, TableComponent } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import { FormatGbpPipe, StatusColorPipe, StatusPipe } from '@shared/pipes';
+import { StatusColorPipe, StatusPipe } from '@shared/pipes';
 
 import { BuyOutAndSurplusTransactionsInfoViewService, BuyOutSurplusTransactionListItemDTO } from 'cca-api';
 
@@ -20,15 +21,11 @@ interface TransactionsTableState {
   totalItems: number;
 }
 
-interface TransactionsTableRow extends BuyOutSurplusTransactionListItemDTO {
-  transactionLink: (string | number)[];
-  transactionFragment: string | null;
-}
-
 @Component({
   selector: 'cca-transaction-table',
   templateUrl: './transactions-table.component.html',
-  imports: [TableComponent, RouterLink, GovukDatePipe, PaginationComponent, StatusPipe, StatusColorPipe, FormatGbpPipe],
+  imports: [TableComponent, RouterLink, GovukDatePipe, PaginationComponent, StatusPipe, StatusColorPipe, DecimalPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionsTableComponent {
   private readonly router = inject(Router);
@@ -41,7 +38,7 @@ export class TransactionsTableComponent {
     { field: 'transactionCode', header: 'Transaction ID' },
     { field: 'creationDate', header: 'Date sent' },
     { field: 'paymentStatus', header: 'Payment status' },
-    { field: 'buyOutFee', header: 'Amount (GBP)', isNumeric: true },
+    { field: 'buyOutFee', header: 'Amount (GBP)' },
   ];
 
   readonly state = signal<TransactionsTableState>({
@@ -50,25 +47,6 @@ export class TransactionsTableComponent {
     pageSize: DEFAULT_PAGE_SIZE,
     totalItems: 0,
   });
-
-  /** CCA2 rows open the account transaction details, CCA3 rows the facility ones. */
-  protected readonly tableData = computed<TransactionsTableRow[]>(() =>
-    this.state().transactions.map((transaction) => {
-      if (transaction.resourceType !== 'ACCOUNT' && transaction.resourceType !== 'FACILITY') {
-        throw new Error(
-          `Cannot link buy-out and surplus transaction ${transaction.transactionCode}: unknown resource type "${transaction.resourceType}"`,
-        );
-      }
-
-      const isAccountTransaction = transaction.resourceType === 'ACCOUNT';
-
-      return {
-        ...transaction,
-        transactionLink: [isAccountTransaction ? 'transactions' : 'cca3-transactions', transaction.id],
-        transactionFragment: isAccountTransaction ? 'transaction-details' : null,
-      };
-    }),
-  );
 
   constructor() {
     this.activatedRoute.queryParamMap

@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -56,7 +56,7 @@ describe('ResponsiblePersonComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ResponsiblePersonComponent, RouterModule.forRoot([])],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         { provide: TasksApiService, useValue: tasksApiService },
         { provide: ActivatedRoute, useValue: route },

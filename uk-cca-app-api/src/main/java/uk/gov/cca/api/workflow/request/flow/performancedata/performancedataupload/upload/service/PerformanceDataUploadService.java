@@ -126,10 +126,11 @@ public class PerformanceDataUploadService {
                 final PerformanceDataUploadRequestPayload requestPayload =
                         (PerformanceDataUploadRequestPayload) requestTask.getRequest().getPayload();
                 final FileDTO csvFileDTO = PerformanceDataUploadUtility.createCsvFile(requestTask.getRequest().getId(),
-                        accountReports.values().stream().toList(), taskPayload.getErrors(), requestPayload.getSectorUserAssignee());
+                        accountReports.values().stream().toList(), taskPayload.getErrors());
 
                 // Save to DB
-                final String uuid = ccaFileAttachmentService.createSystemFileAttachment(csvFileDTO, FileStatus.SUBMITTED);
+                final String uuid = ccaFileAttachmentService.createSystemFileAttachment(
+                        csvFileDTO, FileStatus.SUBMITTED, requestPayload.getSectorUserAssignee());
 
                 FileInfoDTO csvFile = FileInfoDTO.builder().uuid(uuid).name(csvFileDTO.getFileName()).build();
                 taskPayload.setCsvFile(csvFile);
@@ -149,12 +150,12 @@ public class PerformanceDataUploadService {
                 .fileName(entry.getKey())
                 .fileContent(entry.getValue())
                 .fileSize(entry.getValue().length)
-                .fileType(MimeTypeUtils.detect(entry.getValue(), entry.getKey()))
-                .createdBy(assignee).build();
+                .fileType(MimeTypeUtils.detect(entry.getValue(), entry.getKey())).build();
 
         try {
             if(!accountReportsFiles.containsKey(accountId)) {
-                final String accountReportFileUuid = fileAttachmentService.createFileAttachment(excelFile, FileStatus.SUBMITTED);
+                final String accountReportFileUuid = fileAttachmentService.createFileAttachment(
+                        excelFile, FileStatus.SUBMITTED, assignee);
 
                 // Add account to report map
                 accountReportsFiles.put(

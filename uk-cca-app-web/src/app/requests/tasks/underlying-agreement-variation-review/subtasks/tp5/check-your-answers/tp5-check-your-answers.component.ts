@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -18,7 +18,7 @@ import {
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -36,6 +36,7 @@ import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } 
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TP5CheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -51,7 +52,7 @@ export class TP5CheckYourAnswersComponent {
   private readonly currentBaselineExists = this.store.select(underlyingAgreementQuery.selectTargetPeriodExists)();
 
   private readonly sectorAssociationDetailsSchemeData = this.store.select(
-    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
+    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
   )();
 
   private readonly originalTargetPeriodDetails = this.store.select(

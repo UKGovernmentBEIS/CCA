@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -42,6 +42,7 @@ import { resetDetermination } from '../../../utils';
     SummaryComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class VariationDetailsCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

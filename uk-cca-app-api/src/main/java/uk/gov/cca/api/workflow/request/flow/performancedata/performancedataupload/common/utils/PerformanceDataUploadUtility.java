@@ -50,9 +50,7 @@ public class PerformanceDataUploadUtility {
         return null;
     }
 
-    public FileDTO createCsvFile(String requestId,
-                                 List<TargetUnitAccountUploadReport> accountReports, Map<String, String> errors,
-                                 String createdBy) throws IOException {
+    public FileDTO createCsvFile(String requestId, List<TargetUnitAccountUploadReport> accountReports, Map<String, String> errors) throws IOException {
         // Create file name
         final String fileName = String.format("%s_Summary.csv", requestId);
 
@@ -87,7 +85,7 @@ public class PerformanceDataUploadUtility {
 
             return FileDTO.builder()
                     .fileContent(generatedFile).fileName(fileName).fileSize(generatedFile.length)
-                    .fileType(MimeTypeUtils.detect(generatedFile, fileName)).createdBy(createdBy).build();
+                    .fileType(MimeTypeUtils.detect(generatedFile, fileName)).build();
         }
     }
 }

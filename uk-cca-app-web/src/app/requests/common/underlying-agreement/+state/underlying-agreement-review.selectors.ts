@@ -80,12 +80,12 @@ const selectDeterminationSubmitted = createDescendingSelector(underlyingAgreemen
 );
 
 const selectReviewGroupDecisions = createDescendingSelector(
-  underlyingAgreementQuery.selectVariationReviewPayload,
+  underlyingAgreementQuery.selectPayload,
   (payload: UNAVariationReviewRequestTaskPayload) => payload.reviewGroupDecisions || {},
 );
 
 const selectFacilityReviewGroupDecisions = createDescendingSelector(
-  underlyingAgreementQuery.selectVariationReviewPayload,
+  underlyingAgreementQuery.selectPayload,
   (payload: UNAVariationReviewRequestTaskPayload) => payload.facilitiesReviewGroupDecisions || {},
 );
 

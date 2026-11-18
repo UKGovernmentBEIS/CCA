@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
@@ -35,6 +35,7 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
     DetailsSummaryComponent,
     TargetUnitNotesComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitComponent {
   private readonly authStore = inject(AuthStore);

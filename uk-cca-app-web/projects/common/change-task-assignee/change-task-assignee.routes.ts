@@ -8,13 +8,11 @@ import { ChangeAssigneeComponent } from './change-assignee';
 
 export const ROUTES: Routes = [
   {
-    title: 'Reassign task',
     path: '',
     component: ChangeAssigneeComponent,
     data: { backlink: '../', breadcrumb: 'Reassign task' },
   },
   {
-    title: 'Task reassigned',
     path: 'success',
     component: AssignmentSuccessComponent,
     canDeactivate: [() => inject(RequestTaskStore).setTaskReassignedTo(null)],

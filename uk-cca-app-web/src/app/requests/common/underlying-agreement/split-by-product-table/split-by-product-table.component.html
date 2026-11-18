@@ -28,21 +28,15 @@
           @if (canAlterProducts()) {
             @switch (row['productStatus']) {
               @case ('LIVE') {
-                <a class="govuk-link" [routerLink]="['exclude-product', row.productName]"
-                  >Exclude<span class="govuk-visually-hidden"> {{ row.productName }}</span></a
-                >
+                <a class="govuk-link" [routerLink]="['exclude-product', row.productName]">Exclude</a>
               }
 
               @case ('EXCLUDED') {
-                <a class="govuk-link" [routerLink]="['undo-product', row.productName]"
-                  >Undo<span class="govuk-visually-hidden"> {{ row.productName }}</span></a
-                >
+                <a class="govuk-link" [routerLink]="['undo-product', row.productName]">Undo</a>
               }
 
               @default {
-                <a class="govuk-link" [routerLink]="['delete-product', row.productName]"
-                  >Delete<span class="govuk-visually-hidden"> {{ row.productName }}</span></a
-                >
+                <a class="govuk-link" [routerLink]="['delete-product', row.productName]">Delete</a>
               }
             }
           }

@@ -10,8 +10,8 @@ describe('DetailsComponent', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    template: ` <govuk-details [summary]="summary()"></govuk-details> `,
     imports: [DetailsComponent],
+    template: ` <govuk-details [summary]="summary()"></govuk-details> `,
   })
   class TestComponent {
     summary = signal<string | null>(null);

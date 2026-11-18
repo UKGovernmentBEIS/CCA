@@ -9,8 +9,8 @@ describe('FieldsetHintDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    template: '<div govukFieldsetHint>This is a hint</div>',
     imports: [FieldsetHintDirective],
+    template: '<div govukFieldsetHint>This is a hint</div>',
   })
   class TestComponent {}
 

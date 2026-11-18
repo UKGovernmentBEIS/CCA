@@ -11,7 +11,6 @@ import { TextInputComponent } from '../text-input/text-input.component';
 @Component({
   selector: 'cca-responsible-person-input',
   templateUrl: './responsible-person-input.component.html',
-  viewProviders: [existingControlContainer],
   imports: [
     TextInputComponent,
     ReactiveFormsModule,
@@ -20,6 +19,7 @@ import { TextInputComponent } from '../text-input/text-input.component';
     CheckboxComponent,
     CheckboxesComponent,
   ],
+  viewProviders: [existingControlContainer],
 })
 export class ResponsiblePersonInputComponent {
   protected readonly sameAddressExists = input(true);

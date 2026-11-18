@@ -20,8 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
+import uk.gov.netz.api.files.documents.service.FileDocumentTokenService;
 import uk.gov.netz.api.token.FileToken;
+
 
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementDocumentServiceTest {
@@ -33,7 +34,7 @@ class UnderlyingAgreementDocumentServiceTest {
     private UnderlyingAgreementQueryService underlyingAgreementQueryService;
 
     @Mock
-    private FileDocumentStorageService fileDocumentStorageService;
+    private FileDocumentTokenService fileDocumentTokenService;
     
     @Test
     void generateGetFileDocumentToken() {
@@ -48,13 +49,13 @@ class UnderlyingAgreementDocumentServiceTest {
         final FileToken fileToken = FileToken.builder().token("token").build();
         
         when(underlyingAgreementQueryService.getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString())).thenReturn(underlyingAgreementDocument);
-        when(fileDocumentStorageService.generateGetFileDocumentToken(fileDocumentUuid.toString())).thenReturn(fileToken);
+        when(fileDocumentTokenService.generateGetFileDocumentToken(fileDocumentUuid.toString())).thenReturn(fileToken);
 
         final FileToken result = underlyingAgreementDocumentService.generateGetFileDocumentToken(unaId, fileDocumentUuid);
 
         assertEquals(result, fileToken);
         verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString());
-        verify(fileDocumentStorageService, times(1)).generateGetFileDocumentToken(fileDocumentUuid.toString());
+        verify(fileDocumentTokenService, times(1)).generateGetFileDocumentToken(fileDocumentUuid.toString());
     }
 
     @Test
@@ -71,7 +72,7 @@ class UnderlyingAgreementDocumentServiceTest {
 
         assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
         verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString());
-        verifyNoInteractions(fileDocumentStorageService);
+        verifyNoInteractions(fileDocumentTokenService);
     }
 
 }

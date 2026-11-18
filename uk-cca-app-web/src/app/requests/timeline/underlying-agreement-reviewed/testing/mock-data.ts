@@ -1,6 +1,5 @@
 import { RequestActionState } from '@netz/common/store';
 import { mockTargetUnitDetails, UnderlyingAgreementDecisionRequestActionPayload } from '@requests/common';
-import { SchemeVersionEnum } from '@shared/types';
 
 import {
   DefaultNoticeRecipient,
@@ -43,7 +42,7 @@ const facilityDetails: FacilityDetails = {
   isCoveredByUkets: false,
   applicationReason: 'NEW_AGREEMENT',
   facilityAddress: operatorAddress,
-  participatingSchemeVersions: [SchemeVersionEnum.CCA_2, SchemeVersionEnum.CCA_3],
+  participatingSchemeVersions: ['CCA_2', 'CCA_3'],
 };
 
 const facilityContact = {
@@ -226,8 +225,8 @@ const underlyingAgreementPayload: UnderlyingAgreementDecisionRequestActionPayloa
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
-        [SchemeVersionEnum.CCA_3]: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_3']: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },
@@ -257,7 +256,7 @@ const activatedPayloadDTO: UnderlyingAgreementActivatedRequestActionPayload = {
     evidenceFiles: [],
   },
   underlyingAgreementDocuments: {
-    [SchemeVersionEnum.CCA_2]: {
+    CCA_2: {
       name: 'underlying-agreement.pdf',
       uuid: 'abcd-1234',
     },

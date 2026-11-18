@@ -5,10 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -23,7 +21,6 @@ public class TargetPeriodInfoDTO {
     private LocalDate endDate;
     private LocalDate buyOutStartDate;
     private LocalDate buyOutPrimaryPaymentDeadline;
-    private BigDecimal buyOutCost;
+    private Integer buyOutCost;
     private LocalDate secondaryReportingStartDate;
-    private SchemeVersion schemeVersion;
 }

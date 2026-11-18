@@ -1,4 +1,4 @@
-import { Component, input, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -19,6 +19,7 @@ import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
     ButtonDirective,
     ErrorSummaryComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardStepComponent {
   protected readonly showBackLink = input(false);

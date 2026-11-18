@@ -3,21 +3,21 @@ import { Routes } from '@angular/router';
 export const UNDERLYING_AGREEMENT_SUBMITTED_ROUTES: Routes = [
   {
     path: '',
+    data: { backlink: false },
     loadComponent: () =>
       import('./underlying-agreement-submitted-task-list/underlying-agreement-submitted-task-list.component'),
-    data: { backlink: false },
   },
   {
-    title: 'Review target unit details',
     path: 'review-target-unit-details',
-    loadComponent: () => import('@requests/common').then((c) => c.ReviewTargetUnitDetailsSubmittedComponent),
+    title: 'Review target unit details',
     data: { backlink: '../../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.ReviewTargetUnitDetailsSubmittedComponent),
   },
   {
-    title: 'Manage facilities list',
     path: 'manage-facilities',
-    loadComponent: () => import('@requests/common').then((c) => c.ManageFacilitiesSubmittedComponent),
+    title: 'Manage facilities list',
     data: { backlink: '../../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.ManageFacilitiesSubmittedComponent),
   },
   {
     path: 'facility',
@@ -26,38 +26,38 @@ export const UNDERLYING_AGREEMENT_SUBMITTED_ROUTES: Routes = [
         path: ':facilityId',
         children: [
           {
-            title: 'Facility',
             path: '',
             pathMatch: 'full',
-            loadComponent: () => import('@requests/common').then((c) => c.FacilitySubmittedComponent),
+            title: 'Facility',
             data: { backlink: '../../manage-facilities', breadcrumb: false },
+            loadComponent: () => import('@requests/common').then((c) => c.FacilitySubmittedComponent),
           },
           {
-            title: 'View Products',
             path: 'products',
-            loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsTimelineComponent),
+            title: 'View Products',
             data: { breadcrumb: false, backlink: '../' },
+            loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsTimelineComponent),
           },
         ],
       },
     ],
   },
   {
-    title: 'TP5 (2021-2022)',
     path: 'target-period-5',
+    title: 'TP5 (2021-2022)',
+    data: { backlink: '../../', breadcrumb: false },
     loadComponent: () => import('@requests/common').then((c) => c.TargetPeriod5SubmittedComponent),
-    data: { backlink: '../../', breadcrumb: false },
   },
   {
-    title: 'TP6 (2024)',
     path: 'target-period-6',
-    loadComponent: () => import('@requests/common').then((c) => c.TargetPeriod6SubmittedComponent),
+    title: 'TP6 (2024)',
     data: { backlink: '../../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.TargetPeriod6SubmittedComponent),
   },
   {
-    title: 'Authorisation and additional evidence',
     path: 'authorisation-additional-evidence',
-    loadComponent: () => import('@requests/common').then((c) => c.AuthorisationAdditionalEvidenceSubmittedComponent),
+    title: 'Authorisation and additional evidence',
     data: { backlink: '../../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.AuthorisationAdditionalEvidenceSubmittedComponent),
   },
 ];

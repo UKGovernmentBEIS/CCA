@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import {
   SummaryListComponent,
@@ -30,6 +30,7 @@ import {
     </div>
   `,
   imports: [SummaryListComponent, SummaryListRowDirective, SummaryListRowKeyDirective, SummaryListRowValueDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorAssociationInfoSummaryComponent {
   protected readonly sectorId = input<string>();

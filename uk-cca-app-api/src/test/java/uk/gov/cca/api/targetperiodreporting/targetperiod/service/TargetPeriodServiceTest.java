@@ -21,7 +21,6 @@ import uk.gov.cca.api.targetperiodreporting.targetperiod.repository.TargetPeriod
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
@@ -280,7 +279,7 @@ class TargetPeriodServiceTest {
     @Test
     void updateTpBuyOutCost() {
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
-        final BigDecimal buyOutCost = BigDecimal.valueOf(100);
+        final Integer buyOutCost = 100;
 
         final TargetPeriodBuyOutCostUpdateDTO dto = TargetPeriodBuyOutCostUpdateDTO.builder()
                 .buyOutCost(buyOutCost)
@@ -289,7 +288,7 @@ class TargetPeriodServiceTest {
         final TargetPeriod targetPeriod = TargetPeriod.builder()
                 .businessId(targetPeriodType)
                 .schemeVersion(SchemeVersion.CCA_3)
-                .buyOutCost(BigDecimal.valueOf(25))
+                .buyOutCost(25)
                 .build();
 
         when(repository.findByBusinessId(targetPeriodType)).thenReturn(Optional.of(targetPeriod));
@@ -303,7 +302,7 @@ class TargetPeriodServiceTest {
     @Test
     void updateTpBuyOutCost_invalid_scheme() {
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
-        final BigDecimal buyOutCost = BigDecimal.valueOf(100);
+        final Integer buyOutCost = 100;
 
         final TargetPeriodBuyOutCostUpdateDTO dto = TargetPeriodBuyOutCostUpdateDTO.builder()
                 .buyOutCost(buyOutCost)
@@ -312,7 +311,7 @@ class TargetPeriodServiceTest {
         final TargetPeriod targetPeriod = TargetPeriod.builder()
                 .businessId(targetPeriodType)
                 .schemeVersion(SchemeVersion.CCA_2)
-                .buyOutCost(BigDecimal.valueOf(25))
+                .buyOutCost(25)
                 .build();
 
         when(repository.findByBusinessId(targetPeriodType)).thenReturn(Optional.of(targetPeriod));
@@ -341,30 +340,33 @@ class TargetPeriodServiceTest {
     }
     
     @Test
-    void getTargetPeriodsInfoForSchemeWithStartDateUpTo() {
+    void getPreviousTargetPeriodsInScheme() {
         final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final LocalDate date = LocalDate.of(2026, 1, 1);
+
         final TargetPeriod previousTargetPeriod1 = TargetPeriod.builder()
                 .id(1L)
                 .businessId(TargetPeriodType.TP7)
                 .build();
+
         final TargetPeriod previousTargetPeriod2 = TargetPeriod.builder()
                 .id(2L)
                 .businessId(TargetPeriodType.TP8)
                 .build();
 
-        when(repository.findBySchemeVersionAndStartDateLessThanEqualOrderByStartDateAsc(schemeVersion, date))
-                .thenReturn(List.of(previousTargetPeriod1, previousTargetPeriod2));
+        when(repository.findBySchemeVersionAndStartDateLessThanEqual(schemeVersion, date))
+        		.thenReturn(List.of(previousTargetPeriod1, previousTargetPeriod2));
 
-        List<TargetPeriodInfoDTO> result = service.getTargetPeriodsInfoForSchemeWithStartDateUpTo(schemeVersion, date);
+        Set<TargetPeriodType> result = service.getTargetPeriodsForSchemeUpTo(schemeVersion, date);
 
         // Verify
         assertThat(result)
-                .extracting(TargetPeriodInfoDTO::getBusinessId)
-                .containsExactly(
+                .containsExactlyInAnyOrder(
                         TargetPeriodType.TP7,
                         TargetPeriodType.TP8);
-        verify(repository).findBySchemeVersionAndStartDateLessThanEqualOrderByStartDateAsc(schemeVersion, date);
+
+        verify(repository).findBySchemeVersionAndStartDateLessThanEqual(
+        		schemeVersion, date);
     }
 }
 

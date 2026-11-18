@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { roundHalfUpTo7Decimals } from '@requests/common';
 
 import { PerformanceDataFacilityInputEnergyFuelDetails } from 'cca-api';
 
-import { roundHalfUpTo7Decimals } from '../../utils';
 import { EnergyFuelAmountSummaryComponent } from '../energy-fuel-amount/energy-fuel-amount-summary.component';
 
 describe('EnergyFuelAmountSummaryComponent', () => {
@@ -28,8 +29,7 @@ describe('EnergyFuelAmountSummaryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EnergyFuelAmountSummaryComponent],
-      providers: [provideRouter([])],
+      imports: [EnergyFuelAmountSummaryComponent, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EnergyFuelAmountSummaryComponent);

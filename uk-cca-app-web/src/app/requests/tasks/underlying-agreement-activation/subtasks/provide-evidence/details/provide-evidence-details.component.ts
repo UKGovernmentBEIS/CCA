@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -26,7 +26,6 @@ import {
 @Component({
   selector: 'cca-provide-evidence-details',
   templateUrl: './provide-evidence-details.component.html',
-  providers: [ProvideEvidenceDetailsFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -34,6 +33,8 @@ import {
     MultipleFileInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [ProvideEvidenceDetailsFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ProvideEvidenceDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

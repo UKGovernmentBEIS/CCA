@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -28,6 +28,7 @@ const DEFAULT_PAGE_SIZE = 10;
   selector: 'cca-mi-reports-list',
   templateUrl: './mi-reports-list.component.html',
   imports: [TableComponent, RouterLink, PaginationComponent, TextEllipsisPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiReportsListComponent {
   private readonly miReportsUserDefinedService = inject(MiReportsUserDefinedService);

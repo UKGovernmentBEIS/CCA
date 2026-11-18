@@ -9,6 +9,7 @@ describe('FormService', () => {
   let service: FormService;
 
   @Component({
+    imports: [ReactiveFormsModule, TextInputComponent, FormsModule],
     template: `
       <div [formGroup]="formGroup">
         <div govuk-text-input formControlName="test"></div>
@@ -23,7 +24,6 @@ describe('FormService', () => {
         <div govuk-text-input [(ngModel)]="model" name="someField"></div>
       </form>
     `,
-    imports: [ReactiveFormsModule, TextInputComponent, FormsModule],
   })
   class TestComponent {
     formGroup = new FormGroup({

@@ -11,6 +11,12 @@ import { tp5RedirectGuard } from './tp5-redirect.guard';
 export const TARGET_PERIOD_5_ROUTES: Routes = [
   {
     path: '',
+    providers: [
+      {
+        provide: BASELINE_AND_TARGETS_SUBTASK,
+        useValue: BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS,
+      },
+    ],
     children: [
       {
         path: '',
@@ -18,51 +24,45 @@ export const TARGET_PERIOD_5_ROUTES: Routes = [
         children: [],
       },
       {
-        title: 'Baseline data exists',
         path: BaseLineAndTargetsStep.BASELINE_EXISTS,
+        title: 'Baseline data exists',
+        data: { backlink: `../../../`, breadcrumb: false },
         loadComponent: () =>
           import('./baseline-exists/baseline-exists.component').then((c) => c.BaselineExistsComponent),
-        data: { backlink: `../../../`, breadcrumb: false },
       },
       {
-        title: 'Add target composition',
         path: BaseLineAndTargetsStep.TARGET_COMPOSITION,
+        title: 'Add target composition',
+        data: { backlink: `../${BaseLineAndTargetsStep.BASELINE_EXISTS}`, breadcrumb: false },
         loadComponent: () =>
           import('./target-composition/target-composition.component').then((c) => c.TargetCompositionComponent),
-        data: { backlink: `../${BaseLineAndTargetsStep.BASELINE_EXISTS}`, breadcrumb: false },
       },
       {
-        title: 'Add baseline data',
         path: BaseLineAndTargetsStep.ADD_BASELINE_DATA,
+        title: 'Add baseline data',
+        data: { backlink: `../${BaseLineAndTargetsStep.TARGET_COMPOSITION}`, breadcrumb: false },
         loadComponent: () =>
           import('./add-baseline-data/add-baseline-data.component').then((c) => c.AddBaselineDataComponent),
-        data: { backlink: `../${BaseLineAndTargetsStep.TARGET_COMPOSITION}`, breadcrumb: false },
       },
       {
-        title: 'Add targets',
         path: BaseLineAndTargetsStep.ADD_TARGETS,
-        loadComponent: () => import('./add-targets/add-targets.component').then((c) => c.AddTargetsComponent),
+        title: 'Add targets',
         data: { backlink: `../${BaseLineAndTargetsStep.ADD_BASELINE_DATA}`, breadcrumb: false },
+        loadComponent: () => import('./add-targets/add-targets.component').then((c) => c.AddTargetsComponent),
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
+        title: 'Check your answers',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./check-your-answers/tp5-check-your-answers.component').then((c) => c.Tp5CheckYourAnswersComponent),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Summary',
         path: 'summary',
+        title: 'Summary',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./summary/baseline-and-targets-summary.component').then((c) => c.BaselineAndTargetsSummaryComponent),
-        data: { backlink: '../../../', breadcrumb: false },
-      },
-    ],
-    providers: [
-      {
-        provide: BASELINE_AND_TARGETS_SUBTASK,
-        useValue: BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS,
       },
     ],
   },

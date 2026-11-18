@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -26,8 +26,9 @@ import { OperatorUserInvitationStore } from '../store';
       </div>
     </cca-wizard-step>
   `,
-  providers: [passwordFormFactory],
   imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
+  providers: [passwordFormFactory],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetPasswordOnlyComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

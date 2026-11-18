@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -29,6 +29,7 @@ import { UPLOAD_ENFORCEMENT_RESPONSE_NOTICE_SUBTASK } from '../enforcement-respo
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnforcementResponseNoticePrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

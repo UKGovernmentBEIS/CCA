@@ -97,12 +97,11 @@ class FileEvidenceUploadControllerTest {
                 .fileType(evidenceContentType)
                 .fileContent(evidenceContent)
                 .fileSize(evidenceFile.getSize())
-                .createdBy("id")
                 .build();
         final UUID fileEvidenceUuid = UUID.randomUUID();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
-        when(fileEvidenceService.createFileEvidence(fileDTO))
+        when(fileEvidenceService.createFileEvidence(fileDTO, authUser))
                 .thenReturn(fileEvidenceUuid.toString());
 
         mockMvc.perform(
@@ -114,6 +113,6 @@ class FileEvidenceUploadControllerTest {
                 .andExpect(jsonPath("$.uuid").value(fileEvidenceUuid.toString()));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(fileEvidenceService, times(1)).createFileEvidence(fileDTO);
+        verify(fileEvidenceService, times(1)).createFileEvidence(fileDTO, authUser);
     }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -31,6 +31,7 @@ import { notEqualToCurrentValidator } from './edit-surplus.helper';
     TextInputComponent,
     TextareaComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditSurplusComponent {
   private readonly router = inject(Router);
@@ -39,8 +40,11 @@ export class EditSurplusComponent {
   private readonly buyoutAndSurplusTabStore = inject(BuyoutAndSurplusTabStore);
 
   private readonly targetUnitId = +this.activatedRoute.snapshot.paramMap.get('targetUnitId');
+  protected readonly targetPeriod = this.activatedRoute.snapshot.paramMap.get('targetPeriodType');
 
-  readonly currentSurplus = +this.buyoutAndSurplusTabStore.state?.surplusInfo?.surplusDetails.surplusGained;
+  readonly currentSurplus = +this.buyoutAndSurplusTabStore.state?.surplusInfo?.surplusGainedDTOList.find(
+    (e) => e.targetPeriod === this.targetPeriod,
+  )?.surplusGained;
 
   readonly form = new FormGroup({
     surplus: new FormControl(null, [
@@ -53,7 +57,8 @@ export class EditSurplusComponent {
 
   onSubmit() {
     this.buyOutAndSurplusInfoService
-      .updateAccountSurplusGained(this.targetUnitId, {
+      .updateSurplusGained(this.targetUnitId, {
+        targetPeriodType: this.targetPeriod as 'TP5' | 'TP6',
         newSurplusGained: this.form.value.surplus,
         comments: this.form.value.comments,
       })

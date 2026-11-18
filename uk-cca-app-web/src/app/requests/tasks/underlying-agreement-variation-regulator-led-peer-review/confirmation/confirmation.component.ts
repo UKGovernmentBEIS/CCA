@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -14,5 +14,6 @@ import { PanelComponent } from '@netz/govuk-components';
     </div>
   `,
   imports: [PanelComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationComponent {}

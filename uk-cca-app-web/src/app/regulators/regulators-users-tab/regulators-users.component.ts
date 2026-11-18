@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -38,6 +38,7 @@ import { savePartiallyNotFoundRegulatorError } from '../errors/business-error';
     ButtonDirective,
     PendingButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegulatorsUsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

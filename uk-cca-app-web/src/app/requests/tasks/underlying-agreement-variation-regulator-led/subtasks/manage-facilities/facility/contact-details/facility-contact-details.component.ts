@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -29,7 +29,6 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
 @Component({
   selector: 'cca-facility-contact-details',
   templateUrl: './facility-contact-details.component.html',
-  providers: [FacilityContactDetailsFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -40,6 +39,8 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
     PhoneInputComponent,
     RouterLink,
   ],
+  providers: [FacilityContactDetailsFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityContactDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

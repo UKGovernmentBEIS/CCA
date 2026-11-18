@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -22,6 +22,7 @@ import { preAuditReviewQuery } from '../../pre-audit-review.selectors';
     <a class="govuk-link" [routerLink]="['/dashboard']"> Return to: Dashboard </a>
   `,
   imports: [PanelComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreAuditReviewConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

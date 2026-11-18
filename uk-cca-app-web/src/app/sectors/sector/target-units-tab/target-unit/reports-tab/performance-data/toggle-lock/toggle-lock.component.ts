@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -35,6 +35,7 @@ import { PerformanceReportStore } from '../../../performance-report-store';
     </div>
   `,
   imports: [RadioComponent, RadioOptionComponent, ReactiveFormsModule, ButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleLockComponent {
   private readonly router = inject(Router);

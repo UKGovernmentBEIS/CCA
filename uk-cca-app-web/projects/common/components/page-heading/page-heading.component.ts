@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'netz-page-heading',
@@ -11,6 +11,7 @@ import { Component, input } from '@angular/core';
       <ng-content />
     </h1>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageHeadingComponent {
   protected readonly caption = input<string | undefined>(undefined);

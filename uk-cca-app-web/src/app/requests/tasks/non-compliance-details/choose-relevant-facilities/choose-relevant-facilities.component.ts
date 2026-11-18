@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -23,8 +23,6 @@ import {
 
 @Component({
   selector: 'cca-choose-relevant-facilities',
-  templateUrl: './choose-relevant-facilities.component.html',
-  providers: [ChooseRelevantFacilitiesFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -32,6 +30,9 @@ import {
     TextInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [ChooseRelevantFacilitiesFormProvider],
+  templateUrl: './choose-relevant-facilities.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChooseRelevantFacilitiesComponent {
   private readonly formBuilder = inject(FormBuilder);

@@ -1,8 +1,8 @@
-import { provideRouter } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { delay, of } from 'rxjs';
 
@@ -14,6 +14,7 @@ describe('TabDirective', () => {
     let fixture: ComponentFixture<TestComponent>;
 
     @Component({
+      imports: [AsyncPipe, TabDirective, TabsComponent],
       template: `
         <govuk-tabs>
           @for (tab of tabs$ | async; track tab) {
@@ -26,7 +27,6 @@ describe('TabDirective', () => {
           </ng-template>
         </govuk-tabs>
       `,
-      imports: [AsyncPipe, TabDirective, TabsComponent],
     })
     class TestComponent {
       tabs$ = of([
@@ -37,8 +37,7 @@ describe('TabDirective', () => {
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [TabsComponent, TestComponent, TabDirective],
-        providers: [provideRouter([])],
+        imports: [RouterTestingModule, TabsComponent, TestComponent, TabDirective],
       }).compileComponents();
     });
 
@@ -85,6 +84,7 @@ describe('TabDirective', () => {
     let fixture: ComponentFixture<TestComponent>;
 
     @Component({
+      imports: [TabsComponent, TabDirective, AsyncPipe],
       template: `
         <govuk-tabs>
           @for (tab of tabs$ | async; track tab) {
@@ -94,7 +94,6 @@ describe('TabDirective', () => {
           }
         </govuk-tabs>
       `,
-      imports: [TabsComponent, TabDirective, AsyncPipe],
     })
     class TestComponent {
       tabs$ = of([]).pipe(delay(200));
@@ -102,8 +101,7 @@ describe('TabDirective', () => {
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
-        imports: [TabsComponent, TestComponent, TabDirective],
-        providers: [provideRouter([])],
+        imports: [RouterTestingModule, TabsComponent, TestComponent, TabDirective],
       }).compileComponents();
     });
 

@@ -1,22 +1,17 @@
 import { HttpEvent } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchTaskReassignedBadRequest } from '@error/business-errors';
-import {
-  createCommonFileAsyncValidators,
-  FileUploadEvent,
-  FileUploadService,
-  storedFileName,
-} from '@shared/components';
+import { createCommonFileAsyncValidators, FileUploadEvent, FileUploadService } from '@shared/components';
 import { requestTaskReassignedError } from '@shared/errors';
 
 import { FileUuidDTO, RequestTaskAttachmentActionProcessDTO, RequestTaskAttachmentsHandlingService } from 'cca-api';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class RequestTaskFileService {
   private readonly fileUploadService = inject(FileUploadService);
   private readonly requestTaskAttachmentsHandlingService = inject(RequestTaskAttachmentsHandlingService);
@@ -69,10 +64,7 @@ export class RequestTaskFileService {
     // check common-tasks.store.ts
     return {
       uuid,
-      // The attachments map is not guaranteed to have an entry for the uuid. `UploadedFileRef.name`
-      // is typed as a string, so resolve it to an empty name rather than leaving it undefined: the
-      // file list renders `UNKNOWN_FILE_NAME` for it and payloads skip it instead of inventing a name.
-      file: { name: storedFileName(uuid, attachments) },
+      file: { name: attachments?.[uuid] } as File,
     };
   }
 

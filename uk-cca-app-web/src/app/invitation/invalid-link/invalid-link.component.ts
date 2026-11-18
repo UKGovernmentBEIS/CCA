@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { map } from 'rxjs';
@@ -10,6 +10,7 @@ import { PageHeadingComponent } from '@netz/common/components';
   selector: 'cca-invalid-link',
   templateUrl: './invalid-link.component.html',
   imports: [PageHeadingComponent, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvalidLinkComponent {
   private readonly route = inject(ActivatedRoute);

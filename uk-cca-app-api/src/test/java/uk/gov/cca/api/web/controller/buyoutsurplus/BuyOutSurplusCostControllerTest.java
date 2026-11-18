@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +54,7 @@ class BuyOutSurplusCostControllerTest {
     void getBuyOutSurplusCosts() throws Exception {
         final TargetPeriodBuyOutDetailsDTO dto = TargetPeriodBuyOutDetailsDTO.builder()
                 .id(1L)
-                .buyOutCost(BigDecimal.valueOf(25))
+                .buyOutCost(25)
                 .build();
 
         when(targetPeriodService.getTargetPeriodBuyOutDetailsBySchemeVersionAndStartDateDesc(SchemeVersion.CCA_3))
@@ -74,7 +73,7 @@ class BuyOutSurplusCostControllerTest {
     @Test
     void updateBuyOutSurplusCost() throws Exception {
         TargetPeriodBuyOutCostUpdateDTO dto = TargetPeriodBuyOutCostUpdateDTO.builder()
-                .buyOutCost(BigDecimal.valueOf(25))
+                .buyOutCost(25)
                 .build();
 
         mockMvc.perform(patch(REQUEST_PATH + "/{tp}", TargetPeriodType.TP7)
@@ -88,7 +87,7 @@ class BuyOutSurplusCostControllerTest {
     @Test
     void updateBuyOutSurplusCost_invalidBuyOutCost() throws Exception {
         TargetPeriodBuyOutCostUpdateDTO dto = TargetPeriodBuyOutCostUpdateDTO.builder()
-                .buyOutCost(BigDecimal.ZERO)
+                .buyOutCost(0)
                 .build();
 
         mockMvc.perform(patch(REQUEST_PATH + "/{tp}", TargetPeriodType.TP7)

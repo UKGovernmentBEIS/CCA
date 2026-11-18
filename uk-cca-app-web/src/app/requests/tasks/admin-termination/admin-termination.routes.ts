@@ -4,12 +4,11 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 
 export const ADMIN_TERMINATION_ROUTES: Routes = [
   {
-    title: 'Admin termination',
     path: '',
     children: [
       {
-        title: 'Reason for admin termination',
         path: 'reason-for-admin-termination',
+        title: 'Reason for admin termination',
         canActivate: [isEditableSummaryRedirectGuard],
         loadChildren: () =>
           import('./subtasks/reason-for-admin-termination/reason-for-admin-termination.routes').then(
@@ -17,8 +16,8 @@ export const ADMIN_TERMINATION_ROUTES: Routes = [
           ),
       },
       {
-        title: 'Notify operator of decision',
         path: 'notify-operator',
+        title: 'Notify operator of decision',
         canActivate: [isEditableGuard],
         loadChildren: () =>
           import('./notify-operator/admin-termination-notify-operator.routes').then(
@@ -26,8 +25,8 @@ export const ADMIN_TERMINATION_ROUTES: Routes = [
           ),
       },
       {
-        title: 'Send for peer review',
         path: 'send-for-peer-review',
+        title: 'Send for peer review',
         canActivate: [isEditableGuard],
         loadChildren: () =>
           import('./send-for-peer-review/admin-termination-send-for-peer-review.routes').then(

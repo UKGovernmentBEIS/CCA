@@ -27,19 +27,17 @@ export const FACILITY_PERFORMANCE_DATA_REPORT_FORM = new InjectionToken<Facility
   'Facility performance data report form',
 );
 
-export const facilityPerformanceDataInitialValues: Partial<FacilityPerformanceDataCriteria> = {
+export const facilityPerformanceDataInitialValues = {
   facilityOrTargetUnitAccountBusinessId: null,
   reportStatus: null,
   subType: null,
 };
 
-export function isFacilityTargetPeriod(value: string | null | undefined): value is FacilityTargetPeriodType {
+export function isFacilityTargetPeriod(value: string): value is FacilityTargetPeriodType {
   return value === 'TP7' || value === 'TP8' || value === 'TP9';
 }
 
-export function getDefaultTargetPeriodReportType(
-  targetPeriodType: string | null | undefined,
-): FacilityTargetPeriodReportType | null {
+export function getDefaultTargetPeriodReportType(targetPeriodType: string): FacilityTargetPeriodReportType | null {
   return isFacilityTargetPeriod(targetPeriodType) ? 'FINAL' : null;
 }
 
@@ -47,8 +45,8 @@ export function getDefaultTargetPeriodReportType(
  * Interim facility reports only exist for TP8 and TP9; every other facility target period resolves to the final TPR.
  */
 export function getTargetPeriodReportType(
-  targetPeriodType: string | null | undefined,
-  targetPeriodReportType: string | null | undefined,
+  targetPeriodType: string,
+  targetPeriodReportType: string,
 ): FacilityTargetPeriodReportType {
   if ((targetPeriodType === 'TP8' || targetPeriodType === 'TP9') && targetPeriodReportType === 'INTERIM') {
     return 'INTERIM';

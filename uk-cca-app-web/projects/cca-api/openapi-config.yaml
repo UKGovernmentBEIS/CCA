@@ -1,0 +1,6 @@
+templateDir: projects/cca-api/src/assets/templates
+additionalProperties:
+  ngVersion: 11.0.2
+  basePath: /api
+files:
+  .openapi-generator-ignore: {}

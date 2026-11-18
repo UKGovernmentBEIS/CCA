@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, convertToParamMap, UrlSegment, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, UrlSegment, UrlTree } from '@angular/router';
 
 import { AuthStore } from '@netz/common/auth';
 import { RequestTaskStore } from '@netz/common/store';
@@ -13,15 +13,23 @@ import { userIsAssigneeGuard } from './user-is-assignee.guard';
  * Minimal ActivatedRouteSnapshot mock that satisfies createUrlTreeFromSnapshot.
  * pathFromRoot must contain [root, current] where root.children includes current.
  */
-const mockParamMap = convertToParamMap({});
-
 function createMockSnapshot(): ActivatedRouteSnapshot {
   const current: ActivatedRouteSnapshot = {
     url: [new UrlSegment('tasks', {})],
     children: [],
     pathFromRoot: [] as ActivatedRouteSnapshot[],
-    paramMap: mockParamMap,
-    queryParamMap: mockParamMap,
+    paramMap: {
+      keys: [],
+      get: () => null,
+      getAll: () => [],
+      has: () => false,
+    } as unknown as import('@angular/router').ParamMap,
+    queryParamMap: {
+      keys: [],
+      get: () => null,
+      getAll: () => [],
+      has: () => false,
+    } as unknown as import('@angular/router').ParamMap,
     data: {},
     params: {},
     queryParams: {},
@@ -39,8 +47,18 @@ function createMockSnapshot(): ActivatedRouteSnapshot {
     url: [],
     children: [current],
     pathFromRoot: [] as ActivatedRouteSnapshot[],
-    paramMap: mockParamMap,
-    queryParamMap: mockParamMap,
+    paramMap: {
+      keys: [],
+      get: () => null,
+      getAll: () => [],
+      has: () => false,
+    } as unknown as import('@angular/router').ParamMap,
+    queryParamMap: {
+      keys: [],
+      get: () => null,
+      getAll: () => [],
+      has: () => false,
+    } as unknown as import('@angular/router').ParamMap,
     data: {},
     params: {},
     queryParams: {},

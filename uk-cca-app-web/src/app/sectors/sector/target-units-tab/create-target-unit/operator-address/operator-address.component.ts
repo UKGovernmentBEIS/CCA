@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,8 +13,9 @@ import {
 @Component({
   selector: 'cca-operator-address',
   templateUrl: './operator-address.component.html',
-  providers: [TargetUnitOperatorAddressFormProvider],
   imports: [ReactiveFormsModule, AccountAddressInputComponent, WizardStepComponent],
+  providers: [TargetUnitOperatorAddressFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorAddressComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

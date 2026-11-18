@@ -8,6 +8,7 @@ import { FormErrorDirective } from './form-error.directive';
 
 describe('FormErrorDirective', () => {
   @Component({
+    imports: [ReactiveFormsModule, FormErrorDirective],
     template: `
       <div>
         <div class="govuk-form-group">
@@ -28,7 +29,6 @@ describe('FormErrorDirective', () => {
         </form>
       </div>
     `,
-    imports: [ReactiveFormsModule, FormErrorDirective],
   })
   class TestComponent {
     groupedControl = new FormControl('', [Validators.minLength(5)]);

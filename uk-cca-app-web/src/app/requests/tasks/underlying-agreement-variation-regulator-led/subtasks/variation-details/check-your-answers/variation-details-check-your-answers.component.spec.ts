@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -45,7 +45,7 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
     TestBed.configureTestingModule({
       imports: [VariationDetailsCheckYourAnswersComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },
         { provide: TasksApiService, useValue: mockTasksApiService },

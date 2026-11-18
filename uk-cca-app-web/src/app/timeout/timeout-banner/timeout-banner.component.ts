@@ -1,4 +1,13 @@
-import { Component, DOCUMENT, effect, ElementRef, inject, Renderer2, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DOCUMENT,
+  effect,
+  ElementRef,
+  inject,
+  Renderer2,
+  viewChild,
+} from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { ButtonDirective } from '@netz/govuk-components';
@@ -11,6 +20,7 @@ import { TimeoutBannerService } from './timeout-banner.service';
   templateUrl: './timeout-banner.component.html',
   styleUrl: './timeout-banner.component.css',
   imports: [PageHeadingComponent, SecondsToMinutesPipe, ButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimeoutBannerComponent {
   private readonly renderer = inject(Renderer2);
@@ -20,7 +30,7 @@ export class TimeoutBannerComponent {
   readonly modal = viewChild<ElementRef<HTMLDialogElement>>('modal');
 
   private overlayClass = 'govuk-timeout-warning-overlay';
-  private lastFocusedElement: HTMLElement | null = null;
+  private lastFocusedElement = null;
 
   constructor() {
     effect(() => {
@@ -55,8 +65,8 @@ export class TimeoutBannerComponent {
   saveLastFocusedElement() {
     this.lastFocusedElement =
       this.document.activeElement && this.document.activeElement !== this.document.body
-        ? (this.document.activeElement as HTMLElement)
-        : this.document.querySelector<HTMLElement>(':focus');
+        ? this.document.activeElement
+        : this.document.querySelector(':focus');
   }
 
   setFocusOnLastFocusedElement() {

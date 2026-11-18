@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
@@ -18,6 +18,7 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewTargetUnitDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

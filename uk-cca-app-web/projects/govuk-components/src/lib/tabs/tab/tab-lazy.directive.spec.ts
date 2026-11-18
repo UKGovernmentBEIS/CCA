@@ -1,8 +1,8 @@
-import { provideRouter } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { delay, of } from 'rxjs';
 
@@ -13,6 +13,7 @@ describe('TabLazyDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
+    imports: [TabsComponent, TabLazyDirective, AsyncPipe],
     template: `
       <govuk-tabs>
         @for (tab of tabsLazy$ | async; track tab) {
@@ -23,7 +24,6 @@ describe('TabLazyDirective', () => {
         <ng-template govukTabLazy id="lazy3" label="Lazy 3"> Lazy 3</ng-template>
       </govuk-tabs>
     `,
-    imports: [TabsComponent, TabLazyDirective, AsyncPipe],
   })
   class TestComponent {
     tabsLazy$ = of([
@@ -34,8 +34,7 @@ describe('TabLazyDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TabsComponent, TabLazyDirective, TestComponent],
-      providers: [provideRouter([])],
+      imports: [RouterTestingModule, TabsComponent, TabLazyDirective, TestComponent],
     }).compileComponents();
   });
 

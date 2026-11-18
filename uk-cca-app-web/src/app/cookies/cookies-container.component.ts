@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { CookiesPopUpComponent } from '@netz/govuk-components';
 import { AnalyticsService } from '@shared/services';
@@ -16,6 +16,7 @@ import { CookiesService } from './cookies.service';
       (cookiesAcceptedEmitter)="acceptCookies($event)"
     />
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CookiesPopUpComponent, AsyncPipe],
 })
 export class CookiesContainerComponent {

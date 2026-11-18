@@ -331,7 +331,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CcaOperatorUserRegistrationWithCredentialsDTO'
+              $ref: >-
+                #/components/schemas/CcaOperatorUserRegistrationWithCredentialsDTO
         required: true
       responses:
         '200':
@@ -485,7 +486,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: The MI report user defined id
+          description: The mi report user defined id
           required: true
           schema:
             type: integer
@@ -494,7 +495,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CcaMiReportUserDefinedDTO'
+              $ref: '#/components/schemas/MiReportUserDefinedDTO'
         required: true
       responses:
         '204':
@@ -583,7 +584,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO'
+              $ref: >-
+                #/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO
         required: true
       responses:
         '204':
@@ -591,7 +593,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO'
+                $ref: >-
+                  #/components/schemas/FacilityPerformanceDataUpdateVariationIndicatorDTO
         '403':
           description: Forbidden
           content:
@@ -1228,8 +1231,10 @@ paths:
     post:
       tags:
         - Buy-out and surplus info
-      summary: Updates the surplus and surplus history for a specific account
-      operationId: updateAccountSurplusGained
+      summary: >-
+        Updates the surplus and surplus history for a specific account and
+        target period
+      operationId: updateSurplusGained
       parameters:
         - name: accountId
           in: path
@@ -2088,7 +2093,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SectorFacilityPerformanceDataReportSearchCriteria'
+              $ref: >-
+                #/components/schemas/SectorFacilityPerformanceDataReportSearchCriteria
         required: true
       responses:
         '200':
@@ -2096,7 +2102,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SectorFacilityPerformanceDataReportListDTO'
+                $ref: >-
+                  #/components/schemas/SectorFacilityPerformanceDataReportListDTO
         '400':
           description: "Bad Request\t\n Error Code | Description \t\nTPRF1001 | Expected exactly one target year, but found multiple."
           content:
@@ -2133,7 +2140,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SectorAccountPerformanceDataReportSearchCriteria'
+              $ref: >-
+                #/components/schemas/SectorAccountPerformanceDataReportSearchCriteria
         required: true
       responses:
         '200':
@@ -2154,51 +2162,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/sector-association/{sectorAssociationId}/performance-account-template-data-report/facilities:
-    post:
-      tags:
-        - Sector-Level Performance Account Template Data View Pages
-      summary: Populates the performance account template data of sector facilities
-      operationId: getSectorFacilityPerformanceAccountTemplateDataReportList
-      parameters:
-        - name: sectorAssociationId
-          in: path
-          description: The sector association id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportSearchCriteria'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportListDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/sector-association/{sectorAssociationId}/performance-account-template-data-report/accounts:
+  /v1.0/sector-association/{sectorAssociationId}/performance-account-template-data-report:
     post:
       tags:
         - Sector-Level Performance Account Template Data View Pages
       summary: Populates the performance account template data of sector accounts
-      operationId: getSectorAccountPerformanceAccountTemplateDataReportList
+      operationId: getSectorPerformanceAccountTemplateDataReportList
       parameters:
         - name: sectorAssociationId
           in: path
@@ -2211,7 +2180,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportSearchCriteria'
+              $ref: >-
+                #/components/schemas/SectorPerformanceAccountTemplateDataReportSearchCriteria
         required: true
       responses:
         '200':
@@ -2219,7 +2189,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportListDTO'
+                $ref: >-
+                  #/components/schemas/SectorPerformanceAccountTemplateDataReportListDTO
         '403':
           description: Forbidden
           content:
@@ -3072,7 +3043,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CcaMiReportUserDefinedDTO'
+              $ref: '#/components/schemas/MiReportUserDefinedDTO'
         required: true
       responses:
         '204':
@@ -3232,47 +3203,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileUuidDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/facilities/{facilityId}/buy-out-surplus/:
-    post:
-      tags:
-        - Buy-out and surplus info
-      summary: Updates the surplus and surplus history for a specific facility
-      operationId: updateFacilitySurplusGained
-      parameters:
-        - name: facilityId
-          in: path
-          description: The facility id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SurplusUpdateDTO'
-        required: true
-      responses:
-        '204':
-          description: No Content
         '403':
           description: Forbidden
           content:
@@ -3465,12 +3395,6 @@ paths:
             minimum: 1
             type: integer
             format: int32
-        - name: searchCriteria
-          in: query
-          description: The site contacts search criteria
-          required: true
-          schema:
-            $ref: '#/components/schemas/SiteContactSearchCriteriaDTO'
       responses:
         '200':
           description: OK
@@ -3615,59 +3539,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/transactions/{id}/update/received-amount:
-    post:
-      tags:
-        - Buy out surplus transaction update controller
-      summary: Updates the transaction received amount
-      operationId: updateBuyOutSurplusTransactionReceivedAmount
-      parameters:
-        - name: id
-          in: path
-          description: The transaction id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BuyOutSurplusTransactionUpdateReceivedAmountDTO'
-        required: true
-      responses:
-        '204':
-          description: No Content
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nBS1004 | Updates are not allowed while the buy-out batch run is in progress \t\n BS1005 | Negative transaction received amount is not permitted \t\nBS1006 | Invalid transaction charge type \t\nFORM1001 | Form validation failed"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/buy-out-surplus/transactions/{id}/update/payment-status:
     post:
       tags:
         - Buy out surplus transaction update controller
-      summary: Updates the transaction details payment status
-      operationId: updateBuyOutSurplusTransactionDetailsPaymentStatus
+      summary: Updates the transaction payment status and transaction history
+      operationId: updateBuyOutSurplusTransactionPaymentStatus
       parameters:
         - name: id
           in: path
@@ -3680,17 +3557,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BuyOutSurplusTransactionUpdatePaymentStatusDTO'
+              $ref: >-
+                #/components/schemas/BuyOutSurplusTransactionUpdatePaymentStatusDTO
         required: true
       responses:
         '204':
           description: No Content
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nBS1004 | Updates are not allowed while the buy-out batch run is in progress \t\n FORM1001 | Form validation failed"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: Forbidden
           content:
@@ -3709,12 +3581,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/transactions/{id}/update/payment-status/mark-all:
+  /v1.0/buy-out-surplus/transactions/{id}/update/amount:
     post:
       tags:
         - Buy out surplus transaction update controller
-      summary: Marks the details of transaction payment status
-      operationId: markAllBuyOutSurplusTransactionDetailsPaymentStatus
+      summary: Updates the transaction buy out or refund amount and transaction history
+      operationId: updateBuyOutSurplusTransactionAmount
       parameters:
         - name: id
           in: path
@@ -3727,17 +3599,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BuyOutSurplusTransactionMarkPaymentStatusDTO'
+              $ref: '#/components/schemas/BuyOutSurplusTransactionUpdateAmountDTO'
         required: true
       responses:
         '204':
           description: No Content
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nBS1004 | Updates are not allowed while the buy-out batch run is in progress \t\n FORM1001 | Form validation failed"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: Forbidden
           content:
@@ -3746,94 +3612,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/transaction-details/{id}/update/amount:
-    post:
-      tags:
-        - Buy out surplus transaction detail update controller
-      summary: Updates the transaction detail buy out or refund amount
-      operationId: updateBuyOutSurplusTransactionDetailAmount
-      parameters:
-        - name: id
-          in: path
-          description: The transaction detail id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BuyOutSurplusTransactionDetailUpdateAmountDTO'
-        required: true
-      responses:
-        '204':
-          description: No Content
-        '400':
-          description: "Bad Request\t\n Error Code | Description \t\nBS1004 | Updates are not allowed while the buy-out batch run is in progress \t\n FORM1001 | Form validation failed"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/facility-transactions/{id}/details:
-    post:
-      tags:
-        - Buy-out and surplus facility transaction view
-      summary: >-
-        Retrieve buy-out and surplus transaction details for facilities that
-        match the specified search criteria
-      operationId: getFacilityBuyOutSurplusTransactionDetails
-      parameters:
-        - name: id
-          in: path
-          description: The transaction id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FacilityBuyOutSurplusTransactionDetailsSearchCriteria'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FacilityBuyOutSurplusTransactionDetailSearchResultsDTO'
-        '403':
-          description: Forbidden
           content:
             application/json:
               schema:
@@ -4171,7 +3949,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO'
+              $ref: >-
+                #/components/schemas/UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO
         required: true
       responses:
         '204':
@@ -5721,7 +5500,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccountPerformanceAccountTemplateDataReportInfoDTO'
+                $ref: >-
+                  #/components/schemas/AccountPerformanceAccountTemplateDataReportInfoDTO
         '403':
           description: Forbidden
           content:
@@ -5766,7 +5546,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccountPerformanceAccountTemplateDataReportDetailsDTO'
+                $ref: >-
+                  #/components/schemas/AccountPerformanceAccountTemplateDataReportDetailsDTO
         '403':
           description: Forbidden
           content:
@@ -5843,75 +5624,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/target-unit-accounts/{accountId}/facilities:
-    get:
-      tags:
-        - Facilities search info view
-      summary: Retrieves the current account facilities
-      operationId: searchFacilities
-      parameters:
-        - name: accountId
-          in: path
-          description: The account id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: term
-          in: query
-          description: The term to search
-          required: false
-          schema:
-            maxLength: 256
-            minLength: 3
-            type: string
-        - name: page
-          in: query
-          description: The page number starting from zero
-          required: true
-          schema:
-            minimum: 0
-            type: integer
-            format: int32
-        - name: size
-          in: query
-          description: The page size
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FacilitySearchResults'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/target-unit-accounts/{accountId}/buy-out-surplus/history:
     get:
       tags:
         - Buy-out and surplus info
-      summary: Retrieves the surplus history for a specific account
-      operationId: getSurplusHistoryByAccountId
+      summary: Retrieves the surplus history for a specific account and target period
+      operationId: getAllSurplusHistoryByTargetPeriodAndAccountId
       parameters:
         - name: accountId
           in: path
@@ -5920,6 +5638,18 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: targetPeriod
+          in: query
+          description: The target period business id
+          required: true
+          schema:
+            type: string
+            enum:
+              - TP5
+              - TP6
+              - TP7
+              - TP8
+              - TP9
       responses:
         '200':
           description: OK
@@ -5948,12 +5678,30 @@ paths:
       summary: Retrieves the current user associated accounts
       operationId: searchUserAccounts
       parameters:
-        - name: searchCriteria
+        - name: term
           in: query
-          description: The account search criteria
+          description: The term to search
+          required: false
+          schema:
+            maxLength: 256
+            minLength: 3
+            type: string
+        - name: page
+          in: query
+          description: The page number starting from zero
           required: true
           schema:
-            $ref: '#/components/schemas/TargetUnitAccountSearchCriteria'
+            minimum: 0
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: The page size
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int32
       responses:
         '200':
           description: OK
@@ -6279,7 +6027,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO'
+                $ref: >-
+                  #/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO
         '403':
           description: Forbidden
           content:
@@ -7759,150 +7508,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/facilities/{facilityId}/performance-account-template-data-report/info:
-    get:
-      tags:
-        - Target Period Performance Account Template Data Report of the Facility
-      summary: >-
-        Retrieves the facility performance account template data report info if
-        exist
-      operationId: getFacilityPerformanceAccountTemplateDataReportInfo
-      parameters:
-        - name: facilityId
-          in: path
-          description: The facility id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: targetPeriodYear
-          in: query
-          description: The reporting year
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataReportInfoDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/facilities/{facilityId}/performance-account-template-data-report/details:
-    get:
-      tags:
-        - Target Period Performance Account Template Data Report of the Facility
-      summary: Retrieves the facility performance account template data report details
-      operationId: getFacilityPerformanceAccountTemplateDataReportDetails
-      parameters:
-        - name: facilityId
-          in: path
-          description: The facility id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: targetPeriodYear
-          in: query
-          description: The reporting year
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataReportDetailsDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/facilities/{facilityId}/certifications:
+  /v1.0/facilities/account/{accountId}:
     get:
       tags:
         - Facility info view
-      summary: Retrieves the facility certifications
-      operationId: getFacilityCertifications
+      summary: Retrieves the current account facilities
+      operationId: searchFacilities
       parameters:
-        - name: facilityId
+        - name: accountId
           in: path
-          description: The facility id
+          description: The account id
           required: true
           schema:
             type: integer
             format: int64
+        - name: term
+          in: query
+          description: The term to search
+          required: false
+          schema:
+            maxLength: 256
+            minLength: 3
+            type: string
+        - name: page
+          in: query
+          description: The page number starting from zero
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: The page size
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int32
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FacilityCertificationStatusDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/facilities/{facilityId}/buy-out-surplus/history:
-    get:
-      tags:
-        - Buy-out and surplus info
-      summary: Retrieves the surplus history for a specific facility
-      operationId: getFacilitySurplusHistory
-      parameters:
-        - name: facilityId
-          in: path
-          description: The facility id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SurplusHistoryDTO'
+                $ref: '#/components/schemas/FacilitySearchResults'
         '403':
           description: Forbidden
           content:
@@ -7911,6 +7561,12 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -8179,10 +7835,94 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/buy-out-surplus/transactions/{id}:
+    get:
+      tags:
+        - Buy-out and surplus transaction info view
+      summary: >-
+        Retrieve buy-out and surplus transaction summary information by
+        transaction id
+      operationId: getBuyOutSurplusTransactionSummary
+      parameters:
+        - name: id
+          in: path
+          description: The transaction id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuyOutSurplusTransactionSummaryDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/buy-out-surplus/transactions/{id}/history:
+    get:
+      tags:
+        - Buy-out and surplus transaction info view
+      summary: >-
+        Retrieve buy-out and surplus transaction history changes by transaction
+        id
+      operationId: getBuyOutSurplusTransactionHistory
+      parameters:
+        - name: id
+          in: path
+          description: The transaction id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BuyOutSurplusTransactionHistoryDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/buy-out-surplus/transactions/{id}/evidence:
     get:
       tags:
-        - Buy-out and surplus transaction files view
+        - Buy-out and surplus transaction info view
       summary: >-
         Generate the token to get the evidence file that belongs to the provided
         buy-out and surplus transaction id
@@ -8230,7 +7970,7 @@ paths:
   /v1.0/buy-out-surplus/transactions/{id}/document:
     get:
       tags:
-        - Buy-out and surplus transaction files view
+        - Buy-out and surplus transaction info view
       summary: >-
         Generate the token to get the document that belongs to the provided
         Transaction id
@@ -8275,18 +8015,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/transaction-details/{id}/history:
+  /v1.0/buy-out-surplus/transactions/{id}/details:
     get:
       tags:
-        - Buy-out and surplus transaction detail info view
-      summary: >-
-        Retrieve buy-out and surplus transaction history changes by transaction
-        detail id
-      operationId: getBuyOutSurplusTransactionDetailHistory
+        - Buy-out and surplus transaction info view
+      summary: Retrieve buy-out and surplus transaction details by id
+      operationId: getBuyOutSurplusTransactionDetails
       parameters:
         - name: id
           in: path
-          description: The transaction detail id
+          description: The transaction id
           required: true
           schema:
             type: integer
@@ -8297,57 +8035,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BuyOutSurplusTransactionDetailHistoryDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/transaction-details/{id}/evidence:
-    get:
-      tags:
-        - Buy-out and surplus transaction detail info view
-      summary: >-
-        Generate the token to get the evidence file that belongs to the provided
-        buy-out and surplus transaction detail id
-      operationId: generateBuyOutSurplusTransactionDetailEvidenceFileToken
-      parameters:
-        - name: id
-          in: path
-          description: The transaction detail id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: fileEvidenceUuid
-          in: query
-          description: The evidence file uuid
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FileToken'
+                $ref: '#/components/schemas/BuyOutSurplusTransactionDetailsDTO'
         '403':
           description: Forbidden
           content:
@@ -8431,86 +8119,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/facility-transactions/{id}:
-    get:
-      tags:
-        - Buy-out and surplus facility transaction view
-      summary: Retrieve buy-out and surplus transaction information for facility
-      operationId: getFacilityBuyOutSurplusTransaction
-      parameters:
-        - name: id
-          in: path
-          description: The transaction id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FacilityBuyOutSurplusTransactionDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/facility-transactions/{id}/received-amount/history:
-    get:
-      tags:
-        - Buy-out and surplus facility transaction view
-      summary: Get the received amount history details for the provided transaction id
-      operationId: getBuyOutSurplusTransactionReceivedAmountHistory
-      parameters:
-        - name: id
-          in: path
-          description: The transaction id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BuyOutSurplusTransactionReceivedAmountHistoryDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/buy-out-surplus/cost:
     get:
       tags:
@@ -8540,45 +8148,6 @@ paths:
                   $ref: '#/components/schemas/TargetPeriodBuyOutDetailsDTO'
         '403':
           description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/buy-out-surplus/account-transactions/{id}:
-    get:
-      tags:
-        - Buy-out and surplus account transaction view
-      summary: Retrieve buy-out and surplus transaction information for account
-      operationId: getAccountBuyOutSurplusTransaction
-      parameters:
-        - name: id
-          in: path
-          description: The transaction id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountBuyOutSurplusTransactionDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
           content:
             application/json:
               schema:
@@ -8921,6 +8490,11 @@ components:
     HttpHeaders:
       type: object
       properties:
+        allow:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/HttpMethod'
         acceptLanguage:
           type: array
           items:
@@ -9112,11 +8686,6 @@ components:
           format: int64
         contentType:
           $ref: '#/components/schemas/MediaType'
-        allow:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/HttpMethod'
         origin:
           type: string
         contentLanguage:
@@ -9257,7 +8826,8 @@ components:
         payloadType:
           type: string
         underlyingAgreement:
-          $ref: '#/components/schemas/UnderlyingAgreementVariationRegulatorLedSavePayload'
+          $ref: >-
+            #/components/schemas/UnderlyingAgreementVariationRegulatorLedSavePayload
         determination:
           $ref: '#/components/schemas/VariationRegulatorLedDetermination'
         sectionsCompleted:
@@ -9286,7 +8856,8 @@ components:
         subsistenceFeesMoaTargetUnits:
           type: array
           items:
-            $ref: '#/components/schemas/SubsistenceFeesMoaTargetUnitSearchResultInfoDTO'
+            $ref: >-
+              #/components/schemas/SubsistenceFeesMoaTargetUnitSearchResultInfoDTO
         total:
           type: integer
           format: int64
@@ -9310,7 +8881,8 @@ components:
         variableEnergyConsumptionDataByProduct:
           type: array
           items:
-            $ref: '#/components/schemas/PerformanceDataFacilityProductVariableEnergyData'
+            $ref: >-
+              #/components/schemas/PerformanceDataFacilityProductVariableEnergyData
     HttpStatusCode:
       type: object
       properties:
@@ -9341,19 +8913,9 @@ components:
           minLength: 0
           type: string
         queryDefinition:
-          maxLength: 50000
+          maxLength: 10000
           minLength: 0
           type: string
-        categories:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/MiReportUserDefinedCategoryDTO'
-        lastUpdatedOn:
-          type: string
-          format: date-time
-        favourite:
-          type: boolean
     NonComplianceAppealDetailsSubmittedRequestActionPayload:
       required:
         - registrationDate
@@ -9458,6 +9020,82 @@ components:
           type: string
         rfiResponsePayload:
           $ref: '#/components/schemas/RfiResponsePayload'
+    BuyOutSurplusTransactionDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        transactionCode:
+          type: string
+        accountBusinessId:
+          type: string
+        operatorName:
+          type: string
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        targetPeriodResultType:
+          type: string
+          enum:
+            - TARGET_MET
+            - BUY_OUT_REQUIRED
+            - SURPLUS_USED_BUY_OUT_REQUIRED
+            - SURPLUS_USED
+            - OUTSTANDING
+        reportVersion:
+          type: string
+        submissionType:
+          type: string
+          enum:
+            - PRIMARY
+            - SECONDARY
+        fileInfoDTO:
+          $ref: '#/components/schemas/FileInfoDTO'
+        creationDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date
+        paymentStatus:
+          type: string
+          enum:
+            - AWAITING_PAYMENT
+            - AWAITING_REFUND
+            - PAID
+            - REFUNDED
+            - NOT_REQUIRED
+            - UNDER_APPEAL
+            - TERMINATED
+        chargeType:
+          type: string
+          enum:
+            - REFUND
+            - FEE
+        priBuyOutCarbon:
+          type: string
+          format: decimal
+        priBuyOutCost:
+          type: string
+          format: decimal
+        invoicedBuyOutFee:
+          type: string
+          format: decimal
+        invoicedSurplusGained:
+          type: string
+          format: decimal
+        invoicedPreviousPaidFees:
+          type: string
+          format: decimal
+        buyOutFee:
+          type: string
+          format: decimal
     BuyOutSurplusRunSummary:
       required:
         - buyOutTransactions
@@ -9601,9 +9239,6 @@ components:
         surplusGained:
           type: string
           format: decimal
-        buyOutRequired:
-          type: string
-          format: decimal
         actualEnergyCarbon:
           type: string
           format: decimal
@@ -9623,6 +9258,9 @@ components:
           type: string
           format: decimal
         actualImprovement:
+          type: string
+          format: decimal
+        buyOutRequired:
           type: string
           format: decimal
     HttpMethod:
@@ -10006,8 +9644,8 @@ components:
             - TP8
             - TP9
         buyOutCost:
-          type: string
-          format: decimal
+          type: integer
+          format: int32
     RequestDetailsDTO:
       type: object
       properties:
@@ -10288,40 +9926,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NotificationAlertDTO'
-    FacilityCertificationStatusDTO:
-      type: object
-      properties:
-        certificationPeriodId:
-          type: integer
-          format: int64
-        schemeVersion:
-          type: string
-          enum:
-            - CCA_2
-            - CCA_3
-        status:
-          type: string
-          enum:
-            - CERTIFIED
-            - DECERTIFIED
-            - NOT_YET_DEFINED
-        startDate:
-          type: string
-          format: date
-        certificationPeriod:
-          type: string
-          enum:
-            - CP6
-            - CP7
-            - CP8
-            - CP9
-            - CP10
-        certificationPeriodStartDate:
-          type: string
-          format: date
-        certificationPeriodEndDate:
-          type: string
-          format: date
     SubsistenceFeesRunRequestMetadata:
       type: object
       properties:
@@ -10652,7 +10256,8 @@ components:
         determination:
           $ref: '#/components/schemas/VariationDetermination'
         decision:
-          $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+          $ref: >-
+            #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
         reviewSectionsCompleted:
           type: object
           additionalProperties:
@@ -10694,7 +10299,8 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/SectorPerformanceAccountTemplateDataReportItemDTO'
+            $ref: >-
+              #/components/schemas/SectorPerformanceAccountTemplateDataReportItemDTO
         total:
           type: integer
           format: int64
@@ -10783,8 +10389,8 @@ components:
           type: string
           format: date
         buyOutCost:
-          type: string
-          format: decimal
+          type: integer
+          format: int32
         secondaryReportingStartDate:
           type: string
           format: date
@@ -10926,7 +10532,8 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
         reviewAttachments:
           type: object
           additionalProperties:
@@ -10942,42 +10549,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    BuyOutSurplusFacilityTransactionSummary:
-      required:
-        - chargeType
-        - invoicedBuyOutFee
-        - targetPeriodBuyOutCost
-        - targetPeriodType
-        - totalFacilities
-      type: object
-      properties:
-        targetPeriodType:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
-        chargeType:
-          type: string
-          enum:
-            - REFUND
-            - FEE
-        targetPeriodBuyOutCost:
-          type: string
-          format: decimal
-        totalFacilities:
-          type: integer
-          format: int64
-        invoicedBuyOutFee:
-          type: string
-          format: decimal
-        officialNotice:
-          $ref: '#/components/schemas/FileInfoDTO'
-        dueDate:
-          type: string
-          format: date
     NotifyOperatorForDecisionRequestTaskActionPayload:
       required:
         - decisionNotification
@@ -11059,7 +10630,8 @@ components:
         sendEmailNotification:
           type: boolean
         activationDetails:
-          $ref: '#/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails'
+          $ref: >-
+            #/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -11146,31 +10718,6 @@ components:
         priBuyOutCost:
           type: string
           format: decimal
-    BuyOutSurplusFacilityRunRequestMetadata:
-      type: object
-      properties:
-        type:
-          type: string
-        targetPeriodType:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
-        totalAccounts:
-          type: integer
-          format: int64
-        failedAccounts:
-          type: integer
-          format: int64
-        totalFacilities:
-          type: integer
-          format: int64
-        failedFacilities:
-          type: integer
-          format: int64
     PerformanceDataFacilityDigitalFormRequestCreateActionPayload:
       required:
         - reportType
@@ -11192,30 +10739,6 @@ components:
           enum:
             - INTERIM
             - FINAL
-    BuyOutSurplusFacilityAccountProcessingSubmittedRequestActionPayload:
-      required:
-        - facilities
-        - runId
-      type: object
-      properties:
-        payloadType:
-          type: string
-        businessId:
-          type: string
-        runId:
-          type: string
-        summary:
-          type: array
-          items:
-            $ref: '#/components/schemas/BuyOutSurplusFacilityTransactionSummary'
-        defaultContacts:
-          type: array
-          items:
-            $ref: '#/components/schemas/DefaultNoticeRecipient'
-        facilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/BuyOutSurplusFacilityPerformanceDetail'
     PeerReviewDecision:
       required:
         - notes
@@ -11231,27 +10754,6 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
-    TargetUnitAccountSearchCriteria:
-      required:
-        - page
-        - size
-      type: object
-      properties:
-        term:
-          maxLength: 255
-          minLength: 3
-          type: string
-          description: The term to search by account name
-        page:
-          minimum: 0
-          type: integer
-          description: The page number starting from zero
-          format: int32
-        size:
-          minimum: 1
-          type: integer
-          description: The page size
-          format: int32
     FacilityPerformanceDataStatusInfoDTO:
       type: object
       properties:
@@ -11272,16 +10774,6 @@ components:
           type: boolean
         locked:
           type: boolean
-        reportType:
-          type: string
-          enum:
-            - INTERIM
-            - FINAL
-        submissionType:
-          type: string
-          enum:
-            - PRIMARY
-            - SECONDARY
         reportVersion:
           type: integer
           format: int32
@@ -11418,6 +10910,29 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
+    FacilityCertificationDetailsDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - CERTIFIED
+            - DECERTIFIED
+            - NOT_YET_DEFINED
+        startDate:
+          type: string
+          format: date
+        certificationPeriod:
+          type: string
+          enum:
+            - CP6
+            - CP7
+        certificationPeriodStartDate:
+          type: string
+          format: date
+        certificationPeriodEndDate:
+          type: string
+          format: date
     UnderlyingAgreementVariationSaveReviewRequestTaskActionPayload:
       type: object
       properties:
@@ -11434,7 +10949,8 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -11474,6 +10990,9 @@ components:
       properties:
         type:
           type: string
+        reportVersion:
+          type: integer
+          format: int32
         targetYear:
           type: integer
           format: int16
@@ -11630,6 +11149,27 @@ components:
           enum:
             - INTERIM
             - FINAL
+    BuyOutSurplusTransactionSummaryDTO:
+      type: object
+      properties:
+        transactionCode:
+          type: string
+        paymentStatus:
+          type: string
+          enum:
+            - AWAITING_PAYMENT
+            - AWAITING_REFUND
+            - PAID
+            - REFUNDED
+            - NOT_REQUIRED
+            - UNDER_APPEAL
+            - TERMINATED
+        initialAmount:
+          type: string
+          format: decimal
+        currentAmount:
+          type: string
+          format: decimal
     PerformanceDataDownloadSubmitRequestTaskPayload:
       type: object
       properties:
@@ -11651,17 +11191,6 @@ components:
           type: boolean
         errorMessage:
           type: string
-    FacilityPerformanceAccountTemplateDataReportDetailsDTO:
-      type: object
-      properties:
-        targetPeriodYear:
-          type: integer
-          format: int16
-        submissionDate:
-          type: string
-          format: date-time
-        data:
-          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataContainer'
     AccountPerformanceDataStatusInfoDTO:
       type: object
       properties:
@@ -11835,6 +11364,7 @@ components:
       description: The updated scheme exit date
     SectorAssociationSchemeDTO:
       required:
+        - id
         - schemeVersion
         - umbrellaAgreement
       type: object
@@ -11994,7 +11524,8 @@ components:
       type: object
       properties:
         underlyingAgreementTargetUnitDetails:
-          $ref: '#/components/schemas/UnderlyingAgreementVariationApplySaveTargetUnitDetails'
+          $ref: >-
+            #/components/schemas/UnderlyingAgreementVariationApplySaveTargetUnitDetails
         underlyingAgreementVariationDetails:
           $ref: '#/components/schemas/UnderlyingAgreementVariationDetails'
         facilities:
@@ -12114,21 +11645,6 @@ components:
           type: string
         swiftCode:
           type: string
-    BuyOutSurplusFacilityRunCreateActionPayload:
-      required:
-        - targetPeriodType
-      type: object
-      properties:
-        payloadType:
-          type: string
-        targetPeriodType:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
     AssigneeUserInfoDTO:
       type: object
       properties:
@@ -12376,43 +11892,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NotAccountRelatedUploadErrorReport'
-        numberOfFilesSucceeded:
-          type: integer
-          format: int32
-          readOnly: true
         numberOfFilesFailed:
           type: integer
           format: int32
           readOnly: true
-    FacilityBuyOutSurplusTransactionDetailsSearchCriteria:
-      required:
-        - pageNumber
-        - pageSize
-      type: object
-      properties:
-        term:
-          maxLength: 255
-          minLength: 3
-          type: string
-        paymentStatus:
-          type: string
-          enum:
-            - UNDER_APPEAL
-            - AWAITING_PAYMENT
-            - AWAITING_REFUND
-            - PAID
-            - REFUNDED
-            - NOT_REQUIRED
-            - TERMINATED
-        pageNumber:
-          minimum: 0
+        numberOfFilesSucceeded:
           type: integer
           format: int32
-        pageSize:
-          minimum: 1
-          type: integer
-          format: int32
-      description: Search criteria for transaction details
+          readOnly: true
     AuditTrackCorrectiveActionsSaveRequestTaskActionPayload:
       required:
         - actionTitle
@@ -12507,12 +11994,12 @@ components:
         paymentStatus:
           type: string
           enum:
-            - UNDER_APPEAL
             - AWAITING_PAYMENT
             - AWAITING_REFUND
             - PAID
             - REFUNDED
             - NOT_REQUIRED
+            - UNDER_APPEAL
             - TERMINATED
         transactionCode:
           type: string
@@ -12676,7 +12163,8 @@ components:
         payloadType:
           type: string
         activationDetails:
-          $ref: '#/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails'
+          $ref: >-
+            #/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -12817,23 +12305,6 @@ components:
           type: string
           format: date
         fileDocument:
-          $ref: '#/components/schemas/FileInfoDTO'
-    BuyOutSurplusFacilityRunCompletedRequestActionPayload:
-      required:
-        - runSummary
-      type: object
-      properties:
-        payloadType:
-          type: string
-        businessId:
-          type: string
-        runSummary:
-          $ref: '#/components/schemas/BuyOutSurplusFacilityRunSummary'
-        errorType:
-          type: string
-          enum:
-            - GENERATE_CSV_FAILED
-        csvFile:
           $ref: '#/components/schemas/FileInfoDTO'
     PerformanceDataFacilityUpload:
       required:
@@ -13008,7 +12479,8 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
     FileUuidDTO:
       type: object
       properties:
@@ -13195,7 +12667,8 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
         reviewAttachments:
           type: object
           additionalProperties:
@@ -13219,25 +12692,15 @@ components:
         creationDate:
           type: string
           format: date-time
-        schemeVersion:
-          type: string
-          enum:
-            - CCA_2
-            - CCA_3
-        resourceType:
-          type: string
-          enum:
-            - ACCOUNT
-            - FACILITY
         paymentStatus:
           type: string
           enum:
-            - UNDER_APPEAL
             - AWAITING_PAYMENT
             - AWAITING_REFUND
             - PAID
             - REFUNDED
             - NOT_REQUIRED
+            - UNDER_APPEAL
             - TERMINATED
         buyOutFee:
           type: string
@@ -13339,20 +12802,12 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
         reviewAttachments:
           type: object
           additionalProperties:
             type: string
-    FacilityPerformanceAccountTemplateDataContainer:
-      required:
-        - savingActions
-      type: object
-      properties:
-        savingActions:
-          type: array
-          items:
-            $ref: '#/components/schemas/FacilityPerformanceAccountTemplateSavingAction'
     OperatorAuthoritiesInfoDTO:
       type: object
       properties:
@@ -13540,58 +12995,6 @@ components:
           type: integer
           format: int64
       description: The account note request
-    FacilityPerformanceAccountTemplateSavingAction:
-      required:
-        - actionCategoryType
-      type: object
-      properties:
-        actionCategoryType:
-          type: string
-          enum:
-            - ENERGY_MANAGEMENT
-            - PROCESS_OPTIMISATION
-            - NEW_TECHNOLOGY_UPTAKE
-            - INSULATION_IMPROVEMENT
-            - INFRASTRUCTURE_IMPROVEMENT
-            - SWITCHING_NON_RENEWABLE_FUELS
-            - HEAT_RECOVERY
-            - SWITCHING_TO_CHP
-            - SWITCHING_TO_BIOMASS_HEATING
-            - SWITCHING_TO_RENEWABLE_POWER
-            - OTHER_CONTRIBUTIONS
-            - NO_ACTION
-        supplyDemandSideMeasure:
-          type: string
-          enum:
-            - SUPPLY_SIDE
-            - DEMAND_SIDE
-        savingActionsImplemented:
-          type: string
-        reasonsForImplementation:
-          type: string
-        implementationDate:
-          type: string
-          format: date
-        fixedEnergyConsumptionOrCarbonEmissionsImpacted:
-          type: string
-          enum:
-            - FIXED
-            - VARIABLE
-            - FIXED_AND_VARIABLE
-        energyConsumptionOrCarbonEmissionsImpactedPercentage:
-          type: string
-          format: decimal
-        expectedExtentOfChangeImplementedPercentage:
-          type: string
-          format: decimal
-        expectedSavingsFromTheChangeImplementedPercentage:
-          type: string
-          format: decimal
-        estimatedChangeInEnergyConsumptionPercentage:
-          type: string
-          format: decimal
-        notes:
-          type: string
     RdeDecisionPayload:
       required:
         - decision
@@ -13655,8 +13058,10 @@ components:
       properties:
         excluded:
           type: boolean
-        surplusDetails:
-          $ref: '#/components/schemas/SurplusGainedDTO'
+        surplusGainedDTOList:
+          type: array
+          items:
+            $ref: '#/components/schemas/SurplusGainedDTO'
     NonComplianceDetailsSubmitRequestTaskPayload:
       required:
         - nonComplianceDetails
@@ -13927,27 +13332,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DocumentTemplateInfoDTO'
-    BuyOutSurplusTransactionUpdateReceivedAmountDTO:
-      required:
-        - adjustmentAmount
-        - comments
-      type: object
-      properties:
-        adjustmentAmount:
-          type: string
-          format: decimal
-        paymentDate:
-          type: string
-          format: date
-        comments:
-          maxLength: 10000
-          minLength: 0
-          type: string
-        evidenceFiles:
-          type: object
-          additionalProperties:
-            type: string
-      description: The Transaction Update Received Amount Info
     NonComplianceNoticeOfIntentSubmitRequestTaskPayload:
       type: object
       properties:
@@ -14021,33 +13405,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    BuyOutSurplusTransactionMarkPaymentStatusDTO:
-      required:
-        - status
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-            - UNDER_APPEAL
-            - AWAITING_PAYMENT
-            - AWAITING_REFUND
-            - PAID
-            - REFUNDED
-            - NOT_REQUIRED
-            - TERMINATED
-        paymentDate:
-          type: string
-          format: date
-        comments:
-          maxLength: 10000
-          minLength: 0
-          type: string
-        evidenceFiles:
-          type: object
-          additionalProperties:
-            type: string
-      description: The Transaction Update Payment Status Info
     TargetUnitAccountInfoResponseDTO:
       type: object
       properties:
@@ -14080,40 +13437,20 @@ components:
           $ref: '#/components/schemas/SectorAssociationDetailsResponseDTO'
         editable:
           type: boolean
-    CcaMiReportUserDefinedDTO:
-      required:
-        - queryDefinition
-        - reportName
-      type: object
-      properties:
-        reportName:
-          maxLength: 255
-          minLength: 0
-          type: string
-        description:
-          maxLength: 10000
-          minLength: 0
-          type: string
-        queryDefinition:
-          maxLength: 50000
-          minLength: 0
-          type: string
-      description: The MI report user defined DTO
     BuyOutSurplusTransactionUpdatePaymentStatusDTO:
       required:
-        - detailIds
         - status
       type: object
       properties:
         status:
           type: string
           enum:
-            - UNDER_APPEAL
             - AWAITING_PAYMENT
             - AWAITING_REFUND
             - PAID
             - REFUNDED
             - NOT_REQUIRED
+            - UNDER_APPEAL
             - TERMINATED
         comments:
           maxLength: 10000
@@ -14126,15 +13463,6 @@ components:
         paymentDate:
           type: string
           format: date
-        dateOfAppeal:
-          type: string
-          format: date
-        detailIds:
-          uniqueItems: true
-          type: array
-          items:
-            type: integer
-            format: int64
       description: The Transaction Update Payment Status Info
     BuyOutSurplusRunRequestMetadata:
       type: object
@@ -14155,69 +13483,6 @@ components:
         failedAccounts:
           type: integer
           format: int64
-    FacilityBuyOutSurplusTransactionDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        transactionCode:
-          type: string
-        accountBusinessId:
-          type: string
-        operatorName:
-          type: string
-        targetPeriodType:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
-        chargeType:
-          type: string
-          enum:
-            - REFUND
-            - FEE
-        fileInfoDTO:
-          $ref: '#/components/schemas/FileInfoDTO'
-        creationDate:
-          type: string
-          format: date-time
-        dueDate:
-          type: string
-          format: date
-        invoicedBuyOutFee:
-          type: string
-          format: decimal
-        paymentStatus:
-          type: string
-          enum:
-            - UNDER_APPEAL
-            - AWAITING_PAYMENT
-            - AWAITING_REFUND
-            - PAID
-            - REFUNDED
-            - NOT_REQUIRED
-            - TERMINATED
-        expectedAmount:
-          type: string
-          format: decimal
-        receivedAmount:
-          type: string
-          format: decimal
-        amountAllocated:
-          type: string
-          format: decimal
-        expectedMarkedFacilities:
-          type: integer
-          format: int32
-        actualMarkedFacilities:
-          type: integer
-          format: int32
-        hasBulkAction:
-          type: boolean
     UnderlyingAgreementVariationRegulatorLedSubmittedRequestActionPayload:
       required:
         - decisionNotification
@@ -14282,10 +13547,6 @@ components:
         accountId:
           type: integer
           format: int64
-        savingActions:
-          type: array
-          items:
-            $ref: '#/components/schemas/FacilityPerformanceAccountTemplateSavingAction'
         succeeded:
           type: boolean
         errors:
@@ -14485,24 +13746,37 @@ components:
     SectorPerformanceAccountTemplateDataReportItemDTO:
       type: object
       properties:
-        id:
+        accountId:
           type: integer
           format: int64
-        parentId:
-          type: integer
-          format: int64
-        businessId:
+        targetUnitAccountBusinessId:
           type: string
-        name:
+        operatorName:
           type: string
         submissionDate:
           type: string
           format: date-time
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        targetPeriodYear:
+          type: integer
+          format: int16
         status:
           type: string
           enum:
             - SUBMITTED
             - OUTSTANDING
+        submissionType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
     SubsectorAssociationSchemesDTO:
       required:
         - name
@@ -14655,24 +13929,6 @@ components:
             type: string
       discriminator:
         propertyName: reportType
-    BuyOutSurplusTransactionDetailUpdateAmountDTO:
-      required:
-        - amount
-        - comments
-      type: object
-      properties:
-        amount:
-          type: string
-          format: decimal
-        comments:
-          maxLength: 10000
-          minLength: 0
-          type: string
-        evidenceFiles:
-          type: object
-          additionalProperties:
-            type: string
-      description: The Transaction Update Amount
     RequestDetailsSearchResults:
       type: object
       properties:
@@ -14777,31 +14033,6 @@ components:
           $ref: '#/components/schemas/BaselineData'
         targets:
           $ref: '#/components/schemas/Targets'
-    BuyOutSurplusTransactionDetailPaymentStatusChangedHistoryPayload:
-      required:
-        - paymentStatus
-        - type
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/BuyOutSurplusTransactionDetailHistoryPayload'
-        - type: object
-          properties:
-            paymentStatus:
-              type: string
-              enum:
-                - UNDER_APPEAL
-                - AWAITING_PAYMENT
-                - AWAITING_REFUND
-                - PAID
-                - REFUNDED
-                - NOT_REQUIRED
-                - TERMINATED
-            paymentDate:
-              type: string
-              format: date
-            dateOfAppeal:
-              type: string
-              format: date
     ItemSectorDTO:
       type: object
       properties:
@@ -14890,18 +14121,13 @@ components:
       required:
         - pageNumber
         - pageSize
-        - schemeVersion
+        - targetPeriodType
       type: object
       properties:
         term:
           maxLength: 255
           minLength: 3
           type: string
-        schemeVersion:
-          type: string
-          enum:
-            - CCA_2
-            - CCA_3
         targetPeriodType:
           type: string
           enum:
@@ -14910,15 +14136,15 @@ components:
             - TP7
             - TP8
             - TP9
-        paymentStatus:
+        buyOutSurplusPaymentStatus:
           type: string
           enum:
-            - UNDER_APPEAL
             - AWAITING_PAYMENT
             - AWAITING_REFUND
             - PAID
             - REFUNDED
             - NOT_REQUIRED
+            - UNDER_APPEAL
             - TERMINATED
         pageNumber:
           minimum: 0
@@ -15005,16 +14231,11 @@ components:
           enum:
             - SUBMISSION_RESULTS_CSV_FAILED
             - MESSAGE_PROCESSING_FAILED
-        results:
-          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataUploadResults'
         facilityReports:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/FacilityPerformanceAccountTemplateUploadReport'
-        csvRowErrors:
-          type: array
-          items:
-            $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataCsvErrorEntry'
+            $ref: >-
+              #/components/schemas/FacilityPerformanceAccountTemplateUploadReport
         uploadAttachments:
           type: object
           additionalProperties:
@@ -15310,18 +14531,6 @@ components:
             $ref: '#/components/schemas/DefaultNoticeRecipient'
         officialNotice:
           $ref: '#/components/schemas/FileInfoDTO'
-    FacilityPerformanceAccountTemplateDataReportInfoDTO:
-      type: object
-      properties:
-        targetPeriodYear:
-          type: integer
-          format: int16
-        reportVersion:
-          type: integer
-          format: int32
-        submissionDate:
-          type: string
-          format: date-time
     CcaOperatorInvitedUserInfoDTO:
       type: object
       properties:
@@ -15361,46 +14570,6 @@ components:
             - CANCELLED
             - TERMINATED
             - REJECTED
-    BuyOutSurplusFacilityPerformanceDetail:
-      required:
-        - data
-        - facilityBusinessId
-        - performanceDataId
-        - performanceDataReportVersion
-        - siteName
-        - submissionType
-        - targetPeriodType
-      type: object
-      properties:
-        facilityBusinessId:
-          type: string
-        siteName:
-          type: string
-        targetPeriodType:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
-        performanceDataId:
-          type: integer
-          format: int64
-        performanceDataReportVersion:
-          type: integer
-          format: int32
-        submissionType:
-          type: string
-          enum:
-            - PRIMARY
-            - SECONDARY
-        transactionCode:
-          type: string
-        data:
-          $ref: '#/components/schemas/BuyOutSurplusCalculationDataContainer'
-        primaryRulesApplied:
-          type: boolean
     UnderlyingAgreementVariationRegulatorLedSubmitRequestTaskPayload:
       type: object
       properties:
@@ -15528,26 +14697,6 @@ components:
             type: string
         determination:
           $ref: '#/components/schemas/Determination'
-    BuyOutSurplusTransactionDetailHistoryPayload:
-      required:
-        - type
-      type: object
-      properties:
-        comments:
-          maxLength: 10000
-          minLength: 0
-          type: string
-        evidenceFiles:
-          type: object
-          additionalProperties:
-            type: string
-        type:
-          type: string
-          enum:
-            - AMOUNT_CHANGED
-            - PAYMENT_STATUS_CHANGED
-      discriminator:
-        propertyName: type
     PerformanceAccountTemplateProcessingRequestMetadata:
       type: object
       properties:
@@ -15741,30 +14890,26 @@ components:
           format: date-time
         userId:
           type: string
-    BuyOutSurplusFacilityRunSummary:
+    BuyOutSurplusTransactionHistoryPayload:
       required:
-        - failedAccounts
-        - failedFacilities
-        - totalAccounts
-        - totalFacilities
+        - type
       type: object
       properties:
-        totalAccounts:
-          type: integer
-          format: int64
-        failedAccounts:
-          type: integer
-          format: int64
-        totalFacilities:
-          type: integer
-          format: int64
-        failedFacilities:
-          type: integer
-          format: int64
-        runSummaryEntries:
-          type: array
-          items:
-            $ref: '#/components/schemas/BuyOutSurplusFacilityRunSummaryEntry'
+        comments:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        evidenceFiles:
+          type: object
+          additionalProperties:
+            type: string
+        type:
+          type: string
+          enum:
+            - AMOUNT_CHANGED
+            - PAYMENT_STATUS_CHANGED
+      discriminator:
+        propertyName: type
     SectorAssociationSchemesDTO:
       required:
         - sectorAssociationSchemeMap
@@ -15815,7 +14960,8 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
         reviewAttachments:
           type: object
           additionalProperties:
@@ -16144,7 +15290,8 @@ components:
         markingStatusHistoryList:
           type: array
           items:
-            $ref: '#/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO'
+            $ref: >-
+              #/components/schemas/SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO
     PerformanceDataFacilityUploadCsvData:
       type: object
       properties:
@@ -16415,16 +15562,6 @@ components:
           enum:
             - BANK_TRANSFER
             - CREDIT_OR_DEBIT_CARD
-    MiReportUserDefinedCategoryDTO:
-      required:
-        - id
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
     RdeSubmitRequestTaskActionPayload:
       required:
         - rdePayload
@@ -16798,21 +15935,31 @@ components:
       required:
         - pageNumber
         - pageSize
-        - targetPeriodYear
+        - targetPeriodType
       type: object
       properties:
-        term:
+        targetUnitAccountBusinessId:
           maxLength: 255
           minLength: 3
           type: string
-        targetPeriodYear:
-          type: integer
-          format: int16
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
         status:
           type: string
           enum:
             - SUBMITTED
             - OUTSTANDING
+        submissionType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
         pageNumber:
           minimum: 0
           type: integer
@@ -16857,29 +16004,6 @@ components:
             type: string
         expired:
           type: boolean
-    BuyOutSurplusTransactionReceivedAmountHistoryDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        submitter:
-          type: string
-        submissionDate:
-          type: string
-          format: date-time
-        adjustmentAmount:
-          type: string
-          format: decimal
-        comments:
-          type: string
-        paymentDate:
-          type: string
-          format: date
-        evidenceFiles:
-          type: object
-          additionalProperties:
-            type: string
     NotAccountRelatedUploadErrorReport:
       type: object
       properties:
@@ -16894,6 +16018,23 @@ components:
           type: string
         lastName:
           type: string
+    BuyOutSurplusTransactionHistoryDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        submitter:
+          type: string
+        submissionDate:
+          type: string
+          format: date-time
+        payload:
+          oneOf:
+            - $ref: >-
+                #/components/schemas/BuyOutSurplusTransactionAmountChangedHistoryPayload
+            - $ref: >-
+                #/components/schemas/BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload
     NonComplianceDetails:
       required:
         - isEnforcementResponseNoticeRequired
@@ -16941,11 +16082,14 @@ components:
     SurplusGainedDTO:
       type: object
       properties:
-        schemeVersion:
+        targetPeriod:
           type: string
           enum:
-            - CCA_2
-            - CCA_3
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
         surplusGained:
           type: string
           format: decimal
@@ -16999,23 +16143,6 @@ components:
             - REJECTED
         siteContactUserId:
           type: string
-    BuyOutSurplusFacilityAccountProcessingRequestMetadata:
-      type: object
-      properties:
-        type:
-          type: string
-        parentRequestId:
-          type: string
-        accountBusinessId:
-          type: string
-        buyOutTransactionCodes:
-          type: object
-          additionalProperties:
-            type: string
-        refundTransactionCodes:
-          type: object
-          additionalProperties:
-            type: string
     PerformanceAccountTemplateProcessingSubmittedRequestActionPayload:
       type: object
       properties:
@@ -17209,8 +16336,17 @@ components:
       required:
         - comments
         - newSurplusGained
+        - targetPeriodType
       type: object
       properties:
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
         newSurplusGained:
           type: string
           format: decimal
@@ -17226,8 +16362,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CaExternalContactDTO'
-        editable:
-          type: boolean
         isEditable:
           type: boolean
     NoticeRecipientDTO:
@@ -17306,85 +16440,40 @@ components:
           type: object
           additionalProperties:
             type: string
-    AccountBuyOutSurplusTransactionDTO:
+    BuyOutSurplusTransactionAmountChangedHistoryPayload:
+      required:
+        - amount
+        - type
       type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        transactionCode:
-          type: string
-        accountBusinessId:
-          type: string
-        operatorName:
-          type: string
-        targetPeriodType:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
-        chargeType:
-          type: string
-          enum:
-            - REFUND
-            - FEE
-        fileInfoDTO:
-          $ref: '#/components/schemas/FileInfoDTO'
-        creationDate:
-          type: string
-          format: date-time
-        dueDate:
-          type: string
-          format: date
-        invoicedBuyOutFee:
-          type: string
-          format: decimal
-        paymentStatus:
-          type: string
-          enum:
-            - UNDER_APPEAL
-            - AWAITING_PAYMENT
-            - AWAITING_REFUND
-            - PAID
-            - REFUNDED
-            - NOT_REQUIRED
-            - TERMINATED
-        detailId:
-          type: integer
-          format: int64
-        targetPeriodResultType:
-          type: string
-          enum:
-            - TARGET_MET
-            - BUY_OUT_REQUIRED
-            - SURPLUS_USED_BUY_OUT_REQUIRED
-            - SURPLUS_USED
-            - OUTSTANDING
-        reportVersion:
-          type: string
-        submissionType:
-          type: string
-          enum:
-            - PRIMARY
-            - SECONDARY
-        priBuyOutCarbon:
-          type: string
-          format: decimal
-        priBuyOutCost:
-          type: string
-          format: decimal
-        invoicedSurplusGained:
-          type: string
-          format: decimal
-        invoicedPreviousPaidFees:
-          type: string
-          format: decimal
-        buyOutFee:
-          type: string
-          format: decimal
+      allOf:
+        - $ref: '#/components/schemas/BuyOutSurplusTransactionHistoryPayload'
+        - type: object
+          properties:
+            amount:
+              type: string
+              format: decimal
+    BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload:
+      required:
+        - paymentStatus
+        - type
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BuyOutSurplusTransactionHistoryPayload'
+        - type: object
+          properties:
+            paymentStatus:
+              type: string
+              enum:
+                - AWAITING_PAYMENT
+                - AWAITING_REFUND
+                - PAID
+                - REFUNDED
+                - NOT_REQUIRED
+                - UNDER_APPEAL
+                - TERMINATED
+            paymentDate:
+              type: string
+              format: date
     PerformanceDataFacilitySubmissionDetails:
       required:
         - creationDate
@@ -17459,10 +16548,6 @@ components:
           maxLength: 255
           minLength: 0
           type: string
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/MiReportUserDefinedCategoryDTO'
         description:
           maxLength: 10000
           minLength: 0
@@ -17640,18 +16725,6 @@ components:
         energyCarbonFactor:
           type: string
           format: decimal
-    BuyOutSurplusTransactionDetailAmountChangedHistoryPayload:
-      required:
-        - amount
-        - type
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/BuyOutSurplusTransactionDetailHistoryPayload'
-        - type: object
-          properties:
-            amount:
-              type: string
-              format: decimal
     NonComplianceCloseRequestTaskActionPayload:
       required:
         - closeJustification
@@ -17764,9 +16837,9 @@ components:
           type: string
           format: date-time
           deprecated: true
-        formData:
-          type: boolean
         attachment:
+          type: boolean
+        formData:
           type: boolean
         inline:
           type: boolean
@@ -17819,18 +16892,6 @@ components:
             type: string
             format: uuid
       description: The note request
-    FacilityPerformanceAccountTemplateDataCsvErrorEntry:
-      type: object
-      properties:
-        filename:
-          type: string
-        message:
-          type: string
-        facilityBusinessId:
-          type: string
-        rowNumber:
-          type: integer
-          format: int32
     AuditTrackCorrectiveActionsSubmittedRequestActionPayload:
       required:
         - auditTrackCorrectiveActions
@@ -17958,24 +17019,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    FacilityPerformanceAccountTemplateDataUploadResults:
-      type: object
-      properties:
-        totalFilesUploaded:
-          type: integer
-          format: int32
-        facilitiesSucceeded:
-          type: integer
-          format: int32
-        facilitiesFailed:
-          type: integer
-          format: int32
-        uploadSummaryFile:
-          type: string
-          format: uuid
-        submittedDate:
-          type: string
-          format: date-time
     UnderlyingAgreementSaveReviewGroupDecisionRequestTaskActionPayload:
       required:
         - decision
@@ -18066,8 +17109,8 @@ components:
           type: string
           format: date
         buyOutCost:
-          type: string
-          format: decimal
+          type: integer
+          format: int32
         secondaryReportingStartDate:
           type: string
           format: date
@@ -18166,34 +17209,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    FacilityBuyOutSurplusTransactionDetailSearchResultInfoDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        facilityBusinessId:
-          type: string
-        siteName:
-          type: string
-        paymentStatus:
-          type: string
-          enum:
-            - UNDER_APPEAL
-            - AWAITING_PAYMENT
-            - AWAITING_REFUND
-            - PAID
-            - REFUNDED
-            - NOT_REQUIRED
-            - TERMINATED
-        invoicedBuyFee:
-          type: string
-          format: decimal
-        buyOutFee:
-          type: string
-          format: decimal
-        hasHistory:
-          type: boolean
     AccountAddressDTO:
       required:
         - city
@@ -18624,7 +17639,8 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
         reviewAttachments:
           type: object
           additionalProperties:
@@ -18828,7 +17844,8 @@ components:
         facilitiesReviewGroupDecisions:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision'
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
         reviewSectionsCompleted:
           type: object
           additionalProperties:
@@ -19035,25 +18052,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    FacilityPerformanceAccountTemplateDataUploadCompletedRequestActionPayload:
-      required:
-        - details
-        - results
-        - uploadAttachments
-      type: object
-      properties:
-        payloadType:
-          type: string
-        businessId:
-          type: string
-        details:
-          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataUpload'
-        results:
-          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataUploadResults'
-        uploadAttachments:
-          type: object
-          additionalProperties:
-            type: string
     UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO:
       required:
         - financialIndependenceStatus
@@ -19152,7 +18150,6 @@ components:
             - SWITCHING_TO_BIOMASS_HEATING
             - SWITCHING_TO_RENEWABLE_POWER
             - OTHER_CONTRIBUTIONS
-            - NO_ACTION
         savingActionsImplemented:
           type: string
         reasonsForImplementation:
@@ -19182,16 +18179,6 @@ components:
           format: decimal
         notes:
           type: string
-    FacilityBuyOutSurplusTransactionDetailSearchResultsDTO:
-      type: object
-      properties:
-        transactionDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/FacilityBuyOutSurplusTransactionDetailSearchResultInfoDTO'
-        total:
-          type: integer
-          format: int64
     Facility:
       required:
         - apply70Rule
@@ -19272,43 +18259,6 @@ components:
               - VIEW_ONLY
               - EXECUTE
       description: The regulator to invite
-    BuyOutSurplusFacilityRunSummaryEntry:
-      required:
-        - buyOutCost
-        - targetPeriod
-        - totalBuyOutFacilities
-        - totalBuyOutTransactions
-        - totalFacilities
-        - totalRefundFacilities
-        - totalRefundTransactions
-      type: object
-      properties:
-        targetPeriod:
-          type: string
-          enum:
-            - TP5
-            - TP6
-            - TP7
-            - TP8
-            - TP9
-        buyOutCost:
-          type: string
-          format: decimal
-        totalFacilities:
-          type: integer
-          format: int64
-        totalBuyOutTransactions:
-          type: integer
-          format: int64
-        totalBuyOutFacilities:
-          type: integer
-          format: int64
-        totalRefundTransactions:
-          type: integer
-          format: int64
-        totalRefundFacilities:
-          type: integer
-          format: int64
     UserDTO:
       required:
         - email
@@ -19523,6 +18473,24 @@ components:
             - SURPLUS_USED_BUY_OUT_REQUIRED
             - SURPLUS_USED
             - OUTSTANDING
+    BuyOutSurplusTransactionUpdateAmountDTO:
+      required:
+        - amount
+        - comments
+      type: object
+      properties:
+        amount:
+          type: string
+          format: decimal
+        comments:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        evidenceFiles:
+          type: object
+          additionalProperties:
+            type: string
+      description: The Transaction Update Amount
     PerformanceAccountTemplateDataContainer:
       required:
         - file
@@ -19534,16 +18502,10 @@ components:
         energyOrCarbonSavingActionsAndMeasuresImplementedItems:
           type: array
           items:
-            $ref: '#/components/schemas/EnergyOrCarbonSavingActionsAndMeasuresImplementedItem'
+            $ref: >-
+              #/components/schemas/EnergyOrCarbonSavingActionsAndMeasuresImplementedItem
         file:
           $ref: '#/components/schemas/FileInfoDTO'
-    SiteContactSearchCriteriaDTO:
-      type: object
-      properties:
-        businessId:
-          maxLength: 255
-          minLength: 0
-          type: string
     InvitedUserCredentialsDTO:
       required:
         - invitationToken
@@ -19581,7 +18543,8 @@ components:
         businessId:
           type: string
         activationDetails:
-          $ref: '#/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails'
+          $ref: >-
+            #/components/schemas/Cca3ExistingFacilitiesMigrationAccountProcessingActivationDetails
         activationAttachments:
           type: object
           additionalProperties:
@@ -19668,8 +18631,8 @@ components:
       type: object
       properties:
         buyOutCost:
-          type: string
-          format: decimal
+          type: integer
+          format: int32
       description: The buy-out cost
     TP6PerformanceData:
       required:
@@ -19858,55 +18821,6 @@ components:
         consumption:
           type: string
           format: decimal
-    BuyOutSurplusCalculationDataContainer:
-      required:
-        - buyOutRequired
-        - invoicedBuyOutFee
-        - performanceOutcome
-        - previousPaidFees
-        - previousSurplusGained
-        - previousSurplusUsed
-        - schemeTotalSurplus
-        - surplusGained
-        - surplusUsed
-      type: object
-      properties:
-        performanceOutcome:
-          type: string
-          enum:
-            - TARGET_MET
-            - TARGET_NOT_MET
-            - SUBMITTED
-            - OUTSTANDING
-        buyOutRequired:
-          type: string
-          format: decimal
-        surplusGained:
-          type: string
-          format: decimal
-        surplusUsed:
-          type: string
-          format: decimal
-        previousPaidFees:
-          type: string
-          format: decimal
-        previousSurplusGained:
-          type: string
-          format: decimal
-        previousSurplusUsed:
-          type: string
-          format: decimal
-        chargeType:
-          type: string
-          enum:
-            - REFUND
-            - FEE
-        invoicedBuyOutFee:
-          type: string
-          format: decimal
-        schemeTotalSurplus:
-          type: string
-          format: decimal
     UnderlyingAgreementNotifyOperatorForDecisionRequestTaskActionPayload:
       required:
         - decisionNotification
@@ -20076,8 +18990,10 @@ components:
           format: date
         address:
           $ref: '#/components/schemas/FacilityAddressDTO'
-        surplusDetails:
-          $ref: '#/components/schemas/SurplusGainedDTO'
+        facilityCertificationDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityCertificationDetailsDTO'
     FacilityCertificationStatusUpdateDTO:
       required:
         - certificationPeriodId
@@ -20221,21 +19137,6 @@ components:
             - TEMP_DISABLED
         userId:
           type: string
-    BuyOutSurplusTransactionDetailHistoryDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        submitter:
-          type: string
-        submissionDate:
-          type: string
-          format: date-time
-        payload:
-          oneOf:
-            - $ref: '#/components/schemas/BuyOutSurplusTransactionDetailAmountChangedHistoryPayload'
-            - $ref: '#/components/schemas/BuyOutSurplusTransactionDetailPaymentStatusChangedHistoryPayload'
     TargetCommitmentsUpdateDTO:
       required:
         - targetCommitments
@@ -20607,21 +19508,6 @@ components:
               - NONE
               - VIEW_ONLY
               - EXECUTE
-    FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload:
-      required:
-        - performanceData
-        - targetPeriodYear
-      type: object
-      properties:
-        payloadType:
-          type: string
-        businessId:
-          type: string
-        targetPeriodYear:
-          type: integer
-          format: int16
-        performanceData:
-          $ref: '#/components/schemas/FacilityPerformanceAccountTemplateDataContainer'
     ItemAssigneeDTO:
       type: object
       properties:

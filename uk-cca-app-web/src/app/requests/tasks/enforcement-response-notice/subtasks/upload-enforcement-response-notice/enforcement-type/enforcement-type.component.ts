@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -54,6 +54,7 @@ type EnforcementResponseNoticeTypeForm = FormGroup<{
     RadioOptionComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class EnforcementTypeComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

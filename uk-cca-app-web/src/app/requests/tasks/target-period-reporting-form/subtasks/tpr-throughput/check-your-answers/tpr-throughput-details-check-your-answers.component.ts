@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, EMPTY } from 'rxjs';
@@ -63,6 +63,7 @@ import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalForm
     SummaryComponent,
     ThroughputDetailsSummaryComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprThroughputDetailsCheckYourAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -133,7 +134,7 @@ export class TprThroughputDetailsCheckYourAnswersComponent {
       const savedProduct = savedProductsByName.get(product.productName);
       let improvementTarget = facilityImprovementTarget;
 
-      if (facilityBaselineYear != null && product.baselineYear > facilityBaselineYear) {
+      if (facilityBaselineYear != null && product.baselineYear !== facilityBaselineYear) {
         improvementTarget = calculateAdjustedImprovementTarget(
           this.referenceData(),
           this.reportType(),

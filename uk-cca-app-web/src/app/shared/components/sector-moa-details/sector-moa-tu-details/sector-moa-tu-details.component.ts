@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -40,7 +40,6 @@ const DEFAULT_PAGE_SIZE = 30;
 @Component({
   selector: 'cca-sector-moa-tu-details',
   templateUrl: './sector-moa-tu-details.component.html',
-  providers: [TargetUnitFacilitiesListFormProvider, StatusPipe],
   imports: [
     ReactiveFormsModule,
     PageHeadingComponent,
@@ -56,6 +55,8 @@ const DEFAULT_PAGE_SIZE = 30;
     StatusPipe,
     RouterLink,
   ],
+  providers: [TargetUnitFacilitiesListFormProvider, StatusPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorMoaTuDetailsComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

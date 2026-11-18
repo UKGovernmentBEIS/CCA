@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { GovukSelectOption, SelectComponent, TextInputComponent } from '@netz/govuk-components';
@@ -10,8 +10,9 @@ type ProductFormGroup = FormGroup;
 @Component({
   selector: 'cca-add-product-item',
   templateUrl: './add-product-item.component.html',
-  viewProviders: [existingControlContainer],
   imports: [ReactiveFormsModule, TextInputComponent, SelectComponent],
+  viewProviders: [existingControlContainer],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddProductItemComponent {
   private readonly decimalPipe = new DecimalPipe('en-GB');

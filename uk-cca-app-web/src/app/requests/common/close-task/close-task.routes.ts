@@ -5,16 +5,16 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 
 export const CLOSE_TASK_ROUTES: Routes = [
   {
-    title: 'Close task',
     path: 'close-task',
-    loadComponent: () => import('./close-task.component').then((c) => c.CloseTaskComponent),
+    title: 'Close task',
     canActivate: [() => inject(RequestTaskStore).select(requestTaskQuery.selectIsEditable)()],
     data: { breadcrumb: false, backlink: '../..' },
+    loadComponent: () => import('./close-task.component').then((c) => c.CloseTaskComponent),
   },
   {
-    title: 'Task closed',
     path: 'close-task-confirmation',
-    loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.CloseTaskConfirmationComponent),
+    title: 'Task closed',
     data: { breadcrumb: false, backlink: false },
+    loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.CloseTaskConfirmationComponent),
   },
 ];

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { AccessibilityComponent } from './accessibility.component';
 
@@ -9,8 +9,7 @@ describe('AccessibilityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccessibilityComponent],
-      providers: [provideRouter([])],
+      imports: [AccessibilityComponent, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AccessibilityComponent);

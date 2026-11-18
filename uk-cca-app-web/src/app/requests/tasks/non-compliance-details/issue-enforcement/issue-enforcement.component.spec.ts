@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
@@ -12,9 +12,7 @@ import { TasksApiService } from '@requests/common';
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
 import { IssueEnforcementComponent } from './issue-enforcement.component';
 
-@Component({
-  template: '',
-})
+@Component({ template: '' })
 class DummyComponent {}
 
 describe('IssueEnforcementComponent', () => {
@@ -33,7 +31,7 @@ describe('IssueEnforcementComponent', () => {
     await TestBed.configureTestingModule({
       imports: [IssueEnforcementComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideRouter([{ path: '**', component: DummyComponent }]),
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },

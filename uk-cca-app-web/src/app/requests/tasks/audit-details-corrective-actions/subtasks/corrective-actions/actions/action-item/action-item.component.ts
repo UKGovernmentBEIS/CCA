@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { DateInputComponent, TextareaComponent } from '@netz/govuk-components';
@@ -9,8 +9,9 @@ import { CorrectiveActionFormModel } from '../corrective-actions-form.provider';
 @Component({
   selector: 'cca-action-item',
   templateUrl: './action-item.component.html',
-  viewProviders: [existingControlContainer],
   imports: [ReactiveFormsModule, TextareaComponent, DateInputComponent],
+  viewProviders: [existingControlContainer],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActionItemComponent {
   protected readonly group = input.required<CorrectiveActionFormModel>();

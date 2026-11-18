@@ -1,5 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -15,9 +16,11 @@ import { WizardStepComponent } from '../../shared/components/wizard/wizard-step.
   selector: 'cca-change-2fa',
   templateUrl: './change-2fa.component.html',
   imports: [WizardStepComponent, ReactiveFormsModule, TextInputComponent, PanelComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Change2faComponent {
   readonly pendingRequest = inject(PendingRequestService);
+  private readonly router = inject(Router);
   private readonly usersSecuritySetupService = inject(UsersSecuritySetupService);
   private readonly fb = inject(UntypedFormBuilder);
 
@@ -44,7 +47,7 @@ export class Change2faComponent {
       )
       .subscribe((res) => {
         if (res === 'invalid-code') {
-          this.form.get('password')?.setErrors({ invalidCode: 'Invalid code. Please try again.' });
+          this.router.navigate(['2fa', 'invalid-code']);
         } else {
           this.is2FaChanged.set(true);
         }

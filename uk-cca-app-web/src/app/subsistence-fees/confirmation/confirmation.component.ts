@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -7,6 +7,7 @@ import { PanelComponent } from '@netz/govuk-components';
   selector: 'cca-confirmation',
   templateUrl: './confirmation.component.html',
   imports: [RouterLink, PanelComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -33,7 +33,6 @@ import { applySaveActionSideEffects } from '../../../utils';
 @Component({
   selector: 'cca-target-unit-details',
   templateUrl: './target-unit-details.component.html',
-  providers: [TargetUnitDetailsReviewFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -43,6 +42,8 @@ import { applySaveActionSideEffects } from '../../../utils';
     SelectComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [TargetUnitDetailsReviewFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitDetailsComponent implements OnInit {
   private readonly store = inject(RequestTaskStore);

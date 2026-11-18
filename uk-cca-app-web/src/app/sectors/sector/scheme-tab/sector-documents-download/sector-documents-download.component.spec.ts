@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
-import { SchemeVersionEnum } from '@shared/types';
 import { Mocked } from 'vitest';
 
 import {
@@ -60,9 +59,9 @@ describe('SectorDocumentsDownloadComponent', () => {
     it('should sort target periods correctly when given 10 unsorted target periods', () => {
       const mockSectorScheme: SectorAssociationSchemesDTO = {
         sectorAssociationSchemeMap: {
-          [SchemeVersionEnum.CCA_2]: {
+          CCA_2: {
             id: 1,
-            schemeVersion: SchemeVersionEnum.CCA_2,
+            schemeVersion: 'CCA_2',
             umbrellaAgreement: null,
             targetSet: {
               id: 1,

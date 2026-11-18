@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,7 +25,6 @@ type ContactType = CcaOperatorUserInvitationDTO['contactType'];
 @Component({
   selector: 'cca-add-operator',
   templateUrl: './add-operator.component.html',
-  providers: [AddOperatorFormProvider],
   imports: [
     ErrorSummaryComponent,
     TextInputComponent,
@@ -36,6 +35,8 @@ type ContactType = CcaOperatorUserInvitationDTO['contactType'];
     PendingButtonDirective,
     ButtonDirective,
   ],
+  providers: [AddOperatorFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddOperatorComponent {
   private readonly route = inject(ActivatedRoute);

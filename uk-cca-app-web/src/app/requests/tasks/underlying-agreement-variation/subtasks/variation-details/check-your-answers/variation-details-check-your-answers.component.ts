@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -40,6 +40,7 @@ import { extractReviewProps, setVariationDetailsReviewSection } from '../../../u
     SummaryComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class VariationDetailsCheckYourAnswersComponent {
   protected readonly store = inject(RequestTaskStore);

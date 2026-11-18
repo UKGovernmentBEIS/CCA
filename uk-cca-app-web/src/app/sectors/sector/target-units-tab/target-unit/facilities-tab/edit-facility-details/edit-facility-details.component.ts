@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -23,7 +23,6 @@ import {
 @Component({
   selector: 'cca-edit-facility-details',
   templateUrl: './edit-facility-details.component.html',
-  providers: [editFacilityDetailsFormProvider()],
   imports: [
     WizardStepComponent,
     RouterLink,
@@ -33,6 +32,8 @@ import {
     DateInputComponent,
     ConditionalContentDirective,
   ],
+  providers: [editFacilityDetailsFormProvider()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class EditFacilityDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -23,7 +23,6 @@ export class StatusColorPipe implements PipeTransform {
         return 'green';
 
       case 'completed_with_failures':
-      case 'inactive':
       case 'terminated':
       case 'rejected':
       case 'withdrawn':

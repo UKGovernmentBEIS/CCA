@@ -4,7 +4,6 @@ import { nonComplianceDetailsEditableGuard, nonComplianceDetailsRedirectGuard } 
 
 export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
   {
-    title: 'Provide non-compliance details',
     path: '',
     children: [
       {
@@ -14,53 +13,53 @@ export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
         children: [],
       },
       {
-        title: 'Enter details of non-compliance',
         path: 'provide-details',
-        loadComponent: () =>
-          import('./provide-details/provide-details.component').then((c) => c.ProvideDetailsComponent),
+        title: 'Enter details of non-compliance',
         canActivate: [nonComplianceDetailsEditableGuard],
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () =>
+          import('./provide-details/provide-details.component').then((c) => c.ProvideDetailsComponent),
       },
       {
-        title: 'Choose relevant workflows (optional)',
         path: 'choose-relevant-workflows',
+        title: 'Choose relevant workflows (optional)',
+        canActivate: [nonComplianceDetailsEditableGuard],
+        data: { backlink: '../provide-details', breadcrumb: false },
         loadComponent: () =>
           import('./choose-relevant-workflows/choose-relevant-workflows.component').then(
             (c) => c.ChooseRelevantWorkflowsComponent,
           ),
-        canActivate: [nonComplianceDetailsEditableGuard],
-        data: { backlink: '../provide-details', breadcrumb: false },
       },
       {
-        title: 'Choose relevant facilities (optional)',
         path: 'choose-relevant-facilities',
+        title: 'Choose relevant facilities (optional)',
+        canActivate: [nonComplianceDetailsEditableGuard],
+        data: { backlink: '../choose-relevant-workflows', breadcrumb: false },
         loadComponent: () =>
           import('./choose-relevant-facilities/choose-relevant-facilities.component').then(
             (c) => c.ChooseRelevantFacilitiesComponent,
           ),
-        canActivate: [nonComplianceDetailsEditableGuard],
-        data: { backlink: '../choose-relevant-workflows', breadcrumb: false },
       },
       {
-        title: 'Will you be issuing an Enforcement Response Notice?',
         path: 'issue-enforcement',
-        loadComponent: () =>
-          import('./issue-enforcement/issue-enforcement.component').then((c) => c.IssueEnforcementComponent),
+        title: 'Will you be issuing an Enforcement Response Notice?',
         canActivate: [nonComplianceDetailsEditableGuard],
         data: { backlink: '../choose-relevant-facilities', breadcrumb: false },
+        loadComponent: () =>
+          import('./issue-enforcement/issue-enforcement.component').then((c) => c.IssueEnforcementComponent),
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
+        title: 'Check your answers',
+        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
           import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
-        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        title: 'Summary',
         path: 'summary',
-        loadComponent: () => import('@requests/common').then((c) => c.NonComplianceSummaryComponent),
+        title: 'Summary',
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () => import('@requests/common').then((c) => c.NonComplianceSummaryComponent),
       },
       {
         path: 'complete-task',

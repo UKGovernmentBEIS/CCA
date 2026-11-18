@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -19,6 +19,7 @@ import { auditDetailsCorrectiveActionsQuery } from '../../../audit-details-corre
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, ReturnToTaskOrActionPageComponent, SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuditDetailsSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

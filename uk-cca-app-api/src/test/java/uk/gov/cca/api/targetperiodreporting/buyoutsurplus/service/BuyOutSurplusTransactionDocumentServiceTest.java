@@ -5,8 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
+import uk.gov.netz.api.files.documents.service.FileDocumentTokenService;
 import uk.gov.netz.api.token.FileToken;
 
 import java.util.UUID;
@@ -22,7 +21,7 @@ class BuyOutSurplusTransactionDocumentServiceTest {
     private BuyOutSurplusQueryService buyOutSurplusQueryService;
     
     @Mock
-    private FileDocumentStorageService fileDocumentStorageService;
+    private FileDocumentTokenService fileDocumentTokenService;
     
     @InjectMocks
     private BuyOutSurplusTransactionDocumentService service;
@@ -36,13 +35,13 @@ class BuyOutSurplusTransactionDocumentServiceTest {
         
         when(buyOutSurplusQueryService.existsBuyOutSurplusTransactionByIdAndDocumentId(transactionId, documentUuidString))
                 .thenReturn(true);
-        when(fileDocumentStorageService.generateGetFileDocumentToken(documentUuidString))
+        when(fileDocumentTokenService.generateGetFileDocumentToken(documentUuidString))
                 .thenReturn(expectedToken);
         
         FileToken result = service.generateGetFileDocumentToken(transactionId, documentUuid);
         
         verify(buyOutSurplusQueryService).existsBuyOutSurplusTransactionByIdAndDocumentId(transactionId, documentUuidString);
-        verify(fileDocumentStorageService).generateGetFileDocumentToken(documentUuidString);
+        verify(fileDocumentTokenService).generateGetFileDocumentToken(documentUuidString);
         assertEquals(expectedToken, result);
     }
 }

@@ -1,4 +1,4 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -14,7 +14,7 @@ const initialState: UnderlyingAgreementVariationPeerReviewState = {
   attachments: {},
 };
 
-@Service({ autoProvided: false })
+@Injectable()
 export class UnderlyingAgreementVariationPeerReviewStore extends SignalStore<UnderlyingAgreementVariationPeerReviewState> {
   constructor() {
     super(initialState);

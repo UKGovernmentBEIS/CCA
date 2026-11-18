@@ -1,5 +1,5 @@
-import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ScrollService } from './scroll.service';
 
@@ -8,7 +8,7 @@ describe('FormService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([])],
+      imports: [RouterTestingModule],
     });
     service = TestBed.inject(ScrollService);
   });

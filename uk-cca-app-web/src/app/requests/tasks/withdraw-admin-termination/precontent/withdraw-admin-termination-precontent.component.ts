@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -19,6 +19,7 @@ import { adminTerminationWithdrawQuery } from '../withdraw-admin-termination.sel
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WithdrawAdminTerminationPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

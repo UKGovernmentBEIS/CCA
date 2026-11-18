@@ -1,10 +1,9 @@
 import { DatePipe } from '@angular/common';
 
+import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 
 import { AuditDetermination } from 'cca-api';
-
-import { boolToString } from '../../utils';
 
 export function toPreAuditReviewDeterminationSummaryData(
   determination: AuditDetermination,

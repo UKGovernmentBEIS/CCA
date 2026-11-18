@@ -5,12 +5,11 @@ import { TargetComposition } from 'cca-api';
 import { AddBaselineDataFormModel, TargetCompositionFormModel } from './types';
 
 export function measurementTypeValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const measurementTypeControl = control as TargetCompositionFormModel['controls']['measurementType'];
-    if (!measurementTypeControl || !measurementTypeControl.parent) return null;
+  return (control: TargetCompositionFormModel['controls']['measurementType']): ValidationErrors | null => {
+    if (!control || !control.parent) return null;
 
-    const sectorMeasurementType = measurementTypeControl.parent.get('sectorAssociationMeasurementType')?.getRawValue();
-    const measurementType = measurementTypeControl.value;
+    const sectorMeasurementType = control.parent.get('sectorAssociationMeasurementType')?.getRawValue();
+    const measurementType = control.value;
 
     if (!measurementType) return { required: 'Select the measurement units used by the target unit.' };
 
@@ -34,8 +33,7 @@ export function measurementTypeValidator(): ValidatorFn {
 }
 
 export function targetCompositionConditionallyRequiredFieldsValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const group = control as TargetCompositionFormModel;
+  return (group: TargetCompositionFormModel): ValidationErrors | null => {
     if (!group || !(group instanceof FormGroup)) return null;
 
     const agreementCompositionTypeValue = group.get('agreementCompositionType').value;
@@ -79,8 +77,7 @@ export function targetCompositionConditionallyRequiredFieldsValidator(): Validat
 export function addBaselineDataConditionallyRequiredFieldsValidator(
   agreementCompositionType: TargetComposition['agreementCompositionType'],
 ): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const group = control as AddBaselineDataFormModel;
+  return (group: AddBaselineDataFormModel): ValidationErrors | null => {
     if (!group || !(group instanceof FormGroup)) {
       return null;
     }

@@ -1,5 +1,3 @@
-import { SchemeVersionEnum } from '@shared/types';
-
 import {
   RequestActionDTO,
   UnderlyingAgreementPayload,
@@ -41,7 +39,7 @@ const mockUnderlyingAgreement: UnderlyingAgreementPayload = {
       status: 'NEW',
       facilityDetails: {
         name: 'Facility 1',
-        participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
+        participatingSchemeVersions: ['CCA_2'],
         facilityAddress: {
           city: 'Facility City',
           line1: 'Facility Line1',
@@ -191,7 +189,7 @@ const mockPayload: UnderlyingAgreementSubmittedRequestActionPayload = {
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },
@@ -268,10 +266,10 @@ const mockUnARegulatorLedVariationPayload: UnderlyingAgreementVariationRegulator
     },
     sectorAssociationDetails: {
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: {
+        CCA_2: {
           sectorMeasurementType: 'ENERGY_KWH',
         },
-        [SchemeVersionEnum.CCA_3]: {
+        CCA_3: {
           sectorMeasurementType: 'ENERGY_KWH',
         },
       },
@@ -317,7 +315,7 @@ const mockUnARegulatorLedVariationPayload: UnderlyingAgreementVariationRegulator
           name: 'fac3-1-1',
           isCoveredByUkets: false,
           applicationReason: 'NEW_AGREEMENT',
-          participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+          participatingSchemeVersions: ['CCA_3'],
           facilityAddress: {
             line1: 'addr1',
             city: 'kjhn',
@@ -457,7 +455,7 @@ const mockUnARegulatorLedVariationPayload: UnderlyingAgreementVariationRegulator
     },
   },
   underlyingAgreementDocuments: {
-    [SchemeVersionEnum.CCA_3]: {
+    CCA_3: {
       name: 'ADS_2-T00003 CCA3 Underlying Agreement v2 [proposed].pdf',
       uuid: 'e1058482-f97d-4f4b-b067-ae367b08b175',
     },

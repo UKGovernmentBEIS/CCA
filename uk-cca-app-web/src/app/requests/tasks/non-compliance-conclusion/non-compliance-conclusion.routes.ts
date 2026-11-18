@@ -9,7 +9,6 @@ import {
 
 export const NON_COMPLIANCE_CONCLUSION_ROUTES: Routes = [
   {
-    title: 'Provide non-compliance conclusion',
     path: '',
     children: [
       {
@@ -19,22 +18,22 @@ export const NON_COMPLIANCE_CONCLUSION_ROUTES: Routes = [
         children: [],
       },
       {
-        title: 'Provide conclusion details',
         path: 'provide-details',
-        loadComponent: () =>
-          import('./provide-details/provide-details.component').then((c) => c.ProvideDetailsComponent),
+        title: 'Provide conclusion details',
         canActivate: [nonComplianceConclusionEditableGuard],
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () =>
+          import('./provide-details/provide-details.component').then((c) => c.ProvideDetailsComponent),
       },
       {
-        title: 'Provide withdrawal notice',
         path: 'provide-withdrawal-notice',
+        title: 'Provide withdrawal notice',
+        canActivate: [nonComplianceConclusionEditableGuard],
+        data: { backlink: '../provide-details', breadcrumb: false },
         loadComponent: () =>
           import('./provide-withdrawal-notice/provide-withdrawal-notice.component').then(
             (c) => c.ProvideWithdrawalNoticeComponent,
           ),
-        canActivate: [nonComplianceConclusionEditableGuard],
-        data: { backlink: '../provide-details', breadcrumb: false },
       },
       {
         path: 'provide-appeal-details',
@@ -42,21 +41,21 @@ export const NON_COMPLIANCE_CONCLUSION_ROUTES: Routes = [
           import('./provide-appeal-details/provide-appeal-details.routes').then((r) => r.PROVIDE_APPEAL_DETAILS_ROUTES),
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
+        title: 'Check your answers',
+        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
           import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
-        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        title: 'Summary',
         path: 'summary',
-        loadComponent: () => import('./summary/summary.component').then((c) => c.ConclusionSummaryComponent),
+        title: 'Summary',
         data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () => import('./summary/summary.component').then((c) => c.ConclusionSummaryComponent),
       },
       {
-        title: 'Notify operator of decision',
         path: 'notify-operator',
+        title: 'Notify operator of decision',
         canActivate: [nonComplianceConclusionEditableGuard],
         loadChildren: () =>
           import('./notify-operator/notify-operator.routes').then(

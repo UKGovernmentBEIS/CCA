@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -17,6 +17,7 @@ import { AssigneeUserInfoDTO } from 'cca-api';
     </div>
   `,
   imports: [PanelComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeerReviewConfirmationComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

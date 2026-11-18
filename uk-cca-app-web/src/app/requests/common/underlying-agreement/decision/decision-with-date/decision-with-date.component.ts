@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -22,7 +22,7 @@ import { underlyingAgreementQuery } from '../../+state';
 @Component({
   selector: 'cca-decision-with-date',
   templateUrl: './decision-with-date.component.html',
-  viewProviders: [existingControlContainer],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RadioComponent,
     TextareaComponent,
@@ -35,6 +35,7 @@ import { underlyingAgreementQuery } from '../../+state';
     DateInputComponent,
     DetailsComponent,
   ],
+  viewProviders: [existingControlContainer],
 })
 export class DecisionWithDateComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

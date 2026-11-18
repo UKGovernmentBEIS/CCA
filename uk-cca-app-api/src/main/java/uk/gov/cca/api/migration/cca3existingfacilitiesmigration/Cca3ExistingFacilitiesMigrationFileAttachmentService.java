@@ -6,6 +6,7 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.condition.Conditi
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.migration.ftp.FtpFileService;
 import uk.gov.cca.api.migration.ftp.FtpProperties;
@@ -17,6 +18,7 @@ import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.service.FileValidatorService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -58,7 +60,11 @@ public class Cca3ExistingFacilitiesMigrationFileAttachmentService {
 				errors.add(String.format(ERROR_FORMAT, ftpFileDTOResult.getFileDTO().getFileName(), "Not csv file type"));
 			}
             else {
-				attachments.add(createFileAttachment(ftpFileDTOResult.getFileDTO(), errors));
+                try {
+                    attachments.add(createFileAttachment(ftpFileDTOResult.getFileDTO(), errors));
+                } catch (IOException e) {
+                    errors.add(String.format(ERROR_FORMAT, ftpFileDTOResult.getFileDTO().getFileName(), e.getMessage()));
+                }
             }
         });
 
@@ -69,7 +75,7 @@ public class Cca3ExistingFacilitiesMigrationFileAttachmentService {
 		return errors;
 	}
 
-	private FileAttachment createFileAttachment(FileDTO fileDTO, List<String> errors) {
+	private FileAttachment createFileAttachment(FileDTO fileDTO, List<String> errors) throws IOException {
 		List<String> validationErrors = new ArrayList<>();
 
 		this.fileValidators.forEach(validator -> {
@@ -88,6 +94,7 @@ public class Cca3ExistingFacilitiesMigrationFileAttachmentService {
 		FileAttachment attachment = FILE_ATTACHMENT_MAPPER.toFileAttachment(fileDTO);
 		attachment.setUuid(UUID.randomUUID().toString());
 		attachment.setStatus(FileStatus.PENDING_MIGRATION);
+		attachment.setCreatedBy(MigrationConstants.MIGRATION_PROCESS_USER);
 		return attachment;
 	}
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -39,8 +39,9 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  providers: [OperatorAddressFormProvider],
   imports: [ReactiveFormsModule, WizardStepComponent, AccountAddressInputComponent, ReturnToTaskOrActionPageComponent],
+  providers: [OperatorAddressFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorAddressComponent {
   private readonly store = inject(RequestTaskStore);

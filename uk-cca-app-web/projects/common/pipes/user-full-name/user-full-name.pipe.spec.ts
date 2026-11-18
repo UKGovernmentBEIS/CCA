@@ -13,7 +13,7 @@ describe('UserFullNamePipe', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [UserFullNamePipe],
+      declarations: [UserFullNamePipe],
     });
   });
 

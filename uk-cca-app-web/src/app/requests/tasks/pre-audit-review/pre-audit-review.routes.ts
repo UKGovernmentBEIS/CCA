@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 
+import { FileDownloadComponent } from '@shared/components';
+
 export const PRE_AUDIT_REVIEW_ROUTES: Routes = [
   {
-    title: 'Pre-audit review',
     path: '',
     children: [
       {
@@ -32,9 +33,8 @@ export const PRE_AUDIT_REVIEW_ROUTES: Routes = [
           import('./complete-task/complete-task.routes').then((r) => r.PRE_AUDIT_REVIEW_COMPLETE_TASK_ROUTES),
       },
       {
-        title: 'Your download has started',
         path: 'file-download/:uuid',
-        loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
+        component: FileDownloadComponent,
       },
     ],
   },

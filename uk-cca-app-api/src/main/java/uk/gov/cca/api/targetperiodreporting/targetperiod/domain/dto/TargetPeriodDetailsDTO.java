@@ -9,7 +9,6 @@ import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -23,7 +22,7 @@ public class TargetPeriodDetailsDTO {
     private TargetPeriodYearsContainer targetPeriodYearsContainer;
     private LocalDate buyOutStartDate;
     private LocalDate buyOutPrimaryPaymentDeadline;
-    private BigDecimal buyOutCost;
+    private Integer buyOutCost;
     private LocalDate secondaryReportingStartDate;
     private SchemeVersion schemeVersion;
 }

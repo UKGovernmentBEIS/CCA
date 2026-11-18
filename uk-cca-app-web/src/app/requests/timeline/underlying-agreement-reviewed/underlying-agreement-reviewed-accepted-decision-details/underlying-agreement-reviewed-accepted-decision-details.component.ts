@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -12,6 +12,7 @@ import { toAcceptedDecisionDetailsSummaryData } from '../underlying-agreement-re
   selector: 'cca-underlying-agreement-reviewed-accepted-decision',
   template: `<cca-summary [data]="summaryData()" />`,
   imports: [SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementReviewedAcceptedDecisionDetailsComponent {
   private readonly requestActionStore = inject(RequestActionStore);

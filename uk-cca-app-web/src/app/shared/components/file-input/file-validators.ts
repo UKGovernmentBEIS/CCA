@@ -1,11 +1,11 @@
-import { AbstractControl, AsyncValidatorFn, FormControl } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn } from '@angular/forms';
 
 import { of } from 'rxjs';
 
 import { GovukValidators, MessageValidationErrors, MessageValidatorFn } from '@netz/govuk-components';
 
 import { FileType, FileTypeAliases } from '../file-input/file-type.enum';
-import { FileUploadEvent, UNKNOWN_FILE_NAME } from '../file-input/file-upload-event';
+import { FileUploadEvent } from '../file-input/file-upload-event';
 
 export class FileValidators {
   private static getValues(value: FileUploadEvent | FileUploadEvent[]): FileUploadEvent[] {
@@ -48,7 +48,7 @@ export class FileValidators {
   }
 
   static validContentTypes(types: FileType[], message = 'has an invalid type'): MessageValidatorFn {
-    const acceptedTypes = new Set<string>(types.flatMap((type) => [type, ...(FileTypeAliases[type] ?? [])]));
+    const acceptedTypes = new Set(types.flatMap((type) => [type, ...(FileTypeAliases[type] ?? [])]));
 
     return ({ value }: { value: FileUploadEvent | FileUploadEvent[] }) => {
       const messages: MessageValidationErrors = {};
@@ -57,8 +57,8 @@ export class FileValidators {
         const file = event?.file;
         const fileType = file?.type;
 
-        if (fileType && !acceptedTypes.has(fileType)) {
-          messages[`validContentTypes-${index}`] = `${file?.name || UNKNOWN_FILE_NAME} ${message}`;
+        if (fileType && !acceptedTypes.has(fileType as FileType)) {
+          messages[`validContentTypes-${index}`] = `${file?.name ?? 'File'} ${message}`;
         }
       });
 
@@ -77,7 +77,7 @@ export class FileValidators {
         const isInvalid = dimensions.width > maxWidth || dimensions.height > maxHeight;
 
         if (isInvalid) {
-          messages[`dimensions-${index}`] = `${event.file?.name || UNKNOWN_FILE_NAME} ${
+          messages[`dimensions-${index}`] = `${event.file.name} ${
             message ?? `must be smaller than ${maxWidth}x${maxHeight} px`
           }`;
         }
@@ -87,7 +87,7 @@ export class FileValidators {
     };
   }
 
-  static concatenateErrors(errors: (MessageValidationErrors | null)[] = []): MessageValidationErrors {
+  static concatenateErrors(errors: MessageValidationErrors[] = []): MessageValidationErrors {
     if (errors.every((error) => error === null)) return null;
 
     return errors.reduce<MessageValidationErrors>((result, error, index) => {
@@ -101,15 +101,14 @@ export class FileValidators {
     }, {});
   }
 
-  static multipleCompose(validator: MessageValidatorFn): MessageValidatorFn {
+  static multipleCompose(
+    validator: ({ value }: { value: FileUploadEvent }) => MessageValidationErrors,
+  ): MessageValidatorFn {
     return (control) => {
       const value: FileUploadEvent[] | null = control.value;
       if (!value?.length) return null;
 
-      // Wrap each file event in a real control so the validator receives a truthful
-      // AbstractControl (MessageValidatorFn's parameter type); all in-repo file validators
-      // only read `control.value`.
-      const fileValidities = value.map((fileEvent) => validator(new FormControl(fileEvent)));
+      const fileValidities = value.map((fileEvent) => validator({ value: fileEvent }));
       return this.concatenateErrors(fileValidities);
     };
   }

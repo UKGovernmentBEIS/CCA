@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -29,6 +29,7 @@ import { PATUploadQuery } from '../+state/pat-selectors';
     </div>
   `,
   imports: [PanelComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PatConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

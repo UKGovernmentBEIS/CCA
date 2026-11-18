@@ -6,7 +6,6 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.dom
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.common.domain.BuyOutSurplusFacilityRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.processing.domain.BuyOutSurplusFacilityAccountProcessingRequestMetadata;
-import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
@@ -42,8 +41,6 @@ public class RequestMetadataSchemasProvider extends SwaggerSchemasAbstractProvid
         // Buy Out Surplus Facility
         addResolvedShemas(BuyOutSurplusFacilityRunRequestMetadata.class.getSimpleName(), BuyOutSurplusFacilityRunRequestMetadata.class);
         addResolvedShemas(BuyOutSurplusFacilityAccountProcessingRequestMetadata.class.getSimpleName(), BuyOutSurplusFacilityAccountProcessingRequestMetadata.class);
-        // Emissions Trading Scheme
-        addResolvedShemas(EmissionsTradingSchemeDataRequestMetadata.class.getSimpleName(), EmissionsTradingSchemeDataRequestMetadata.class);
     }
     
 }

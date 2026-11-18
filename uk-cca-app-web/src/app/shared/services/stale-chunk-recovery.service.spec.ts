@@ -98,7 +98,8 @@ describe('StaleChunkRecoveryService', () => {
   });
 
   it('should not reload when session storage is unavailable', () => {
-    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    // Node 26 ships its own Web Storage, so `window.sessionStorage` is not always jsdom's `Storage`.
+    vi.spyOn(Object.getPrototypeOf(window.sessionStorage) as Storage, 'getItem').mockImplementation(() => {
       throw new DOMException('The operation is insecure.', 'SecurityError');
     });
 

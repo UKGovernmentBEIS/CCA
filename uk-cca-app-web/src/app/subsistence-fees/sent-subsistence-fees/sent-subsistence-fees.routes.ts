@@ -5,6 +5,7 @@ import { SentSubsistenceFeesDetailsResolver } from './sent-subsistence-fees.reso
 export const SENT_SUBSISTENCE_FEES_ROUTES: Routes = [
   {
     path: ':runId',
+    resolve: { subFeesDetails: SentSubsistenceFeesDetailsResolver },
     data: {
       breadcrumb: {
         text: 'Subsistence fees',
@@ -12,10 +13,8 @@ export const SENT_SUBSISTENCE_FEES_ROUTES: Routes = [
         link: '/subsistence-fees',
       },
     },
-    resolve: { subFeesDetails: SentSubsistenceFeesDetailsResolver },
     children: [
       {
-        title: 'Payment request details',
         path: '',
         loadComponent: () => import('./sent-subsistence-fees.component').then((c) => c.SentSubsistenceFeesComponent),
       },

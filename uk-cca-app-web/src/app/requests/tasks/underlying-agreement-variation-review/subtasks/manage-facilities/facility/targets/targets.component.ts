@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -27,6 +27,7 @@ import { deleteFacilityDecision, resetDetermination } from '../../../../utils';
   selector: 'cca-targets',
   template: `<cca-common-facility-targets (submitted)="onSubmit($event)" />`,
   imports: [CommonFacilityTargetsComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetsComponent {
   private readonly store = inject(RequestTaskStore);

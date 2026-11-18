@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
@@ -23,6 +23,7 @@ import { SectorAssociationInfoDTO, SectorAssociationInfoViewService } from 'cca-
     </govuk-table>
   `,
   imports: [PageHeadingComponent, TableComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorListComponent {
   private readonly sectorAssociationInfoViewService = inject(SectorAssociationInfoViewService);
@@ -48,11 +49,7 @@ export class SectorListComponent {
     const multiplier = direction === 'ascending' ? 1 : -1;
 
     return [...this._sectors()].sort(
-      (a, b) =>
-        this.collator.compare(
-          String(a[column as keyof SectorAssociationInfoDTO] ?? ''),
-          String(b[column as keyof SectorAssociationInfoDTO] ?? ''),
-        ) * multiplier,
+      (a, b) => this.collator.compare(String(a[column] ?? ''), String(b[column] ?? '')) * multiplier,
     );
   });
 

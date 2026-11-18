@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { PeerReviewConfirmationComponent } from '@requests/common';
 
@@ -6,5 +6,6 @@ import { PeerReviewConfirmationComponent } from '@requests/common';
   selector: 'cca-admin-termination-peer-review-confirmation',
   template: `<cca-peer-review-confirmation />`,
   imports: [PeerReviewConfirmationComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AdminTerminationPeerReviewConfirmationComponent {}

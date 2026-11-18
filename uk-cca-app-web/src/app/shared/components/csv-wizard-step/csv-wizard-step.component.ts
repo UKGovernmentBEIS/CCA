@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -24,6 +24,7 @@ import { CsvErrorSummaryComponent } from '../csv-error-summary/csv-error-summary
     CsvErrorSummaryComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CsvWizardStepComponent {
   protected readonly showBackLink = input(false);

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'cca-loading-spinner',
@@ -12,5 +12,6 @@ import { Component } from '@angular/core';
     </div>
   `,
   styleUrl: './loading-spinner.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingSpinnerComponent {}

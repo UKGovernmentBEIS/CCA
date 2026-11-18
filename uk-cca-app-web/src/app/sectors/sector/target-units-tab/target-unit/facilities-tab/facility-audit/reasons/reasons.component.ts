@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -22,6 +22,7 @@ import { FacilityAuditStore } from '../facility-audit.store';
     TextareaComponent,
     FacilityAuditReasonPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReasonsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

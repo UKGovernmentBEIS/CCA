@@ -1,9 +1,8 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
 import { of } from 'rxjs';
@@ -25,8 +24,8 @@ import { PASSWORD_FORM, passwordFormFactory } from './password-form.factory';
       <button type="submit">Submit</button>
     </form>
   `,
-  providers: [passwordFormFactory],
   imports: [PasswordComponent, ReactiveFormsModule, ErrorSummaryComponent],
+  providers: [passwordFormFactory],
 })
 export class TestComponent {
   protected readonly form = inject<FormGroup>(PASSWORD_FORM);
@@ -48,7 +47,7 @@ describe('PasswordComponent', () => {
       imports: [TestComponent],
       providers: [
         provideRouter([]),
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
       ],
@@ -201,14 +200,6 @@ describe('PasswordComponent', () => {
     fixture.detectChanges();
 
     expect(getAllByText('A custom validation message from the server').length).toBeGreaterThanOrEqual(2);
-  });
-
-  it('should show the password strength feedback for a weak password', () => {
-    type(document.getElementById('password') as HTMLInputElement, 'aaaaaaaaaaaa');
-    fixture.detectChanges();
-
-    expect(fixture.debugElement.query(By.css('.psm__feedback'))).toBeTruthy();
-    expect(getByText('Repeated characters like "aaa" are easy to guess.')).toBeTruthy();
   });
 });
 

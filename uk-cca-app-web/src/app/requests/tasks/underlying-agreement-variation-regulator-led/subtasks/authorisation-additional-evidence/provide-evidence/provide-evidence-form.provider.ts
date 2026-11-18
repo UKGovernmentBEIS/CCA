@@ -2,11 +2,7 @@ import { inject, InjectionToken, Provider } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import {
-  getAttachmentType,
-  underlyingAgreementVariationRegulatorLedQuery,
-  UPLOAD_SECTION_ATTACHMENT_TYPE,
-} from '@requests/common';
+import { underlyingAgreementVariationRegulatorLedQuery, UPLOAD_SECTION_ATTACHMENT_TYPE } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 
@@ -37,7 +33,7 @@ export const ProvideEvidenceFormProvider: Provider = {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         additionalEvidence.authorisationAttachmentIds || [],
         underlyingAgreementAttachments,
-        getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
+        UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
         true,
         !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
       ),
@@ -45,7 +41,7 @@ export const ProvideEvidenceFormProvider: Provider = {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         additionalEvidence.additionalEvidenceAttachmentIds || [],
         underlyingAgreementAttachments,
-        getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
+        UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
         false,
         !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
       ),

@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -46,7 +46,6 @@ type SectorMoasState = {
 @Component({
   selector: 'cca-sector-moas',
   templateUrl: './sector-moas.component.html',
-  providers: [SectorMoasFormProvider, StatusPipe],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -62,6 +61,8 @@ type SectorMoasState = {
     StatusColorPipe,
     StatusPipe,
   ],
+  providers: [SectorMoasFormProvider, StatusPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorMoasComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

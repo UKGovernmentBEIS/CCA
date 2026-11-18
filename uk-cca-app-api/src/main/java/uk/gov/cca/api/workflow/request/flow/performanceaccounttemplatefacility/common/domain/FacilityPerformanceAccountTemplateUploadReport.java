@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facility.domain.FacilityPerformanceAccountTemplateSavingAction;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -25,9 +24,6 @@ public class FacilityPerformanceAccountTemplateUploadReport implements Serializa
     private String facilityBusinessId;
 
     private Long accountId;
-
-    @Builder.Default
-    private List<FacilityPerformanceAccountTemplateSavingAction> savingActions = new ArrayList<>();
 
     private boolean succeeded;
 

@@ -8,8 +8,8 @@ import { CountryService } from '@shared/services';
 @Component({
   selector: 'cca-facility-address-input',
   templateUrl: './facility-address-input.component.html',
-  viewProviders: [existingControlContainer],
   imports: [TextInputComponent, ReactiveFormsModule, SelectComponent],
+  viewProviders: [existingControlContainer],
 })
 export class FacilityAddressInputComponent {
   private readonly countryService = inject(CountryService);

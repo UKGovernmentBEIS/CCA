@@ -65,9 +65,10 @@ public class PerformanceAccountTemplateDataGenerateCsvReportService {
 			final byte[] generatedFile = sw.toString().getBytes(StandardCharsets.UTF_8);
 
 			FileDTO reportFile = FileDTO.builder().fileContent(generatedFile).fileName(fileName)
-					.fileSize(generatedFile.length).fileType(MimeTypeUtils.detect(generatedFile, fileName))
-					.createdBy(requestPayload.getSectorUserAssignee()).build();
-            final String uuid = ccaFileAttachmentService.createSystemFileAttachment(reportFile, FileStatus.SUBMITTED);
+					.fileSize(generatedFile.length).fileType(MimeTypeUtils.detect(generatedFile, fileName)).build();
+			
+            final String uuid = ccaFileAttachmentService.createSystemFileAttachment(
+            		reportFile, FileStatus.SUBMITTED, requestPayload.getSectorUserAssignee());
 			
 			requestTaskPayload.setCsvReportFile(FileInfoDTO.builder().uuid(uuid).name(reportFile.getFileName()).build());
 		}

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -16,6 +16,7 @@ import { NON_COMPLIANCE_DETAILS_SUBTASK } from '../types';
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NonComplianceCompleteTaskButtonComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

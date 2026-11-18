@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError } from 'rxjs';
@@ -29,6 +29,7 @@ import { createRequestTaskActionProcessDTO } from '../../../transform';
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, ReturnToTaskOrActionPageComponent, CorrectiveActionsSummaryDetailsComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CorrectiveActionsSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

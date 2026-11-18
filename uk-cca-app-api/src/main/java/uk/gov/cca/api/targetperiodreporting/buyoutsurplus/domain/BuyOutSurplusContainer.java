@@ -1,6 +1,7 @@
 package uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain;
 
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -35,4 +37,9 @@ public class BuyOutSurplusContainer {
     @PositiveOrZero
     @Digits(integer = Integer.MAX_VALUE, fraction = 2)
     private BigDecimal invoicedPreviousPaidFees;
+
+    private LocalDate invoicedPaymentDeadline;
+
+    @NotNull
+    private BuyOutSurplusChargeType chargeType;
 }

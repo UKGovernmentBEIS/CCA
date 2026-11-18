@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -10,6 +10,7 @@ import { toPerformanceUploadSubmittedSummaryData } from './performance-data-uplo
   selector: 'cca-performance-data-download-submitted',
   template: `<cca-summary [data]="summaryData()" />`,
   imports: [SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataUploadSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

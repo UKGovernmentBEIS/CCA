@@ -1,5 +1,5 @@
 const { gitDescribeSync } = require('git-describe');
-const gitBranch = require('git-branch');
+const { execSync } = require('child_process');
 const { version } = require('./package.json');
 const { resolve, relative } = require('path');
 const { writeFileSync, existsSync, mkdirSync } = require('fs-extra');
@@ -10,7 +10,16 @@ const gitInfo = gitDescribeSync({
 });
 
 gitInfo.devVersion = version;
-gitInfo.branch = gitBranch.sync();
+gitInfo.branch = currentBranch();
+
+// Same as git-branch: branch name, or null on a detached HEAD (e.g. CI checkouts).
+function currentBranch() {
+  try {
+    return execSync('git symbolic-ref --short -q HEAD', { cwd: __dirname, encoding: 'utf-8' }).trim();
+  } catch {
+    return null;
+  }
+}
 
 if (!existsSync(__dirname + '/src/environments')) {
   mkdirSync(__dirname + '/src/environments');
@@ -19,9 +28,8 @@ const file = resolve(__dirname, 'src', 'environments', 'version.ts');
 writeFileSync(
   file,
   `// IMPORTANT: THIS FILE IS AUTO GENERATED! DO NOT MANUALLY EDIT OR CHECKIN!
-// @ts-nocheck
 /* tslint:disable */
-export const VERSION = ${JSON.stringify(gitInfo, null, 4)} as const;
+export const VERSION = ${JSON.stringify(gitInfo, null, 4)};
 /* tslint:enable */
 `,
   { encoding: 'utf-8' },

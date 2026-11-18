@@ -2,10 +2,6 @@
   {{ currentLabel() }}
 </label>
 
-@if (hint()) {
-  <div [id]="identifier + '-hint'" class="govuk-hint">{{ hint() }}</div>
-}
-
 @if (shouldDisplayErrors) {
   <govuk-error-message [errors]="control.errors" [identifier]="identifier" />
 }
@@ -14,15 +10,12 @@
   [formControl]="control"
   [id]="identifier"
   [attr.name]="identifier"
-  [attr.aria-describedby]="
-    describedBy(hint() ? identifier + '-hint' : null, shouldDisplayErrors ? identifier + '-error' : null)
-  "
   [ngClass]="widthClass()"
   class="govuk-select"
   [class.govuk-select--error]="shouldDisplayErrors"
   govukFormError
 >
-  @for (option of options(); track option.value) {
+  @for (option of options(); track option) {
     <option [attr.disabled]="option.disabled || null" [ngValue]="option.value">
       {{ option.text }}
     </option>

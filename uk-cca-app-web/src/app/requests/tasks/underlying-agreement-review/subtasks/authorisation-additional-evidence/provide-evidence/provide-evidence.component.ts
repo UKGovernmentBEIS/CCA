@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -27,8 +27,9 @@ import { resetDetermination } from '../../../utils';
 @Component({
   selector: 'cca-provide-evidence',
   templateUrl: './provide-evidence.component.html',
-  providers: [ProvideEvidenceFormProvider],
   imports: [MultipleFileInputComponent, ReactiveFormsModule, WizardStepComponent, ReturnToTaskOrActionPageComponent],
+  providers: [ProvideEvidenceFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProvideEvidenceComponent {
   private readonly store = inject(RequestTaskStore);

@@ -4,9 +4,7 @@ import { provideRouter, Router } from '@angular/router';
 
 import { paymentStatusRedirectGuard } from './payment-status.guard';
 
-@Component({
-  template: '',
-})
+@Component({ template: '' })
 class TestComponent {}
 
 describe('paymentStatusRedirectGuard', () => {
@@ -18,8 +16,8 @@ describe('paymentStatusRedirectGuard', () => {
         provideRouter([
           {
             path: 'buyout-surplus',
-            component: TestComponent,
             canActivate: [paymentStatusRedirectGuard],
+            component: TestComponent,
           },
         ]),
       ],
@@ -31,12 +29,6 @@ describe('paymentStatusRedirectGuard', () => {
   it('preserves the fragment when adding the default payment status', async () => {
     await router.navigateByUrl('/buyout-surplus#cost');
 
-    expect(router.url).toBe('/buyout-surplus?paymentStatus=AWAITING_PAYMENT#cost');
-  });
-
-  it('preserves an explicitly selected payment status', async () => {
-    await router.navigateByUrl('/buyout-surplus?paymentStatus=PAID#transactions');
-
-    expect(router.url).toBe('/buyout-surplus?paymentStatus=PAID#transactions');
+    expect(router.url).toBe('/buyout-surplus?buyOutSurplusPaymentStatus=AWAITING_PAYMENT#cost');
   });
 });

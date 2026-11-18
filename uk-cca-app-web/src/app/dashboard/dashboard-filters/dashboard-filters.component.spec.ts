@@ -95,7 +95,6 @@ describe('DashboardFiltersComponent', () => {
 
     expect(optionLabels).toEqual([
       'All',
-      'PAT reporting - Upload CSV file',
       'Target unit account creation',
       'TP reporting (TP6) - Download spreadsheets',
       'TP reporting (TP6) - Upload spreadsheets',

@@ -1,10 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-
-import { SplitByProductTableComponent } from '../../underlying-agreement/split-by-product-table/split-by-product-table.component';
-import { tprFormActionQuery } from '../+state/tpr-form-timeline.selectors';
+import { SplitByProductTableComponent, tprFormActionQuery } from '@requests/common';
 
 @Component({
   selector: 'cca-tpr-products-timeline',
@@ -21,6 +19,7 @@ import { tprFormActionQuery } from '../+state/tpr-form-timeline.selectors';
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, SplitByProductTableComponent, ReturnToTaskOrActionPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprProductsTimelineComponent {
   private readonly requestActionStore = inject(RequestActionStore);

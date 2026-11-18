@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -14,9 +14,7 @@ import { TasksApiService } from '@requests/common';
 import { mockPreAuditReviewState } from '../../../testing/mock-data';
 import { PreAuditReviewRequestedDocumentsUploadComponent } from './pre-audit-review-requested-documents-upload.component';
 
-@Component({
-  template: '',
-})
+@Component({ template: '' })
 class DummyComponent {}
 
 const mockForm = new FormGroup({
@@ -41,7 +39,7 @@ describe('PreAuditReviewRequestedDocumentsUploadComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PreAuditReviewRequestedDocumentsUploadComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideRouter([{ path: '**', component: DummyComponent }]),
         RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },

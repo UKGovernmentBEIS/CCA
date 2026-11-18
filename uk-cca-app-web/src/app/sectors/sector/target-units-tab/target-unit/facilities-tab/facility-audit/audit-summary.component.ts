@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
@@ -14,7 +14,7 @@ import { toFacilityAuditSummaryData } from './audit-summary-data';
   template: `
     <div class="govuk-!-width-two-thirds">
       @if (inProgressFacilityAuditTask()) {
-        <govuk-warning-text>
+        <govuk-warning-text assistiveText="">
           An audit task is in progress. You cannot start a new one until the previous audit task has been completed.
         </govuk-warning-text>
       }
@@ -23,6 +23,7 @@ import { toFacilityAuditSummaryData } from './audit-summary-data';
     <cca-summary [data]="data()" />
   `,
   imports: [SummaryComponent, WarningTextComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuditSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { DocumentTemplatesService } from 'cca-api';
 
@@ -8,6 +8,7 @@ import { TemplateSearchComponent, TemplateSearchFetchFn } from '../template-sear
   selector: 'cca-documents',
   template: `<cca-template-search [fetchFn]="fetchFn" templateType="document" fragment="documents" />`,
   imports: [TemplateSearchComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentsComponent {
   private readonly documentTemplatesService = inject(DocumentTemplatesService);

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -35,7 +35,6 @@ import {
 @Component({
   selector: 'cca-performance-data-download-generate',
   templateUrl: './performance-data-download-generate.component.html',
-  providers: [PerformanceDataDownloadGenerateFormProvider],
   imports: [
     SummaryListComponent,
     SummaryListRowDirective,
@@ -47,6 +46,8 @@ import {
     PerformanceDataDownloadGeneratingComponent,
     PerformanceDataDownloadGeneratedComponent,
   ],
+  providers: [PerformanceDataDownloadGenerateFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataDownloadGenerateComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -96,7 +97,7 @@ export class PerformanceDataDownloadGenerateComponent implements OnInit {
         } as RequestTaskActionPayload,
       })
       .pipe(
-        catchNotFoundRequest<never>(ErrorCode.NOTFOUND1001, () =>
+        catchNotFoundRequest(ErrorCode.NOTFOUND1001, () =>
           this.businessErrorService.showErrorForceNavigation(taskNotFoundError),
         ),
         catchTaskReassignedBadRequest(() =>

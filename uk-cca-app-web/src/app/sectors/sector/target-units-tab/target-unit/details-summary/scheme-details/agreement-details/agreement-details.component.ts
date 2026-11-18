@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import {
   SummaryListComponent,
@@ -25,6 +25,7 @@ import { UnderlyingAgreementDocumentDetailsDTO } from 'cca-api';
     SummaryDownloadFilesComponent,
     DatePipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AgreementDetailsComponent {
   protected readonly agreement = input.required<UnderlyingAgreementDocumentDetailsDTO>();

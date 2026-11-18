@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -10,6 +10,7 @@ import { toPatSubmittedSummaryData } from './pat-upload-submitted-summary-data';
   selector: 'cca-pat-upload-submitted',
   template: `<cca-summary [data]="summaryData" />`,
   imports: [SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PATUploadSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

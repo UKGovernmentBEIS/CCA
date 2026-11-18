@@ -1,4 +1,4 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 import { produce } from 'immer';
@@ -8,7 +8,7 @@ import { UserDTO, UserStateDTO, UserTermsVersionDTO } from 'cca-api';
 
 import { AuthState, initialState } from './auth.state';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class AuthStore extends SignalStore<AuthState> {
   constructor() {
     super(initialState);

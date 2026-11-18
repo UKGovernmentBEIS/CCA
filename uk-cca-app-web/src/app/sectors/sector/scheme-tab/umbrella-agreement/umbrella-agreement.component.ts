@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -19,7 +19,6 @@ import {
 @Component({
   selector: 'cca-umbrella-agreement',
   templateUrl: './umbrella-agreement.component.html',
-  providers: [UmbrellaAgreementFormProvider],
   imports: [
     PageHeadingComponent,
     WarningTextComponent,
@@ -29,6 +28,8 @@ import {
     TextareaComponent,
     DateInputComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [UmbrellaAgreementFormProvider],
 })
 export class UmbrellaAgreementComponent {
   private readonly route = inject(ActivatedRoute);

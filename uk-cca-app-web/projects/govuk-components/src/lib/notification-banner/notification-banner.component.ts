@@ -1,8 +1,17 @@
-import { AfterViewInit, Component, ElementRef, computed, input, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  computed,
+  input,
+  viewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'govuk-notification-banner',
   templateUrl: './notification-banner.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationBannerComponent implements AfterViewInit {
   readonly type = input<'success' | 'neutral'>('neutral');

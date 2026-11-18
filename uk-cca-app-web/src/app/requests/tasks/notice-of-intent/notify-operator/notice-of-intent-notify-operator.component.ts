@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -42,7 +42,6 @@ import { createNotifyOperatorActionDTO } from '../transform';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  providers: [NotifyOperatorOfDecisionFormProvider],
   imports: [
     NotifyOperatorOfDecisionComponent,
     ReactiveFormsModule,
@@ -50,6 +49,8 @@ import { createNotifyOperatorActionDTO } from '../transform';
     WizardStepComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [NotifyOperatorOfDecisionFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class NoticeOfIntentNotifyOperatorComponent {
   private readonly router = inject(Router);

@@ -1,15 +1,7 @@
 import { inject } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  CanDeactivateFn,
-  NavigationCancel,
-  NavigationEnd,
-  NavigationError,
-  Router,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, CanDeactivateFn, Router } from '@angular/router';
 
-import { catchError, filter, map, of, take } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 
 import { RequestActionStore } from '@netz/common/store';
 
@@ -46,24 +38,7 @@ export function getRequestActionPageCanActivateGuard(actionIdParam = 'actionId')
 
 export function getRequestActionPageCanDeactivateGuard(): CanDeactivateFn<unknown> {
   return () => {
-    const store = inject(RequestActionStore);
-    const router = inject(Router);
-    const leavingAction = store.state.action;
-    const navigationId = router.currentNavigation()?.id;
-
-    router.events
-      .pipe(
-        filter(
-          (event) =>
-            (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) &&
-            event.id === navigationId,
-        ),
-        take(1),
-      )
-      .subscribe((event) => {
-        // Keep the displayed action on cancellation, and never clear an action loaded by the destination.
-        if (event instanceof NavigationEnd && store.state.action === leavingAction) store.reset();
-      });
+    inject(RequestActionStore).reset();
     return true;
   };
 }

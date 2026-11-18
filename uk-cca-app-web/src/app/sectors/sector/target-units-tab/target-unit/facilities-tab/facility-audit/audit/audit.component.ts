@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -13,6 +13,7 @@ import { FacilityAuditStore } from '../facility-audit.store';
   selector: 'cca-audit',
   templateUrl: './audit.component.html',
   imports: [ReactiveFormsModule, RouterLink, WizardStepComponent, RadioComponent, RadioOptionComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuditComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

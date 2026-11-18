@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
@@ -16,6 +16,7 @@ import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer
     </div>
   `,
   imports: [PageHeadingComponent, FacilityItemListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageFacilitiesComponent {
   private readonly store = inject(RequestTaskStore);

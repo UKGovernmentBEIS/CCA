@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -13,8 +13,9 @@ import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 @Component({
   selector: 'cca-edit-financial-independence',
   templateUrl: './edit-financial-independence.component.html',
-  providers: [StatusPipe],
   imports: [SelectComponent, ReactiveFormsModule, WizardStepComponent, RouterLink],
+  providers: [StatusPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditFinancialIndependenceComponent {
   private readonly updateTargetUnitAccountService = inject(UpdateTargetUnitAccountService);

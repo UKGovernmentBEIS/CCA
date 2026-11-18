@@ -39,7 +39,7 @@ describe('WorkflowHistoryTabComponent', () => {
       snapshot: {
         paramMap: { get: vi.fn().mockReturnValue('test-sector-id') },
         queryParamMap: queryParamMock,
-        fragment: null as string | null,
+        fragment: null,
       },
       queryParamMap: of(queryParamMock),
     };

@@ -17,7 +17,6 @@ export function toEmailTemplateSummary(dto: NotificationTemplateViewDTO, isEdita
   const documentsList: LinkList = dto?.documentTemplates.map((dt) => ({
     link: `/templates/document/${dt.id}`,
     text: dt.name,
-    queryParams: { fromEmail: dto.id },
   }));
 
   factory

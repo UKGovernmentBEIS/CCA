@@ -1,5 +1,5 @@
 import { DecimalPipe, PercentPipe } from '@angular/common';
-import { Component, computed, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -45,7 +45,6 @@ import {
 @Component({
   selector: 'cca-tpr-throughput-split-by-product',
   templateUrl: './tpr-throughput-split-by-product.component.html',
-  providers: [tprThroughputDetailsByProductFormProvider],
   imports: [
     DetailsComponent,
     ReactiveFormsModule,
@@ -58,6 +57,8 @@ import {
     DecimalPipe,
     PercentPipe,
   ],
+  providers: [tprThroughputDetailsByProductFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprThroughputSplitByProductComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -160,7 +161,7 @@ export class TprThroughputSplitByProductComponent {
       const productBaseYear = product.baselineYear;
       let improvementTarget = facilityImprovementTarget;
 
-      if (facilityBaselineYear != null && productBaseYear > facilityBaselineYear) {
+      if (facilityBaselineYear != null && productBaseYear !== facilityBaselineYear) {
         improvementTarget = calculateAdjustedImprovementTarget(
           this.referenceData(),
           this.reportType(),

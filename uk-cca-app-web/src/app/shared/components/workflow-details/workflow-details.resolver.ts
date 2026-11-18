@@ -3,22 +3,9 @@ import { ResolveFn } from '@angular/router';
 
 import { combineLatest } from 'rxjs';
 
-import {
-  ItemDTOResponse,
-  RequestActionInfoDTO,
-  RequestActionsService,
-  RequestDetailsDTO,
-  RequestItemsService,
-  RequestsService,
-} from 'cca-api';
+import { RequestActionsService, RequestItemsService, RequestsService } from 'cca-api';
 
-export type ResolvedWorkflowDetails = {
-  workflowDetails: RequestDetailsDTO;
-  requestItems: ItemDTOResponse;
-  requestActions: RequestActionInfoDTO[];
-};
-
-export const WorkflowDetailsResolver: ResolveFn<ResolvedWorkflowDetails> = (route) => {
+export const WorkflowDetailsResolver: ResolveFn<unknown> = (route) => {
   const workflowId = route.paramMap.get('workflowId');
   const requestsService = inject(RequestsService);
   const requestItemsService = inject(RequestItemsService);

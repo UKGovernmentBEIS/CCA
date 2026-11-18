@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -8,7 +8,7 @@ import { PanelComponent } from '@netz/govuk-components';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel title="Target period report submitted" />
+        <govuk-panel title="Target period report submitted"></govuk-panel>
 
         <h2 class="govuk-heading-m">What happens next</h2>
         <p>
@@ -22,5 +22,6 @@ import { PanelComponent } from '@netz/govuk-components';
     </div>
   `,
   imports: [PanelComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprFormSubmitConfirmationComponent {}

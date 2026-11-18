@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -19,8 +19,9 @@ type DashboardCriteriaQueryParams = DashboardFiltersFormValue & { page: number }
 @Component({
   selector: 'cca-dashboard-filters',
   templateUrl: './dashboard-filters.component.html',
-  providers: [DashboardFiltersFormProvider],
   imports: [ReactiveFormsModule, TextInputComponent, SelectComponent, ButtonDirective, UtilityPanelComponent],
+  providers: [DashboardFiltersFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardFiltersComponent {
   private readonly router = inject(Router);

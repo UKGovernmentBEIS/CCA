@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 
@@ -59,6 +59,7 @@ const VARIATION_TABLE_COLUMN: GovukTableColumn = { field: 'variationIndicator', 
     PaginationComponent,
     ButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityPerformanceDataReportTableComponent {
   private readonly sectorLevelPerformanceDataViewPagesService = inject(SectorLevelPerformanceDataViewPagesService);

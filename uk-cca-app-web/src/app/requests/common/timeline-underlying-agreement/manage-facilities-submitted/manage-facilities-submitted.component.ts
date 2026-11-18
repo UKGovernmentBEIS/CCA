@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -16,6 +16,7 @@ import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-ag
     </div>
   `,
   imports: [PageHeadingComponent, FacilityItemListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageFacilitiesSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

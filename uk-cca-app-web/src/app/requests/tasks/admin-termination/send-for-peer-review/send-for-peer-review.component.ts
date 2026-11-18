@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { SendForPeerReviewComponent } from '@requests/common';
 
@@ -13,5 +13,6 @@ import { SendForPeerReviewComponent } from '@requests/common';
     />
   `,
   imports: [SendForPeerReviewComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AdminTerminationSendForPeerReviewComponent {}

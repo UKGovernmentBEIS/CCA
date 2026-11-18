@@ -1,5 +1,4 @@
 import { mockTargetUnitDetails, mockUnderlyingAgreement } from '@requests/common';
-import { SchemeVersionEnum } from '@shared/types';
 
 import { UnderlyingAgreementReviewRequestTaskPayload } from 'cca-api';
 
@@ -22,7 +21,7 @@ const basePayload: UnderlyingAgreementReviewRequestTaskPayload = {
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },

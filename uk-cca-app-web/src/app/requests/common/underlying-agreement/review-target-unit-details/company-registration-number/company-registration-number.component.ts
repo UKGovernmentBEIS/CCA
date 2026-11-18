@@ -1,4 +1,4 @@
-import { Component, computed, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { catchError, of, take } from 'rxjs';
@@ -27,7 +27,6 @@ import { CompanyNumberState, CompanyRegistrationNumberSubmitEvent } from '../../
 @Component({
   selector: 'cca-common-company-registration-number',
   templateUrl: './company-registration-number.component.html',
-  providers: [CompanyRegistrationNumberFormProvider],
   imports: [
     ReactiveFormsModule,
     ReturnToTaskOrActionPageComponent,
@@ -38,6 +37,8 @@ import { CompanyNumberState, CompanyRegistrationNumberSubmitEvent } from '../../
     ConditionalContentDirective,
     DetailsComponent,
   ],
+  providers: [CompanyRegistrationNumberFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommonCompanyRegistrationNumberComponent {
   private readonly companiesInformationService = inject(CompaniesInformationService);

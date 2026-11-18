@@ -54,12 +54,7 @@
       </govuk-details>
     }
 
-    <div
-      govuk-textarea
-      formControlName="additionalInformation"
-      label="Additional information"
-      [labelHidden]="true"
-    ></div>
+    <div govuk-textarea formControlName="additionalInformation"></div>
 
     <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files" label="Upload a file (optional)" />
   </cca-wizard-step>

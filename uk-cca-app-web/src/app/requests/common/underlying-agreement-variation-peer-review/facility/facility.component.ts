@@ -1,11 +1,11 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
 import { CountryService } from '@shared/services';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 
 import { toFacilityWizardSummaryDataWithDecisionAndStatus } from '../../underlying-agreement';
 import { isCCA3Scheme } from '../../utils';
@@ -23,6 +23,7 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
     }
   `,
   imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -41,7 +42,7 @@ export class FacilityComponent {
   );
 
   private readonly schemeVersion = computed(() =>
-    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersionEnum.CCA_3 : SchemeVersionEnum.CCA_2,
+    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersion.CCA_3 : SchemeVersion.CCA_2,
   );
 
   protected readonly summaryData = computed(() => {

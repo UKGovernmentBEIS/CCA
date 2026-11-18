@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { catchError, Observable, pipe, tap } from 'rxjs';
 
@@ -32,7 +32,7 @@ const INITIAL_STATE: TuMoaDetailsState = {
   totalFacilityItems: 0,
 };
 
-@Service({ autoProvided: false })
+@Injectable()
 export class TuMoaDetailsStore extends SignalStore<TuMoaDetailsState> {
   private readonly subsistenceFeesMoAViewService = inject(SubsistenceFeesMoAViewService);
   private readonly subsistenceFeesMoATargetUnitViewService = inject(SubsistenceFeesMoATargetUnitViewService);

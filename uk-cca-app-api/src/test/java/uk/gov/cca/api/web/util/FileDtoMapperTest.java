@@ -12,29 +12,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class FileDtoMapperTest {
 
-    private final FileDtoMapper mapper = Mappers.getMapper(FileDtoMapper.class);
+    private FileDtoMapper mapper = Mappers.getMapper(FileDtoMapper.class);
 
     @Test
     void toFileDTO() throws IOException {
-        String createdBy = "createdBy";
-        String content = "content";
+        String  content = "content";
         MultipartFile multipartFile = new MockMultipartFile("name", "originalname.txt", "type", content.getBytes());
         
-        FileDTO fileDTO = mapper.toFileDTO(multipartFile, createdBy);
+        FileDTO fileDTO = mapper.toFileDTO(multipartFile);
         
         assertThat(fileDTO.getFileContent()).isEqualTo(content.getBytes());
         assertThat(fileDTO.getFileName()).isEqualTo("originalname.txt");
         assertThat(fileDTO.getFileSize()).isEqualTo(content.getBytes().length);
         assertThat(fileDTO.getFileType()).isEqualTo("text/plain");
-        assertThat(fileDTO.getCreatedBy()).isEqualTo(createdBy);
-    }
-    
-    @Test
-    void toFileDTO_when_file_is_null() throws IOException {
-        String createdBy = "user-id";
-
-        FileDTO fileDTO = mapper.toFileDTO(null, createdBy);
-
-        assertThat(fileDTO).isNull();
     }
 }

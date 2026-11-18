@@ -2,13 +2,11 @@ import { Routes } from '@angular/router';
 
 export const TEMPLATES_ROUTES: Routes = [
   {
-    title: 'Templates',
     path: '',
     children: [
       {
-        title: 'Templates',
         path: '',
-        loadComponent: () => import('./templates.component').then((c) => c.TemplatesComponent),
+        loadComponent: () => import('./templates.component').then((m) => m.TemplatesComponent),
       },
       {
         path: 'email',

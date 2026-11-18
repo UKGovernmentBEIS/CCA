@@ -18,10 +18,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.service.PerformanceAccountTemplateDataQueryService;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.facility.service.FacilityPerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.netz.api.security.Authorized;
@@ -34,9 +33,8 @@ import uk.gov.netz.api.security.Authorized;
 public class SectorAssociationPerformanceAccountTemplateDataReportController {
 
 	private final PerformanceAccountTemplateDataQueryService performanceAccountTemplateDataQueryService;
-	private final FacilityPerformanceAccountTemplateDataQueryService facilityPerformanceAccountTemplateDataQueryService;
 
-	@PostMapping(path = "/accounts")
+	@PostMapping
 	@Operation(summary = "Populates the performance account template data of sector accounts")
 	@ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {
 			@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = SectorPerformanceAccountTemplateDataReportListDTO.class)) })
@@ -45,7 +43,7 @@ public class SectorAssociationPerformanceAccountTemplateDataReportController {
 	@ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {
 			@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class)) })
 	@Authorized(resourceId = "#sectorAssociationId")
-	public ResponseEntity<SectorPerformanceAccountTemplateDataReportListDTO> getSectorAccountPerformanceAccountTemplateDataReportList(
+	public ResponseEntity<SectorPerformanceAccountTemplateDataReportListDTO> getSectorPerformanceAccountTemplateDataReportList(
 			@PathVariable @Parameter(description = "The sector association id") Long sectorAssociationId,
 			@RequestBody @Valid @Parameter(description = "The search criteria") SectorPerformanceAccountTemplateDataReportSearchCriteria criteria) {
 		return new ResponseEntity<>(
@@ -54,21 +52,4 @@ public class SectorAssociationPerformanceAccountTemplateDataReportController {
 				HttpStatus.OK);
 	}
 
-	@PostMapping(path = "/facilities")
-	@Operation(summary = "Populates the performance account template data of sector facilities")
-	@ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {
-			@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = SectorPerformanceAccountTemplateDataReportListDTO.class)) })
-	@ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {
-			@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class)) })
-	@ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {
-			@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class)) })
-	@Authorized(resourceId = "#sectorAssociationId")
-	public ResponseEntity<SectorPerformanceAccountTemplateDataReportListDTO> getSectorFacilityPerformanceAccountTemplateDataReportList(
-			@PathVariable @Parameter(description = "The sector association id") Long sectorAssociationId,
-			@RequestBody @Valid @Parameter(description = "The search criteria") SectorPerformanceAccountTemplateDataReportSearchCriteria criteria) {
-		return new ResponseEntity<>(
-				facilityPerformanceAccountTemplateDataQueryService
-						.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria),
-				HttpStatus.OK);
-	}
 }

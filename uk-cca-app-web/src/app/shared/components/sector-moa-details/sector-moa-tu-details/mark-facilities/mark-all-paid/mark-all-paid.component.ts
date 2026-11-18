@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -27,6 +27,7 @@ import { SectorMoaTUDetailsStore } from '../../sector-moa-tu-details.store';
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkAllPaidComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);

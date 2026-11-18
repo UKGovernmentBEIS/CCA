@@ -60,8 +60,8 @@ import { applySaveActionSideEffects, deleteDecision } from '../../../utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  providers: [ProvideEvidenceFormProvider],
   imports: [WizardStepComponent, ReactiveFormsModule, ReturnToTaskOrActionPageComponent, MultipleFileInputComponent],
+  providers: [ProvideEvidenceFormProvider],
 })
 export class ProvideEvidenceComponent {
   private readonly store = inject(RequestTaskStore);

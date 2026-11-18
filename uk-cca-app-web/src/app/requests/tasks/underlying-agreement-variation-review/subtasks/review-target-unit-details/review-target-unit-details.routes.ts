@@ -14,61 +14,61 @@ export const REVIEW_TARGET_UNIT_DETAILS_ROUTES: Routes = [
         children: [],
       },
       {
-        title: 'Review target unit details',
         path: 'summary',
+        title: 'Review target unit details',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./summary/review-target-unit-details-summary.component').then(
             (c) => c.ReviewTargetUnitDetailsSummaryComponent,
           ),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Target unit details decision',
         path: 'decision',
+        title: 'Target unit details decision',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./decision/review-target-unit-details-decision.component').then(
             (c) => c.ReviewTargetUnitDetailsDecisionComponent,
           ),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
+        title: 'Check your answers',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./check-your-answers/review-target-unit-details-check-your-answers.component').then(
             (c) => c.ReviewTargetUnitDetailsCheckYourAnswersComponent,
           ),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Edit company registration number',
         path: ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER,
+        title: 'Edit company registration number',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./company-registration-number/company-registration-number.component').then(
             (c) => c.CompanyRegistrationNumberComponent,
           ),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Edit target unit details',
         path: ReviewTargetUnitDetailsWizardStep.TARGET_UNIT_DETAILS,
+        title: 'Edit target unit details',
+        data: { backlink: `../${ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER}`, breadcrumb: false },
         loadComponent: () =>
           import('./target-unit-details/target-unit-details.component').then((c) => c.TargetUnitDetailsComponent),
-        data: { backlink: `../${ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER}`, breadcrumb: false },
       },
       {
-        title: 'Edit operator address',
         path: ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS,
+        title: 'Edit operator address',
+        data: { backlink: `../${ReviewTargetUnitDetailsWizardStep.TARGET_UNIT_DETAILS}`, breadcrumb: false },
         loadComponent: () =>
           import('./operator-address/operator-address.component').then((c) => c.OperatorAddressComponent),
-        data: { backlink: `../${ReviewTargetUnitDetailsWizardStep.TARGET_UNIT_DETAILS}`, breadcrumb: false },
       },
       {
-        title: 'Edit responsible person',
         path: ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON,
+        title: 'Edit responsible person',
+        data: { backlink: `../${ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS}`, breadcrumb: false },
         loadComponent: () =>
           import('./responsible-person/responsible-person.component').then((c) => c.ResponsiblePersonComponent),
-        data: { backlink: `../${ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS}`, breadcrumb: false },
       },
     ],
   },

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -15,6 +15,7 @@ import { trackCorrectiveActionsCompletedQuery } from '../track-corrective-action
     <cca-summary [data]="data" />
   `,
   imports: [PageHeadingComponent, SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrackCorrectiveActionsCompletedDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

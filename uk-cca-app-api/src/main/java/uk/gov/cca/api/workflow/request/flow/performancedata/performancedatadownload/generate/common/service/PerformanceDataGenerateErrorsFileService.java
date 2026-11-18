@@ -66,11 +66,11 @@ public class PerformanceDataGenerateErrorsFileService {
 			final byte[] generatedFile = sw.toString().getBytes(StandardCharsets.UTF_8);
 			FileDTO csvFileDTO = FileDTO.builder()
 					.fileContent(generatedFile).fileName(errorsFileName).fileSize(generatedFile.length)
-					.fileType(MimeTypeUtils.detect(generatedFile, errorsFileName))
-					.createdBy(requestPayload.getSectorUserAssignee()).build();
+					.fileType(MimeTypeUtils.detect(generatedFile, errorsFileName)).build();
 
 			// Save to DB
-			final String uuid = ccaFileAttachmentService.createSystemFileAttachment(csvFileDTO, FileStatus.SUBMITTED);
+			final String uuid = ccaFileAttachmentService.createSystemFileAttachment(
+					csvFileDTO, FileStatus.SUBMITTED, requestPayload.getSectorUserAssignee());
 
 			return Optional.of(FileInfoDTO.builder().uuid(uuid).name(errorsFileName).build());
 		} catch (Exception e) {

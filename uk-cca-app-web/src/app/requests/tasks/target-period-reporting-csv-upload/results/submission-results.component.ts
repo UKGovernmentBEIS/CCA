@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
@@ -28,6 +28,7 @@ import { tprCSVUploadQuery } from '../target-period-reporting-csv-upload.selecto
     SummaryComponent,
     RouterLink,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmissionResultsComponent {
   private readonly router = inject(Router);

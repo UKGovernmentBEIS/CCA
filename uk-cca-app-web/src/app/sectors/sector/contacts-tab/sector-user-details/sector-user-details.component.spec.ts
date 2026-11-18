@@ -59,7 +59,7 @@ describe('SectorUserDetailsComponent', () => {
   });
 
   it('should display available "change" links', () => {
-    const changeLinks = getAllByRole('link').filter((l) => l.textContent?.trim().startsWith('Change '));
+    const changeLinks = getAllByRole('link').filter((l) => l.textContent === 'Change');
     expect(changeLinks.length).toEqual(7);
   });
 });

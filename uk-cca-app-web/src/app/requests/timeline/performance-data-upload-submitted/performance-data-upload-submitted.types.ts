@@ -1,6 +1,10 @@
-import { PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload, TP6PerformanceData } from 'cca-api';
+import {
+  PerformanceData,
+  PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload,
+  TP6PerformanceDataAllOf,
+} from 'cca-api';
 
-export type PerformanceDataTp6 = TP6PerformanceData;
+export type PerformanceDataTp6 = PerformanceData & TP6PerformanceDataAllOf;
 
 export type PerformanceDataUploadedActionPayload = Omit<
   PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload,

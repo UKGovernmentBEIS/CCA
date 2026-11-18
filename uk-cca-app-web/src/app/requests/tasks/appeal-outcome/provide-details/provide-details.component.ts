@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -20,8 +20,6 @@ import {
 
 @Component({
   selector: 'cca-appeal-outcome-provide-details',
-  templateUrl: './provide-details.component.html',
-  providers: [AppealOutcomeFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -32,6 +30,9 @@ import {
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [AppealOutcomeFormProvider],
+  templateUrl: './provide-details.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProvideDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

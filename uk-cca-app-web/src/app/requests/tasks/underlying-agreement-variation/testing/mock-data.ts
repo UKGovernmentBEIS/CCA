@@ -1,6 +1,5 @@
 import { RequestTaskState } from '@netz/common/store';
 import { UNAVariationRequestTaskPayload } from '@requests/common';
-import { SchemeVersionEnum } from '@shared/types';
 
 import {
   Facility,
@@ -26,7 +25,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -83,7 +82,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -140,7 +139,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -197,7 +196,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -256,7 +255,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -313,7 +312,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -370,7 +369,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -427,7 +426,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -483,7 +482,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -707,7 +706,7 @@ export const mockTargetUnitDetails: TargetUnitAccountDetails = {
 
 export const mockOriginalUnderlyingAgreementContainer: UnderlyingAgreementContainer = {
   schemeDataMap: {
-    [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
+    ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
   },
   underlyingAgreement: mockUnderlyingAgreementVariationOriginal,
   underlyingAgreementAttachments: {
@@ -728,7 +727,7 @@ export const mockUnaVariationRequestTaskPayload: UNAVariationRequestTaskPayload 
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },

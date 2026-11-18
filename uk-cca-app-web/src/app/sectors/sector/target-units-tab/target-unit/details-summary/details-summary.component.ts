@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -15,7 +15,7 @@ import {
 import { UtilityPanelComponent } from '@shared/components';
 import { OperatorTypePipe, StatusPipe, transformAddress } from '@shared/pipes';
 import { CountryService } from '@shared/services';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 import { equalAddressFields, equalArrayFields, equalFields, transformPhoneNumber } from '@shared/utils';
 
 import { CompaniesInformationService, CompanyProfileDTO } from 'cca-api';
@@ -44,6 +44,7 @@ export type IsEditableData = {
     OperatorTypePipe,
     SchemeDetailsComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailsSummaryComponent implements OnInit {
   private readonly companiesInformationService = inject(CompaniesInformationService);
@@ -98,11 +99,11 @@ export class DetailsSummaryComponent implements OnInit {
   }));
 
   protected readonly cca2UnderlyingAgreementDetails = computed(
-    () => this.unaDetails()?.underlyingAgreementDocumentMap?.[SchemeVersionEnum.CCA_2],
+    () => this.unaDetails()?.underlyingAgreementDocumentMap?.[SchemeVersion.CCA_2],
   );
 
   protected readonly cca3UnderlyingAgreementDetails = computed(
-    () => this.unaDetails()?.underlyingAgreementDocumentMap?.[SchemeVersionEnum.CCA_3],
+    () => this.unaDetails()?.underlyingAgreementDocumentMap?.[SchemeVersion.CCA_3],
   );
 
   protected readonly fieldDiffs = computed(() => {

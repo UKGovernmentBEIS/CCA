@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -23,6 +23,7 @@ import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, ReturnToTaskOrActionPageComponent, EnergyFuelAmountSummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergyFuelAmountDetailsSummaryComponent {
   protected readonly requestTaskStore = inject(RequestTaskStore);

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
@@ -24,6 +24,7 @@ import { CorrectiveActions } from 'cca-api';
     RouterLink,
     DatePipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CorrectiveActionsSummaryDetailsComponent {
   readonly correctiveActions = input.required<CorrectiveActions>();

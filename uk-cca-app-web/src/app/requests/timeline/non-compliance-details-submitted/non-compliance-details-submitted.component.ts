@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,6 +11,7 @@ import { toNonComplianceDetailsSubmittedSummaryData } from './non-compliance-det
   selector: 'cca-non-compliance-details-submitted',
   template: `<cca-summary [data]="data()" />`,
   imports: [SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NonComplianceDetailsSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

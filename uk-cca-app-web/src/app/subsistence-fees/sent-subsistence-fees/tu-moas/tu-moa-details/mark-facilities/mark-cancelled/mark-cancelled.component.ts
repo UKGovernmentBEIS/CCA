@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -27,6 +27,7 @@ import { TuMoaDetailsStore } from '../../tu-moa-details.store';
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkCancelledComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

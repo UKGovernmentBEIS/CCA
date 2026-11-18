@@ -5,24 +5,18 @@ import { SubsistenceFeesStore } from './subsistence-fees.store';
 
 export const SUBSISTENCE_FEES_ROUTES: Routes = [
   {
-    title: 'Subsistence fees',
     path: '',
-    loadComponent: () => import('./subsistence-fees.component').then((c) => c.SubsistenceFeesComponent),
+    providers: [SubsistenceFeesStore],
     canDeactivate: [
       () => {
         inject(SubsistenceFeesStore).reset();
         return true;
       },
     ],
-    providers: [SubsistenceFeesStore],
+    loadComponent: () => import('./subsistence-fees.component').then((c) => c.SubsistenceFeesComponent),
   },
   {
-    title: 'New payment request',
     path: 'new-payment-request',
-    loadComponent: () =>
-      import('./new-subsistence-fees-payment-request/new-subsistence-fees-payment-request.component').then(
-        (c) => c.NewSubsistenceFeesPaymentRequestComponent,
-      ),
     data: {
       breadcrumb: {
         text: 'Subsistence fees',
@@ -30,6 +24,10 @@ export const SUBSISTENCE_FEES_ROUTES: Routes = [
         link: '/subsistence-fees',
       },
     },
+    loadComponent: () =>
+      import('./new-subsistence-fees-payment-request/new-subsistence-fees-payment-request.component').then(
+        (c) => c.NewSubsistenceFeesPaymentRequestComponent,
+      ),
   },
   {
     path: 'workflow-history',
@@ -49,12 +47,10 @@ export const SUBSISTENCE_FEES_ROUTES: Routes = [
       import('./sent-subsistence-fees/sent-subsistence-fees.routes').then((r) => r.SENT_SUBSISTENCE_FEES_ROUTES),
   },
   {
-    title: 'Payment requests process in progress',
     path: 'confirmation',
     loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
   },
   {
-    title: 'New payment request',
     path: 'request-error',
     loadComponent: () => import('./request-error/request-error.component').then((c) => c.RequestErrorComponent),
   },

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -31,6 +31,7 @@ import { toAppealDetailsSummaryData } from '../to-appeal-details-summary-data';
     PendingButtonDirective,
     ReturnToTaskOrActionPageComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckYourAnswersComponent {
   private readonly provideAppealDetailsStore = inject(ProvideAppealDetailsStore);

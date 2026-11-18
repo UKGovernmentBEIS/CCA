@@ -1,27 +1,27 @@
 package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDetailInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.domain.BuyOutSurplusAccountProcessingException;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.common.validation.BuyOutSurplusViolation;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.utils.BuyOutSurplusCalculationUtil;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.service.BuyOutSurplusPaymentDeadlineService;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.flow.common.service.CalculateWorkingDaysService;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 public class TP6BuyOutSurplusCalculation {
 
@@ -30,7 +30,7 @@ public class TP6BuyOutSurplusCalculation {
     private final BuyOutSurplusQueryService buyOutSurplusQueryService;
     private final BuyOutSurplusAccountProcessingOfficialNoticeService buyOutSurplusAccountProcessingOfficialNoticeService;
     private final BuyOutSurplusManagementService buyOutSurplusManagementService;
-    private final BuyOutSurplusPaymentDeadlineService buyOutSurplusPaymentDeadlineService;
+    private final CalculateWorkingDaysService calculateWorkingDaysService;
 
     // Init Variables
     private Request request;
@@ -40,16 +40,16 @@ public class TP6BuyOutSurplusCalculation {
     private PerformanceDataBuyOutSurplusDetailsDTO performanceData;
 
     // Variables
-    private List<BuyOutSurplusTransactionDetailInfoDTO> previousTransactions;
+    private List<BuyOutSurplusTransactionInfoDTO> previousTransactions;
 
     public TP6BuyOutSurplusCalculation(TargetUnitAccountNoticeRecipients targetUnitAccountNoticeRecipients, BuyOutSurplusQueryService buyOutSurplusQueryService,
                                        BuyOutSurplusAccountProcessingOfficialNoticeService buyOutSurplusAccountProcessingOfficialNoticeService,
-                                       BuyOutSurplusManagementService buyOutSurplusManagementService, BuyOutSurplusPaymentDeadlineService buyOutSurplusPaymentDeadlineService) {
+                                       BuyOutSurplusManagementService buyOutSurplusManagementService, CalculateWorkingDaysService calculateWorkingDaysService) {
         this.targetUnitAccountNoticeRecipients = targetUnitAccountNoticeRecipients;
         this.buyOutSurplusQueryService = buyOutSurplusQueryService;
         this.buyOutSurplusAccountProcessingOfficialNoticeService = buyOutSurplusAccountProcessingOfficialNoticeService;
         this.buyOutSurplusManagementService = buyOutSurplusManagementService;
-        this.buyOutSurplusPaymentDeadlineService = buyOutSurplusPaymentDeadlineService;
+        this.calculateWorkingDaysService = calculateWorkingDaysService;
     }
 
     /** Initialize with data **/
@@ -89,9 +89,8 @@ public class TP6BuyOutSurplusCalculation {
 
     /** Initialize Primary **/
     private TP6BuyOutSurplusCalculation primaryResult() {
-        LocalDate invoicedPaymentDeadline = buyOutSurplusPaymentDeadlineService.getBuyOutPaymentDeadline(this.request.getCompetentAuthority(), PerformanceDataSubmissionType.PRIMARY, targetPeriodDetails, LocalDate.now());
         BuyOutSurplusResult buyOutSurplus = BuyOutSurplusCalculationUtil
-                .initializePrimaryResult(this.performanceData, invoicedPaymentDeadline);
+                .initializePrimaryResult(this.performanceData, this.targetPeriodDetails);
         this.requestPayload.setBuyOutSurplus(buyOutSurplus);
         this.requestPayload.setTransactionRequired(
                 buyOutSurplus.getBuyOutSurplusContainer().getInvoicedBuyOutFee().compareTo(BigDecimal.ZERO) != 0);
@@ -101,9 +100,9 @@ public class TP6BuyOutSurplusCalculation {
 
     /** Initialize Secondary **/
     private TP6BuyOutSurplusCalculation secondaryResult() {
-        LocalDate invoicedPaymentDeadline = buyOutSurplusPaymentDeadlineService.getBuyOutPaymentDeadline(this.request.getCompetentAuthority(), PerformanceDataSubmissionType.SECONDARY, targetPeriodDetails, LocalDate.now());
         BuyOutSurplusResult buyOutSurplus = BuyOutSurplusCalculationUtil
-                .initializeSecondaryResult(this.performanceData, this.previousTransactions, this.targetPeriodDetails, invoicedPaymentDeadline);
+                .initializeSecondaryResult(this.performanceData, this.previousTransactions, this.targetPeriodDetails,
+                		this.calculateWorkingDaysService.addWorkingDays(LocalDate.now(), 30, this.request.getCompetentAuthority()));
         this.requestPayload.setBuyOutSurplus(buyOutSurplus);
         this.requestPayload.setTransactionRequired(
                 buyOutSurplus.getBuyOutSurplusContainer().getInvoicedBuyOutFee().compareTo(BigDecimal.ZERO) != 0);
@@ -114,7 +113,7 @@ public class TP6BuyOutSurplusCalculation {
     /** Get previous completed payments **/
     private TP6BuyOutSurplusCalculation previousPayments() {
         this.previousTransactions = this.buyOutSurplusQueryService
-                .getAccountTransactionInfo(this.request.getAccountId(), this.targetPeriodDetails.getBusinessId());
+                .getAllTransactionInfoByAccountAndTargetPeriodPessimistic(this.request.getAccountId(), this.targetPeriodDetails.getBusinessId());
 
         return this;
     }
@@ -138,7 +137,7 @@ public class TP6BuyOutSurplusCalculation {
 
     /** Update awaiting payments to TERMINATED **/
     private TP6BuyOutSurplusCalculation terminateAwaitPayments() {
-        this.buyOutSurplusManagementService.terminateAwaitingPayments(this.previousTransactions, this.requestMetadata);
+        this.buyOutSurplusManagementService.terminateAwaitPayments(this.previousTransactions, this.requestMetadata);
 
         return this;
     }
@@ -178,8 +177,7 @@ public class TP6BuyOutSurplusCalculation {
             this.requestPayload.getBuyOutSurplus().setFileDocumentUuid(officialNotice.getUuid());
 
             // Persist the buy out surplus transaction
-            this.buyOutSurplusManagementService
-                    .saveBuyOutSurplusTransaction(this.requestPayload.getBuyOutSurplus(), this.request.getAccountId(), this.targetPeriodDetails.getBusinessId());
+            this.buyOutSurplusManagementService.saveBuyOutSurplusTransaction(this.requestPayload.getBuyOutSurplus());
         }
 
         return this;

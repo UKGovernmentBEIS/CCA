@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -46,7 +46,6 @@ const DEFAULT_PAGE_SIZE = 30;
 @Component({
   selector: 'cca-tu-moa-details',
   templateUrl: './tu-moa-details.component.html',
-  providers: [TargetUnitFacilitiesListFormProvider, StatusPipe],
   imports: [
     ReactiveFormsModule,
     TagComponent,
@@ -65,6 +64,8 @@ const DEFAULT_PAGE_SIZE = 30;
     RouterLink,
     WarningTextComponent,
   ],
+  providers: [TargetUnitFacilitiesListFormProvider, StatusPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TuMoaDetailsComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

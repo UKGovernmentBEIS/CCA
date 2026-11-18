@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Service } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 import { distinctUntilChanged, EMPTY, filter, map, Observable, switchMap, take, timer } from 'rxjs';
@@ -9,14 +9,8 @@ import { logger } from '@shared/utils';
 
 import { RequestDetailsDTO, RequestSearchCriteria, RequestsService } from 'cca-api';
 
-export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_PAGE = 1;
-
-/**
- * A batch run of either scheme blocks a new one, so both types are polled together and both are listed
- * in the workflow history.
- */
-export const BUY_OUT_SURPLUS_REQUEST_TYPES = ['BUY_OUT_SURPLUS_RUN', 'BUY_OUT_SURPLUS_FACILITY_RUN'];
 
 export type BuyoutSurplusState = {
   currentPage: number;
@@ -36,7 +30,7 @@ const INITIAL_STATE: BuyoutSurplusState = {
   totalWorkflowHistoryItems: 0,
 };
 
-@Service({ autoProvided: false })
+@Injectable()
 export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
   private readonly destroyRef = inject(DestroyRef);
   private readonly requestsService = inject(RequestsService);
@@ -85,7 +79,7 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
     const requestSearchCriteria: RequestSearchCriteria = {
       resourceType: 'CA',
       resourceId: 'ENGLAND',
-      requestTypes: BUY_OUT_SURPLUS_REQUEST_TYPES,
+      requestTypes: ['BUY_OUT_SURPLUS_RUN'],
       requestStatuses: ['IN_PROGRESS'],
       historyCategory: HistoryCategory.CA,
       pageNumber: 0,
@@ -127,7 +121,7 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
     const requestSearchCriteria: RequestSearchCriteria = {
       resourceType: 'CA',
       resourceId: 'ENGLAND',
-      requestTypes: BUY_OUT_SURPLUS_REQUEST_TYPES,
+      requestTypes: ['BUY_OUT_SURPLUS_RUN'],
       historyCategory: HistoryCategory.CA,
       pageNumber: this.state.currentPage - 1,
       pageSize: this.state.pageSize || 10,

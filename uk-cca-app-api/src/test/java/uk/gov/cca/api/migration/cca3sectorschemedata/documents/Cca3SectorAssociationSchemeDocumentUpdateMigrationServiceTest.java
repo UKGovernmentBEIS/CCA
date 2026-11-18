@@ -61,7 +61,6 @@ class Cca3SectorAssociationSchemeDocumentUpdateMigrationServiceTest {
 				.fileContent("fileContent200".getBytes())
 				.fileType("fileType200")
 				.fileSize("fileContent200".getBytes().length)
-				.createdBy(MigrationConstants.MIGRATION_PROCESS_USER)
 				.build();
 		final FtpFileDTOResult ftpFileDTOResult = FtpFileDTOResult.builder()
 				.fileDTO(fileDTO)

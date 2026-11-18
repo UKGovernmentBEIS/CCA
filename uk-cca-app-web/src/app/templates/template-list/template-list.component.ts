@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { GovukTableColumn, TableComponent } from '@netz/govuk-components';
@@ -22,6 +22,7 @@ import { DocumentTemplateInfoDTO, NotificationTemplateInfoDTO } from 'cca-api';
     </govuk-table>
   `,
   imports: [TableComponent, RouterLink, DatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplateListComponent {
   protected readonly templates = input.required<NotificationTemplateInfoDTO[] | DocumentTemplateInfoDTO[]>();

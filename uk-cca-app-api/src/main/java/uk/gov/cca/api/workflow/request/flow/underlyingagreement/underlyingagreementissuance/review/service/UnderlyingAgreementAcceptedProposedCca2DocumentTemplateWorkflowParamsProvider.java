@@ -8,14 +8,14 @@ import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocum
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
-import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateSyncWorkflowParamsProvider;
+import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
 public class UnderlyingAgreementAcceptedProposedCca2DocumentTemplateWorkflowParamsProvider implements
-        DocumentTemplateSyncWorkflowParamsProvider<UnderlyingAgreementRequestPayload> {
+        DocumentTemplateWorkflowParamsProvider<UnderlyingAgreementRequestPayload> {
 
     private final DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
 

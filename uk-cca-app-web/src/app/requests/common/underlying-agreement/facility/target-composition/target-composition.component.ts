@@ -1,4 +1,4 @@
-import { Component, computed, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -22,7 +22,6 @@ import { TARGET_COMPOSITION_FORM, TargetCompositionFormProvider } from './target
 @Component({
   selector: 'cca-common-facility-target-composition',
   templateUrl: './target-composition.component.html',
-  providers: [TargetCompositionFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -31,6 +30,8 @@ import { TARGET_COMPOSITION_FORM, TargetCompositionFormProvider } from './target
     CcaTextInputComponent,
     RouterLink,
   ],
+  providers: [TargetCompositionFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommonFacilityTargetCompositionComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

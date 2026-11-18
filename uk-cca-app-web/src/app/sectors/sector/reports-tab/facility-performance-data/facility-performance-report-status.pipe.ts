@@ -1,10 +1,19 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { getFacilityPerformanceReportStatusLabel } from '@shared/utils';
+export enum FacilityPerformanceReportStatusEnum {
+  TARGET_MET = 'Target met',
+  TARGET_NOT_MET = 'Target not met',
+  SUBMITTED = 'Submitted',
+  OUTSTANDING = 'Outstanding',
+}
 
 @Pipe({ name: 'facilityPerformanceReportStatus' })
 export class FacilityPerformanceReportStatusPipe implements PipeTransform {
   transform(value: string | null): string {
-    return getFacilityPerformanceReportStatusLabel(value);
+    if (!value) return '';
+
+    const text = FacilityPerformanceReportStatusEnum[value];
+
+    return text ?? value;
   }
 }

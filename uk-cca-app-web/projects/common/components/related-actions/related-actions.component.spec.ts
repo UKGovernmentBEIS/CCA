@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, ActivatedRouteSnapshot, provideRouter, Route } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Route } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { RequestTaskActionProcessDTO } from 'cca-api';
 
@@ -43,9 +44,8 @@ describe('RelatedActionsComponent', () => {
 
   const setupTestingModule = async (withChangeAssigneeRoute = false) => {
     await TestBed.configureTestingModule({
-      imports: [TestComponent],
+      imports: [RouterTestingModule, TestComponent],
       providers: [
-        provideRouter([]),
         { provide: TASK_RELATED_ACTIONS_MAP, useValue: actionsMap },
         { provide: ActivatedRoute, useValue: constructRoute(withChangeAssigneeRoute) },
       ],

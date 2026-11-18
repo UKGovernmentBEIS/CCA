@@ -1,4 +1,4 @@
-import { Component, computed, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -42,6 +42,7 @@ import {
     WizardStepComponent,
     RouterLink,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationFacilityDetailsFormComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

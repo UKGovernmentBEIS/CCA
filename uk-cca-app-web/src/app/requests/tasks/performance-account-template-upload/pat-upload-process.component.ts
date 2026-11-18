@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -33,7 +33,6 @@ import { PatUploadProcessedComponent } from './processed/pat-upload-processed.co
 @Component({
   selector: 'cca-performance-account-template-upload',
   templateUrl: './pat-upload-process.component.html',
-  providers: [PATUploadProcessFormProvider],
   imports: [
     ReactiveFormsModule,
     SelectComponent,
@@ -44,6 +43,8 @@ import { PatUploadProcessedComponent } from './processed/pat-upload-processed.co
     PatUploadProcessedComponent,
     WizardStepComponent,
   ],
+  providers: [PATUploadProcessFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PATUploadProcessComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -84,7 +85,7 @@ export class PATUploadProcessComponent implements OnInit {
         } as RequestTaskActionPayload,
       })
       .pipe(
-        catchNotFoundRequest<never>(ErrorCode.NOTFOUND1001, () =>
+        catchNotFoundRequest(ErrorCode.NOTFOUND1001, () =>
           this.businessErrorService.showErrorForceNavigation(taskNotFoundError),
         ),
         catchTaskReassignedBadRequest(() =>
@@ -102,7 +103,7 @@ export class PATUploadProcessComponent implements OnInit {
       take(1),
       switchMap(() => this.tasksService.getTaskItemInfoById(this.taskId())),
       takeUntilDestroyed(this.destroyRef),
-      map((r): PATUploadPayload => r.requestTask.payload as PATUploadPayload),
+      map((r) => r.requestTask.payload),
       switchMap((payload: PATUploadPayload) => {
         if (payload.processingStatus === 'IN_PROGRESS') return this.fetchTaskItemInfo();
         this.requestTaskStore.setPayload(payload);

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { CancelConfirmationComponent } from '@netz/common/components';
 
@@ -9,6 +9,7 @@ import { CancelConfirmationComponent } from '@netz/common/components';
       <p>The task has been cancelled and the target unit account has been closed.</p>
     </netz-cancel-confirmation>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CancelConfirmationComponent],
 })
 export class UnderlyingAgreementCancelTaskConfirmationComponent {}

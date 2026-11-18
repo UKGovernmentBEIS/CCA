@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -15,6 +15,7 @@ import { toSubsectorSchemeSummaryData } from '../scheme-summary-data';
     <cca-summary [data]="schemeSummaryData()" />
   `,
   imports: [PageHeadingComponent, SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubSectorDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

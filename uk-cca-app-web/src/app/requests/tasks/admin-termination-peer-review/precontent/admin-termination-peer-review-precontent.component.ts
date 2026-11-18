@@ -1,7 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserId } from '@netz/common/auth';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 
@@ -9,17 +10,20 @@ import { ButtonDirective } from '@netz/govuk-components';
   selector: 'cca-admin-termination-peer-review-precontent',
   template: `
     @if (isUserAssignee()) {
-      <a
+      <button
+        netzPendingButton
         govukButton
+        type="button"
         routerLink="admin-termination-peer-review/peer-review-decision"
         [relativeTo]="activatedRoute"
         [replaceUrl]="true"
       >
         Peer review decision
-      </a>
+      </button>
     }
   `,
-  imports: [ButtonDirective, RouterLink],
+  imports: [ButtonDirective, PendingButtonDirective, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminTerminationPeerReviewPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

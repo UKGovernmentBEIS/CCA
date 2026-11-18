@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -43,6 +43,7 @@ export type TargetUnitUserFormModel = FormGroup<{
     SelectComponent,
     PendingButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersAndContactsTabComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

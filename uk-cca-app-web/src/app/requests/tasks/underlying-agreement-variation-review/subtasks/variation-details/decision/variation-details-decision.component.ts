@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -39,7 +39,6 @@ import { resetDetermination } from '../../../utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  providers: [decisionFormProvider('VARIATION_DETAILS')],
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -48,6 +47,8 @@ import { resetDetermination } from '../../../utils';
     WizardStepComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [decisionFormProvider('VARIATION_DETAILS')],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationDetailsDecisionComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

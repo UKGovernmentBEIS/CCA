@@ -30,17 +30,18 @@ import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.PerformanceAccountTemplateDataStatus;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportItemDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
-import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.common.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.repository.PerformanceAccountTemplateDataCustomRepository;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataEntity;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataStatus;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.PerformanceAccountTemplateDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.TargetType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.TargetUnitIdentityAndPerformance;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportItemDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.account.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
@@ -68,19 +69,20 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 	
 	@BeforeEach
     void setUp() {
-		TargetPeriod targetPeriod = createTargetPeriod();
+		TargetPeriod targetPeriod = createTargetPeriod(TargetPeriodType.TP6);
+		TargetPeriod targetPeriodAnother = createTargetPeriod(TargetPeriodType.TP5);
 		
 		TargetUnitAccount account1 = createAccount(-1L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2023, 11, 3).atStartOfDay(), null);
 		createPerformanceAccountTemplateDataEntity(account1.getId(),
-				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.INTERIM);
+				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.INTERIM, 1);
 		
 		TargetUnitAccount account2 = createAccount(-2L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2024, 11, 3).atStartOfDay(), null);
 		createPerformanceAccountTemplateDataEntity(account2.getId(),
-				targetPeriod, Year.of(2021), PerformanceAccountTemplateDataSubmissionType.INTERIM);
+				targetPeriodAnother, Year.of(2021), PerformanceAccountTemplateDataSubmissionType.INTERIM, 1);
 		
 		TargetUnitAccount account3 = createAccount(-3L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2025, 2, 3).atStartOfDay(), null);
 		createPerformanceAccountTemplateDataEntity(account3.getId(),
-				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.INTERIM);
+				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.INTERIM, 1);
 		
 		createAccount(-4L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2018, 11, 3).atStartOfDay(), null);
         
@@ -90,7 +92,7 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
         
 		TargetUnitAccount account7 = createAccount(-7L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2024, 11, 3).atStartOfDay(), LocalDate.of(2025, 1, 1).atStartOfDay());
         createPerformanceAccountTemplateDataEntity(account7.getId(),
-				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.FINAL);
+				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.FINAL, 1);
         
         createAccount(-8L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2016, 11, 3).atStartOfDay(), LocalDate.of(2017, 5, 3).atStartOfDay());
     	
@@ -101,30 +103,32 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 	void getSectorPerformanceAccountTemplateDataReportListBySearchCriteria() {
     	SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
 				.builder()
-				.targetPeriodYear(targetPeriodYear)
+				.targetPeriodType(TargetPeriodType.TP6)
 				.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
 				.build();
     	
 		SectorPerformanceAccountTemplateDataReportListDTO result = cut
-				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria);
+				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria,
+						targetPeriodYear);
 		
-		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getId)
-				.containsExactly(-1L, -2L, -3L, -4L, -7L);
+		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getAccountId)
+				.containsExactly(-1L, -4L, -7L);
 	}
 	
 	@Test
 	void getSectorPerformanceAccountTemplateDataReportListBySearchCriteria_business_account_id() {
     	SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
 				.builder()
-				.targetPeriodYear(targetPeriodYear)
-				.term("businessId-1")
+				.targetPeriodType(TargetPeriodType.TP6)
+				.targetUnitAccountBusinessId("businessId-1")
 				.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
 				.build();
     	
 		SectorPerformanceAccountTemplateDataReportListDTO result = cut
-				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria);
+				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria,
+						targetPeriodYear);
 		
-		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getId)
+		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getAccountId)
 				.containsExactly(-1L);
 	}
 	
@@ -132,32 +136,68 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 	void getSectorPerformanceAccountTemplateDataReportListBySearchCriteria_status_submitted() {
     	SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
 				.builder()
-				.targetPeriodYear(targetPeriodYear)
+				.targetPeriodType(TargetPeriodType.TP6)
 				.status(PerformanceAccountTemplateDataStatus.SUBMITTED)
 				.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
 				.build();
     	
 		SectorPerformanceAccountTemplateDataReportListDTO result = cut
-				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria);
+				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria,
+						targetPeriodYear);
 		
-		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getId)
-				.containsExactly(-1L, -3L, -7L);
+		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getAccountId)
+				.containsExactly(-1L, -7L);
 	}
 	
 	@Test
 	void getSectorPerformanceAccountTemplateDataReportListBySearchCriteria_status_outstanding() {
     	SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
 				.builder()
-				.targetPeriodYear(targetPeriodYear)
+				.targetPeriodType(TargetPeriodType.TP6)
 				.status(PerformanceAccountTemplateDataStatus.OUTSTANDING)
 				.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
 				.build();
     	
 		SectorPerformanceAccountTemplateDataReportListDTO result = cut
-				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria);
+				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria,
+						targetPeriodYear);
 		
-		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getId)
-				.containsExactly(-2L, -4L);
+		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getAccountId)
+				.containsExactly(-4L);
+	}
+	
+	@Test
+	void getSectorPerformanceAccountTemplateDataReportListBySearchCriteria_type_interim() {
+    	SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
+				.builder()
+				.targetPeriodType(TargetPeriodType.TP6)
+				.submissionType(PerformanceAccountTemplateDataSubmissionType.INTERIM)
+				.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
+				.build();
+    	
+		SectorPerformanceAccountTemplateDataReportListDTO result = cut
+				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria,
+						targetPeriodYear);
+		
+		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getAccountId)
+				.containsExactly(-1L);
+	}
+	
+	@Test
+	void getSectorPerformanceAccountTemplateDataReportListBySearchCriteria_type_final() {
+    	SectorPerformanceAccountTemplateDataReportSearchCriteria criteria = SectorPerformanceAccountTemplateDataReportSearchCriteria
+				.builder()
+				.targetPeriodType(TargetPeriodType.TP6)
+				.submissionType(PerformanceAccountTemplateDataSubmissionType.FINAL)
+				.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
+				.build();
+    	
+		SectorPerformanceAccountTemplateDataReportListDTO result = cut
+				.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria,
+						targetPeriodYear);
+		
+		assertThat(result.getItems()).extracting(SectorPerformanceAccountTemplateDataReportItemDTO::getAccountId)
+				.containsExactly(-7L);
 	}
 	
 	private TargetUnitAccount createAccount(Long id, Long sectorId, TargetUnitAccountStatus status, LocalDateTime acceptedDate, LocalDateTime terminationDate) {
@@ -188,10 +228,10 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 		return address;
     }
 	
-	private TargetPeriod createTargetPeriod() {
+	private TargetPeriod createTargetPeriod(TargetPeriodType type) {
 		TargetPeriod targetPeriod = TargetPeriod.builder()
-				.businessId(TargetPeriodType.TP6)
-				.name(TargetPeriodType.TP6.name())
+				.businessId(type)
+				.name(type.name())
 				.startDate(LocalDate.now())
 				.endDate(LocalDate.now())
 				.targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
@@ -212,7 +252,8 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 	}
 	
 	private void createPerformanceAccountTemplateDataEntity(Long accountId,
-			TargetPeriod targetPeriod, Year targetPeriodYear, PerformanceAccountTemplateDataSubmissionType submissionType) {
+			TargetPeriod targetPeriod, Year targetPeriodYear,
+			PerformanceAccountTemplateDataSubmissionType submissionType, int reportVersion) {
 		
 		TargetUnitIdentityAndPerformance targetUnitIdentityAndPerformance = TargetUnitIdentityAndPerformance.builder()
 				.targetType(TargetType.ABSOLUTE).build();
@@ -227,7 +268,7 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 				.targetPeriod(targetPeriod)
 				.targetPeriodYear(targetPeriodYear)
 				.submissionType(submissionType)
-				.reportVersion(1)
+				.reportVersion(reportVersion)
 				.build();
 		entityManager.persist(pat);
 	}

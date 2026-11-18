@@ -11,7 +11,7 @@ export enum PerformanceOutcomeEnum {
 @Pipe({ name: 'performanceOutcome' })
 export class PerformanceOutcomePipe implements PipeTransform {
   transform(value: string | null): string {
-    const text = PerformanceOutcomeEnum[value as keyof typeof PerformanceOutcomeEnum];
+    const text = PerformanceOutcomeEnum[value];
     if (!text) throw new Error('invalid performance outcome');
     return text;
   }

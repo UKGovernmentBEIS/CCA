@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable, of, tap } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { selectIsFeatureEnabled } from '../config/config.selectors';
 import { ConfigStore } from '../config/config.store';
 import { LatestTermsStore } from './latest-terms.store';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class LatestTermsService {
   private readonly lastestTermStore = inject(LatestTermsStore);
   private readonly configStore = inject(ConfigStore);

@@ -35,10 +35,8 @@ describe('createRequestTaskActionProcessDTO', () => {
     const sectionsCompleted = { uploadEnforcementResponseNotice: 'COMPLETED' };
     const dto = createRequestTaskActionProcessDTO(123, payload, sectionsCompleted);
 
-    const requestTaskActionPayload =
-      dto.requestTaskActionPayload as NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload;
-    expect(requestTaskActionPayload.enforcementResponseNotice).toBe(payload.enforcementResponseNotice);
-    expect(requestTaskActionPayload.sectionsCompleted).toBe(sectionsCompleted);
+    expect(dto.requestTaskActionPayload['enforcementResponseNotice']).toBe(payload.enforcementResponseNotice);
+    expect(dto.requestTaskActionPayload['sectionsCompleted']).toBe(sectionsCompleted);
   });
 
   it('should handle an undefined payload', () => {

@@ -10,7 +10,6 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
 import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
-import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEmptyPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestCreateValidationResult;
 
 import java.util.List;
@@ -32,9 +31,8 @@ class Cca2ExtensionNoticeAccountProcessingCreateValidatorTest {
     private RequestQueryService requestQueryService;
 
     @Test
-    void validateCreation() {
+    void validateAction() {
         final Long accountId = 1L;
-        final RequestCreateActionEmptyPayload payload =  new RequestCreateActionEmptyPayload();
 
         when(requestQueryService
                 .existsRequestByAccountAndType(accountId, CcaRequestType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING))
@@ -43,7 +41,7 @@ class Cca2ExtensionNoticeAccountProcessingCreateValidatorTest {
                 .thenReturn(List.of());
 
         // Invoke
-        RequestCreateValidationResult result = validator.validateCreation(accountId, payload);
+        RequestCreateValidationResult result = validator.validateAction(accountId);
 
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder().valid(true).build());
@@ -53,16 +51,15 @@ class Cca2ExtensionNoticeAccountProcessingCreateValidatorTest {
     }
 
     @Test
-    void validateCreation_request_exist_not_valid() {
+    void validateAction_request_exist_not_valid() {
         final Long accountId = 1L;
-        final RequestCreateActionEmptyPayload payload =  new RequestCreateActionEmptyPayload();
 
         when(requestQueryService
                 .existsRequestByAccountAndType(accountId, CcaRequestType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING))
                 .thenReturn(true);
 
         // Invoke
-        RequestCreateValidationResult result = validator.validateCreation(accountId, payload);
+        RequestCreateValidationResult result = validator.validateAction(accountId);
 
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder()
@@ -75,9 +72,8 @@ class Cca2ExtensionNoticeAccountProcessingCreateValidatorTest {
     }
 
     @Test
-    void validateCreation_in_progress_exist_not_valid() {
+    void validateAction_in_progress_exist_not_valid() {
         final Long accountId = 1L;
-        final RequestCreateActionEmptyPayload payload =  new RequestCreateActionEmptyPayload();
 
         when(requestQueryService
                 .existsRequestByAccountAndType(accountId, CcaRequestType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING))
@@ -86,7 +82,7 @@ class Cca2ExtensionNoticeAccountProcessingCreateValidatorTest {
                 .thenReturn(List.of(Request.builder().type(RequestType.builder().code(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION).build()).build()));
 
         // Invoke
-        RequestCreateValidationResult result = validator.validateCreation(accountId, payload);
+        RequestCreateValidationResult result = validator.validateAction(accountId);
 
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder()
@@ -96,17 +92,6 @@ class Cca2ExtensionNoticeAccountProcessingCreateValidatorTest {
         verify(requestQueryService, times(1))
                 .existsRequestByAccountAndType(accountId, CcaRequestType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING);
         verify(requestQueryService, times(1)).findInProgressRequestsByAccount(accountId);
-    }
-
-    @Test
-    void getApplicableAccountStatuses() {
-        assertThat(validator.getApplicableAccountStatuses()).isEmpty();
-    }
-
-    @Test
-    void getMutuallyExclusiveRequests() {
-        assertThat(validator.getMutuallyExclusiveRequests())
-                .containsExactlyInAnyOrder(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION, CcaRequestType.ADMIN_TERMINATION);
     }
 
     @Test

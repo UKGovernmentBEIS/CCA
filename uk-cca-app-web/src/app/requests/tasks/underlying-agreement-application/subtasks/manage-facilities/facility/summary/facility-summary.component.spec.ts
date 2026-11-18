@@ -1,4 +1,4 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -8,7 +8,6 @@ import { of } from 'rxjs';
 import { RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
-import { SchemeVersionEnum } from '@shared/types';
 
 import { RequestTaskPayload } from 'cca-api';
 
@@ -31,7 +30,7 @@ describe('FacilitySummaryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FacilitySummaryComponent],
       providers: [
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         RequestTaskStore,
         {
@@ -56,7 +55,7 @@ describe('FacilitySummaryComponent', () => {
               sectorAssociationDetails: {
                 subsectorAssociationName: 'SUBSECTOR_2',
                 schemeDataMap: {
-                  [SchemeVersionEnum.CCA_3]: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'kWh' },
+                  ['CCA_3']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'kWh' },
                 },
               },
             },
@@ -68,7 +67,7 @@ describe('FacilitySummaryComponent', () => {
                     name: 'Facility 1',
                     isCoveredByUkets: false,
                     applicationReason: 'NEW_AGREEMENT',
-                    participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
+                    participatingSchemeVersions: ['CCA_3'],
                     facilityAddress: {
                       line1: 'Facility Line1',
                       line2: 'Facility Line2',

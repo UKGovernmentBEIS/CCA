@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +25,8 @@ import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.netz.api.account.domain.dto.AccountContactDTO;
 import uk.gov.netz.api.account.domain.dto.AccountContactInfoResponse;
-import uk.gov.netz.api.account.domain.dto.SiteContactSearchCriteriaDTO;
 import uk.gov.netz.api.account.service.AccountCaSiteContactService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
-import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.security.AuthorizedRole;
 
@@ -71,15 +68,11 @@ public class CaSiteContactController {
             @NotNull(message = "{parameter.page.typeMismatch}") Integer page,
             @RequestParam("size") @Parameter(name = "size", description = "The page size")
             @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")
-            @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize,
-            @Valid
-            @ModelAttribute
-            @Parameter(description = "The site contacts search criteria")
-            SiteContactSearchCriteriaDTO searchCriteria) {
+            @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize) {
 
-        return new ResponseEntity<>(accountCaSiteContactService.getAccountsAndCaSiteContacts(
-                    user, PagingRequest.builder().pageNumber(page).pageSize(pageSize).build(), searchCriteria),
-                HttpStatus.OK
+        return new ResponseEntity<>(
+            accountCaSiteContactService.getAccountsAndCaSiteContacts(user, page, pageSize),
+            HttpStatus.OK
         );
     }
 

@@ -32,32 +32,35 @@ const phoneNumberOtherValidator = (): ValidatorFn => {
       return { invalidChars: 'The phone number contains invalid characters' };
     }
 
+    let validNumber = false;
+    let validationResult;
+
     try {
       const regionCode = phoneNumberUtil.getRegionCodeForCountryCode(countryCode);
       const phoneNumber = phoneNumberUtil.parseAndKeepRawInput(phone, regionCode);
 
-      const validNumber = phoneNumberUtil.isValidNumber(phoneNumber);
-
-      if (!validNumber) {
-        switch (phoneNumberUtil.isPossibleNumberWithReason(phoneNumber)) {
-          case PhoneNumberUtil.ValidationResult.TOO_SHORT:
-            return { tooShort: 'The phone number is too short for your country code' };
-
-          case PhoneNumberUtil.ValidationResult.TOO_LONG:
-            return { tooLong: 'The phone number is too long for your country code' };
-
-          case PhoneNumberUtil.ValidationResult.INVALID_LENGTH:
-            return { invalidLength: 'The phone number length is invalid' };
-
-          default:
-            return { invalidPhone: 'Your phone number is not valid' };
-        }
-      }
-
-      return null;
+      validNumber = phoneNumberUtil.isValidNumber(phoneNumber);
+      validationResult = phoneNumberUtil.isPossibleNumberWithReason(phoneNumber);
     } catch {
       return { invalidPhone: 'Your phone number is not valid' };
     }
+    if (!validNumber) {
+      switch (validationResult) {
+        case PhoneNumberUtil.ValidationResult.TOO_SHORT:
+          return { tooShort: 'The phone number is too short for your country code' };
+
+        case PhoneNumberUtil.ValidationResult.TOO_LONG:
+          return { tooLong: 'The phone number is too long for your country code' };
+
+        case PhoneNumberUtil.ValidationResult.INVALID_LENGTH:
+          return { invalidLength: 'The phone number length is invalid' };
+
+        default:
+          return { invalidPhone: 'Your phone number is not valid' };
+      }
+    }
+
+    return null;
   };
 };
 

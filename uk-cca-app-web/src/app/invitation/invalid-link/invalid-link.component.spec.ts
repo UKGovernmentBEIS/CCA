@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 
@@ -14,8 +15,8 @@ describe('InvalidLinkComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InvalidLinkComponent],
-      providers: [provideRouter([]), { provide: ActivatedRoute, useValue: activatedRoute }],
+      imports: [InvalidLinkComponent, RouterTestingModule],
+      providers: [{ provide: ActivatedRoute, useValue: activatedRoute }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InvalidLinkComponent);

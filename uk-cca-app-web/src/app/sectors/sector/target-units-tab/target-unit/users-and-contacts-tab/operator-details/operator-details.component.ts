@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { AuthStore, selectUserId, selectUserRoleType } from '@netz/common/auth';
@@ -32,6 +32,7 @@ import { toSummaryData } from './operator-details-summary-helper';
     }
   `,
   imports: [PageHeadingComponent, SummaryComponent, TwoFaLinkComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

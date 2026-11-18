@@ -1,4 +1,4 @@
-import { Component, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -25,8 +25,9 @@ import {
 @Component({
   selector: 'cca-facility-item-exclude',
   templateUrl: './facility-item-exclude.component.html',
-  providers: [FacilityItemExcludeFormProvider],
   imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, DateInputComponent],
+  providers: [FacilityItemExcludeFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityItemExcludeComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

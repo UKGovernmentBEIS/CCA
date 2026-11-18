@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -51,6 +51,7 @@ import {
     TitleCasePipe,
     PendingButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorContactsTabComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

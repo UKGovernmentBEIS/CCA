@@ -1,6 +1,6 @@
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { TimelineItemComponent } from './timeline-item.component';
 
@@ -11,7 +11,7 @@ describe('TimelineItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideRouter([])],
+      imports: [RouterTestingModule],
     }).compileComponents();
   });
 

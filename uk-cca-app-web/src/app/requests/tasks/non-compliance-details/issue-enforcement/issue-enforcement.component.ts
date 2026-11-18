@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -6,7 +6,6 @@ import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   ConditionalContentDirective,
-  LegendContentDirective,
   RadioComponent,
   RadioOptionComponent,
   TextareaComponent,
@@ -26,18 +25,18 @@ import {
 
 @Component({
   selector: 'cca-issue-enforcement',
-  templateUrl: './issue-enforcement.component.html',
-  providers: [IssueEnforcementFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
     RadioComponent,
     RadioOptionComponent,
     ConditionalContentDirective,
-    LegendContentDirective,
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [IssueEnforcementFormProvider],
+  templateUrl: './issue-enforcement.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IssueEnforcementComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

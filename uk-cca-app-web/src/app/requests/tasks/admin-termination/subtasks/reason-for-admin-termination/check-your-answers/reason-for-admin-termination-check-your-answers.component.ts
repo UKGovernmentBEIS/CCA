@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -29,6 +29,7 @@ import { REASON_FOR_ADMIN_TERMINATION_SUBTASK } from '../../../types';
     <netz-return-to-task-or-action-page />
   `,
   imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, ReturnToTaskOrActionPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ReasonForAdminTerminationSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -1,8 +1,9 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'govuk-warning-text',
   templateUrl: './warning-text.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WarningTextComponent {
   readonly assistiveText = input('Warning');

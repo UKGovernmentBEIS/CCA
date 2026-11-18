@@ -29,7 +29,7 @@ describe('ViewHistoryComponent', () => {
   ];
 
   const mockService = {
-    getSurplusHistoryByAccountId: vi.fn().mockReturnValue(of(mockSurplusHistoryDTO)),
+    getAllSurplusHistoryByTargetPeriodAndAccountId: vi.fn().mockReturnValue(of(mockSurplusHistoryDTO)),
   };
 
   const mockActivatedRoute = {
@@ -37,6 +37,7 @@ describe('ViewHistoryComponent', () => {
       paramMap: {
         get: (key: string) => {
           if (key === 'targetUnitId') return '1';
+          if (key === 'targetPeriodType') return 'TP6';
           return null;
         },
       },
@@ -70,12 +71,12 @@ describe('ViewHistoryComponent', () => {
   });
 
   it('should create the component', () => {
-    expect(getByText(/Surplus gained change history/)).toBeTruthy();
+    expect(getByText(/TP6 surplus gained change history/)).toBeTruthy();
   });
 
-  it('should display heading with business ID and history title', () => {
+  it('should display heading with business ID and period', () => {
     expect(getByText('ADS_1-T00001')).toBeTruthy();
-    expect(getByText('Surplus gained change history')).toBeTruthy();
+    expect(getByText('TP6 surplus gained change history')).toBeTruthy();
   });
 
   it('should render three accordion items', () => {

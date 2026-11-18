@@ -1,11 +1,11 @@
-import { provideHttpClient, withXhr } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockFacilitiesList, mockSentSubsistenceFeesDetails, mockTuMoaDetails } from '@shared/components';
-import { getSummaryListData } from '@testing';
 
 import { TuMoaDetailsComponent } from './tu-moa-details.component';
 import { TuMoaDetailsStore } from './tu-moa-details.store';
@@ -20,7 +20,7 @@ describe('TuMoaDetailsComponent', () => {
       imports: [TuMoaDetailsComponent],
       providers: [
         TuMoaDetailsStore,
-        provideHttpClient(withXhr()),
+        provideHttpClient(),
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
@@ -50,7 +50,17 @@ describe('TuMoaDetailsComponent', () => {
   });
 
   it('should display the correct data', () => {
-    const detailsValues = getSummaryListData(fixture.nativeElement);
+    const definitionLists = fixture.debugElement.queryAll(By.css('dl'));
+
+    const detailsValues = definitionLists.map((dl) => {
+      const terms = dl.queryAll(By.css('dt')).map((dt) => dt.nativeElement.textContent.trim());
+      const descriptions = dl
+        .queryAll(By.css('dd'))
+        .filter((dd) => dd.nativeElement.textContent.trim() !== 'Change')
+        .map((dd) => dd.nativeElement.textContent.trim());
+
+      return [terms, descriptions];
+    });
 
     expect(detailsValues).toEqual([
       [
@@ -69,7 +79,7 @@ describe('TuMoaDetailsComponent', () => {
         [
           'ADS_53-T00001',
           'tu53-oper1',
-          '2025 Target Unit MoA - ADS_53-T00001 - CCATM01200.pdf (opens in a new tab)',
+          '2025 Target Unit MoA - ADS_53-T00001 - CCATM01200.pdf',
           '27 Feb 2025',
           'Awaiting payment',
           '185',

@@ -1,4 +1,4 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -14,7 +14,7 @@ const initialState: ActiveSectorUserStoreType = {
   details: null,
 };
 
-@Service({ autoProvided: false })
+@Injectable()
 export class ActiveSectorUserStore extends SignalStore<ActiveSectorUserStoreType> {
   constructor() {
     super(initialState);

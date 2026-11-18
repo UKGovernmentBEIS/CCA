@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import { SummaryListComponent, SummaryListRowDirective, SummaryListRowValueDirective } from '@netz/govuk-components';
 import { UtilityPanelComponent } from '@shared/components';
@@ -17,6 +17,7 @@ export type CompaniesHouseState = {
   selector: 'cca-companies-house-details',
   templateUrl: './companies-house-details.component.html',
   imports: [UtilityPanelComponent, SummaryListComponent, SummaryListRowDirective, SummaryListRowValueDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompaniesHouseDetailsComponent {
   protected readonly toggleCompaniesHouseDetails = input.required<boolean>();

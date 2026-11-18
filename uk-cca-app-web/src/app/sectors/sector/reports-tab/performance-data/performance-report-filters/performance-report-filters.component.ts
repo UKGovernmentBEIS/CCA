@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -15,8 +15,9 @@ import {
 @Component({
   selector: 'cca-performance-report-filters',
   templateUrl: './performance-report-filters.component.html',
-  providers: [PerformanceDataReportFormProvider],
   imports: [SelectComponent, ButtonDirective, ReactiveFormsModule, UtilityPanelComponent, TextInputComponent],
+  providers: [PerformanceDataReportFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceReportFiltersComponent {
   private readonly router = inject(Router);

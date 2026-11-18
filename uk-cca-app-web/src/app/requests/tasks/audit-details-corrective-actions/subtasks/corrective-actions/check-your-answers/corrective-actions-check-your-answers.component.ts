@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError } from 'rxjs';
@@ -42,6 +42,7 @@ import { CORRECTIVE_ACTIONS_SUBTASK } from '../../../types';
     PendingButtonDirective,
     CorrectiveActionsSummaryDetailsComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CorrectiveActionsCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

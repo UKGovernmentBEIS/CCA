@@ -25,7 +25,7 @@ public interface TargetPeriodRepository extends JpaRepository<TargetPeriod, Long
   
   List<TargetPeriod> findByBuyOutStartDateLessThanEqualOrderByBuyOutStartDateDesc(LocalDate date);
 
-  List<TargetPeriod> findBySchemeVersionAndStartDateLessThanEqualOrderByStartDateAsc(
+  List<TargetPeriod> findBySchemeVersionAndStartDateLessThanEqual(
 		SchemeVersion schemeVersion, LocalDate date);
 }
 

@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { AuthStore, selectIsLoggedIn, selectLoginStatus } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
@@ -16,7 +17,8 @@ interface ViewModel {
 @Component({
   selector: 'cca-landing-page',
   templateUrl: './landing-page.component.html',
-  imports: [PageHeadingComponent, BackToTopComponent, NgTemplateOutlet, ServiceBannerComponent],
+  imports: [PageHeadingComponent, RouterLink, BackToTopComponent, NgTemplateOutlet, ServiceBannerComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingPageComponent {
   private readonly authStore = inject(AuthStore);

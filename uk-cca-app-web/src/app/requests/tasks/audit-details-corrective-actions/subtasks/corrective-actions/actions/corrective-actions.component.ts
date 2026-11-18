@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -25,8 +25,9 @@ import {
 @Component({
   selector: 'cca-corrective-actions',
   templateUrl: './corrective-actions.component.html',
-  providers: [correctiveActionsFormProvider],
   imports: [ReactiveFormsModule, ReturnToTaskOrActionPageComponent, WizardStepComponent, ActionItemComponent],
+  providers: [correctiveActionsFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CorrectiveActionsComponent {
   private readonly formBuilder = inject(FormBuilder);

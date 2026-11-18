@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -43,6 +43,7 @@ import { CORRECTIVE_ACTIONS_SUBTASK } from '../../../types';
     RadioOptionComponent,
     RadioComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HasActionsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

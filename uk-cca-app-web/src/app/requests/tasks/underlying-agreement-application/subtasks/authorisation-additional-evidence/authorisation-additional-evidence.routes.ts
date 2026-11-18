@@ -15,24 +15,24 @@ export const AUTHORISATION_ADDITIONAL_EVIDENCE_ROUTES: Routes = [
         children: [],
       },
       {
-        title: 'Summary',
         path: 'summary',
-        loadComponent: () => import('./summary/authorisation-additional-evidence-summary.component'),
+        title: 'Summary',
         data: { backlink: '../../../', breadcrumb: false },
+        loadComponent: () => import('./summary/authorisation-additional-evidence-summary.component'),
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
+        title: 'Check your answers',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./check-your-answers/authorisation-additional-evidence-check-your-answers.component'),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Provide additional evidence',
         path: AuthorisationAdditionalEvidenceWizardStep.PROVIDE_EVIDENCE,
-        loadComponent: () =>
-          import('./provide-evidence/provide-evidence.component').then((c) => c.ProvideEvidenceComponent),
+        title: 'Provide additional evidence',
         data: { backlink: '../../../', breadcrumb: false },
+        loadComponent: () =>
+          import('./provide-evidence/provide-evidence.component').then((m) => m.ProvideEvidenceComponent),
       },
     ],
   },

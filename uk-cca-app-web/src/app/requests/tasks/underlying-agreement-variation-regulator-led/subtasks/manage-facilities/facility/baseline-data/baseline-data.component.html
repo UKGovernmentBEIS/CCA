@@ -2,7 +2,7 @@
   <cca-wizard-step
     (formSubmit)="onSubmit()"
     [formGroup]="form"
-    [caption]="$safeNavigationMigration(facility?.facilityDetails?.name)"
+    [caption]="facility?.facilityDetails?.name"
     heading="Baseline data"
     data-testid="baseline-data-form"
   >

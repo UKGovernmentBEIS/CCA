@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -30,6 +30,7 @@ import { createSaveDeterminationActionDTO } from '../../../transform';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SummaryComponent,
     PageHeadingComponent,

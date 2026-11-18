@@ -11,6 +11,12 @@ import { tp6RedirectGuard } from './tp6-redirect.guard';
 export const TARGET_PERIOD_6_ROUTES: Routes = [
   {
     path: '',
+    providers: [
+      {
+        provide: BASELINE_AND_TARGETS_SUBTASK,
+        useValue: BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS,
+      },
+    ],
     children: [
       {
         path: '',
@@ -18,49 +24,43 @@ export const TARGET_PERIOD_6_ROUTES: Routes = [
         children: [],
       },
       {
-        title: 'Target composition',
         path: BaseLineAndTargetsReviewStep.TARGET_COMPOSITION,
+        title: 'Target composition',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./target-composition/target-composition.component').then((c) => c.TargetCompositionComponent),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Add baseline data',
         path: BaseLineAndTargetsReviewStep.ADD_BASELINE_DATA,
+        title: 'Add baseline data',
+        data: { backlink: '../', breadcrumb: false },
         loadComponent: () =>
           import('./add-baseline-data/add-baseline-data.component').then((c) => c.AddBaselineDataComponent),
-        data: { backlink: '../', breadcrumb: false },
       },
       {
-        title: 'Add targets',
         path: BaseLineAndTargetsReviewStep.ADD_TARGETS,
-        loadComponent: () => import('./add-targets/add-targets.component').then((c) => c.AddTargetsComponent),
+        title: 'Add targets',
         data: { backlink: '../', breadcrumb: false },
+        loadComponent: () => import('./add-targets/add-targets.component').then((c) => c.AddTargetsComponent),
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
+        title: 'Check your answers',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./check-your-answers/tp6-check-your-answers.component').then((c) => c.TP6CheckYourAnswersComponent),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Summary',
         path: 'summary',
+        title: 'Summary',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () => import('./summary/tp6-summary.component').then((c) => c.TP6SummaryComponent),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'TP6 (2024)',
         path: 'decision',
-        loadComponent: () => import('./decision/tp6-decision.component').then((c) => c.TP6DecisionComponent),
+        title: 'TP6 (2024)',
         data: { backlink: '../../../', breadcrumb: false },
-      },
-    ],
-    providers: [
-      {
-        provide: BASELINE_AND_TARGETS_SUBTASK,
-        useValue: BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS,
+        loadComponent: () => import('./decision/tp6-decision.component').then((c) => c.TP6DecisionComponent),
       },
     ],
   },

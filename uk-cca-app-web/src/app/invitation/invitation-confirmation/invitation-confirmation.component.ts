@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { ButtonDirective, PanelComponent } from '@netz/govuk-components';
 import { AuthService } from '@shared/services';
@@ -23,6 +23,7 @@ import { AuthService } from '@shared/services';
     </div>
   `,
   imports: [PanelComponent, ButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvitationConfirmationComponent {
   private readonly authService = inject(AuthService);

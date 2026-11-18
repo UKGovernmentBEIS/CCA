@@ -4,7 +4,6 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 
 export const UNDERLYING_AGREEMENT_ACTIVATION_ROUTES: Routes = [
   {
-    title: 'Upload target unit assent',
     path: '',
     children: [
       {
@@ -14,8 +13,8 @@ export const UNDERLYING_AGREEMENT_ACTIVATION_ROUTES: Routes = [
           import('./subtasks/provide-evidence/provide-evidence.routes').then((r) => r.PROVIDE_EVIDENCE_ROUTES),
       },
       {
-        title: 'Notify operator of decision',
         path: 'notify-operator',
+        title: 'Notify operator of decision',
         canActivate: [isEditableGuard],
         loadChildren: () =>
           import('./notify-operator/underlying-agreement-activation-notify-operator.routes').then(

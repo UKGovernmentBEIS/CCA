@@ -139,21 +139,6 @@ describe('RefreshBaselineDataComponent', () => {
     );
   });
 
-  it('should show the product base year error when refresh returns TPRDF1010', () => {
-    tasksApiService.saveRequestTaskAction.mockReturnValue(throwError(() => ({ error: { code: 'TPRDF1010' } })));
-
-    component.onRefreshBaselineData();
-    fixture.detectChanges();
-
-    expect(component.isErrorSummaryDisplayed()).toBe(true);
-    expect(component.errorSummaryInfo().linkText).toBe(
-      'Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report',
-    );
-    expect(fixture.nativeElement.textContent).toContain(
-      'Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report',
-    );
-  });
-
   it('should not display error summary for unknown error codes', () => {
     tasksApiService.saveRequestTaskAction.mockReturnValue(throwError(() => ({ error: { code: 'UNKNOWN_CODE' } })));
 

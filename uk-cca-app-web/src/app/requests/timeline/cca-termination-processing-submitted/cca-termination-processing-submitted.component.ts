@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,8 +13,9 @@ const DEFAULT_PAGE_SIZE = 10;
 
 @Component({
   selector: 'cca-cca-termination-processing-submitted',
-  templateUrl: './cca-termination-processing-submitted.component.html',
   imports: [TableComponent, PaginationComponent],
+  templateUrl: './cca-termination-processing-submitted.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CcaTerminationProcessingSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

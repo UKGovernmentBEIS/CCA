@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -29,9 +29,10 @@ import {
 
 @Component({
   selector: 'cca-choose-relevant-workflows',
-  templateUrl: './choose-relevant-workflows.component.html',
-  providers: [ChooseRelevantWorkflowsFormProvider],
   imports: [ReactiveFormsModule, WizardStepComponent, ComboboxComponent, ReturnToTaskOrActionPageComponent],
+  providers: [ChooseRelevantWorkflowsFormProvider],
+  templateUrl: './choose-relevant-workflows.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChooseRelevantWorkflowsComponent {
   private readonly formBuilder = inject(FormBuilder);

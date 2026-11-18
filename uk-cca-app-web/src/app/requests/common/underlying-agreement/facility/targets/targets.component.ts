@@ -1,4 +1,4 @@
-import { Component, computed, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -12,8 +12,9 @@ import { FACILITY_TARGETS_FORM, FacilityTargetsFormModel, FacilityTargetsFormPro
 @Component({
   selector: 'cca-common-facility-targets',
   templateUrl: './targets.component.html',
-  providers: [FacilityTargetsFormProvider],
   imports: [ReactiveFormsModule, WizardStepComponent, TextInputComponent, RouterLink],
+  providers: [FacilityTargetsFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommonFacilityTargetsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

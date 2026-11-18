@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -51,6 +51,7 @@ import { extractReviewProps, resetReviewSection } from '../../../utils';
     NgTemplateOutlet,
     CompaniesHouseDetailsComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ReviewTargetUnitDetailsCheckYourAnswersComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);

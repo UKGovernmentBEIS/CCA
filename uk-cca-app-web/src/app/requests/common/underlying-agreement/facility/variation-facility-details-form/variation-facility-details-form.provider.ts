@@ -7,17 +7,21 @@ import { catchError, debounceTime, filter, map, Observable, of, switchMap, tap }
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
+import {
+  facilityExistenceValidator,
+  hasBothCCASchemes,
+  isCCA2Scheme,
+  isCCA3Scheme,
+  isCreationDateAfterCutOffDate,
+  underlyingAgreementQuery,
+} from '@requests/common';
 import { AccountAddressFormModel, createAccountAddressForm } from '@shared/components';
 import { ConfigService } from '@shared/config';
 import { UK_COUNTRY_CODES } from '@shared/services';
-import { SchemeVersionEnum, SchemeVersions } from '@shared/types';
+import { SchemeVersion, SchemeVersions } from '@shared/types';
 import { facilityIDValidators, textFieldValidators } from '@shared/validators';
 
 import { FacilityDetails, FacilityService } from 'cca-api';
-
-import { hasBothCCASchemes, isCCA2Scheme, isCCA3Scheme, isCreationDateAfterCutOffDate } from '../../../utils';
-import { underlyingAgreementQuery } from '../../+state/underlying-agreement.selectors';
-import { facilityExistenceValidator } from '../validators';
 
 export type VariationFacilityDetailsFormModel = {
   name: FormControl<string>;
@@ -211,7 +215,7 @@ function handleApplicationReasonChange(
     schemeParticipationChoiceCtrl.disable({ emitEvent: false });
     schemeParticipationChoiceCtrl.reset();
 
-    participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_3], { emitEvent: false });
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_3], { emitEvent: false });
 
     previousFacilityIdCtrl.updateValueAndValidity({ emitEvent: true });
     schemeParticipationChoiceCtrl.updateValueAndValidity({ emitEvent: true });
@@ -253,13 +257,11 @@ function handleSchemeParticipationLogic(
     schemeParticipationChoiceCtrl.reset();
 
     if (hasBothCCASchemes(previousFacilitySchemes)) {
-      participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_2, SchemeVersionEnum.CCA_3], {
-        emitEvent: false,
-      });
+      participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2, SchemeVersion.CCA_3], { emitEvent: false });
     } else if (isCCA3Scheme(previousFacilitySchemes)) {
-      participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_3], { emitEvent: false });
+      participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_3], { emitEvent: false });
     } else {
-      participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_2], { emitEvent: false });
+      participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2], { emitEvent: false });
     }
 
     // Emit once at the end
@@ -274,19 +276,19 @@ function handleSchemeParticipationLogic(
     schemeParticipationChoiceCtrl.setValidators([
       GovukValidators.required('Select yes if this facility will participate in CCA3'),
     ]);
-    participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_2, SchemeVersionEnum.CCA_3], { emitEvent: false });
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2, SchemeVersion.CCA_3], { emitEvent: false });
   } else if (isCCA3Scheme(previousFacilitySchemes)) {
     // Previous facility has CCA3 -> automatically set to CCA3
     schemeParticipationChoiceCtrl.disable({ emitEvent: false });
     schemeParticipationChoiceCtrl.reset();
-    participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_3], { emitEvent: false });
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_3], { emitEvent: false });
   } else {
     // Previous facility has CCA2 -> show user choice
     schemeParticipationChoiceCtrl.enable({ emitEvent: false });
     schemeParticipationChoiceCtrl.setValidators([
       GovukValidators.required('Select yes if this facility will participate in CCA3'),
     ]);
-    participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_2], { emitEvent: false });
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2], { emitEvent: false });
   }
 
   // Emit once at the end
@@ -299,9 +301,9 @@ function updateSchemeParticipation(group: FormGroup<VariationFacilityDetailsForm
 
   if (userChoice === true) {
     // User chose Yes -> BOTH CCA2 and CCA3
-    participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_2, SchemeVersionEnum.CCA_3]);
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2, SchemeVersion.CCA_3]);
   } else if (userChoice === false) {
     // User chose No -> CCA2 only
-    participatingSchemeVersionsCtrl.setValue([SchemeVersionEnum.CCA_2]);
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2]);
   }
 }

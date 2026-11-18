@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -27,7 +27,6 @@ import {
 @Component({
   selector: 'cca-upload-notice-of-intent',
   templateUrl: './upload-notice.component.html',
-  providers: [UploadNoticeOfIntentFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -35,6 +34,8 @@ import {
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [UploadNoticeOfIntentFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class UploadNoticeComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

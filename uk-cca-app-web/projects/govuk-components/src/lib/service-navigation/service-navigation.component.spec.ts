@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, PLATFORM_ID, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
@@ -29,9 +29,10 @@ describe('GovukServiceNavigationComponent', () => {
       />
     `,
     imports: [GovukServiceNavigationComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
   })
   class TestComponent {
-    readonly serviceName = signal<string | undefined>('Manage your Climate Change Agreements');
+    readonly serviceName = signal<string | undefined>('Manage your Climate Change Agreement');
     readonly serviceHomepage = signal<GovukLinkTarget | undefined>({ routerLink: '/' });
     readonly navigation = signal<GovukServiceNavigationItem[]>([
       { text: 'Tasks', routerLink: '/dashboard' },
@@ -135,7 +136,7 @@ describe('GovukServiceNavigationComponent', () => {
       const link = serviceNameEl()?.querySelector('a') as HTMLAnchorElement;
       expect(link.getAttribute('href')).toBe('/');
       expect(link.classList.contains('govuk-service-navigation__link')).toBe(true);
-      expect(link.textContent?.trim()).toBe('Manage your Climate Change Agreements');
+      expect(link.textContent?.trim()).toBe('Manage your Climate Change Agreement');
     });
 
     it('should give every link the service navigation link class', async () => {
@@ -181,7 +182,7 @@ describe('GovukServiceNavigationComponent', () => {
 
       expect(serviceNameEl()?.querySelector('a')).toBeNull();
       const text = serviceNameEl()?.querySelector('.govuk-service-navigation__text');
-      expect(text?.textContent?.trim()).toBe('Manage your Climate Change Agreements');
+      expect(text?.textContent?.trim()).toBe('Manage your Climate Change Agreement');
     });
   });
 

@@ -1,10 +1,5 @@
 @if (templateLabel()) {
-  <label
-    [for]="identifier"
-    [id]="'l.' + identifier"
-    [class]="currentLabelSize()"
-    [class.govuk-visually-hidden]="labelHidden()"
-  >
+  <label [for]="identifier" [id]="'l.' + identifier" [class]="currentLabelSize()">
     <ng-content select="[govukLabel]" />
   </label>
 } @else {
@@ -12,7 +7,7 @@
     [for]="identifier"
     [id]="'l.' + identifier"
     [class]="currentLabelSize()"
-    [class.govuk-visually-hidden]="isLabelHidden()"
+    [class.govuk-visually-hidden]="!label()"
   >
     {{ label() }}
   </label>
@@ -52,9 +47,6 @@
     (input)="onChange(getInputValue($event))"
     (keydown)="onKeyDown($event)"
     [attr.inputmode]="inputMode()"
-    [attr.aria-describedby]="
-      describedBy(hint() ? identifier + '-hint' : null, shouldDisplayErrors ? identifier + '-error' : null)
-    "
     [autocomplete]="autoComplete()"
     [class.govuk-input--error]="shouldDisplayErrors"
     [disabled]="disabled()"

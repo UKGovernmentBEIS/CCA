@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -32,6 +32,7 @@ import {
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergyFuelAmountSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

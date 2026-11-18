@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { catchError } from 'rxjs';
 
@@ -32,7 +32,7 @@ const INITIAL_STATE: ReceivedAmountState = {
   changeType: 'add',
 };
 
-@Service({ autoProvided: false })
+@Injectable()
 export class ReceivedAmountStore extends SignalStore<ReceivedAmountState> {
   private readonly subsistenceFeesMoAReceivedAmountControllerService = inject(
     SubsistenceFeesMoAReceivedAmountControllerService,

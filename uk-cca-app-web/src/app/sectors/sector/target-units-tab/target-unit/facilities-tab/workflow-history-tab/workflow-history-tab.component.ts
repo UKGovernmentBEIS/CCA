@@ -1,5 +1,5 @@
 import { DatePipe, KeyValuePipe, TitleCasePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -24,12 +24,9 @@ import { workflowStatusesMap, workflowTypesMap } from './workflow-history-tab.ty
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 
-type WorkflowMetadata = Record<string, string | undefined>;
-
 @Component({
   selector: 'cca-workflow-history-tab',
   templateUrl: './workflow-history-tab.component.html',
-  providers: [WorkflowHistoryTabFormProvider],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -44,6 +41,8 @@ type WorkflowMetadata = Record<string, string | undefined>;
     TitleCasePipe,
     WorkflowTypePipe,
   ],
+  providers: [WorkflowHistoryTabFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowHistoryTabComponent {
   private readonly requestsService = inject(RequestsService);
@@ -56,12 +55,6 @@ export class WorkflowHistoryTabComponent {
 
   protected readonly workflowTypesMap = workflowTypesMap;
   protected readonly workflowStatusesMap = workflowStatusesMap;
-
-  protected getWorkflowMetadata(workflow: RequestDetailsSearchResults['requestDetails'][number]): WorkflowMetadata {
-    return Object.fromEntries(
-      Object.entries(workflow.requestMetadata ?? {}).map(([key, value]) => [key, String(value)]),
-    );
-  }
 
   readonly state = signal<WorkflowHistoryTabState>({
     workflowsHistory: null,

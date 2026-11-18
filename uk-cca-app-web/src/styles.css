@@ -141,10 +141,3 @@ cca-phase-bar .govuk-phase-banner {
     margin-left: 15px;
   }
 }
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  gap: 10px;
-}

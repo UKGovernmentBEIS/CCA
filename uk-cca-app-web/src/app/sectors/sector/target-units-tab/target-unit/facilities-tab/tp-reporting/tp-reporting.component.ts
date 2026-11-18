@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,6 +38,7 @@ import {
     DetailsComponent,
     TitleCasePipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TpReportingComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

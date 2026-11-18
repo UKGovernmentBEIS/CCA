@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,7 +30,6 @@ import { ADD_TARGETS_FORM, AddTargetsFormModel, AddTargetsFormProvider } from '.
 @Component({
   selector: 'cca-add-targets',
   templateUrl: './add-targets.component.html',
-  providers: [AddTargetsFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -38,6 +37,8 @@ import { ADD_TARGETS_FORM, AddTargetsFormModel, AddTargetsFormProvider } from '.
     DecimalPipe,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [AddTargetsFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddTargetsComponent {
   private readonly tasksApiService = inject(TasksApiService);

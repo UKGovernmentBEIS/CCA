@@ -1,27 +1,27 @@
 export const UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_TIMELINE_ROUTES = [
   {
     path: '',
+    data: { backlink: '../' },
     loadComponent: () =>
       import('./underlying-agreement-variation-regulator-led-submitted-task-list/underlying-agreement-variation-regulator-led-submitted-task-list.component').then(
         (c) => c.UnARegulatorLedVariationSubmittedTaskListComponent,
       ),
-    data: { backlink: false },
   },
   {
     path: 'variation-details',
-    loadComponent: () => import('@requests/common').then((c) => c.VariationDetailsSubmittedComponent),
     data: { backlink: '../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.VariationDetailsSubmittedComponent),
   },
   {
     path: 'review-target-unit-details',
-    loadComponent: () => import('@requests/common').then((c) => c.ReviewTargetUnitDetailsSubmittedComponent),
     data: { backlink: '../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.ReviewTargetUnitDetailsSubmittedComponent),
   },
   {
-    title: 'Manage facilities list',
     path: 'review-manage-facilities',
-    loadComponent: () => import('@requests/common').then((c) => c.ManageFacilitiesSubmittedComponent),
+    title: 'Manage facilities list',
     data: { backlink: '../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.ManageFacilitiesSubmittedComponent),
   },
   {
     path: 'facility',
@@ -30,16 +30,16 @@ export const UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_TIMELINE_ROUTES = [
         path: ':facilityId',
         children: [
           {
-            title: 'Facility',
             path: '',
-            loadComponent: () => import('@requests/common').then((c) => c.FacilitySubmittedComponent),
+            title: 'Facility',
             data: { backlink: '../../review-manage-facilities', breadcrumb: false },
+            loadComponent: () => import('@requests/common').then((c) => c.FacilitySubmittedComponent),
           },
           {
-            title: 'View Products',
             path: 'products',
-            loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsTimelineComponent),
+            title: 'View Products',
             data: { breadcrumb: false, backlink: '../' },
+            loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsTimelineComponent),
           },
         ],
       },
@@ -47,22 +47,22 @@ export const UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_TIMELINE_ROUTES = [
   },
   {
     path: 'target-period-5',
-    loadComponent: () => import('@requests/common').then((c) => c.TargetPeriod5SubmittedComponent),
     data: { backlink: '../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.TargetPeriod5SubmittedComponent),
   },
   {
     path: 'target-period-6',
-    loadComponent: () => import('@requests/common').then((c) => c.TargetPeriod6SubmittedComponent),
     data: { backlink: '../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.TargetPeriod6SubmittedComponent),
   },
   {
     path: 'authorisation-additional-evidence',
-    loadComponent: () => import('@requests/common').then((c) => c.AuthorisationAdditionalEvidenceSubmittedComponent),
     data: { backlink: '../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.AuthorisationAdditionalEvidenceSubmittedComponent),
   },
   {
     path: 'operator-assent-decision',
-    loadComponent: () => import('@requests/common').then((c) => c.OperatorAssentDecisionSubmittedComponent),
     data: { backlink: '../', breadcrumb: false },
+    loadComponent: () => import('@requests/common').then((c) => c.OperatorAssentDecisionSubmittedComponent),
   },
 ];

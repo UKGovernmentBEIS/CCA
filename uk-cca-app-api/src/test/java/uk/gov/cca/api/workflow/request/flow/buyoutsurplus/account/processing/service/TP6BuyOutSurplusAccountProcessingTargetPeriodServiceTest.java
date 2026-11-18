@@ -10,8 +10,8 @@ import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusChargeType;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusContainer;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionDetailInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataResourceType;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
@@ -33,7 +33,6 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.dom
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.SurplusCalculatedDetails;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.service.BuyOutSurplusPaymentDeadlineService;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
@@ -42,6 +41,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
+import uk.gov.netz.api.workflow.request.flow.common.service.CalculateWorkingDaysService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -77,7 +77,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
     private BuyOutSurplusAccountProcessingOfficialNoticeService buyOutSurplusAccountProcessingOfficialNoticeService;
     
     @Mock
-    private BuyOutSurplusPaymentDeadlineService buyOutSurplusPaymentDeadlineService;
+    private CalculateWorkingDaysService calculateWorkingDaysService;
 
     @Mock
     private BuyOutSurplusManagementService buyOutSurplusManagementService;
@@ -101,15 +101,10 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .parentRequestId("parentRequestId")
                 .build();
         Request request = Request.builder()
-                .requestResources(List.of(
-                        RequestResource.builder()
-                            .resourceType(ResourceType.ACCOUNT)
-                            .resourceId(accountId.toString())
-                            .build(),
-                        RequestResource.builder()
-                                .resourceType(ResourceType.CA)
-                                .resourceId(CompetentAuthorityEnum.ENGLAND.name())
-                                .build())
+                .requestResources(List.of(RequestResource.builder()
+                        .resourceType(ResourceType.ACCOUNT)
+                        .resourceId(accountId.toString())
+                        .build())
                 )
                 .metadata(metadata)
                 .payload(BuyOutSurplusAccountProcessingRequestPayload.builder()
@@ -139,7 +134,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                         .invoicedPreviousPaidFees(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP))
                         .build())
                 .build();
-        final List<BuyOutSurplusTransactionDetailInfoDTO> previousPayments = List.of();
+        final List<BuyOutSurplusTransactionInfoDTO> previousPayments = List.of();
         final BuyOutSurplusAccountProcessingRequestMetadata expectedMetadata =
                 BuyOutSurplusAccountProcessingRequestMetadata.builder()
                         .parentRequestId("parentRequestId")
@@ -165,13 +160,10 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                                 .build())
                         .build();
 
-        when(buyOutSurplusQueryService.getAccountTransactionInfo(accountId, targetPeriodType))
+        when(buyOutSurplusQueryService.getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType))
                 .thenReturn(previousPayments);
         when(accountPerformanceDataStatusQueryService.getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType))
                 .thenReturn(performanceReportDetails);
-        when(buyOutSurplusPaymentDeadlineService
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.PRIMARY), eq(targetPeriodDetails), any(LocalDate.class)))
-                .thenReturn(LocalDate.of(2025, 7, 1));
 
         // Invoke
         tp6BuyOutSurplusAccountProcessingTargetPeriodService.processBuyOutSurplus(request, accountState);
@@ -185,13 +177,11 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .isEqualTo(expectedMetadata);
         verify(accountPerformanceDataStatusQueryService, times(1))
                 .getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType);
-        verify(buyOutSurplusQueryService, times(1)).getAccountTransactionInfo(accountId, targetPeriodType);
+        verify(buyOutSurplusQueryService, times(1)).getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType);
         verify(buyOutSurplusManagementService, times(1))
                 .createBankSurplus(eq(accountId), any(), any());
         verify(buyOutSurplusManagementService, times(1))
                 .saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
-        verify(buyOutSurplusPaymentDeadlineService, times(1))
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.PRIMARY), eq(targetPeriodDetails), any(LocalDate.class));
         verifyNoInteractions(targetUnitAccountNoticeRecipients, buyOutSurplusAccountProcessingOfficialNoticeService);
         verify(requestService, times(1)).addActionToRequest(request, actionPayload, actionType, submitterId);
         verifyNoMoreInteractions(buyOutSurplusManagementService);
@@ -213,15 +203,10 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .parentRequestId("parentRequestId")
                 .build();
         Request request = Request.builder()
-                .requestResources(List.of(
-                        RequestResource.builder()
-                            .resourceType(ResourceType.ACCOUNT)
-                            .resourceId(accountId.toString())
-                            .build(),
-                        RequestResource.builder()
-                                .resourceType(ResourceType.CA)
-                                .resourceId(CompetentAuthorityEnum.ENGLAND.name())
-                                .build())
+                .requestResources(List.of(RequestResource.builder()
+                        .resourceType(ResourceType.ACCOUNT)
+                        .resourceId(accountId.toString())
+                        .build())
                 )
                 .metadata(metadata)
                 .payload(BuyOutSurplusAccountProcessingRequestPayload.builder()
@@ -255,6 +240,8 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .invoicedSurplusGained(BigDecimal.ZERO)
                 .priBuyOutCost(BigDecimal.valueOf(150).setScale(2, RoundingMode.HALF_UP))
                 .invoicedPreviousPaidFees(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP))
+                .invoicedPaymentDeadline(LocalDate.of(2025, 7, 1))
+                .chargeType(BuyOutSurplusChargeType.FEE)
                 .build();
         final BuyOutSurplusResult buyOutSurplus = BuyOutSurplusResult.builder()
                 .performanceDataId(performanceDataId)
@@ -262,10 +249,8 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .transactionCode(transactionCode)
                 .paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT)
                 .fileDocumentUuid("notice")
-                .invoicedPaymentDeadline(LocalDate.of(2025, 7, 1))
-                .chargeType(BuyOutSurplusChargeType.FEE)
                 .build();
-        final List<BuyOutSurplusTransactionDetailInfoDTO> previousPayments = List.of();
+        final List<BuyOutSurplusTransactionInfoDTO> previousPayments = List.of();
         final BuyOutSurplusAccountProcessingRequestMetadata expectedMetadata =
                 BuyOutSurplusAccountProcessingRequestMetadata.builder()
                         .parentRequestId("parentRequestId")
@@ -301,7 +286,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
 
         when(accountPerformanceDataStatusQueryService.getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType))
                 .thenReturn(performanceReportDetails);
-        when(buyOutSurplusQueryService.getAccountTransactionInfo(accountId, targetPeriodType))
+        when(buyOutSurplusQueryService.getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType))
                 .thenReturn(previousPayments);
         when(buyOutSurplusManagementService.generateTransactionCode(targetPeriodDetails))
                 .thenReturn(transactionCode);
@@ -310,9 +295,6 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         when(buyOutSurplusAccountProcessingOfficialNoticeService
                 .generateOfficialNotice(request, PerformanceDataSubmissionType.PRIMARY, BuyOutSurplusPaymentStatus.AWAITING_PAYMENT, transactionCode))
                 .thenReturn(officialNotice);
-        when(buyOutSurplusPaymentDeadlineService
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.PRIMARY), eq(targetPeriodDetails), any(LocalDate.class)))
-                .thenReturn(LocalDate.of(2025, 7, 1));
 
         // Invoke
         tp6BuyOutSurplusAccountProcessingTargetPeriodService.processBuyOutSurplus(request, accountState);
@@ -326,20 +308,18 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .isEqualTo(expectedMetadata);
         verify(accountPerformanceDataStatusQueryService, times(1))
                 .getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType);
-        verify(buyOutSurplusQueryService, times(1)).getAccountTransactionInfo(accountId, targetPeriodType);
+        verify(buyOutSurplusQueryService, times(1)).getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType);
         verify(buyOutSurplusManagementService, times(1))
                 .createBankSurplus(eq(accountId), any(), any());
         verify(targetUnitAccountNoticeRecipients, times(1)).getDefaultNoticeRecipients(accountId);
         verify(buyOutSurplusManagementService, times(1)).generateTransactionCode(targetPeriodDetails);
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .generateOfficialNotice(request, PerformanceDataSubmissionType.PRIMARY, BuyOutSurplusPaymentStatus.AWAITING_PAYMENT, transactionCode);
-        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(buyOutSurplus, accountId, targetPeriodType);
+        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(buyOutSurplus);
         verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
         verify(requestService, times(1)).addActionToRequest(request, actionPayload, actionType, submitterId);
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, officialNotice, null);
-        verify(buyOutSurplusPaymentDeadlineService, times(1))
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.PRIMARY), eq(targetPeriodDetails), any(LocalDate.class));
         verifyNoMoreInteractions(buyOutSurplusManagementService, buyOutSurplusAccountProcessingOfficialNoticeService);
     }
 
@@ -354,21 +334,20 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
                 .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
-                .buyOutCost(BigDecimal.valueOf(25))
+                .buyOutCost(25)
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
                 .build();
         Request request = Request.builder()
-                .requestResources(List.of(
+                .requestResources(List.of(RequestResource.builder()
+                        .resourceType(ResourceType.ACCOUNT)
+                        .resourceId(accountId.toString())
+                        .build(),
                         RequestResource.builder()
-                            .resourceType(ResourceType.ACCOUNT)
-                            .resourceId(accountId.toString())
-                            .build(),
-                        RequestResource.builder()
-                            .resourceType(ResourceType.CA)
-                            .resourceId(CompetentAuthorityEnum.ENGLAND.name())
-                            .build())
+                        .resourceType(ResourceType.CA)
+                        .resourceId(CompetentAuthorityEnum.ENGLAND.name())
+                        .build())
                 )
                 .metadata(metadata)
                 .payload(BuyOutSurplusAccountProcessingRequestPayload.builder()
@@ -402,6 +381,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .invoicedSurplusGained(BigDecimal.TWO)
                 .priBuyOutCost(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP))
                 .invoicedPreviousPaidFees(BigDecimal.valueOf(80).setScale(2, RoundingMode.HALF_UP))
+                .chargeType(BuyOutSurplusChargeType.REFUND)
                 .build();
         final BuyOutSurplusResult buyOutSurplus = BuyOutSurplusResult.builder()
                 .performanceDataId(performanceDataId)
@@ -409,12 +389,11 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_REFUND)
                 .transactionCode(transactionCode)
                 .fileDocumentUuid("notice")
-                .chargeType(BuyOutSurplusChargeType.REFUND)
                 .build();
-        final List<BuyOutSurplusTransactionDetailInfoDTO> previousPayments = List.of(
-                BuyOutSurplusTransactionDetailInfoDTO.builder().id(1L).buyOutFee(BigDecimal.valueOf(15)).paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT).build(),
-                BuyOutSurplusTransactionDetailInfoDTO.builder().id(2L).buyOutFee(BigDecimal.valueOf(100)).paymentStatus(BuyOutSurplusPaymentStatus.PAID).build(),
-                BuyOutSurplusTransactionDetailInfoDTO.builder().id(3L).buyOutFee(BigDecimal.valueOf(20)).paymentStatus(BuyOutSurplusPaymentStatus.REFUNDED).build()
+        final List<BuyOutSurplusTransactionInfoDTO> previousPayments = List.of(
+                BuyOutSurplusTransactionInfoDTO.builder().id(1L).buyOutFee(BigDecimal.valueOf(15)).paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT).build(),
+                BuyOutSurplusTransactionInfoDTO.builder().id(2L).buyOutFee(BigDecimal.valueOf(100)).paymentStatus(BuyOutSurplusPaymentStatus.PAID).build(),
+                BuyOutSurplusTransactionInfoDTO.builder().id(3L).buyOutFee(BigDecimal.valueOf(20)).paymentStatus(BuyOutSurplusPaymentStatus.REFUNDED).build()
         );
         final BuyOutSurplusAccountProcessingRequestMetadata expectedMetadata =
                 BuyOutSurplusAccountProcessingRequestMetadata.builder()
@@ -450,7 +429,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
 
         when(accountPerformanceDataStatusQueryService.getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType))
                 .thenReturn(performanceReportDetails);
-        when(buyOutSurplusQueryService.getAccountTransactionInfo(accountId, targetPeriodType))
+        when(buyOutSurplusQueryService.getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType))
                 .thenReturn(previousPayments);
         when(buyOutSurplusManagementService.generateTransactionCode(targetPeriodDetails))
                 .thenReturn(transactionCode);
@@ -461,9 +440,8 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .thenReturn(officialNotice);
         when(buyOutSurplusAccountProcessingOfficialNoticeService.generateRefundOfficialNotice(request))
                 .thenReturn(refundClaimForm);
-        when(buyOutSurplusPaymentDeadlineService
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.SECONDARY), eq(targetPeriodDetails), any(LocalDate.class)))
-        		.thenReturn(LocalDate.of(2025, 7, 1));
+        when(calculateWorkingDaysService.addWorkingDays(any(LocalDate.class), eq(30), eq(CompetentAuthorityEnum.ENGLAND)))
+        		.thenReturn(LocalDate.now().plusDays(30));
 
         // Invoke
         tp6BuyOutSurplusAccountProcessingTargetPeriodService.processBuyOutSurplus(request, accountState);
@@ -477,8 +455,8 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .isEqualTo(expectedMetadata);
         verify(accountPerformanceDataStatusQueryService, times(1))
                 .getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType);
-        verify(buyOutSurplusQueryService, times(1)).getAccountTransactionInfo(accountId, targetPeriodType);
-        verify(buyOutSurplusManagementService, times(1)).terminateAwaitingPayments(previousPayments, metadata);
+        verify(buyOutSurplusQueryService, times(1)).getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType);
+        verify(buyOutSurplusManagementService, times(1)).terminateAwaitPayments(previousPayments, metadata);
         verify(buyOutSurplusManagementService, times(1))
                 .createBankSurplus(eq(accountId), any(), any());
         verify(targetUnitAccountNoticeRecipients, times(1)).getDefaultNoticeRecipients(accountId);
@@ -486,13 +464,12 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .generateOfficialNotice(request, PerformanceDataSubmissionType.SECONDARY, BuyOutSurplusPaymentStatus.AWAITING_REFUND, transactionCode);
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1)).generateRefundOfficialNotice(request);
-        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(buyOutSurplus, accountId, targetPeriodType);
+        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(buyOutSurplus);
         verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
         verify(requestService, times(1)).addActionToRequest(request, actionPayload, actionType, submitterId);
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, officialNotice, refundClaimForm);
-        verify(buyOutSurplusPaymentDeadlineService, times(1))
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.SECONDARY), eq(targetPeriodDetails), any(LocalDate.class));
+        verify(calculateWorkingDaysService, times(1)).addWorkingDays(any(LocalDate.class), eq(30), eq(CompetentAuthorityEnum.ENGLAND));
     }
 
     @Test
@@ -506,21 +483,20 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
                 .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
-                .buyOutCost(BigDecimal.valueOf(25))
+                .buyOutCost(25)
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
                 .build();
         Request request = Request.builder()
-                .requestResources(List.of(
+                .requestResources(List.of(RequestResource.builder()
+                        .resourceType(ResourceType.ACCOUNT)
+                        .resourceId(accountId.toString())
+                        .build(),
                         RequestResource.builder()
-                            .resourceType(ResourceType.ACCOUNT)
-                            .resourceId(accountId.toString())
-                            .build(),
-                        RequestResource.builder()
-                            .resourceType(ResourceType.CA)
-                            .resourceId(CompetentAuthorityEnum.ENGLAND.name())
-                            .build())
+                        .resourceType(ResourceType.CA)
+                        .resourceId(CompetentAuthorityEnum.ENGLAND.name())
+                        .build())
                 )
                 .metadata(metadata)
                 .payload(BuyOutSurplusAccountProcessingRequestPayload.builder()
@@ -556,11 +532,11 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                         .invoicedSurplusGained(BigDecimal.TWO)
                         .priBuyOutCost(BigDecimal.valueOf(150).setScale(2, RoundingMode.HALF_UP))
                         .invoicedPreviousPaidFees(BigDecimal.valueOf(80).setScale(2, RoundingMode.HALF_UP))
+                        .chargeType(BuyOutSurplusChargeType.FEE)
                         .build())
                 .paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT)
                 .transactionCode(transactionCode)
                 .fileDocumentUuid("notice")
-                .chargeType(BuyOutSurplusChargeType.FEE)
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata expectedMetadata =
                 BuyOutSurplusAccountProcessingRequestMetadata.builder()
@@ -570,17 +546,17 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                         .performanceDataId(performanceDataId)
                         .transactionCode(transactionCode)
                         .build();
-        final List<BuyOutSurplusTransactionDetailInfoDTO> previousPayments = List.of(
-                BuyOutSurplusTransactionDetailInfoDTO.builder().id(1L).buyOutFee(BigDecimal.valueOf(15)).paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_REFUND).build(),
-                BuyOutSurplusTransactionDetailInfoDTO.builder().id(2L).buyOutFee(BigDecimal.valueOf(100)).paymentStatus(BuyOutSurplusPaymentStatus.PAID).build(),
-                BuyOutSurplusTransactionDetailInfoDTO.builder().id(3L).buyOutFee(BigDecimal.valueOf(20)).paymentStatus(BuyOutSurplusPaymentStatus.REFUNDED).build()
+        final List<BuyOutSurplusTransactionInfoDTO> previousPayments = List.of(
+                BuyOutSurplusTransactionInfoDTO.builder().id(1L).buyOutFee(BigDecimal.valueOf(15)).paymentStatus(BuyOutSurplusPaymentStatus.AWAITING_REFUND).build(),
+                BuyOutSurplusTransactionInfoDTO.builder().id(2L).buyOutFee(BigDecimal.valueOf(100)).paymentStatus(BuyOutSurplusPaymentStatus.PAID).build(),
+                BuyOutSurplusTransactionInfoDTO.builder().id(3L).buyOutFee(BigDecimal.valueOf(20)).paymentStatus(BuyOutSurplusPaymentStatus.REFUNDED).build()
         );
         final FileInfoDTO officialNotice = FileInfoDTO.builder().uuid("notice").build();
         final String actionType = CcaRequestActionType.TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED;
 
         when(accountPerformanceDataStatusQueryService.getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType))
                 .thenReturn(performanceReportDetails);
-        when(buyOutSurplusQueryService.getAccountTransactionInfo(accountId, targetPeriodType))
+        when(buyOutSurplusQueryService.getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType))
                 .thenReturn(previousPayments);
         when(buyOutSurplusManagementService.generateTransactionCode(targetPeriodDetails))
                 .thenReturn(transactionCode);
@@ -589,9 +565,8 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         when(buyOutSurplusAccountProcessingOfficialNoticeService
                 .generateOfficialNotice(request, PerformanceDataSubmissionType.SECONDARY, BuyOutSurplusPaymentStatus.AWAITING_PAYMENT, transactionCode))
                 .thenReturn(officialNotice);
-        when(buyOutSurplusPaymentDeadlineService
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.SECONDARY), eq(targetPeriodDetails), any(LocalDate.class)))
-				.thenReturn(LocalDate.of(2025, 7, 1));
+        when(calculateWorkingDaysService.addWorkingDays(any(LocalDate.class), eq(30), eq(CompetentAuthorityEnum.ENGLAND)))
+				.thenReturn(LocalDate.now().plusDays(30));
 
         // Invoke
         tp6BuyOutSurplusAccountProcessingTargetPeriodService.processBuyOutSurplus(request, accountState);
@@ -611,28 +586,27 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .isEqualTo(buyOutSurplus.getBuyOutSurplusContainer().getPriBuyOutCost());
         assertThat(actual.getBuyOutSurplusContainer().getInvoicedPreviousPaidFees())
                 .isEqualTo(buyOutSurplus.getBuyOutSurplusContainer().getInvoicedPreviousPaidFees());
-        assertThat(actual.getInvoicedPaymentDeadline()).isEqualTo(LocalDate.of(2025, 7, 1));
+        assertThat(actual.getBuyOutSurplusContainer().getInvoicedPaymentDeadline()).isInTheFuture();
         assertThat(((BuyOutSurplusAccountProcessingRequestPayload) request.getPayload()).getPerformanceData())
                 .isEqualTo(performanceReportDetails);
         assertThat((BuyOutSurplusAccountProcessingRequestMetadata) request.getMetadata())
                 .isEqualTo(expectedMetadata);
         verify(accountPerformanceDataStatusQueryService, times(1))
                 .getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType);
-        verify(buyOutSurplusQueryService, times(1)).getAccountTransactionInfo(accountId, targetPeriodType);
-        verify(buyOutSurplusManagementService, times(1)).terminateAwaitingPayments(previousPayments, metadata);
+        verify(buyOutSurplusQueryService, times(1)).getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType);
+        verify(buyOutSurplusManagementService, times(1)).terminateAwaitPayments(previousPayments, metadata);
         verify(buyOutSurplusManagementService, times(1))
                 .createBankSurplus(eq(accountId), any(), any());
         verify(targetUnitAccountNoticeRecipients, times(1)).getDefaultNoticeRecipients(accountId);
         verify(buyOutSurplusManagementService, times(1)).generateTransactionCode(targetPeriodDetails);
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .generateOfficialNotice(request, PerformanceDataSubmissionType.SECONDARY, BuyOutSurplusPaymentStatus.AWAITING_PAYMENT, transactionCode);
-        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(any(), eq(accountId), eq(targetPeriodType));
+        verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusTransaction(any());
         verify(buyOutSurplusManagementService, times(1)).saveBuyOutSurplusProcessedData(performanceDataId, resourceType);
         verify(requestService, times(1)).addActionToRequest(eq(request), any(), eq(actionType), eq(submitterId));
         verify(buyOutSurplusAccountProcessingOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, officialNotice, null);
-        verify(buyOutSurplusPaymentDeadlineService, times(1))
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.SECONDARY), eq(targetPeriodDetails), any(LocalDate.class));
+        verify(calculateWorkingDaysService, times(1)).addWorkingDays(any(LocalDate.class), eq(30), eq(CompetentAuthorityEnum.ENGLAND));
         verifyNoMoreInteractions(buyOutSurplusAccountProcessingOfficialNoticeService);
     }
 
@@ -645,21 +619,16 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
                 .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
-                .buyOutCost(BigDecimal.valueOf(25))
+                .buyOutCost(25)
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
                 .build();
         Request request = Request.builder()
-                .requestResources(List.of(
-                        RequestResource.builder()
-                            .resourceType(ResourceType.ACCOUNT)
-                            .resourceId(accountId.toString())
-                            .build(),
-                        RequestResource.builder()
-                                .resourceType(ResourceType.CA)
-                                .resourceId(CompetentAuthorityEnum.ENGLAND.name())
-                                .build())
+                .requestResources(List.of(RequestResource.builder()
+                        .resourceType(ResourceType.ACCOUNT)
+                        .resourceId(accountId.toString())
+                        .build())
                 )
                 .metadata(metadata)
                 .payload(BuyOutSurplusAccountProcessingRequestPayload.builder()
@@ -679,18 +648,15 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
                 .priBuyOutCost(BigDecimal.valueOf(150))
                 .totalPriBuyOutCarbon(BigDecimal.valueOf(43))
                 .build();
-        final List<BuyOutSurplusTransactionDetailInfoDTO> previousPayments = List.of(
-                BuyOutSurplusTransactionDetailInfoDTO.builder().id(1L).buyOutFee(BigDecimal.valueOf(100)).paymentStatus(BuyOutSurplusPaymentStatus.PAID).build(),
-                BuyOutSurplusTransactionDetailInfoDTO.builder().id(2L).buyOutFee(BigDecimal.valueOf(120)).paymentStatus(BuyOutSurplusPaymentStatus.REFUNDED).build()
+        final List<BuyOutSurplusTransactionInfoDTO> previousPayments = List.of(
+                BuyOutSurplusTransactionInfoDTO.builder().id(1L).buyOutFee(BigDecimal.valueOf(100)).paymentStatus(BuyOutSurplusPaymentStatus.PAID).build(),
+                BuyOutSurplusTransactionInfoDTO.builder().id(2L).buyOutFee(BigDecimal.valueOf(120)).paymentStatus(BuyOutSurplusPaymentStatus.REFUNDED).build()
         );
 
         when(accountPerformanceDataStatusQueryService.getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType))
                 .thenReturn(performanceReportDetails);
-        when(buyOutSurplusQueryService.getAccountTransactionInfo(accountId, targetPeriodType))
+        when(buyOutSurplusQueryService.getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType))
                 .thenReturn(previousPayments);
-        when(buyOutSurplusPaymentDeadlineService
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.SECONDARY), eq(targetPeriodDetails), any(LocalDate.class)))
-                .thenReturn(LocalDate.of(2025, 7, 1));
 
         // Invoke
         BuyOutSurplusAccountProcessingException ex = assertThrows(BuyOutSurplusAccountProcessingException.class, () ->
@@ -700,9 +666,7 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         assertThat(ex.getError()).isEqualTo(BuyOutSurplusViolation.BuyOutSurplusViolationMessage.PREVIOUS_PAID_FEES_FAILED);
         verify(accountPerformanceDataStatusQueryService, times(1))
                 .getLastPerformanceDataBuyOutSurplusDetails(accountId, targetPeriodType);
-        verify(buyOutSurplusQueryService, times(1)).getAccountTransactionInfo(accountId, targetPeriodType);
-        verify(buyOutSurplusPaymentDeadlineService, times(1))
-                .getBuyOutPaymentDeadline(eq(CompetentAuthorityEnum.ENGLAND), eq(PerformanceDataSubmissionType.SECONDARY), eq(targetPeriodDetails), any(LocalDate.class));
+        verify(buyOutSurplusQueryService, times(1)).getAllTransactionInfoByAccountAndTargetPeriodPessimistic(accountId, targetPeriodType);
         verifyNoInteractions(targetUnitAccountNoticeRecipients, buyOutSurplusAccountProcessingOfficialNoticeService,
                 buyOutSurplusManagementService, requestService);
     }

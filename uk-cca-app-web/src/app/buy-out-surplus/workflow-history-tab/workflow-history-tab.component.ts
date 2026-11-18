@@ -1,5 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 
@@ -23,6 +23,7 @@ import { BuyoutSurplusStore, DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../buy-out-
     StatusPipe,
     StatusColorPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowHistoryTabComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -33,10 +34,8 @@ export class WorkflowHistoryTabComponent {
     { field: 'id', header: 'Run ID' },
     { field: 'creationDate', header: 'Date initiated' },
     { field: 'requestStatus', header: 'Process status', widthClass: 'govuk-!-width-one-quarter' },
-    { field: 'totalFacilities', header: 'Total facilities', isNumeric: true },
-    { field: 'totalAccounts', header: 'Total TUs', isNumeric: true },
-    { field: 'failedFacilities', header: 'Failed facilities', isNumeric: true },
-    { field: 'failedAccounts', header: 'Failed TUs', isNumeric: true },
+    { field: 'totalAccounts', header: 'Total TUs' },
+    { field: 'failedAccounts', header: 'Failed TUs' },
   ];
 
   protected readonly state = this.buyoutSurplusStore.stateAsSignal;

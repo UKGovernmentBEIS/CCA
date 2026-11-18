@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
 
+import { FileDownloadComponent } from '@shared/components';
+
 import { refreshDaysRemainingGuard } from './track-corrective-actions.guard';
 
 export const TRACK_CORRECTIVE_ACTIONS_ROUTES: Routes = [
   {
-    title: 'Track corrective actions',
     path: '',
     canDeactivate: [refreshDaysRemainingGuard],
     children: [
@@ -14,9 +15,8 @@ export const TRACK_CORRECTIVE_ACTIONS_ROUTES: Routes = [
           import('./complete-task/complete-task.routes').then((r) => r.TRACK_CORRECTIVE_ACTIONS_COMPLETE_TASK_ROUTES),
       },
       {
-        title: 'Your download has started',
         path: 'file-download/:uuid',
-        loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
+        component: FileDownloadComponent,
       },
       {
         path: ':actionId',

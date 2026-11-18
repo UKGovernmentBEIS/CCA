@@ -1,10 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
-
-import { SplitByProductTableComponent } from '../../underlying-agreement/split-by-product-table/split-by-product-table.component';
-import { tprFormQuery } from '../+state/tpr-form.selectors';
+import { SplitByProductTableComponent, tprFormQuery } from '@requests/common';
 
 @Component({
   selector: 'cca-tpr-products',
@@ -21,6 +19,7 @@ import { tprFormQuery } from '../+state/tpr-form.selectors';
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, SplitByProductTableComponent, ReturnToTaskOrActionPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprProductsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

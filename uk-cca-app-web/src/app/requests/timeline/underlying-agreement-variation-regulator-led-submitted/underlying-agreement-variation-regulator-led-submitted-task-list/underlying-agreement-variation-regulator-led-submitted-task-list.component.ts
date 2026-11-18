@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, TaskListComponent } from '@netz/common/components';
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
@@ -14,6 +14,7 @@ import { getAllUnARegulatorLedVariationTimelineSections } from '../underlying-ag
     <netz-task-list [sections]="sections()" />
   `,
   imports: [TaskListComponent, PageHeadingComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnARegulatorLedVariationSubmittedTaskListComponent {
   private readonly requestActionStore = inject(RequestActionStore);

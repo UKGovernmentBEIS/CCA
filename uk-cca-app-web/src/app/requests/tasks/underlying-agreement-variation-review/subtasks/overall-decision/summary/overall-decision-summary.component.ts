@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -17,6 +17,7 @@ import { generateDownloadUrl } from '@shared/utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SummaryComponent, PageHeadingComponent, ReturnToTaskOrActionPageComponent],
 })
 export class OverallDecisionSummaryComponent {

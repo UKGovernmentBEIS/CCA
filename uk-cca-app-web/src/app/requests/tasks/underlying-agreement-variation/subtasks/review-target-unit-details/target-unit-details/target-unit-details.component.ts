@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -24,7 +24,6 @@ import { extractReviewProps } from '../../../utils';
 @Component({
   selector: 'cca-variation-target-unit-details',
   templateUrl: './target-unit-details.component.html',
-  providers: [TargetUnitDetailsSubmitFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -32,6 +31,8 @@ import { extractReviewProps } from '../../../utils';
     ReturnToTaskOrActionPageComponent,
     OperatorTypePipe,
   ],
+  providers: [TargetUnitDetailsSubmitFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TargetUnitDetailsComponent {
   private readonly store = inject(RequestTaskStore);

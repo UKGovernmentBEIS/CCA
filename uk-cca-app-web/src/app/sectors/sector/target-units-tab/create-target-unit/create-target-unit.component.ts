@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -15,8 +15,9 @@ import { TARGET_UNIT_CREATION_FORM, TargetUnitCreationFormProvider } from './cre
 @Component({
   selector: 'cca-create-target-unit',
   templateUrl: './create-target-unit.component.html',
-  providers: [TargetUnitCreationFormProvider],
   imports: [ReactiveFormsModule, RouterLink, WizardStepComponent, TargetUnitDetailsInputComponent],
+  providers: [TargetUnitCreationFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateTargetUnitComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

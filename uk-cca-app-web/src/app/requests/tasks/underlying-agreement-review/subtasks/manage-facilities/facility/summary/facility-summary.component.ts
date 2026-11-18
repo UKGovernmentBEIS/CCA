@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -11,7 +11,7 @@ import {
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { CountryService } from '@shared/services';
-import { SchemeVersionEnum } from '@shared/types';
+import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
@@ -28,6 +28,7 @@ import { generateDownloadUrl } from '@shared/utils';
     <a class="govuk-link" routerLink="../..">Return to: Manage facilities</a>
   `,
   imports: [SummaryComponent, PageHeadingComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FacilitySummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -54,7 +55,7 @@ export default class FacilitySummaryComponent {
   );
 
   private readonly schemeVersion = computed(() =>
-    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersionEnum.CCA_3 : SchemeVersionEnum.CCA_2,
+    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersion.CCA_3 : SchemeVersion.CCA_2,
   );
 
   private readonly sectorSchemeData = computed(() =>

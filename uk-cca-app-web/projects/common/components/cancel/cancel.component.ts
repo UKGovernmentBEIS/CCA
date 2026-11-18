@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective } from '@netz/govuk-components';
@@ -16,6 +16,7 @@ import { PageHeadingComponent } from '../page-heading';
       </div>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PendingButtonDirective, PageHeadingComponent, ButtonDirective],
 })
 export class CancelComponent {

@@ -12,35 +12,35 @@ export const TPR_THROUGHPUT_ROUTES: Routes = [
         children: [],
       },
       {
-        title: 'Summary',
         path: 'summary',
+        title: 'Summary',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./summary/tpr-throughput-details-summary.component').then(
             (c) => c.TprThroughputDetailsSummaryComponent,
           ),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Check your answers',
         path: 'check-your-answers',
+        title: 'Check your answers',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./check-your-answers/tpr-throughput-details-check-your-answers.component').then(
             (c) => c.TprThroughputDetailsCheckYourAnswersComponent,
           ),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'Provide target period throughput details',
         path: 'details',
+        title: 'Provide target period throughput details',
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./details/tpr-throughput-details.component').then((c) => c.TprThroughputDetailsComponent),
-        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        title: 'View Products',
         path: 'products',
-        loadComponent: () => import('@requests/common').then((c) => c.TprProductsComponent),
+        title: 'View Products',
         data: { breadcrumb: false, backlink: '../details' },
+        loadComponent: () => import('@requests/common').then((c) => c.TprProductsComponent),
       },
     ],
   },

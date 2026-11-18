@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -11,7 +11,7 @@ import { tprCSVUploadQuery } from '../target-period-reporting-csv-upload.selecto
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel title="Target period report closed" />
+        <govuk-panel title="Target period report closed"></govuk-panel>
 
         @if (processingStatus() === 'COMPLETED') {
           <h2 class="govuk-heading-m">What happens next</h2>
@@ -33,6 +33,7 @@ import { tprCSVUploadQuery } from '../target-period-reporting-csv-upload.selecto
     </div>
   `,
   imports: [RouterLink, PanelComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CloseTaskConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
