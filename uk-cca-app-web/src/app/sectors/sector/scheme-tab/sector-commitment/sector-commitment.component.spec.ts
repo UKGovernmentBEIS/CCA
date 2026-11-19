@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { SchemeVersionEnum } from '@shared/types';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Mocked } from 'vitest';
 
@@ -21,18 +22,18 @@ describe('SectorCommitmentComponent', () => {
   let component: SectorCommitmentComponent;
   let fixture: ComponentFixture<SectorCommitmentComponent>;
   let route: ActivatedRouteStub;
-  let router: Mocked<Router>;
+  let router: Router;
   let detailsUpdateService: Mocked<SectorAssociationSchemeDetailsUpdateService>;
   let subsectorDetailsUpdateService: Mocked<SubsectorAssociationSchemeDetailsUpdateService>;
 
   const sectorScheme: SectorAssociationSchemesDTO = {
     sectorAssociationSchemeMap: {
-      CCA_3: {
+      [SchemeVersionEnum.CCA_3]: {
         id: 20,
         umbrellaAgreement: null,
         umaDate: '2026-01-01',
         sectorDefinition: 'Definition',
-        schemeVersion: 'CCA_3',
+        schemeVersion: SchemeVersionEnum.CCA_3,
         editable: true,
         targetSet: {
           id: 30,
@@ -51,7 +52,7 @@ describe('SectorCommitmentComponent', () => {
   const subSector: SubsectorAssociationSchemesDTO = {
     name: 'Subsector',
     subsectorAssociationSchemeMap: {
-      CCA_3: {
+      [SchemeVersionEnum.CCA_3]: {
         id: 200,
         editable: true,
         targetSet: {
@@ -69,9 +70,6 @@ describe('SectorCommitmentComponent', () => {
   };
 
   beforeEach(async () => {
-    router = {
-      navigate: vi.fn().mockResolvedValue(true),
-    } as unknown as Mocked<Router>;
     detailsUpdateService = {
       updateSectorAssociationSchemeTargetCommitments: vi.fn().mockReturnValue(of(null)),
     } as unknown as Mocked<SectorAssociationSchemeDetailsUpdateService>;
@@ -82,12 +80,15 @@ describe('SectorCommitmentComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SectorCommitmentComponent],
       providers: [
+        provideRouter([]),
         { provide: ActivatedRoute, useFactory: () => route },
-        { provide: Router, useValue: router },
         { provide: SectorAssociationSchemeDetailsUpdateService, useValue: detailsUpdateService },
         { provide: SubsectorAssociationSchemeDetailsUpdateService, useValue: subsectorDetailsUpdateService },
       ],
     }).compileComponents();
+
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
   it('should create', async () => {
@@ -108,12 +109,12 @@ describe('SectorCommitmentComponent', () => {
   });
 
   it('should prefill whole-number percentages without floating point precision artifacts', async () => {
-    const cca3Scheme = sectorScheme.sectorAssociationSchemeMap.CCA_3;
+    const cca3Scheme = sectorScheme.sectorAssociationSchemeMap[SchemeVersionEnum.CCA_3];
 
     await createComponent({
       sectorScheme: {
         sectorAssociationSchemeMap: {
-          CCA_3: {
+          [SchemeVersionEnum.CCA_3]: {
             ...cca3Scheme,
             targetSet: {
               ...cca3Scheme.targetSet!,

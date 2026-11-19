@@ -1,4 +1,5 @@
 import { RequestActionState } from '@netz/common/store';
+import { SchemeVersionEnum } from '@shared/types';
 
 import {
   Facility,
@@ -38,7 +39,7 @@ const facilityDetails: FacilityDetails = {
   isCoveredByUkets: false,
   applicationReason: 'NEW_AGREEMENT',
   facilityAddress: operatorAddress,
-  participatingSchemeVersions: ['CCA_2'],
+  participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
 };
 
 const facilityContact = {

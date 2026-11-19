@@ -37,7 +37,7 @@ describe('TuMoaGeneratedComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Payment request ID', 'Charging year', 'Transaction ID', 'Payment requests notice'],
-        ['S2515', '2025', 'CCATM01203', '2025 Target Unit MoA - ADS_52-T00001 - CCATM01203.pdf'],
+        ['S2515', '2025', 'CCATM01203', '2025 Target Unit MoA - ADS_52-T00001 - CCATM01203.pdf (opens in a new tab)'],
       ],
       [
         ['Users'],

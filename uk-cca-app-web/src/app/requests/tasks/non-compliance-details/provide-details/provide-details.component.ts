@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -18,6 +18,7 @@ import {
   TasksApiService,
 } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
+import { getToday } from '@shared/utils';
 import { produce } from 'immer';
 
 import { NonComplianceDetails, RequestTaskActionPayload } from 'cca-api';
@@ -32,6 +33,8 @@ import {
 
 @Component({
   selector: 'cca-provide-details',
+  templateUrl: './provide-details.component.html',
+  providers: [ProvideDetailsFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -41,16 +44,13 @@ import {
     DetailsComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [ProvideDetailsFormProvider],
-  templateUrl: './provide-details.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProvideDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly tasksApiService = inject(TasksApiService);
   private readonly requestTaskStore = inject(RequestTaskStore);
-  protected readonly today = new Date();
+  protected readonly today = getToday();
 
   protected readonly form = inject<ProvideDetailsFormModel>(PROVIDE_DETAILS_FORM);
 

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -38,7 +38,7 @@ describe('ProvideEvidenceCheckAnswersComponent', () => {
     TestBed.configureTestingModule({
       imports: [ProvideEvidenceCheckAnswersComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -63,7 +63,7 @@ describe('ProvideEvidenceCheckAnswersComponent', () => {
     expect(page.header.textContent.trim()).toEqual('Check your answers');
 
     expect(page.summaryListValues).toEqual([
-      ['Uploaded files', 'sample_profile1.png'],
+      ['Uploaded files', 'sample_profile1.png (opens in a new tab)'],
       ['Comments', 'My comments'],
     ]);
   });

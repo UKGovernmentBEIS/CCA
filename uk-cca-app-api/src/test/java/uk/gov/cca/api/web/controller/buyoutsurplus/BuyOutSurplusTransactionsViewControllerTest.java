@@ -1,6 +1,5 @@
 package uk.gov.cca.api.web.controller.buyoutsurplus;
 
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionsListDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionsListSearchCriteria;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusTransactionQueryService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 
 import java.util.Collections;
@@ -30,7 +29,7 @@ class BuyOutSurplusTransactionsViewControllerTest {
     private BuyOutSurplusTransactionsViewController controller;
     
     @Mock
-    private BuyOutSurplusQueryService service;
+    private BuyOutSurplusTransactionQueryService buyOutSurplusTransactionQueryService;
     
     @Test
     void getBuyOutSurplusTransactions_returns200WithBody() {
@@ -43,15 +42,15 @@ class BuyOutSurplusTransactionsViewControllerTest {
         
         AppUser appUser = mock(AppUser.class);
         
-        when(service.getBuyOutSurplusTransactionsList(appUser, criteria)).thenReturn(expectedDto);
+        when(buyOutSurplusTransactionQueryService.getBuyOutSurplusTransactionsList(appUser, criteria)).thenReturn(expectedDto);
         
         ResponseEntity<BuyOutSurplusTransactionsListDTO> response =
                 controller.getBuyOutSurplusTransactions(appUser, criteria);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(response.getBody(), expectedDto);
-        verify(service, times(1)).getBuyOutSurplusTransactionsList(appUser, criteria);
-        verifyNoMoreInteractions(service);
+        verify(buyOutSurplusTransactionQueryService, times(1)).getBuyOutSurplusTransactionsList(appUser, criteria);
+        verifyNoMoreInteractions(buyOutSurplusTransactionQueryService);
     }
 }
 

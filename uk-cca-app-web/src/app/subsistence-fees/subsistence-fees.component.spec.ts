@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +19,7 @@ describe('SubsistenceFeesComponent', () => {
       imports: [SubsistenceFeesComponent],
       providers: [
         SubsistenceFeesStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
@@ -56,7 +56,7 @@ describe('SubsistenceFeesComponent', () => {
     fixture.detectChanges();
 
     const warning = document.querySelector('strong.govuk-warning-text__text');
-    expect(warning.textContent.trim()).toBe('New payment requests will become available after 1 Apr 2025');
+    expect(warning.textContent.trim()).toBe('Warning New payment requests will become available after 1 Apr 2025');
   });
 
   it('should display payment request in progress warning', () => {
@@ -70,7 +70,7 @@ describe('SubsistenceFeesComponent', () => {
 
     const warning = document.querySelector('strong.govuk-warning-text__text');
     expect(warning.textContent.trim()).toBe(
-      'Payment request run is in progress, you cannot initiate a new one until it has finished',
+      'Warning Payment request run is in progress, you cannot initiate a new one until it has finished',
     );
   });
 });

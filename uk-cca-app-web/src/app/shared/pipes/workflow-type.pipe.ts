@@ -27,10 +27,14 @@ export function workflowType(type: RequestDetailsDTO['requestType'], initiatorRo
       return 'Subsistence fees';
 
     case 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING':
+    case 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING':
       return 'Buy-out and surplus';
 
     case 'FACILITY_AUDIT':
       return 'Facility audit';
+
+    case 'EMISSIONS_TRADING_SCHEME_DATA':
+      return 'UK ETS reporting';
 
     case 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING':
       return 'Performance Data';

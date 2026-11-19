@@ -51,7 +51,7 @@ public class CcaProcessRequestCreateAspect {
 
             final RequestCreateValidationResult validationResult = requestCreateBySectorAssociationValidatorOpt
                     .map(requestCreateBySectorAndAccountValidator -> requestCreateBySectorAndAccountValidator.validateAction(sectorAssociationId, accountId))
-                    .orElse(RequestCreateValidationResult.builder().valid(true).isAvailable(true).build());
+                    .orElse(RequestCreateValidationResult.builder().valid(true).available(true).build());
 
             if (!validationResult.isValid() || !validationResult.isAvailable()) {
                 throw new BusinessException(ErrorCode.REQUEST_TYPE_NOT_FOUND, validationResult);

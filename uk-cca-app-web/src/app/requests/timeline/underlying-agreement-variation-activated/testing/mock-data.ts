@@ -1,3 +1,5 @@
+import { SchemeVersionEnum } from '@shared/types';
+
 import { RequestActionDTO, UnderlyingAgreementVariationActivatedRequestActionPayload } from 'cca-api';
 
 const mockVariationActivatedPayload: UnderlyingAgreementVariationActivatedRequestActionPayload = {
@@ -39,7 +41,7 @@ const mockVariationActivatedPayload: UnderlyingAgreementVariationActivatedReques
   },
   underlyingAgreementActivationAttachments: {},
   underlyingAgreementDocuments: {
-    CCA_2: {
+    [SchemeVersionEnum.CCA_2]: {
       name: 'Activated underlying agreement cover letter.pdf',
       uuid: 'abcd-1234',
     },

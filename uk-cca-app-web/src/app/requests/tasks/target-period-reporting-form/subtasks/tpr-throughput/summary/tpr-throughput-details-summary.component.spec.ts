@@ -9,6 +9,7 @@ import {
 } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
+import { produce } from 'immer';
 
 import { PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload } from 'cca-api';
 
@@ -154,6 +155,32 @@ describe('TprThroughputDetailsSummaryComponent', () => {
   it('should build totals-only summary data', () => {
     expect(getByText(/Target period throughput details/, fixture.nativeElement)).toBeTruthy();
     expect(getByText(/Total throughput/, fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/Adjusted throughput/, fixture.nativeElement)).toBeTruthy();
+  });
+
+  it('should show baseline intensity and improvement target in the totals-only summary', () => {
+    const text = (fixture.nativeElement as HTMLElement).textContent;
+
+    expect(text).toContain('Baseline energy intensity (kWh/tonnes)0.5');
+    expect(text).toContain('Improvement target %12%');
+  });
+
+  it('should not show baseline intensity or improvement target for fixed-energy-only facilities', () => {
+    store.setState(
+      produce(mockTotalsState, (draft) => {
+        const payload = draft.requestTaskItem.requestTask
+          .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
+        payload.referenceData.baselineAndTargets.variableEnergyType = null;
+        payload.referenceData.baselineAndTargets.baselineVariableEnergy = null;
+      }),
+    );
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent;
+
+    expect(text).toContain('Total throughput');
+    expect(text).not.toContain('intensity');
+    expect(text).not.toContain('Improvement target %');
   });
 
   it('should use carbon dioxide terminology in the carbon totals-only summary', () => {

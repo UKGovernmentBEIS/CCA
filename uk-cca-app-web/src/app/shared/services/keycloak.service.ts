@@ -1,10 +1,10 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 
 import Keycloak, {
-  type KeycloakConfig,
   type KeycloakInitOptions,
   type KeycloakLoginOptions,
   type KeycloakProfile,
+  type KeycloakServerConfig,
   type KeycloakTokenParsed,
 } from 'keycloak-js';
 
@@ -24,7 +24,7 @@ export interface KeycloakEvent {
   type: KeycloakEventType;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class KeycloakService {
   private keycloak: Keycloak | undefined;
 
@@ -35,7 +35,7 @@ export class KeycloakService {
   }
 
   get isAuthenticated(): boolean {
-    return this.keycloak?.authenticated;
+    return this.keycloak?.authenticated ?? false;
   }
 
   get token(): string | undefined {
@@ -54,22 +54,22 @@ export class KeycloakService {
     return this.keycloak?.refreshTokenParsed;
   }
 
-  init(config: KeycloakConfig & KeycloakInitOptions): Promise<boolean> {
+  init(config: KeycloakServerConfig & KeycloakInitOptions): Promise<boolean> {
     const { realm, clientId, url, ...initOptions } = config;
 
-    const keycloakConfig: KeycloakConfig = {
+    const keycloakConfig: KeycloakServerConfig = {
       url,
       realm,
       clientId,
     };
 
-    this.keycloak = new Keycloak(keycloakConfig);
+    this.keycloak = this.createKeycloak(keycloakConfig);
+    this.setupEventListeners();
 
     return new Promise((resolve, reject) => {
       this.keycloak
         .init(initOptions)
         .then((authenticated) => {
-          this.setupEventListeners();
           resolve(authenticated);
         })
         .catch((error) => {
@@ -77,6 +77,11 @@ export class KeycloakService {
           reject(error);
         });
     });
+  }
+
+  // Factory seam so tests can inject a fake Keycloak adapter.
+  protected createKeycloak(config: KeycloakServerConfig): Keycloak {
+    return new Keycloak(config);
   }
 
   private setupEventListeners(): void {
@@ -111,39 +116,31 @@ export class KeycloakService {
     };
   }
 
-  updateToken(minValidity?: number): Promise<boolean> {
+  private withKeycloak<T>(action: (keycloak: Keycloak) => Promise<T>): Promise<T> {
     if (!this.keycloak) {
-      return Promise.reject('Keycloak not initialized');
+      return Promise.reject(new Error('Keycloak not initialized'));
     }
-    return this.keycloak.updateToken(minValidity ?? 60);
+    return action(this.keycloak);
+  }
+
+  updateToken(minValidity?: number): Promise<boolean> {
+    return this.withKeycloak((keycloak) => keycloak.updateToken(minValidity ?? 60));
   }
 
   login(options?: KeycloakLoginOptions): Promise<void> {
-    if (!this.keycloak) {
-      return Promise.reject('Keycloak not initialized');
-    }
-    return this.keycloak.login(options);
+    return this.withKeycloak((keycloak) => keycloak.login(options));
   }
 
-  createLoginUrl(options?: KeycloakLoginOptions): string {
-    if (!this.keycloak) {
-      throw new Error('Keycloak not initialized');
-    }
-    return this.keycloak.createLoginUrl(options);
+  createLoginUrl(options?: KeycloakLoginOptions): Promise<string> {
+    return this.withKeycloak((keycloak) => keycloak.createLoginUrl(options));
   }
 
   logout(redirectUri?: string): Promise<void> {
-    if (!this.keycloak) {
-      return Promise.reject('Keycloak not initialized');
-    }
-    return this.keycloak.logout({ redirectUri });
+    return this.withKeycloak((keycloak) => keycloak.logout({ redirectUri }));
   }
 
   loadUserProfile(): Promise<KeycloakProfile> {
-    if (!this.keycloak) {
-      return Promise.reject('Keycloak not initialized');
-    }
-    return this.keycloak.loadUserProfile();
+    return this.withKeycloak((keycloak) => keycloak.loadUserProfile());
   }
 
   isTokenExpired(minValidity?: number): boolean {

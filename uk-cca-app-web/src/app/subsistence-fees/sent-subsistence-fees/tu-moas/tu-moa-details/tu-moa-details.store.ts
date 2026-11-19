@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { catchError, Observable, pipe, tap } from 'rxjs';
 
@@ -32,7 +32,7 @@ const INITIAL_STATE: TuMoaDetailsState = {
   totalFacilityItems: 0,
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class TuMoaDetailsStore extends SignalStore<TuMoaDetailsState> {
   private readonly subsistenceFeesMoAViewService = inject(SubsistenceFeesMoAViewService);
   private readonly subsistenceFeesMoATargetUnitViewService = inject(SubsistenceFeesMoATargetUnitViewService);
@@ -50,7 +50,8 @@ export class TuMoaDetailsStore extends SignalStore<TuMoaDetailsState> {
   updateSelectedTUMoAFacilities(selectedRow: SubsistenceFeesMoaFacilitySearchResultInfoDTO, checked: boolean) {
     if (selectedRow.markFacilitiesStatus === 'CANCELLED') return; // cancelled facilities are not selectable
 
-    const selectedFacilities = this.state.selectedFacilities;
+    // Copy, so the store's Map is never mutated in place and selectors see a new reference.
+    const selectedFacilities = new Map(this.state.selectedFacilities);
 
     if (checked) {
       selectedFacilities.set(selectedRow.facilityBusinessId, selectedRow);

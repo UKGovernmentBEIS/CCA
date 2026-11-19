@@ -1,6 +1,7 @@
 package uk.gov.cca.api.workflow.bpmn.flowable.handler.performanceaccounttemplatefacility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -27,6 +28,7 @@ public class FacilityPerformanceAccountTemplateDataUploadCompletedHandlerFlowabl
 
         // Convert to Map<Long, FacilityUploadReport>
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         Map<Long, FacilityPerformanceAccountTemplateUploadReport> facilityReports = rawMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> Long.parseLong(e.getKey()),

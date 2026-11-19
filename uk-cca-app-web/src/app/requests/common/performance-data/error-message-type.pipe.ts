@@ -11,7 +11,9 @@ export enum ErrorMessageTypeEnum {
 @Pipe({ name: 'errorMessageType' })
 export class ErrorMessageTypePipe implements PipeTransform {
   transform(value: PerformanceDataDownloadSubmitRequestTaskPayload['errorMessage']): string {
-    const text = ErrorMessageTypeEnum[value];
+    const text = Object.hasOwn(ErrorMessageTypeEnum, value)
+      ? ErrorMessageTypeEnum[value as keyof typeof ErrorMessageTypeEnum]
+      : undefined;
     if (!text) throw new Error('invalid error message type');
     return text;
   }

@@ -95,11 +95,13 @@ describe('DashboardFiltersComponent', () => {
 
     expect(optionLabels).toEqual([
       'All',
+      'PAT reporting - Upload CSV file',
       'Target unit account creation',
       'TP reporting (TP6) - Download spreadsheets',
       'TP reporting (TP6) - Upload spreadsheets',
       'TP reporting (TP7, TP8, TP9) - Submit form',
       'TP reporting (TP7, TP8, TP9) - Upload CSV file',
+      'UK emissions trading scheme (UK ETS) reporting - Submit form',
       'Underlying agreement application',
       'Variation',
     ]);
@@ -132,6 +134,7 @@ describe('DashboardFiltersComponent', () => {
       },
       queryParamsHandling: 'merge',
       relativeTo: mockActivatedRoute,
+      scroll: 'manual',
       fragment: null,
     });
   });
@@ -159,6 +162,7 @@ describe('DashboardFiltersComponent', () => {
       },
       queryParamsHandling: 'merge',
       relativeTo: mockActivatedRoute,
+      scroll: 'manual',
       fragment: null,
     });
   });

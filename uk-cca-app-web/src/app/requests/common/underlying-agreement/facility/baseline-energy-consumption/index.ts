@@ -1,3 +1,4 @@
+export * from './baseline-energy-draft.guard';
 export * from './baseline-energy-draft.service';
 export * from './transform';
 export * from './summary-products';

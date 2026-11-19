@@ -37,7 +37,7 @@ describe('SectorMoaGeneratedComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['Payment request ID', 'Charging year', 'Transaction ID', 'Payment requests notice'],
-        ['S2513', '2025', 'CCACM01204', '2025 Sector MoA - ADS_1 - CCACM01204.pdf'],
+        ['S2513', '2025', 'CCACM01204', '2025 Sector MoA - ADS_1 - CCACM01204.pdf (opens in a new tab)'],
       ],
       [
         ['Users'],

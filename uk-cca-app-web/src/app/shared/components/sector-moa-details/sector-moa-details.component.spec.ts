@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -20,7 +20,7 @@ describe('SectorMoaDetailsComponent', () => {
       imports: [SectorMoaDetailsComponent],
       providers: [
         SectorMoaDetailsStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
@@ -76,7 +76,7 @@ describe('SectorMoaDetailsComponent', () => {
         ],
         [
           'ADS_1 - Aerospace_1',
-          '2025 Sector MoA - ADS_1 - CCACM01201.pdf',
+          '2025 Sector MoA - ADS_1 - CCACM01201.pdf (opens in a new tab)',
           '27 Feb 2025',
           'Awaiting payment',
           '0 out of 1',

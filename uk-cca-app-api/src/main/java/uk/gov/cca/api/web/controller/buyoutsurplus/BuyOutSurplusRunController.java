@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AvailableTargetPeriodsBuyOutDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.web.orchestrator.buyoutsurplus.dto.AvailableTargetPeriodsBuyOutDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.cca.api.web.orchestrator.buyoutsurplus.service.BuyOutSurplusServiceOrchestrator;
 import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.time.LocalDate;
@@ -37,7 +38,7 @@ import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 @Tag(name = "Buy-out and surplus info")
 public class BuyOutSurplusRunController {
 
-	private final BuyOutSurplusQueryService buyOutSurplusQueryService;
+	private final BuyOutSurplusServiceOrchestrator buyOutSurplusServiceOrchestrator;
 
 	@GetMapping(path = "/excluded-accounts")
 	@Operation(summary = "Retrieves all the on hold accounts for a specific target period")
@@ -55,8 +56,8 @@ public class BuyOutSurplusRunController {
 			@RequestParam @Parameter(name = "targetPeriodType", description = "The target period business id") TargetPeriodType targetPeriodType
 			) {
 
-		return new ResponseEntity<>(buyOutSurplusQueryService
-				.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType), HttpStatus.OK);
+		return new ResponseEntity<>(buyOutSurplusServiceOrchestrator
+				.getExcludedAccountsForBuyOutSurplusRun(targetPeriodType), HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "/available-target-periods")
@@ -73,7 +74,7 @@ public class BuyOutSurplusRunController {
 	@AuthorizedRole(roleType = REGULATOR)
 	public ResponseEntity<AvailableTargetPeriodsBuyOutDTO> getAvailableBuyOutTargetPeriods() {
 
-		return new ResponseEntity<>(buyOutSurplusQueryService.getAvailableBuyOutTargetPeriods(LocalDate.now()), HttpStatus.OK);
+		return new ResponseEntity<>(buyOutSurplusServiceOrchestrator.getAvailableBuyOutTargetPeriods(LocalDate.now()), HttpStatus.OK);
 	}
 
 }

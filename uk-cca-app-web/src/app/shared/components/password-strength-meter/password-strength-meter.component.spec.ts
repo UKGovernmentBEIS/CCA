@@ -98,5 +98,17 @@ describe('PasswordStrengthMeterComponent', () => {
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.psm__feedback'))).toBeTruthy();
     expect(fixture.debugElement.query(By.css('.psm__suggestion'))).toBeTruthy();
+    expect(fixture.debugElement.query(By.css('[role="status"] .psm__feedback'))).toBeTruthy();
+    expect(fixture.debugElement.query(By.css('[role="status"] .psm__suggestion'))).toBeTruthy();
+  });
+
+  it('should keep the status live region present before feedback is rendered', () => {
+    componentRef.setInput('password', '123asd123');
+    componentRef.setInput('enableFeedback', false);
+    fixture.detectChanges();
+
+    const status = fixture.debugElement.query(By.css('[role="status"]'));
+    expect(status).toBeTruthy();
+    expect(status.nativeElement.querySelector('.psm__feedback')).toBeNull();
   });
 });

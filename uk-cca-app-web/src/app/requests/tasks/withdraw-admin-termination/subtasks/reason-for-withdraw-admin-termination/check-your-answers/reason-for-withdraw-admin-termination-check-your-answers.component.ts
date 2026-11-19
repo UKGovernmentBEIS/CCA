@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -29,7 +29,6 @@ import { toWithdrawAdminTerminationReasonSummaryData } from '../../../withdraw-a
     <netz-return-to-task-or-action-page />
   `,
   imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, ReturnToTaskOrActionPageComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ReasonForWithdrawAdminTerminationCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

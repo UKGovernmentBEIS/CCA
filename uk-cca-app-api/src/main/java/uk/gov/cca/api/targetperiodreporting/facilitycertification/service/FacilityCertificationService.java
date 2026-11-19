@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertification;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationDTO;
@@ -17,22 +18,28 @@ import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.Fac
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.repository.FacilityCertificationRepository;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.transform.FacilityCertificationMapper;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.validation.FacilityCertificationValidationService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.CertificationPeriodService;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusDTO;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Validated
 @Service
 @RequiredArgsConstructor
 public class FacilityCertificationService {
-    
-    private static final FacilityCertificationMapper FACILITY_CERTIFICATION_MAPPER = Mappers.getMapper(FacilityCertificationMapper.class);
-    
+
+    private final CertificationPeriodService certificationPeriodService;
     private final FacilityCertificationRepository facilityCertificationRepository;
     private final FacilityCertificationValidationService validatorService;
+
+    private static final FacilityCertificationMapper FACILITY_CERTIFICATION_MAPPER = Mappers.getMapper(FacilityCertificationMapper.class);
 
     @Transactional
     public void certifyFacilities(@NotEmpty Set<Long> facilityIds,
@@ -95,9 +102,20 @@ public class FacilityCertificationService {
                 .toList();
     }
 
-    public List<FacilityCertificationDTO> getFacilityCertifications(Long facilityId) {
-        return facilityCertificationRepository.findAllByFacilityId(facilityId).stream()
+    public List<FacilityCertificationStatusDTO> getFacilityCertifications(Long facilityId) {
+        Map<Long, FacilityCertificationDTO> facilityCertificationByPeriod = facilityCertificationRepository
+                .findAllByFacilityId(facilityId).stream()
                 .map(FACILITY_CERTIFICATION_MAPPER::toFacilityCertificationDto)
+                .collect(Collectors.toMap(FacilityCertificationDTO::getCertificationPeriodId, Function.identity()));
+
+        LocalDate currentDate = LocalDate.now();
+        FacilityCertificationDTO facilityNotDefined = FacilityCertificationDTO.builder()
+                .certificationStatus(FacilityCertificationStatus.NOT_YET_DEFINED).build();
+
+        return certificationPeriodService.getAllCertificationPeriods().stream()
+                .sorted(Comparator.comparing(CertificationPeriodDTO::getStartDate).reversed())
+                .filter(cp -> cp.getStartDate().isBefore(currentDate) || cp.getStartDate().isEqual(currentDate))
+                .map(cp -> FACILITY_CERTIFICATION_MAPPER.toFacilityCertificationStatusDTO(facilityCertificationByPeriod.getOrDefault(cp.getId(), facilityNotDefined), cp))
                 .toList();
     }
 

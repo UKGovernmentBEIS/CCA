@@ -62,7 +62,7 @@ describe('Directive: PasswordStrengthMeter - ProgressBar', () => {
     const items = fixture.debugElement.queryAll(By.css('.psm__progress-bar-item'));
 
     expect(items.length).toEqual(3);
-    expect(items[0].styles['width']).toEqual(`33.333333333333336%`);
+    expect(items[0].styles['width']).toEqual('33.3333%');
   });
 
   it('should update the aria attributes', () => {

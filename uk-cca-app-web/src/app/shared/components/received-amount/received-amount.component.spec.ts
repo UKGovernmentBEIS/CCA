@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +21,7 @@ describe('ReceivedAmountComponent', () => {
       imports: [ReceivedAmountComponent],
       providers: [
         ReceivedAmountStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub({ moaId: 1 }) },
       ],
@@ -48,7 +48,6 @@ describe('ReceivedAmountComponent', () => {
         ['Sector', 'Transaction ID', 'Current total amount (GBP)', 'Current received amount (GBP)'],
         ['ADS_52 - Aerospace_52', 'CCACM01201', '370', '5,100'],
       ],
-      [[], []],
     ]);
   });
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -13,14 +13,13 @@ import { MiReportsUserDefinedService, MiReportUserDefinedDTO } from 'cca-api';
       <netz-page-heading caption="Delete MI Report">
         Are you sure you want to delete the {{ query.reportName }} MI Report?
       </netz-page-heading>
-      <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+      <govuk-warning-text>You will not be able to undo this action.</govuk-warning-text>
       <p>Your MI Report and all its data will be deleted permanently.</p>
       <button (click)="onDelete()" class="govuk-button govuk-button--warning">Yes, delete the MI Report</button>
     </div>
     <a routerLink="../.." class="govuk-link">Return to: MI Reports</a>
   `,
   imports: [WarningTextComponent, PageHeadingComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteMiReportComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

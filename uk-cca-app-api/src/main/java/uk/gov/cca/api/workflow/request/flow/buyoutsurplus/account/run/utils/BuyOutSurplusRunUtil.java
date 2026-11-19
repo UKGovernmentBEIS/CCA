@@ -19,7 +19,9 @@ public class BuyOutSurplusRunUtil {
     private final String STATUS_SUCCESS = "PASS";
     private final String STATUS_ERROR = "FAIL";
 
-    public FileDTO createCsvFileContent(final String requestId, final Map<Long, BuyOutSurplusAccountState> buyOutSurplusAccountStates) throws IOException {
+    public FileDTO createCsvFileContent(final String requestId,
+                                        final Map<Long, BuyOutSurplusAccountState> buyOutSurplusAccountStates,
+                                        String createdBy) throws IOException {
         // Create file name
         final String fileName = String.format("%s Buy-out and surplus summary report.csv", requestId);
 
@@ -44,7 +46,7 @@ public class BuyOutSurplusRunUtil {
 
             return FileDTO.builder()
                     .fileContent(generatedFile).fileName(fileName).fileSize(generatedFile.length)
-                    .fileType(MimeTypeUtils.detect(generatedFile, fileName)).build();
+                    .fileType(MimeTypeUtils.detect(generatedFile, fileName)).createdBy(createdBy).build();
         }
     }
 }

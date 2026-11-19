@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -8,10 +8,10 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { mockVariationReviewRequestTaskState } from '@requests/common/underlying-agreement/testing/variation-review-mock-data';
 import { click, getByText } from '@testing';
 import { Mocked } from 'vitest';
 
-import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import AuthorisationAdditionalEvidenceCheckYourAnswersComponent from './authorisation-additional-evidence-check-your-answers.component';
 
 describe('AuthorisationAdditionalEvidenceCheckYourAnswersComponent', () => {
@@ -31,7 +31,7 @@ describe('AuthorisationAdditionalEvidenceCheckYourAnswersComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AuthorisationAdditionalEvidenceCheckYourAnswersComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },

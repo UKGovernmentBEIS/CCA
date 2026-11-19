@@ -6,24 +6,35 @@ import { UnderlyingAgreementVariationPeerReviewStore } from './+state/underlying
 
 export const UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_ROUTES: Routes = [
   {
+    title: 'Peer review application for underlying agreement variation',
     path: '',
-    providers: [UnderlyingAgreementVariationPeerReviewStore],
     children: [
       {
+        title: 'Variation details',
         path: 'variation-details',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-variation-peer-review/variation-details/variation-details.component').then(
+            (c) => c.VariationDetailsComponent,
+          ),
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewVariationDetailsComponent),
       },
       {
+        title: 'Target unit details',
         path: 'review-target-unit-details',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-variation-peer-review/review-target-unit-details/review-target-unit-details.component').then(
+            (c) => c.ReviewTargetUnitDetailsComponent,
+          ),
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetUnitDetailsComponent),
       },
       {
-        path: 'manage-facilities',
         title: 'Manage facilities list',
+        path: 'manage-facilities',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-variation-peer-review/manage-facilities/manage-facilities.component').then(
+            (c) => c.ManageFacilitiesComponent,
+          ),
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewManageFacilitiesComponent),
       },
       {
         path: 'facility',
@@ -32,52 +43,74 @@ export const UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_ROUTES: Routes = [
             path: ':facilityId',
             children: [
               {
-                path: '',
                 title: 'Facility',
+                path: '',
+                loadComponent: () =>
+                  import('@requests/common/underlying-agreement-variation-peer-review/facility/facility.component').then(
+                    (c) => c.FacilityComponent,
+                  ),
                 data: { backlink: '../../manage-facilities', breadcrumb: false },
-                loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewFacilityComponent),
               },
               {
-                path: 'products',
                 title: 'View Products',
+                path: 'products',
+                loadComponent: () =>
+                  import('@requests/common/underlying-agreement-peer-review/products/summary-products-peer-review.component').then(
+                    (c) => c.SummaryProductsPeerReviewComponent,
+                  ),
                 data: { breadcrumb: false, backlink: '../' },
-                loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsPeerReviewComponent),
               },
             ],
           },
         ],
       },
       {
+        title: 'TP5 (2021-2022)',
         path: 'target-period-5',
-        data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetPeriod5Component),
-      },
-      {
-        path: 'target-period-6',
-        data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewTargetPeriod6Component),
-      },
-      {
-        path: 'authorisation-additional-evidence',
-        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
-          import('@requests/common').then((c) => c.UNAVariationPeerReviewAuthorisationAdditionalEvidenceComponent),
+          import('@requests/common/underlying-agreement-variation-peer-review/target-period-5/target-period-5.component').then(
+            (c) => c.TargetPeriod5Component,
+          ),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        path: 'overall-decision',
+        title: 'TP6 (2024)',
+        path: 'target-period-6',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-variation-peer-review/target-period-6/target-period-6.component').then(
+            (c) => c.TargetPeriod6Component,
+          ),
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAVariationPeerReviewOverallDecisionComponent),
+      },
+      {
+        title: 'Authorisation and additional evidence',
+        path: 'authorisation-additional-evidence',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-variation-peer-review/authorisation-additional-evidence/authorisation-additional-evidence.component').then(
+            (c) => c.AuthorisationAdditionalEvidenceComponent,
+          ),
+        data: { backlink: '../../', breadcrumb: false },
+      },
+      {
+        title: 'Overall decision',
+        path: 'overall-decision',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-variation-peer-review/overall-decision/overall-decision.component').then(
+            (c) => c.OverallDecisionComponent,
+          ),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
         path: 'peer-review-decision',
         canActivate: [userIsAssigneeGuard],
         loadChildren: () =>
-          import('./peer-review-decision/peer-review-decision.routes').then((m) => m.PEER_REVIEW_DECISION_ROUTES),
+          import('./peer-review-decision/peer-review-decision.routes').then((r) => r.PEER_REVIEW_DECISION_ROUTES),
       },
       {
         path: '**',
         redirectTo: '/dashboard',
       },
     ],
+    providers: [UnderlyingAgreementVariationPeerReviewStore],
   },
 ];

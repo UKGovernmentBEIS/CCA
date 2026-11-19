@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { of } from 'rxjs';
 
+import { SchemeVersionEnum } from '@shared/types';
 import { Mock } from 'vitest';
 
 import { BuyOutAndSurplusCostInfoService, TargetPeriodBuyOutDetailsDTO } from 'cca-api';
@@ -15,8 +16,8 @@ describe('CostTabComponent', () => {
 
   const buyOutCosts: TargetPeriodBuyOutDetailsDTO[] = [
     { id: 9, businessId: 'TP9' },
-    { id: 8, businessId: 'TP8', buyOutCost: 38 },
-    { id: 7, businessId: 'TP7', buyOutCost: 37 },
+    { id: 8, businessId: 'TP8', buyOutCost: '38' },
+    { id: 7, businessId: 'TP7', buyOutCost: '37' },
   ];
 
   beforeEach(async () => {
@@ -34,7 +35,7 @@ describe('CostTabComponent', () => {
   });
 
   it('retrieves the CCA3 buy-out costs', () => {
-    expect(mockService.getBuyOutCosts).toHaveBeenCalledWith('CCA_3');
+    expect(mockService.getBuyOutCosts).toHaveBeenCalledWith(SchemeVersionEnum.CCA_3);
   });
 
   it('displays the target period costs', () => {
@@ -42,12 +43,17 @@ describe('CostTabComponent', () => {
 
     expect(rows).toHaveLength(3);
     expect(rows[0].textContent).toContain('TP7');
-    expect(rows[0].textContent).toContain('£37 / tCO2e');
+    expect(rows[0].textContent).toContain('£37.00 / tCO2e');
     expect(rows[1].textContent).toContain('TP8');
-    expect(rows[1].textContent).toContain('£38 / tCO2e');
+    expect(rows[1].textContent).toContain('£38.00 / tCO2e');
     expect(rows[2].textContent).toContain('TP9');
     expect(rows[2].textContent).toContain('Not yet defined');
-    expect(rows[2].querySelector('td div').classList.contains('govuk-!-text-align-right')).toBe(true);
+    expect(fixture.nativeElement.querySelector('thead th:nth-child(2)').classList).toContain(
+      'govuk-table__header--numeric',
+    );
+    for (const row of rows) {
+      expect(row.querySelector('td').classList).toContain('govuk-table__cell--numeric');
+    }
   });
 
   it('links each Change action to its target period cost page', () => {

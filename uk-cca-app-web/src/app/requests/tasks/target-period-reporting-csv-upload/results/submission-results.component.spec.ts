@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -30,7 +30,7 @@ describe('SubmissionResultsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SubmissionResultsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -58,7 +58,8 @@ describe('SubmissionResultsComponent', () => {
             facilitiesSucceeded: 0,
             facilitiesFailed: 1,
             uploadSummaryFile: 'b0939e73-6c89-4663-9ba6-3a3ae104f8bc',
-            submittedDate: '2026-06-30T12:49:27.727602514Z',
+            // The API sends an instant; the summary displays its local date and time.
+            submittedDate: new Date(2026, 5, 30, 8, 49, 27).toISOString(),
           },
           uploadAttachments: {
             '5a773a53-01ad-4c8e-ba9b-bca0560e926d': 'dummy.csv',
@@ -91,12 +92,11 @@ describe('SubmissionResultsComponent', () => {
       'Submission summary file',
     ]);
 
-    // Date is timezone-dependent, just verify it matches the expected pattern
-    expect(values[0]).toMatch(/\d{1,2} \w{3} \d{4} - \d{2}:\d{2}:\d{2}/);
+    expect(values[0]).toBe('30 Jun 2026 - 8:49:27');
     expect(values[1]).toBe('1');
     expect(values[2]).toBe('0');
     expect(values[3]).toBe('1');
-    expect(values[4]).toBe('Upload_Summary.csv');
+    expect(values[4]).toBe('Upload_Summary.csv (opens in a new tab)');
   });
 
   it('should display an error message when errorMessage exists', async () => {

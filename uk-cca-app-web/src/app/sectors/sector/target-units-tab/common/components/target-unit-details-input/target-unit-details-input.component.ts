@@ -1,4 +1,14 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  ElementRef,
+  inject,
+  Injector,
+  input,
+  OnInit,
+  viewChild,
+  viewChildren,
+} from '@angular/core';
 import {
   ControlContainer,
   FormArray,
@@ -26,6 +36,7 @@ import { addSicCodeFormControl } from '../../utils';
 @Component({
   selector: 'cca-target-unit-details-input',
   templateUrl: './target-unit-details-input.component.html',
+  viewProviders: [existingControlContainer],
   imports: [
     ReactiveFormsModule,
     TextInputComponent,
@@ -34,10 +45,13 @@ import { addSicCodeFormControl } from '../../utils';
     SelectComponent,
     ButtonDirective,
   ],
-  viewProviders: [existingControlContainer],
 })
 export class TargetUnitDetailsInputComponent implements OnInit {
   private readonly controlContainer = inject(ControlContainer);
+  private readonly injector = inject(Injector);
+
+  private readonly sicCodeRows = viewChildren('sicCodeRow', { read: ElementRef });
+  private readonly addCodeButton = viewChild('addCodeButton', { read: ElementRef });
 
   protected readonly subSectors = input<SubsectorAssociationInfoDTO[]>([]);
   protected subSectorOptions: GovukSelectOption[];
@@ -64,5 +78,15 @@ export class TargetUnitDetailsInputComponent implements OnInit {
 
   removeCode(index: number) {
     this.sicCodeFormArray.removeAt(index);
+
+    afterNextRender(
+      {
+        write: () => {
+          const nextRowInput = this.sicCodeRows()[index]?.nativeElement.querySelector('input');
+          (nextRowInput ?? this.addCodeButton()?.nativeElement)?.focus();
+        },
+      },
+      { injector: this.injector },
+    );
   }
 }

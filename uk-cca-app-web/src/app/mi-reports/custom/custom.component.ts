@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { EMPTY, map } from 'rxjs';
@@ -10,7 +10,6 @@ import { ButtonDirective, ErrorSummaryComponent, GovukValidators, TextareaCompon
 
 import { CustomMiReportQuery, MiReportsUserDefinedService } from 'cca-api';
 
-import { ExtendedMiReportResult } from '../core/mi-interfaces';
 import { MiReportsExportService } from '../core/mi-reports-export.service';
 
 @Component({
@@ -24,7 +23,6 @@ import { MiReportsExportService } from '../core/mi-reports-export.service';
     PendingButtonDirective,
     ErrorSummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomReportComponent {
   private readonly fb = inject(FormBuilder);
@@ -35,6 +33,7 @@ export class CustomReportComponent {
     query: this.fb.control<string>(null, [GovukValidators.required('Query must not be empty')]),
   });
   protected readonly isErrorSummaryDisplayed = signal(false);
+  private readonly errorSummary = viewChild(ErrorSummaryComponent);
 
   exportToExcel() {
     if (this.form.invalid) {
@@ -50,9 +49,10 @@ export class CustomReportComponent {
         catchBadRequest(ErrorCodes.REPORT1001, () => {
           this.form.controls.query.setErrors({ apiError: 'Unable to execute query' });
           this.isErrorSummaryDisplayed.set(true);
+          this.errorSummary()?.focus();
           return EMPTY;
         }),
-        map((results: ExtendedMiReportResult) => {
+        map((results) => {
           this.miReportsExportService.exportToExcel(results, 'Custom sql report');
         }),
       )

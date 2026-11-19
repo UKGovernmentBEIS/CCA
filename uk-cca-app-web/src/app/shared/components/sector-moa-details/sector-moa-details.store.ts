@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { catchError, Observable, pipe, tap } from 'rxjs';
 
@@ -30,7 +30,7 @@ const INITIAL_STATE: SectorMoaDetailsState = {
   totalTUItems: 0,
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class SectorMoaDetailsStore extends SignalStore<SectorMoaDetailsState> {
   private readonly subsistenceFeesMoAViewService = inject(SubsistenceFeesMoAViewService);
   private readonly userRoleType = inject(AuthStore).select(selectUserRoleType);
@@ -48,7 +48,7 @@ export class SectorMoaDetailsStore extends SignalStore<SectorMoaDetailsState> {
   updateSelectedTUs(selectedRow: SubsistenceFeesMoaTargetUnitSearchResultInfoDTO, checked: boolean) {
     if (selectedRow.markFacilitiesStatus === 'CANCELLED') return; // cancelled facilities are not selectable
 
-    const selectedTUs = this.state.selectedTUs;
+    const selectedTUs = new Map(this.state.selectedTUs);
 
     if (checked) {
       selectedTUs.set(selectedRow.businessId, selectedRow);

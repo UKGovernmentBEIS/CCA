@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 import { DetailsComponent } from '@netz/govuk-components';
 import { fileUtils } from '@shared/utils';
@@ -18,7 +18,6 @@ interface AgreementsState {
   selector: 'cca-scheme-details',
   templateUrl: './scheme-details.component.html',
   imports: [AgreementDetailsComponent, DetailsComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchemeDetailsComponent {
   protected readonly downloadURL = input.required<string>();

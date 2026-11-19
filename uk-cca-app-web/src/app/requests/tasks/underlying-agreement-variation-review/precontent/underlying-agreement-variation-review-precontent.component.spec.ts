@@ -1,15 +1,12 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
-import { of } from 'rxjs';
-
 import { RequestTaskStore } from '@netz/common/store';
 import { mockClass } from '@netz/common/testing';
-import { mockUNAReviewRequestTaskState } from '@requests/common';
+import { mockUNAReviewRequestTaskState } from '@requests/common/underlying-agreement/testing/mock-data';
 import { click, getByText } from '@testing';
-import { Mocked } from 'vitest';
 
 import { UnderlyingAgreementVariationReviewPrecontentComponent } from './underlying-agreement-variation-review-precontent.component';
 
@@ -18,14 +15,12 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
   let router: Router;
 
   const mockRoute = mockClass(ActivatedRoute);
-  const mockRouter: Mocked<Partial<Router>> = { navigate: vi.fn().mockReturnValue(of(null)) };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UnderlyingAgreementVariationReviewPrecontentComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), RequestTaskStore, provideRouter([])],
+      providers: [provideHttpClient(withXhr()), provideHttpClientTesting(), RequestTaskStore, provideRouter([])],
     })
-      .overrideProvider(Router, { useValue: mockRouter })
       .overrideProvider(ActivatedRoute, { useValue: mockRoute })
       .compileComponents();
 
@@ -34,6 +29,7 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
     store.setState({ ...store.state, isEditable: true });
 
     router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     fixture = TestBed.createComponent(UnderlyingAgreementVariationReviewPrecontentComponent);
     fixture.detectChanges();
   });

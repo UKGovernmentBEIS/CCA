@@ -64,6 +64,12 @@ import io.hypersistence.utils.hibernate.type.json.JsonType;
                 + "where tu.sectorAssociationId = :sectorAssociationId "
     ),
     @NamedQuery(
+            name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_IDS_BY_SECTOR_ASSOCIATION_IN,
+            query = "select tu.id "
+                    + "from TargetUnitAccount tu "
+                    + "where tu.sectorAssociationId in (:sectorAssociationIds) "
+    ),
+    @NamedQuery(
             name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_ACTIVATED_BEFORE_WITH_STATUS_ACTIVE_OR_TERMINATED_BETWEEN,
             query = "select new uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO(tu.id, tu.businessId, tu.name) "
                     + "from TargetUnitAccount tu "
@@ -94,6 +100,7 @@ import io.hypersistence.utils.hibernate.type.json.JsonType;
 public class TargetUnitAccount extends Account {
 
     public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_IDS_BY_SECTOR_ASSOCIATION = "TargetUnitAccount.findAllIdsBySectorAssociationId";
+    public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_IDS_BY_SECTOR_ASSOCIATION_IN = "TargetUnitAccount.findAllIdsBySectorAssociationIdIn";
     public static final String NAMED_QUERY_FIND_ACCOUNTS_BY_CONTACT_TYPE_AND_USER_ID_AND_SECTOR_ASSOCIATION = "TargetUnitAccount.findTargetUnitAccountsByContactTypeAndUserIdAndSectorAsssociationId";
     public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_NOTICE_RECIPIENTS_BY_ACCOUNT_ID = "TargetUnitAccount.findTargetUnitAccountNoticeRecipientsByAccountId";
 	public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_ACTIVATED_BEFORE_WITH_STATUS_ACTIVE_OR_TERMINATED_BETWEEN = "TargetUnitAccount.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween";

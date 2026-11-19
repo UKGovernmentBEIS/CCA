@@ -4,19 +4,26 @@ import { userIsAssigneeGuard } from '@shared/guards';
 
 export const UNDERLYING_AGREEMENT_PEER_REVIEW_ROUTES: Routes = [
   {
+    title: 'Peer review application for underlying agreement',
     path: '',
     children: [
       {
-        path: 'target-unit-details',
         title: 'Target unit details',
+        path: 'target-unit-details',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-peer-review/review-target-unit-details/review-target-unit-details.component').then(
+            (c) => c.ReviewTargetUnitDetailsComponent,
+          ),
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewTargetUnitDetailsComponent),
       },
       {
-        path: 'manage-facilities',
         title: 'Manage facilities list',
+        path: 'manage-facilities',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-peer-review/manage-facilities/manage-facilities.component').then(
+            (c) => c.ManageFacilitiesComponent,
+          ),
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewManageFacilitiesComponent),
       },
       {
         path: 'facility',
@@ -25,39 +32,50 @@ export const UNDERLYING_AGREEMENT_PEER_REVIEW_ROUTES: Routes = [
             path: ':facilityId',
             children: [
               {
-                path: '',
                 title: 'Facility',
+                path: '',
+                loadComponent: () =>
+                  import('@requests/common/underlying-agreement-peer-review/facility/facility.component').then(
+                    (c) => c.FacilityComponent,
+                  ),
                 data: { backlink: '../../manage-facilities', breadcrumb: false },
-                loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewFacilityComponent),
               },
               {
-                path: 'products',
                 title: 'View Products',
+                path: 'products',
+                loadComponent: () =>
+                  import('@requests/common/underlying-agreement-peer-review/products/summary-products-peer-review.component').then(
+                    (c) => c.SummaryProductsPeerReviewComponent,
+                  ),
                 data: { breadcrumb: false, backlink: '../' },
-                loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsPeerReviewComponent),
               },
             ],
           },
         ],
       },
       {
-        path: 'authorisation-additional-evidence',
         title: 'Authorisation and additional evidence',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'authorisation-additional-evidence',
         loadComponent: () =>
-          import('@requests/common').then((c) => c.UNAPeerReviewAuthorisationAdditionalEvidenceComponent),
+          import('@requests/common/underlying-agreement-peer-review/authorisation-additional-evidence/authorisation-additional-evidence.component').then(
+            (c) => c.AuthorisationAdditionalEvidenceComponent,
+          ),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
-        path: 'overall-decision',
         title: 'Overall decision',
+        path: 'overall-decision',
+        loadComponent: () =>
+          import('@requests/common/underlying-agreement-peer-review/overall-decision/overall-decision.component').then(
+            (c) => c.OverallDecisionComponent,
+          ),
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewOverallDecisionComponent),
       },
       {
         path: 'peer-review-decision',
         canActivate: [userIsAssigneeGuard],
         loadChildren: () =>
-          import('./peer-review-decision/peer-review-decision.routes').then((m) => m.PEER_REVIEW_DECISION_ROUTES),
+          import('./peer-review-decision/peer-review-decision.routes').then((r) => r.PEER_REVIEW_DECISION_ROUTES),
       },
       {
         path: '**',

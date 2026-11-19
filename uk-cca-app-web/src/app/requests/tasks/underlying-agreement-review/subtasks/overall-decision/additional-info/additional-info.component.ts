@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -22,13 +22,19 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
       heading="Provide any additional information here to support your decision (optional)"
       (formSubmit)="submit()"
     >
-      <div govuk-textarea formControlName="additionalInfo" hint="This will be included in the official notice."></div>
+      <div
+        govuk-textarea
+        formControlName="additionalInfo"
+        label="Additional information (optional)"
+        hint="This will be included in the official notice."
+      ></div>
       <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files" />
     </cca-wizard-step>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
+  providers: [provideAdditionalInfo()],
   imports: [
     WizardStepComponent,
     TextareaComponent,
@@ -36,8 +42,6 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
     MultipleFileInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [provideAdditionalInfo()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdditionalInfoComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

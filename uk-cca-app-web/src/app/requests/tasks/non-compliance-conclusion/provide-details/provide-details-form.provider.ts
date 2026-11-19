@@ -21,6 +21,11 @@ export type ProvideDetailsFormModel = FormGroup<{
 
 export const PROVIDE_DETAILS_FORM = new InjectionToken<ProvideDetailsFormModel>('Provide conclusion details form');
 
+const conditionalDateValidators = [
+  GovukValidators.required('Enter a date'),
+  futureDateValidator('This date cannot be in the future'),
+];
+
 export const ProvideDetailsFormProvider: Provider = {
   provide: PROVIDE_DETAILS_FORM,
   deps: [FormBuilder, RequestTaskStore],
@@ -67,12 +72,9 @@ export const ProvideDetailsFormProvider: Provider = {
 
 function updateDateValidation(parentValue: boolean | null, dateControl: FormControl<Date | string | null>): void {
   if (parentValue === true) {
-    dateControl.setValidators([
-      GovukValidators.required('Enter a date'),
-      futureDateValidator('This date cannot be in the future'),
-    ]);
+    dateControl.addValidators(conditionalDateValidators);
   } else {
-    dateControl.clearValidators();
+    dateControl.removeValidators(conditionalDateValidators);
     if (parentValue === false) {
       dateControl.reset(null);
     }

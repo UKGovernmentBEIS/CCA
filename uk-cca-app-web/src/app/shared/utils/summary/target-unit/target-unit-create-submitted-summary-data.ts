@@ -1,4 +1,3 @@
-import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { transformAddress, transformOperatorType } from '@shared/pipes';
 import { Country } from '@shared/types';
@@ -6,6 +5,7 @@ import { Country } from '@shared/types';
 import { TargetUnitAccountPayload } from 'cca-api';
 
 import { transformPhoneNumber } from '../../phone';
+import { boolToString } from '../../text';
 
 export function toTargetUnitCreateSubmittedSummaryData(
   payload: TargetUnitAccountPayload,

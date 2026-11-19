@@ -1,8 +1,8 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationBehaviorOptions, Router, RouterLink } from '@angular/router';
 
 import { switchMap, tap } from 'rxjs';
 
@@ -46,6 +46,7 @@ type SectorMoasState = {
 @Component({
   selector: 'cca-sector-moas',
   templateUrl: './sector-moas.component.html',
+  providers: [SectorMoasFormProvider, StatusPipe],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -61,8 +62,6 @@ type SectorMoasState = {
     StatusColorPipe,
     StatusPipe,
   ],
-  providers: [SectorMoasFormProvider, StatusPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorMoasComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);
@@ -128,22 +127,28 @@ export class SectorMoasComponent {
 
   onApplyFilters() {
     if (this.searchForm.invalid) return;
-    this.handleQueryParamsNavigation({
-      page: DEFAULT_PAGE,
-      term: this.searchForm.value.term,
-      paymentStatus: this.searchForm.value.paymentStatus,
-      markFacilitiesStatus: this.searchForm.value.markFacilitiesStatus,
-    });
+    this.handleQueryParamsNavigation(
+      {
+        page: DEFAULT_PAGE,
+        term: this.searchForm.value.term,
+        paymentStatus: this.searchForm.value.paymentStatus,
+        markFacilitiesStatus: this.searchForm.value.markFacilitiesStatus,
+      },
+      'manual',
+    );
   }
 
   onClearFilters() {
     this.searchForm.reset();
-    this.handleQueryParamsNavigation({
-      page: DEFAULT_PAGE,
-      term: INITIAL_FORM_VALUES.term,
-      paymentStatus: INITIAL_FORM_VALUES.paymentStatus,
-      markFacilitiesStatus: INITIAL_FORM_VALUES.markFacilitiesStatus,
-    });
+    this.handleQueryParamsNavigation(
+      {
+        page: DEFAULT_PAGE,
+        term: INITIAL_FORM_VALUES.term,
+        paymentStatus: INITIAL_FORM_VALUES.paymentStatus,
+        markFacilitiesStatus: INITIAL_FORM_VALUES.markFacilitiesStatus,
+      },
+      'manual',
+    );
   }
 
   onPageChange(page: number) {
@@ -183,11 +188,13 @@ export class SectorMoasComponent {
       paymentStatus: SubsistenceFeesMoaSearchCriteria['paymentStatus'];
       markFacilitiesStatus: SubsistenceFeesMoaSearchCriteria['markFacilitiesStatus'];
     }>,
+    scroll?: NavigationBehaviorOptions['scroll'],
   ) {
     this.router.navigate([], {
       queryParams: { ...pagination },
       queryParamsHandling: 'merge',
       relativeTo: this.activatedRoute,
+      scroll,
       fragment: 'sector-moas',
     });
   }

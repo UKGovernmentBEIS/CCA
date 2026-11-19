@@ -1,23 +1,23 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
 import { TextareaComponent } from '@netz/govuk-components';
-import { MultipleFileInputComponent, UuidFilePair } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
 import { AccountNotesService, NoteRequest, RequestNotesService } from 'cca-api';
 
+import { UuidFilePair } from '../../file-input/file-upload-event';
+import { MultipleFileInputComponent } from '../../multiple-file-input/multiple-file-input.component';
 import { EDIT_NOTE_FORM, EditNoteFormModel, EditNoteFormProvider } from './edit-note-form.provider';
 
 @Component({
   selector: 'cca-workflow-edit-note',
   templateUrl: './edit-note.component.html',
-  imports: [ReactiveFormsModule, TextareaComponent, MultipleFileInputComponent, RouterLink],
   providers: [EditNoteFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, TextareaComponent, MultipleFileInputComponent, RouterLink],
 })
 export class WorkflowEditNoteComponent {
   private readonly requestNotesService = inject(RequestNotesService);

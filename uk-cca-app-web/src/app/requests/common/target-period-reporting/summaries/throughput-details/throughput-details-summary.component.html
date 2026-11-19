@@ -2,7 +2,9 @@
   <h2 class="govuk-heading-m">Target period throughput details</h2>
 
   @if (isEditable()) {
-    <a class="govuk-link" [routerLink]="[detailsLink()]">Change</a>
+    <a class="govuk-link" [routerLink]="[detailsLink()]">
+      Change<span class="govuk-visually-hidden"> target period throughput details</span>
+    </a>
   }
 </div>
 

@@ -9,8 +9,8 @@ describe('DebounceClickDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    imports: [DebounceClickDirective],
     template: ` <button #button govukDebounceClick (debounceClick)="onClick()">Simple button</button> `,
+    imports: [DebounceClickDirective],
   })
   class TestComponent {
     readonly button = viewChild<ElementRef>('button');

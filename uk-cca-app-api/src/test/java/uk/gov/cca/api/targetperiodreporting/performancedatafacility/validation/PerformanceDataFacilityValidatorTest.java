@@ -920,4 +920,102 @@ class PerformanceDataFacilityValidatorTest {
         verify(performanceDataFacilityReferenceDataService, times(1))
                 .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
     }
+
+    @Test
+    void validateFacilityProductsBeforeFacilityBaseYear() {
+        final Long accountId = 11L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder()
+                .facilityBusinessId(facilityBusinessId)
+                .accountId(accountId)
+                .build();
+
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .baselineYear(Year.of(2022))
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .baselineYear(Year.of(2022))
+                                .build()
+                ))
+                .build();
+
+        when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
+                .thenReturn(baselineAndTargets);
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isTrue();
+        verify(performanceDataFacilityReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
+    }
+
+    @Test
+    void validateFacilityProductsBeforeFacilityBaseYear_not_valid() {
+        final Long accountId = 11L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder()
+                .facilityBusinessId(facilityBusinessId)
+                .accountId(accountId)
+                .build();
+
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .baselineYear(Year.of(2023))
+                .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .baselineYear(Year.of(2022))
+                                .build()
+                ))
+                .build();
+
+        when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
+                .thenReturn(baselineAndTargets);
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isFalse();
+        assertThat((List<PerformanceDataFacilityViolation>) result.getViolations()).extracting(PerformanceDataFacilityViolation::getMessage)
+                .containsOnly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_PRODUCT_EXIST_BEFORE_FACILITY_BASE_YEAR.getMessage());
+        verify(performanceDataFacilityReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
+    }
 }

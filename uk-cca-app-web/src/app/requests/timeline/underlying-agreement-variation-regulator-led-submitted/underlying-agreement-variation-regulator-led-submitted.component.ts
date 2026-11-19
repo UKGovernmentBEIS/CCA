@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,7 +11,6 @@ import { toUnARegulatorLedVariationSubmittedSummaryData } from './underlying-agr
   selector: 'cca-underlying-agreement-variation-regulator-led-actions-submitted',
   template: `<cca-summary [data]="summaryData()" /> `,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnARegulatorLedVariationSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

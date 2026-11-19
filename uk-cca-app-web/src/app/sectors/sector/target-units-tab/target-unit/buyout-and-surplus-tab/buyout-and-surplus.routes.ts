@@ -1,6 +1,9 @@
+import { inject } from '@angular/core';
+
 import { userIsRegulatorGuard } from '@shared/guards';
 
-import { editSurplusGuard } from './edit-surplus/edit-surplus-guard';
+import { ActiveTargetUnitStore } from '../../active-target-unit.store';
+import { editSurplusGuard } from './edit-surplus/edit-surplus.guard';
 import { surplusHistoryGuard } from './surplus-history/surplus-history.guard';
 
 export const BUYOUT_AND_SURPLUS_ROUTES = [
@@ -8,36 +11,42 @@ export const BUYOUT_AND_SURPLUS_ROUTES = [
     path: 'buyout-surplus',
     children: [
       {
+        title: () =>
+          `Do you want to put the account ${inject(ActiveTargetUnitStore).state?.targetUnitAccountDetails?.businessId} on hold for the next buy-out and surplus batch?`,
         path: 'edit-on-hold',
-        canActivate: [userIsRegulatorGuard],
-        data: { breadcrumb: false, backlink: '../../' },
         loadComponent: () => import('./edit-on-hold/edit-on-hold.component').then((c) => c.EditOnHoldComponent),
+        canActivate: [userIsRegulatorGuard],
+        data: { breadcrumb: false, backlink: { link: '../../', fragment: 'buyout-surplus' } },
       },
       {
+        title: 'On hold status updated',
         path: 'edit-on-hold/confirmation',
-        canActivate: [userIsRegulatorGuard],
         loadComponent: () =>
           import('./edit-on-hold/confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+        canActivate: [userIsRegulatorGuard],
       },
       {
-        path: ':targetPeriodType/surplus-history',
-        canActivate: [surplusHistoryGuard],
-        data: { breadcrumb: false, backlink: '../../../' },
+        title: 'Surplus gained change history',
+        path: 'surplus-history',
         loadComponent: () =>
           import('./surplus-history/surplus-history.component').then((c) => c.SurplusHistoryComponent),
+        canActivate: [surplusHistoryGuard],
+        data: { breadcrumb: false, backlink: { link: '../../', fragment: 'buyout-surplus' } },
       },
       {
-        path: ':targetPeriodType/edit-surplus',
-        canActivate: [userIsRegulatorGuard, editSurplusGuard],
-        data: { breadcrumb: false, backlink: '../../../' },
+        title: 'Surplus gained',
+        path: 'edit-surplus',
         loadComponent: () => import('./edit-surplus/edit-surplus.component').then((c) => c.EditSurplusComponent),
+        canActivate: [userIsRegulatorGuard, editSurplusGuard],
+        data: { breadcrumb: false, backlink: { link: '../../', fragment: 'buyout-surplus' } },
       },
       {
-        path: ':targetPeriodType/edit-surplus/confirmation',
-        canActivate: [userIsRegulatorGuard],
-        data: { breadcrumb: false, backlink: '../../../../' },
+        title: 'Surplus gained updated',
+        path: 'edit-surplus/confirmation',
         loadComponent: () =>
           import('./edit-surplus/confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+        canActivate: [userIsRegulatorGuard],
+        data: { breadcrumb: false, backlink: { link: '../../../', fragment: 'buyout-surplus' } },
       },
     ],
   },

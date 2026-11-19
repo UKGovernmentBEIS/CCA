@@ -7,6 +7,10 @@ describe('WorkflowTypePipe', () => {
     expect(pipe).toBeTruthy();
   });
 
+  it('uses the shared title for the CCA3 account workflow', () => {
+    expect(pipe.transform('BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING')).toBe('Buy-out and surplus');
+  });
+
   it('should transform "CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING" to "CCA2 extension"', () => {
     expect(pipe.transform('CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING')).toBe('CCA2 extension');
   });

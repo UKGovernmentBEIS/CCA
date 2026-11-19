@@ -10,7 +10,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.files.evidences.domain.FileEvidence;
 import uk.gov.cca.api.files.evidences.repository.FileEvidenceRepository;
-import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.utils.DateService;
 import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
@@ -71,17 +70,17 @@ class FileEvidenceServiceTest {
 
     @Test
     void createFileEvidence() throws IOException {
-        AppUser user = AppUser.builder().firstName("firstName").userId("userId").lastName("lastName").build();
         byte[] contentBytes = "dummycontent".getBytes();
         FileDTO fileDTO = FileDTO.builder()
                 .fileName("name")
                 .fileSize(contentBytes.length)
                 .fileType("application/pdf")
                 .fileContent(contentBytes)
+                .createdBy("userId")
                 .build();
         FileStatus status = FileStatus.PENDING;
 
-        String fileEvidenceUuid = fileEvidenceService.createFileEvidence(fileDTO, user);
+        String fileEvidenceUuid = fileEvidenceService.createFileEvidence(fileDTO);
 
         assertThat(fileEvidenceUuid).isNotNull();
         ArgumentCaptor<FileEvidence> evidenceCaptor = ArgumentCaptor.forClass(FileEvidence.class);

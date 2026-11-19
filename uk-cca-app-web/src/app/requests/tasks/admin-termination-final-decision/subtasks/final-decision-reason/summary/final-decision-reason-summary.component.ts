@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -24,7 +24,6 @@ import { toFinalDecisionReasonSummaryData } from '../../../final-decision-reason
     <netz-return-to-task-or-action-page />
   `,
   imports: [SummaryComponent, PageHeadingComponent, FinalDecisionTypePipe, ReturnToTaskOrActionPageComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FinalDecisionReasonSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

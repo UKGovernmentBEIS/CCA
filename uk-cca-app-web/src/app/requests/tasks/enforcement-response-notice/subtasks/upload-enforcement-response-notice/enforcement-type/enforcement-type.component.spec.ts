@@ -1,8 +1,8 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -63,20 +63,11 @@ describe('EnforcementTypeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EnforcementTypeComponent],
       providers: [
-        provideHttpClient(),
+        provideRouter([]),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideZonelessChangeDetection(),
         { provide: ActivatedRoute, useValue: route },
-        {
-          provide: Router,
-          useValue: {
-            navigate: vi.fn(),
-            url: '/test/enforcement-type',
-            events: of({}),
-            createUrlTree: () => ({}),
-            serializeUrl: () => '',
-          },
-        },
         { provide: TasksApiService, useValue: tasksApiService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Upload enforcement response notice' },
@@ -85,6 +76,7 @@ describe('EnforcementTypeComponent', () => {
 
     store = TestBed.inject(RequestTaskStore);
     router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     tasksApiService.saveRequestTaskAction.mockClear();
   });
 

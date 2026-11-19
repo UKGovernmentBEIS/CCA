@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -38,7 +38,6 @@ import { createSaveDecisionActionDTO } from '../../../transform';
     SummaryComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
   private readonly store = inject(RequestTaskStore);

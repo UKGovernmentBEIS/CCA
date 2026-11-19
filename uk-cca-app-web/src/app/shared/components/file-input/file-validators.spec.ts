@@ -439,6 +439,33 @@ describe('FileValidators', () => {
       });
     });
 
+    it('should fall back to a placeholder name when the entry has no file', () => {
+      // An entry without a file reference has no name to report.
+      const formControl = new FormControl(
+        { dimensions: { width: 2000, height: 2000 } },
+        {
+          validators: FileValidators.maxImageDimensionsSize(1200, 1000),
+        },
+      );
+
+      expect(formControl.errors).toEqual({
+        'dimensions-0': 'File must be smaller than 1200x1000 px',
+      });
+    });
+
+    it('should fall back to a placeholder name when the name is empty', () => {
+      const formControl = new FormControl(
+        { file: { name: '' }, dimensions: { width: 2000, height: 2000 } },
+        {
+          validators: FileValidators.maxImageDimensionsSize(1200, 1000),
+        },
+      );
+
+      expect(formControl.errors).toEqual({
+        'dimensions-0': 'File must be smaller than 1200x1000 px',
+      });
+    });
+
     it('should support a custom error message', () => {
       const formControl = new FormControl(
         createFileEvent({

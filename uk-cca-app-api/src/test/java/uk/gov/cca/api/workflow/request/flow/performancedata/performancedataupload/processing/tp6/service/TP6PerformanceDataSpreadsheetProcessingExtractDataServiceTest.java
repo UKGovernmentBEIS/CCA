@@ -77,7 +77,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
                 PerformanceDataSpreadsheetProcessingRequestMetadata.builder()
                         .submissionType(PerformanceDataSubmissionType.PRIMARY)
                         .performanceDataTargetPeriodType(PerformanceDataTargetPeriodType.TP6)
-                        .targetPeriodDetails(TargetPeriodYearDTO.builder().buyOutCost(25).build())
+                        .targetPeriodDetails(TargetPeriodYearDTO.builder().buyOutCost(BigDecimal.valueOf(25)).build())
                         .build();
         final FileDTO file = FileDTO.builder().fileContent(createMockXlsxTemplate()).build();
 

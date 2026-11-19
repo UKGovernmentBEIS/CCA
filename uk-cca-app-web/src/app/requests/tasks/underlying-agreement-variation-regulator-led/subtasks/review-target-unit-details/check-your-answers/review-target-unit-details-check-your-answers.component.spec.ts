@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -61,26 +61,17 @@ describe('CheckYourAnswersComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ReviewTargetUnitDetailsCheckYourAnswersComponent, RouterModule.forRoot([])],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: TasksApiService, useValue: tasksApiService },
         { provide: ActivatedRoute, useValue: route },
-        {
-          provide: Router,
-          useValue: {
-            navigate: vi.fn(),
-            url: '/test/check-your-answers',
-            events: of({}),
-            createUrlTree: () => ({}),
-            serializeUrl: () => '',
-          },
-        },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Vary the underlying agreement' },
       ],
     }).compileComponents();
 
     router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     store = TestBed.inject(RequestTaskStore);
     store.setState(enhancedMockState);
 

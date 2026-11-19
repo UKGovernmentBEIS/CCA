@@ -1,148 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:design="http://flowable.org/design" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Flowable Design" exporterVersion="2025.2.04" design:palette="flowable-work-process-palette">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Flowable Open Source Modeler" exporterVersion="6.8.0">
   <process id="PROCESS_BUY_OUT_SURPLUS_FACILITY_RUN" name="Buy out Surplus Facility Process run" isExecutable="true">
-    <extensionElements>
-      <design:stencilid><![CDATA[BPMNDiagram]]></design:stencilid>
-      <design:creationdate><![CDATA[2026-07-23T09:11:43.667Z]]></design:creationdate>
-      <design:modificationdate><![CDATA[2026-07-23T13:47:05.614Z]]></design:modificationdate>
-    </extensionElements>
-    <serviceTask id="Activity_0xd0pff" name="buy out surplus run completed" flowable:delegateExpression="#{buyOutSurplusFacilityRunCompletedHandlerFlowable}">
-      <extensionElements>
-        <design:stencilid><![CDATA[ServiceTask]]></design:stencilid>
-        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="Activity_131ih32" name="buy out surplus run submitted" flowable:async="true" flowable:delegateExpression="#{buyOutSurplusFacilityRunSubmittedHandlerFlowable}">
-      <extensionElements>
-        <design:stencilid><![CDATA[ServiceTask]]></design:stencilid>
-        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="Activity_1v1o7ti" name="create csv file" flowable:async="true" flowable:delegateExpression="#{buyOutSurplusFacilityRunCreateCsvFileHandlerFlowable}">
-      <extensionElements>
-        <design:stencilid><![CDATA[ServiceTask]]></design:stencilid>
-        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
-      </extensionElements>
-    </serviceTask>
+    <serviceTask id="Activity_0xd0pff" name="buy out surplus run completed" flowable:delegateExpression="#{buyOutSurplusFacilityRunCompletedHandlerFlowable}"></serviceTask>
+    <serviceTask id="Activity_131ih32" name="buy out surplus run submitted" flowable:async="true" flowable:delegateExpression="#{buyOutSurplusFacilityRunSubmittedHandlerFlowable}"></serviceTask>
+    <serviceTask id="Activity_1v1o7ti" name="create csv file" flowable:async="true" flowable:delegateExpression="#{buyOutSurplusFacilityRunCreateCsvFileHandlerFlowable}"></serviceTask>
     <serviceTask id="Activity_1v0z1ae" name="trigger buy out surplus account processing" flowable:delegateExpression="#{buyOutSurplusFacilityAccountsProcessingTriggerHandlerFlowable}">
-      <extensionElements>
-        <design:stencilid><![CDATA[ServiceTask]]></design:stencilid>
-        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
-      </extensionElements>
       <multiInstanceLoopCharacteristics isSequential="true" flowable:collection="accountIds" flowable:elementVariable="accountId">
         <extensionElements></extensionElements>
       </multiInstanceLoopCharacteristics>
     </serviceTask>
-    <exclusiveGateway id="Gateway_1b9cfc9" name="check accounts size" default="Flow_0aod0f6">
-      <extensionElements>
-        <design:stencilid><![CDATA[Exclusive_Databased_Gateway]]></design:stencilid>
-        <design:display_ref_in_diagram><![CDATA[true]]></design:display_ref_in_diagram>
-      </extensionElements>
-    </exclusiveGateway>
-    <startEvent id="StartEvent_1" flowable:formFieldValidation="false">
-      <extensionElements>
-        <flowable:work-form-field-validation><![CDATA[false]]></flowable:work-form-field-validation>
-        <design:stencilid><![CDATA[StartNoneEvent]]></design:stencilid>
-      </extensionElements>
-    </startEvent>
-    <endEvent id="Event_0grjtyr">
-      <extensionElements>
-        <design:stencilid><![CDATA[EndNoneEvent]]></design:stencilid>
-      </extensionElements>
-    </endEvent>
-    <sequenceFlow id="SequenceFlow_8" sourceRef="Activity_0xd0pff" targetRef="Event_0grjtyr">
-      <extensionElements>
-        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="SequenceFlow_16" sourceRef="Activity_131ih32" targetRef="Gateway_1b9cfc9">
-      <extensionElements>
-        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="Flow_1v51yh4" sourceRef="Activity_1v1o7ti" targetRef="Activity_0xd0pff">
-      <extensionElements>
-        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="SequenceFlow_14" sourceRef="Activity_1v0z1ae" targetRef="Activity_1v1o7ti">
-      <extensionElements>
-        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
-      </extensionElements>
+    <exclusiveGateway id="Gateway_1b9cfc9" name="check accounts size" default="Flow_0aod0f6"></exclusiveGateway>
+    <startEvent id="StartEvent_1" flowable:formFieldValidation="false"></startEvent>
+    <endEvent id="Event_0grjtyr"></endEvent>
+    <sequenceFlow id="SequenceFlow_8" sourceRef="Activity_0xd0pff" targetRef="Event_0grjtyr"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_16" sourceRef="Activity_131ih32" targetRef="Gateway_1b9cfc9"></sequenceFlow>
+    <sequenceFlow id="Flow_1v51yh4" sourceRef="Activity_1v1o7ti" targetRef="Activity_0xd0pff"></sequenceFlow>
+    <sequenceFlow id="Flow_1opujsq" sourceRef="StartEvent_1" targetRef="Activity_131ih32"></sequenceFlow>
+    <intermediateCatchEvent id="sid-6C4B2DE2-CFAC-4877-AF91-AE8D16EB365D" name="timer event">
+      <timerEventDefinition>
+        <timeDuration>PT1S</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow id="sid-42923C9A-DA8E-4D49-A9D0-B83BD0AF4274" sourceRef="Activity_1v0z1ae" targetRef="sid-6C4B2DE2-CFAC-4877-AF91-AE8D16EB365D"></sequenceFlow>
+    <serviceTask id="sid-52E37CDA-930A-4CC7-969E-128BCDB41DE5" name="Populate TU completed number" flowable:delegateExpression="#{buyOutSurplusFacilityRunPopulateNumberOfAccountsCompletedHandlerFlowable}"></serviceTask>
+    <sequenceFlow id="sid-CE76302F-8A98-4FAD-9123-12D0A34BBBAF" sourceRef="sid-6C4B2DE2-CFAC-4877-AF91-AE8D16EB365D" targetRef="sid-52E37CDA-930A-4CC7-969E-128BCDB41DE5"></sequenceFlow>
+    <exclusiveGateway id="sid-FE2E5D33-046E-4B13-BABE-238ED1D29D6A" name="all completed?"></exclusiveGateway>
+    <sequenceFlow id="sid-F613D469-97AC-4349-B73C-BCF3288C1720" name="yes" sourceRef="sid-FE2E5D33-046E-4B13-BABE-238ED1D29D6A" targetRef="Activity_1v1o7ti">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${accountsCompleted == accountIds.size()}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="Flow_1qdl2l8" sourceRef="Gateway_1b9cfc9" targetRef="Activity_1v0z1ae">
-      <extensionElements>
-        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
-      </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${accountIds.size() > 0}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="Flow_0aod0f6" sourceRef="Gateway_1b9cfc9" targetRef="Activity_1v1o7ti">
-      <extensionElements>
-        <flowable:is-default-flow><![CDATA[true]]></flowable:is-default-flow>
-        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
-      </extensionElements>
-    </sequenceFlow>
-    <sequenceFlow id="Flow_1opujsq" sourceRef="StartEvent_1" targetRef="Activity_131ih32">
-      <extensionElements>
-        <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
-      </extensionElements>
+    <sequenceFlow id="sid-5D7EEE15-0CDA-44BE-B0AE-A56422C720E7" sourceRef="sid-52E37CDA-930A-4CC7-969E-128BCDB41DE5" targetRef="sid-FE2E5D33-046E-4B13-BABE-238ED1D29D6A"></sequenceFlow>
+    <sequenceFlow id="Flow_0aod0f6" sourceRef="Gateway_1b9cfc9" targetRef="Activity_1v1o7ti"></sequenceFlow>
+    <sequenceFlow id="sid-E8CC618D-105D-47B8-9384-7CA48A1EF8D2" name="no" sourceRef="sid-FE2E5D33-046E-4B13-BABE-238ED1D29D6A" targetRef="sid-6C4B2DE2-CFAC-4877-AF91-AE8D16EB365D">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${accountsCompleted < accountIds.size()}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_PROCESS_BUY_OUT_SURPLUS_FACILITY_RUN">
     <bpmndi:BPMNPlane bpmnElement="PROCESS_BUY_OUT_SURPLUS_FACILITY_RUN" id="BPMNPlane_PROCESS_BUY_OUT_SURPLUS_FACILITY_RUN">
       <bpmndi:BPMNShape bpmnElement="Activity_0xd0pff" id="BPMNShape_Activity_0xd0pff">
-        <omgdc:Bounds height="80.0" width="100.0" x="1083.1889543676787" y="169.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="1170.0" y="169.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Activity_131ih32" id="BPMNShape_Activity_131ih32">
-        <omgdc:Bounds height="80.0" width="100.0" x="291.0" y="169.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="120.0" y="169.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Activity_1v1o7ti" id="BPMNShape_Activity_1v1o7ti">
-        <omgdc:Bounds height="80.0" width="100.0" x="875.1889543676787" y="169.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="1005.0" y="169.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Activity_1v0z1ae" id="BPMNShape_Activity_1v0z1ae">
-        <omgdc:Bounds height="80.0" width="100.0" x="671.1889543676787" y="169.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="435.0" y="169.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Gateway_1b9cfc9" id="BPMNShape_Gateway_1b9cfc9">
-        <omgdc:Bounds height="40.0" width="40.0" x="515.1889543676787" y="189.0"></omgdc:Bounds>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="18.0" width="112.0" x="482.0" y="239.0"></omgdc:Bounds>
-        </bpmndi:BPMNLabel>
+        <omgdc:Bounds height="40.0" width="40.0" x="270.0" y="189.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="StartEvent_1" id="BPMNShape_StartEvent_1">
-        <omgdc:Bounds height="30.0" width="30.0" x="155.0" y="194.0"></omgdc:Bounds>
+        <omgdc:Bounds height="30.0" width="30.0" x="30.0" y="194.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="Event_0grjtyr" id="BPMNShape_Event_0grjtyr">
-        <omgdc:Bounds height="28.0" width="28.0" x="1262.1879289770543" y="195.0"></omgdc:Bounds>
+        <omgdc:Bounds height="28.0" width="28.0" x="1335.0" y="195.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-6C4B2DE2-CFAC-4877-AF91-AE8D16EB365D" id="BPMNShape_sid-6C4B2DE2-CFAC-4877-AF91-AE8D16EB365D">
+        <omgdc:Bounds height="31.0" width="31.0" x="600.0" y="193.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-52E37CDA-930A-4CC7-969E-128BCDB41DE5" id="BPMNShape_sid-52E37CDA-930A-4CC7-969E-128BCDB41DE5">
+        <omgdc:Bounds height="80.0" width="100.0" x="705.0" y="169.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-FE2E5D33-046E-4B13-BABE-238ED1D29D6A" id="BPMNShape_sid-FE2E5D33-046E-4B13-BABE-238ED1D29D6A">
+        <omgdc:Bounds height="40.0" width="40.0" x="870.0" y="189.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_16" id="BPMNEdge_SequenceFlow_16" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
-        <omgdi:waypoint x="391.0" y="209.0"></omgdi:waypoint>
-        <omgdi:waypoint x="515.0" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="219.95" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="270.0" y="209.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E8CC618D-105D-47B8-9384-7CA48A1EF8D2" id="BPMNEdge_sid-E8CC618D-105D-47B8-9384-7CA48A1EF8D2" flowable:sourceDockerX="20.5" flowable:sourceDockerY="20.5" flowable:targetDockerX="15.5" flowable:targetDockerY="15.5">
+        <omgdi:waypoint x="890.5" y="228.44150985663086"></omgdi:waypoint>
+        <omgdi:waypoint x="890.5" y="321.0"></omgdi:waypoint>
+        <omgdi:waypoint x="615.5" y="321.0"></omgdi:waypoint>
+        <omgdi:waypoint x="615.5" y="224.44994110039502"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_1v51yh4" id="BPMNEdge_Flow_1v51yh4" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
-        <omgdi:waypoint x="975.1889543676787" y="209.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1083.1889543676787" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1104.9499999999834" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1169.9999999998909" y="209.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_8" id="BPMNEdge_SequenceFlow_8" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
-        <omgdi:waypoint x="1183.1889543676787" y="209.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1262.1879289770543" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1269.9499999999389" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1335.0" y="209.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_1opujsq" id="BPMNEdge_Flow_1opujsq" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
-        <omgdi:waypoint x="185.0" y="209.0"></omgdi:waypoint>
-        <omgdi:waypoint x="291.0" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="59.94999883049306" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="119.99999999995785" y="209.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_14" id="BPMNEdge_SequenceFlow_14" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
-        <omgdi:waypoint x="771.1889543676787" y="209.0"></omgdi:waypoint>
-        <omgdi:waypoint x="875.1889543676787" y="209.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="sid-42923C9A-DA8E-4D49-A9D0-B83BD0AF4274" id="BPMNEdge_sid-42923C9A-DA8E-4D49-A9D0-B83BD0AF4274" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="15.5" flowable:targetDockerY="15.5">
+        <omgdi:waypoint x="534.949999999981" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="600.0" y="209.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F613D469-97AC-4349-B73C-BCF3288C1720" id="BPMNEdge_sid-F613D469-97AC-4349-B73C-BCF3288C1720" flowable:sourceDockerX="20.5" flowable:sourceDockerY="20.5" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="909.5019652650823" y="209.4420731707317"></omgdi:waypoint>
+        <omgdi:waypoint x="1004.9999999999887" y="209.1518237082067"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_1qdl2l8" id="BPMNEdge_Flow_1qdl2l8" flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
-        <omgdi:waypoint x="555.1889543676787" y="209.0"></omgdi:waypoint>
-        <omgdi:waypoint x="671.1889543676787" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="309.94488723729205" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="435.0" y="209.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="Flow_0aod0f6" id="BPMNEdge_Flow_0aod0f6" flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
-        <omgdi:waypoint x="535.0" y="189.0"></omgdi:waypoint>
-        <omgdi:waypoint x="535.0" y="79.0"></omgdi:waypoint>
-        <omgdi:waypoint x="925.0" y="79.0"></omgdi:waypoint>
-        <omgdi:waypoint x="925.0" y="169.0"></omgdi:waypoint>
+        <omgdi:waypoint x="290.0" y="189.0"></omgdi:waypoint>
+        <omgdi:waypoint x="290.0" y="79.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1055.0" y="79.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1055.0" y="169.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-CE76302F-8A98-4FAD-9123-12D0A34BBBAF" id="BPMNEdge_sid-CE76302F-8A98-4FAD-9123-12D0A34BBBAF" flowable:sourceDockerX="16.0" flowable:sourceDockerY="16.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="631.9498989331325" y="209.4424464078543"></omgdi:waypoint>
+        <omgdi:waypoint x="704.999999999997" y="209.17967625899283"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-5D7EEE15-0CDA-44BE-B0AE-A56422C720E7" id="BPMNEdge_sid-5D7EEE15-0CDA-44BE-B0AE-A56422C720E7" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
+        <omgdi:waypoint x="804.9499999998759" y="209.0"></omgdi:waypoint>
+        <omgdi:waypoint x="870.0" y="209.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

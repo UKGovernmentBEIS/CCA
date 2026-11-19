@@ -10,7 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFixedConversionFactor;
+import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
+import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityNonStandardFuel;
+import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceEnergyFuelDetails;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PerformanceDataFacilityInputEnergyFuelDetails {
+public class PerformanceDataFacilityInputEnergyFuelDetails implements PerformanceEnergyFuelDetails {
 
     @Builder.Default
     private Map<PerformanceDataFacilityFixedConversionFactor, @Valid @NotNull PerformanceDataFacilityFuelEnergyConsumption> standardFuels = new EnumMap<>(PerformanceDataFacilityFixedConversionFactor.class);

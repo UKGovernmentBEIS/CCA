@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionsListDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionsListSearchCriteria;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusTransactionQueryService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -34,7 +34,7 @@ import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 @Tag(name = "Buy-out and surplus transactions info view")
 public class BuyOutSurplusTransactionsViewController {
     
-    private final BuyOutSurplusQueryService buyOutSurplusQueryService;
+    private final BuyOutSurplusTransactionQueryService buyOutSurplusTransactionQueryService;
 
     @PostMapping
     @Operation(summary = "Retrieve buy-out and surplus transactions that match the specified search criteria")
@@ -46,7 +46,7 @@ public class BuyOutSurplusTransactionsViewController {
             @Parameter(hidden = true) AppUser appUser,
             @Valid @RequestBody @Parameter(description = "Search criteria for transactions", required = true) BuyOutSurplusTransactionsListSearchCriteria searchCriteria) {
         
-        BuyOutSurplusTransactionsListDTO result = buyOutSurplusQueryService
+        BuyOutSurplusTransactionsListDTO result = buyOutSurplusTransactionQueryService
                 .getBuyOutSurplusTransactionsList(appUser, searchCriteria);
 
         return ResponseEntity.ok(result);

@@ -10,6 +10,8 @@ export interface CcaTableColumn {
   widthClass?: GovukTextWidthClass | string;
   isSortable?: boolean;
   isHeader?: boolean;
+  /** Right-align the header and cells, including decimal strings and formatted values. */
+  isNumeric?: boolean;
   primary?: boolean;
 }
 

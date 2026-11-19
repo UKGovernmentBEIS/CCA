@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -11,7 +11,8 @@ import {
   SummaryListRowValueDirective,
   TableComponent,
 } from '@netz/govuk-components';
-import { boolToString, primaryCarbonDisplayUnit, tprFormActionQuery } from '@requests/common';
+import { primaryCarbonDisplayUnit, tprFormActionQuery } from '@requests/common';
+import { boolToString } from '@shared/utils';
 
 import {
   buildSubmittedEnergyFuelRows,
@@ -32,7 +33,6 @@ import {
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergyFuelAmountSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

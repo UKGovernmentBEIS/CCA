@@ -1,3 +1,3 @@
 import { MiReportUserDefinedResult } from 'cca-api';
 
-export type ExtendedMiReportResult = MiReportUserDefinedResult & { reportType: string };
+export type ExtendedMiReportResult = MiReportUserDefinedResult;

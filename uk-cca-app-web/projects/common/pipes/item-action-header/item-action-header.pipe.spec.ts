@@ -18,6 +18,12 @@ describe('ItemActionHeaderPipe', () => {
     expect(pipe).toBeTruthy();
   });
 
+  it('keeps the CCA3 calculated title independent of submitter and outcome', () => {
+    expect(
+      pipe.transform({ ...baseRequestAction, type: 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED' }),
+    ).toBe('Buy-out fee and surplus calculated');
+  });
+
   it('should display the submitter of the request action', () => {
     expect(
       pipe.transform({
@@ -210,6 +216,12 @@ describe('ItemActionHeaderPipe', () => {
     expect(
       pipe.transform({
         ...baseRequestAction,
+        type: 'BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED',
+      }),
+    ).toEqual('Buy-out and surplus batch run submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
         type: 'BUY_OUT_SURPLUS_RUN_COMPLETED',
       }),
     ).toEqual('Buy-out and surplus batch run completed');
@@ -217,6 +229,18 @@ describe('ItemActionHeaderPipe', () => {
       pipe.transform({
         ...baseRequestAction,
         type: 'BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES',
+      }),
+    ).toEqual('Buy-out and surplus batch run completed with failures');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED',
+      }),
+    ).toEqual('Buy-out and surplus batch run completed');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_WITH_FAILURES',
       }),
     ).toEqual('Buy-out and surplus batch run completed with failures');
     expect(
@@ -418,6 +442,25 @@ describe('ItemActionHeaderPipe', () => {
         type: 'PERFORMANCE_DATA_FACILITY_UPLOAD_CLOSED',
       }),
     ).toEqual('Target period reporting closed by John Bolt');
+
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETED',
+      }),
+    ).toEqual('PAT reporting submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('PAT reporting submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_CLOSED',
+      }),
+    ).toEqual('PAT reporting closed by John Bolt');
   });
 
   it('should display the approved application title', () => {

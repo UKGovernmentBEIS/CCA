@@ -1,0 +1,136 @@
+@if (transactionDetails.paymentStatus !== 'TERMINATED') {
+  @if (errorSummaryInfo(); as errorSummary) {
+    <div class="govuk-!-width-two-thirds">
+      <cca-error-summary [errorSummaryInfo]="errorSummary" />
+    </div>
+  }
+
+  <cca-wizard-step [formGroup]="form" heading="Status" caption="Change" submitText="Confirm" (formSubmit)="onSubmit()">
+    <cca-summary [data]="transactionSummary" />
+
+    <div govuk-radio formControlName="status" legend="Select a status">
+      @if (transactionDetails.chargeType === 'FEE') {
+        <govuk-radio-option label="Awaiting payment" value="AWAITING_PAYMENT">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div
+                  formControlName="awaitingPaymentComments"
+                  govuk-textarea
+                  label="Comments (optional)"
+                  [maxLength]="commentsMaxLength"
+                ></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+
+        <govuk-radio-option label="Under appeal" value="UNDER_APPEAL">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div
+                  formControlName="dateOfAppeal"
+                  govuk-date-input
+                  label="Enter the date on which the appeal was lodged"
+                ></div>
+              </div>
+            </div>
+
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div
+                  formControlName="appealComments"
+                  govuk-textarea
+                  label="Comments"
+                  [maxLength]="commentsMaxLength"
+                ></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+      } @else {
+        <govuk-radio-option label="Awaiting refund" value="AWAITING_REFUND">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div
+                  formControlName="awaitingRefundComments"
+                  govuk-textarea
+                  label="Comments (optional)"
+                  [maxLength]="commentsMaxLength"
+                ></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+      }
+
+      <govuk-radio-option label="Not required" value="NOT_REQUIRED">
+        <ng-container govukConditionalContent>
+          <div class="govuk-grid-row govuk-!-margin-top-3">
+            <div class="govuk-grid-column-two-thirds">
+              <div
+                formControlName="notRequiredComments"
+                govuk-textarea
+                label="Comments"
+                [maxLength]="commentsMaxLength"
+              ></div>
+            </div>
+          </div>
+        </ng-container>
+      </govuk-radio-option>
+
+      @if (transactionDetails.chargeType === 'FEE') {
+        <govuk-radio-option label="Paid" value="PAID">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div
+                  formControlName="paymentDate"
+                  govuk-date-input
+                  label="Enter the date when the payment was received in the bank account"
+                ></div>
+              </div>
+            </div>
+
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div
+                  formControlName="paidComments"
+                  govuk-textarea
+                  label="Comments (optional)"
+                  [maxLength]="commentsMaxLength"
+                ></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+      } @else {
+        <govuk-radio-option label="Refunded" value="REFUNDED">
+          <ng-container govukConditionalContent>
+            <div class="govuk-grid-row govuk-!-margin-top-3">
+              <div class="govuk-grid-column-two-thirds">
+                <div
+                  formControlName="refundedComments"
+                  govuk-textarea
+                  label="Comments (optional)"
+                  [maxLength]="commentsMaxLength"
+                ></div>
+              </div>
+            </div>
+          </ng-container>
+        </govuk-radio-option>
+      }
+    </div>
+
+    <cca-multiple-file-input
+      [baseDownloadUrl]="'../file-evidences-download/attachment/'"
+      [listTitle]="'Uploaded files'"
+      label="Upload evidence (optional)"
+      formControlName="evidenceFiles"
+    />
+  </cca-wizard-step>
+} @else {
+  <cca-terminated-transaction [transactionDetails]="transactionDetails" heading="Status" />
+}

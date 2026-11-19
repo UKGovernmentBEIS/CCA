@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationBehaviorOptions, Router, RouterLink } from '@angular/router';
 
 import { switchMap } from 'rxjs';
 
@@ -15,13 +15,16 @@ import {
   TextInputComponent,
   WarningTextComponent,
 } from '@netz/govuk-components';
-import { PaginationComponent, SummaryComponent, TableComponent, UtilityPanelComponent } from '@shared/components';
 import { StatusColorPipe, StatusPipe } from '@shared/pipes';
 
 import { SubsistenceFeesMoaSearchCriteria, SubsistenceFeesMoaTargetUnitSearchResultInfoDTO } from 'cca-api';
 
 import { CcaTableColumn } from 'src/app/shared/components/table/types';
 
+import { PaginationComponent } from '../pagination/pagination.component';
+import { SummaryComponent } from '../summary/summary.component';
+import { TableComponent } from '../table/table.component';
+import { UtilityPanelComponent } from '../utility-panel/utility-panel.component';
 import { SectorMoaDetailsStore } from './sector-moa-details.store';
 import { toSectorMoaDetailsSummary } from './sector-moa-details-summary';
 import {
@@ -37,6 +40,7 @@ const DEFAULT_PAGE_SIZE = 30;
 @Component({
   selector: 'cca-sector-moa-details',
   templateUrl: './sector-moa-details.component.html',
+  providers: [TargetUnitsListFormProvider, StatusPipe],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -55,8 +59,6 @@ const DEFAULT_PAGE_SIZE = 30;
     WarningTextComponent,
     UtilityPanelComponent,
   ],
-  providers: [TargetUnitsListFormProvider, StatusPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorMoaDetailsComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);
@@ -136,20 +138,26 @@ export class SectorMoaDetailsComponent {
 
   onApplyFilters() {
     if (this.searchForm.invalid) return;
-    this.handleQueryParamsNavigation({
-      page: DEFAULT_PAGE,
-      term: this.searchForm.value.term,
-      markFacilitiesStatus: this.searchForm.value.markFacilitiesStatus,
-    });
+    this.handleQueryParamsNavigation(
+      {
+        page: DEFAULT_PAGE,
+        term: this.searchForm.value.term,
+        markFacilitiesStatus: this.searchForm.value.markFacilitiesStatus,
+      },
+      'manual',
+    );
   }
 
   onClearFilters() {
     this.searchForm.reset();
-    this.handleQueryParamsNavigation({
-      page: DEFAULT_PAGE,
-      term: INITIAL_FORM_VALUES.term,
-      markFacilitiesStatus: INITIAL_FORM_VALUES.markFacilitiesStatus,
-    });
+    this.handleQueryParamsNavigation(
+      {
+        page: DEFAULT_PAGE,
+        term: INITIAL_FORM_VALUES.term,
+        markFacilitiesStatus: INITIAL_FORM_VALUES.markFacilitiesStatus,
+      },
+      'manual',
+    );
   }
 
   onPageChange(page: number) {
@@ -185,11 +193,13 @@ export class SectorMoaDetailsComponent {
       term: SubsistenceFeesMoaSearchCriteria['term'];
       markFacilitiesStatus: SubsistenceFeesMoaSearchCriteria['markFacilitiesStatus'];
     }>,
+    scroll?: NavigationBehaviorOptions['scroll'],
   ) {
     this.router.navigate([], {
       queryParams: { ...filters },
       queryParamsHandling: 'merge',
       relativeTo: this.activatedRoute,
+      scroll,
       fragment: 'sector-moas',
     });
   }

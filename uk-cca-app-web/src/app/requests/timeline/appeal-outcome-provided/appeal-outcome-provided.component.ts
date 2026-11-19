@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { GovukDatePipe } from '@netz/common/pipes';
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
@@ -16,7 +16,6 @@ const TRIBUNAL_DECISION_LABELS: Record<NonComplianceAppealOutcomeDetails['tribun
   selector: 'cca-appeal-outcome-provided',
   template: `<cca-summary [data]="data()" />`,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppealOutcomeProvidedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

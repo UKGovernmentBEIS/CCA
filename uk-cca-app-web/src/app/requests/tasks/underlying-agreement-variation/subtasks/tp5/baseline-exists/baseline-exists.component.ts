@@ -1,10 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { NotificationBannerComponent, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
+import {
+  LegendContentDirective,
+  NotificationBannerComponent,
+  RadioComponent,
+  RadioOptionComponent,
+} from '@netz/govuk-components';
 import {
   applyTp5ExistSideEffect,
   BaselineAndTargetPeriodsSubtasks,
@@ -30,16 +35,16 @@ import {
 @Component({
   selector: 'cca-baseline-exists',
   templateUrl: './baseline-exists.component.html',
+  providers: [BaselineExistsFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
     RadioOptionComponent,
     RadioComponent,
+    LegendContentDirective,
     ReturnToTaskOrActionPageComponent,
     NotificationBannerComponent,
   ],
-  providers: [BaselineExistsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaselineExistsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { mockRequestTaskState, TARGET_UNIT_DETAILS_SUBMIT_FORM, TasksApiService } from '@requests/common';
+import { TARGET_UNIT_DETAILS_SUBMIT_FORM, TasksApiService } from '@requests/common';
+import { mockRequestTaskState } from '@requests/common/underlying-agreement/testing/mock-data';
 
 import { SectorAssociationSchemeService } from 'cca-api';
 
@@ -59,7 +60,7 @@ describe('TargetUnitDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TargetUnitDetailsComponent],
       providers: [
-        { provide: Router, useValue: { navigate: vi.fn() } },
+        provideRouter([]),
         { provide: ActivatedRoute, useValue: route },
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: SectorAssociationSchemeService, useValue: mockSectorService },
@@ -71,6 +72,7 @@ describe('TargetUnitDetailsComponent', () => {
 
     store = TestBed.inject(RequestTaskStore);
     router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     tasksApiService = TestBed.inject(TasksApiService);
 
     store.setState(mockState);

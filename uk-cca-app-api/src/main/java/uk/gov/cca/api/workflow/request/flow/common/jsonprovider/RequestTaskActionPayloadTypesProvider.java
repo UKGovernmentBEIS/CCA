@@ -9,6 +9,7 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.Adm
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
@@ -127,7 +128,10 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
 
 
                 // CCA3 PAT
-                new NamedType(FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_PROCESSING_PAYLOAD)
+                new NamedType(FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_PROCESSING_PAYLOAD),
+
+                // ETS
+                new NamedType(EmissionsTradingSchemeDataSaveRequestTaskActionPayload.class, EMISSIONS_TRADING_SCHEME_DATA_SAVE_PAYLOAD)
         );
     }
 

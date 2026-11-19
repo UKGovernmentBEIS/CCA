@@ -5,36 +5,35 @@ import { PendingRequestGuard } from '@shared/guards';
 
 import { MiReportsUserDefinedService } from 'cca-api';
 
-import { MiReportsComponent } from './mi-reports.component';
-
 export const MI_REPORTS_ROUTES: Routes = [
   {
-    path: '',
     title: 'MI Reports',
-    component: MiReportsComponent,
+    path: '',
+    loadComponent: () => import('./mi-reports.component').then((c) => c.MiReportsComponent),
     canDeactivate: [PendingRequestGuard],
   },
   {
-    path: 'custom',
     title: 'Create custom report',
-    data: {
-      backlink: '../',
-      breadcrumb: false,
-    },
+    path: 'custom',
     loadComponent: () => import('./custom/custom.component').then((c) => c.CustomReportComponent),
-  },
-  {
-    path: 'create-mi-report',
-    title: 'Create new report',
     data: {
       backlink: '../',
       breadcrumb: false,
     },
-    loadComponent: () => import('./mi-report-form/mi-report-form.component').then((c) => c.MiReportFormComponent),
   },
   {
+    title: 'Create new report',
+    path: 'create-mi-report',
+    loadComponent: () => import('./mi-report-form/mi-report-form.component').then((c) => c.MiReportFormComponent),
+    data: {
+      backlink: '../',
+      breadcrumb: false,
+    },
+  },
+  {
+    title: 'Edit MI report',
     path: 'edit-mi-report/:queryId',
-    title: 'Edit MI report',
+    loadComponent: () => import('./mi-report-form/mi-report-form.component').then((c) => c.MiReportFormComponent),
     data: {
       backlink: '../../',
       breadcrumb: false,
@@ -43,11 +42,11 @@ export const MI_REPORTS_ROUTES: Routes = [
       query: (route: ActivatedRouteSnapshot) =>
         inject(MiReportsUserDefinedService).getMiReportUserDefinedById(+route.paramMap.get('queryId')),
     },
-    loadComponent: () => import('./mi-report-form/mi-report-form.component').then((c) => c.MiReportFormComponent),
   },
   {
-    path: 'delete-mi-report/:queryId',
     title: 'Edit MI report',
+    path: 'delete-mi-report/:queryId',
+    loadComponent: () => import('./delete-mi-report/delete-mi-report.component').then((c) => c.DeleteMiReportComponent),
     data: {
       backlink: '../../',
       breadcrumb: false,
@@ -56,6 +55,5 @@ export const MI_REPORTS_ROUTES: Routes = [
       query: (route: ActivatedRouteSnapshot) =>
         inject(MiReportsUserDefinedService).getMiReportUserDefinedById(+route.paramMap.get('queryId')),
     },
-    loadComponent: () => import('./delete-mi-report/delete-mi-report.component').then((c) => c.DeleteMiReportComponent),
   },
 ];

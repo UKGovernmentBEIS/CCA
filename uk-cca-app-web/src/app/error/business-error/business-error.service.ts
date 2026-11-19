@@ -1,18 +1,18 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, from, ignoreElements, Observable } from 'rxjs';
 
 import { BusinessError } from './business-error';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BusinessErrorService {
   private readonly router = inject(Router);
 
   private readonly errorSubject = new BehaviorSubject<BusinessError>(null);
   readonly error$ = this.errorSubject.asObservable();
 
-  showError(error: BusinessError): Observable<boolean> {
+  showError(error: BusinessError): Observable<never> {
     this.errorSubject.next(error);
 
     return from(this.router.navigate(['/error/business'], { skipLocationChange: true })).pipe(ignoreElements());
@@ -20,7 +20,7 @@ export class BusinessErrorService {
 
   // this method is used to bypass the pendingRequestGuard when the error has to be caught before the
   // PendingRequestService tracks the request
-  showErrorForceNavigation(error: BusinessError): Observable<boolean> {
+  showErrorForceNavigation(error: BusinessError): Observable<never> {
     this.errorSubject.next(error);
 
     return from(

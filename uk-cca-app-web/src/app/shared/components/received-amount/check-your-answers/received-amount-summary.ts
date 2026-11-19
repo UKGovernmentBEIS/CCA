@@ -1,10 +1,12 @@
 import { DecimalPipe } from '@angular/common';
 
-import { SummaryData, SummaryFactory } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 import BigNumber from 'bignumber.js';
 
 import { SubsistenceFeesMoaReceivedAmountDetailsDTO } from 'cca-api';
+
+import { SummaryFactory } from '../../summary/summary.factory';
+import { SummaryData } from '../../summary/type';
 
 export function toReceivedAmountSummaryData(
   changeType: 'add' | 'subtract',

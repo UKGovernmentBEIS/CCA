@@ -53,4 +53,27 @@ describe('TaskHeaderInfoComponent', () => {
 
     expect(page.info.map((el) => el.textContent.trim())).toEqual(['Assigned to:', 'Days Remaining: 13']);
   });
+
+  it('should display the ETS reporting details', () => {
+    componentRef.setInput('requestType', 'EMISSIONS_TRADING_SCHEME_DATA');
+    componentRef.setInput('assignee', 'Sector user');
+    componentRef.setInput('startDate', '2027-05-05');
+    componentRef.setInput('payload', { targetYear: 2026, uketsId: 'UK-E-IN-0000' });
+    fixture.detectChanges();
+
+    expect(page.info.map((el) => el.textContent.trim())).toEqual([
+      'Assigned to: Sector user',
+      'Date initiated: 05/05/2027',
+      'Year: 2026',
+      'Participates in UK ETS: Yes, UK-E-IN-0000',
+    ]);
+  });
+
+  it('should display non-participation for an ETS task without a permit ID', () => {
+    componentRef.setInput('requestType', 'EMISSIONS_TRADING_SCHEME_DATA');
+    componentRef.setInput('payload', { targetYear: 2026, uketsId: null });
+    fixture.detectChanges();
+
+    expect(page.info.map((el) => el.textContent.trim())).toContain('Participates in UK ETS: No');
+  });
 });

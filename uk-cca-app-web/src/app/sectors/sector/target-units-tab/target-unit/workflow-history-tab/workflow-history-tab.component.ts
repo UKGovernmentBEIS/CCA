@@ -1,5 +1,5 @@
 import { DatePipe, KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -19,6 +19,7 @@ import {
   WorkflowHistoryTabFormProvider,
 } from '../../../workflow-history-tab/workflow-history-tab-form.provider';
 import { WorkflowHistoryTabState, workflowStatusesMap, workflowTypesMap } from './workflow-history-tab.types';
+import { expandBuyoutHistoryTypes, toHistoryMetadata } from './workflow-history-tab.utils';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
@@ -26,6 +27,17 @@ const DEFAULT_PAGE_SIZE = 10;
 @Component({
   selector: 'cca-workflow-history-tab',
   templateUrl: './workflow-history-tab.component.html',
+  providers: [WorkflowHistoryTabFormProvider],
+  styles: `
+    .search-results-list_item {
+      border-bottom: 1px solid var(--govuk-border-colour);
+      overflow-wrap: anywhere;
+    }
+
+    .search-results-list_item:last-child {
+      border-bottom: 0;
+    }
+  `,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -40,8 +52,6 @@ const DEFAULT_PAGE_SIZE = 10;
     PerformanceOutcomePipe,
     WorkflowTypePipe,
   ],
-  providers: [WorkflowHistoryTabFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowHistoryTabComponent {
   private readonly requestsService = inject(RequestsService);
@@ -64,6 +74,13 @@ export class WorkflowHistoryTabComponent {
     pageSize: +this.activatedRoute.snapshot.queryParamMap.get('pageSize') || DEFAULT_PAGE_SIZE,
   });
 
+  protected readonly workflows = computed(() =>
+    (this.state().workflowsHistory?.requestDetails ?? []).map((workflow) => ({
+      ...workflow,
+      metadata: toHistoryMetadata(workflow),
+    })),
+  );
+
   constructor() {
     this.activatedRoute.queryParamMap
       .pipe(
@@ -85,7 +102,7 @@ export class WorkflowHistoryTabComponent {
           const requestSearchCriteria: RequestSearchCriteria = {
             resourceType: 'ACCOUNT',
             resourceId: this.targetUnitId,
-            requestTypes,
+            requestTypes: expandBuyoutHistoryTypes(requestTypes),
             requestStatuses,
             historyCategory: HistoryCategory.UNA,
             pageNumber: page - 1,

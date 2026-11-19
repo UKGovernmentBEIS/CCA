@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
@@ -37,7 +38,7 @@ class CertificationPeriodServiceTest {
     void getAllCertificationPeriods() {
         final CertificationPeriod certificationPeriod = CertificationPeriod.builder()
                 .id(1L)
-                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP6).build())
+                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP6).schemeVersion(SchemeVersion.CCA_2).build())
                 .businessId(CertificationPeriodType.CP7)
                 .name("name")
                 .certificationBatchTriggerDate(LocalDate.of(2025, 7, 2))
@@ -48,6 +49,7 @@ class CertificationPeriodServiceTest {
         final CertificationPeriodDTO dto = CertificationPeriodDTO.builder()
                 .id(1L)
                 .targetPeriodType(TargetPeriodType.TP6)
+                .schemeVersion(SchemeVersion.CCA_2)
                 .certificationPeriodType(CertificationPeriodType.CP7)
                 .certificationBatchTriggerDate(LocalDate.of(2025, 7, 2))
                 .startDate(LocalDate.of(2025, 7, 1))
@@ -69,7 +71,7 @@ class CertificationPeriodServiceTest {
         final CertificationPeriodType type = CertificationPeriodType.CP7;
         final CertificationPeriod certificationPeriod = CertificationPeriod.builder()
                 .id(1L)
-                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP6).build())
+                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP6).schemeVersion(SchemeVersion.CCA_2).build())
                 .businessId(CertificationPeriodType.CP7)
                 .name("name")
                 .certificationBatchTriggerDate(LocalDate.of(2025, 7, 2))
@@ -80,6 +82,7 @@ class CertificationPeriodServiceTest {
         final CertificationPeriodDTO dto = CertificationPeriodDTO.builder()
                 .id(1L)
                 .targetPeriodType(TargetPeriodType.TP6)
+                .schemeVersion(SchemeVersion.CCA_2)
                 .certificationPeriodType(CertificationPeriodType.CP7)
                 .certificationBatchTriggerDate(LocalDate.of(2025, 7, 2))
                 .startDate(LocalDate.of(2025, 7, 1))
@@ -101,7 +104,7 @@ class CertificationPeriodServiceTest {
         final LocalDate triggerDate = LocalDate.of(2025, 7, 2);
         final CertificationPeriod certificationPeriod = CertificationPeriod.builder()
                 .id(1L)
-                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP6).build())
+                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP6).schemeVersion(SchemeVersion.CCA_2).build())
                 .businessId(CertificationPeriodType.CP7)
                 .name("name")
                 .certificationBatchTriggerDate(LocalDate.of(2025, 7, 2))
@@ -112,6 +115,7 @@ class CertificationPeriodServiceTest {
         final CertificationPeriodDTO dto = CertificationPeriodDTO.builder()
                 .id(1L)
                 .targetPeriodType(TargetPeriodType.TP6)
+                .schemeVersion(SchemeVersion.CCA_2)
                 .certificationPeriodType(CertificationPeriodType.CP7)
                 .certificationBatchTriggerDate(LocalDate.of(2025, 7, 2))
                 .startDate(LocalDate.of(2025, 7, 1))
@@ -165,7 +169,7 @@ class CertificationPeriodServiceTest {
         final Long certificationPeriodId = 2L;
         final CertificationPeriod certificationPeriod = CertificationPeriod.builder()
                 .id(certificationPeriodId)
-                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP6).build())
+                .targetPeriod(TargetPeriod.builder().businessId(TargetPeriodType.TP6).schemeVersion(SchemeVersion.CCA_2).build())
                 .businessId(CertificationPeriodType.CP7)
                 .name("name")
                 .certificationBatchTriggerDate(LocalDate.of(2025, 7, 2))
@@ -185,5 +189,6 @@ class CertificationPeriodServiceTest {
         assertEquals(certificationPeriod.getStartDate(), result.getStartDate());
         assertEquals(certificationPeriod.getBusinessId(), result.getCertificationPeriodType());
         assertEquals(certificationPeriod.getTargetPeriod().getBusinessId(), result.getTargetPeriodType());
+        assertEquals(certificationPeriod.getTargetPeriod().getSchemeVersion(), result.getSchemeVersion());
     }
 }

@@ -7,19 +7,21 @@ import { canActivateMarkFacilitiesGuard } from './mark-facilities/mark-facilitie
 
 export const TARGET_UNIT_MOA_DETAILS_ROUTES: Routes = [
   {
+    title: 'Target unit MoA',
     path: '',
     loadComponent: () => import('./tu-moa-details.component').then((c) => c.TuMoaDetailsComponent),
   },
   {
     path: 'received-amount',
-    providers: [ReceivedAmountStore],
     canDeactivate: [
       () => {
         inject(ReceivedAmountStore).reset();
         return true;
       },
     ],
-    loadChildren: () => import('@shared/components').then((r) => r.RECEIVED_AMOUNT_ROUTES),
+    loadChildren: () =>
+      import('@shared/components/received-amount/received-amount.routes').then((r) => r.RECEIVED_AMOUNT_ROUTES),
+    providers: [ReceivedAmountStore],
   },
   {
     path: 'mark-facilities',

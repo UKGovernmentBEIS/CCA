@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,6 +34,7 @@ import { createProposedUnderlyingAgreementPayload } from '../utils';
 @Component({
   selector: 'cca-notify-operator',
   templateUrl: './notify-operator.component.html',
+  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -44,8 +45,6 @@ import { createProposedUnderlyingAgreementPayload } from '../utils';
     SelectComponent,
     NoticeRecipientsTypePipe,
   ],
-  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotifyOperatorComponent {
   private readonly store = inject(RequestTaskStore);
@@ -59,6 +58,7 @@ export class NotifyOperatorComponent {
   protected readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
   protected readonly errorForm = inject<ApiErrorFormModel>(API_ERROR_FORM);
   protected readonly isErrorSummaryDisplayed = signal(false);
+  private readonly errorSummary = viewChild(ErrorSummaryComponent);
 
   private readonly taskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
   private readonly defaultNoticeRecipients = toSignal(this.tasksService.getDefaultNoticeRecipients(this.taskId));
@@ -151,6 +151,7 @@ export class NotifyOperatorComponent {
         catchBadRequest([ErrorCodes.UNA1001, ErrorCodes.UNA1002], (res) => {
           setApiErrors(this.errorForm, res);
           this.isErrorSummaryDisplayed.set(true);
+          this.errorSummary()?.focus();
           return EMPTY;
         }),
       )

@@ -1,6 +1,6 @@
-import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { transformFacilityAuditReason } from '@shared/pipes';
+import { boolToString } from '@shared/utils';
 
 import { FacilityAuditViewDTO } from 'cca-api';
 

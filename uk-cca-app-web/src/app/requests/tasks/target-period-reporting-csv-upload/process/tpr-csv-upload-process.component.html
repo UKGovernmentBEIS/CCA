@@ -42,6 +42,7 @@
       <cca-multiple-file-input
         [baseDownloadUrl]="downloadUrl()"
         [listTitle]="'Uploaded files'"
+        [showFilesizeHint]="false"
         hint="Your documents must be CSV files, no more than 20MB."
         formControlName="uploadedFiles"
         [accepted]="'.csv'"

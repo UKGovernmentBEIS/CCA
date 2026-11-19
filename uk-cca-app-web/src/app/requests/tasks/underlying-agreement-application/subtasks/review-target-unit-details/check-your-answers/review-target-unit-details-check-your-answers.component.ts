@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -41,7 +41,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
     PendingButtonDirective,
     ReturnToTaskOrActionPageComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

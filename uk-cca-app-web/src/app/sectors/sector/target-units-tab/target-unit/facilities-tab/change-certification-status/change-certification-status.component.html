@@ -1,4 +1,4 @@
-@if (hasFormErrors() && (form?.pristine || form?.dirty)) {
+@if (hasFormErrors()) {
   <govuk-error-summary [form]="form" />
 }
 
@@ -13,8 +13,8 @@
 
       <ul class="govuk-list govuk-list--bullet">
         <li>
-          Certified facility status means that the operator will be able to claim CCL relief for the certification, and
-          the start date you enter will be shown on the Reduced Rate Certificate for this facility
+          Certified facility status means that the operator will be able to claim CCL relief for the certification
+          period, and the start date you enter will be shown on the Reduced Rate Certificate for this facility
         </li>
         <li>
           Decertified facility status means that the facility will not appear on the Reduced Rate Certificate, and the
@@ -26,30 +26,32 @@
 
   <div class="govuk-grid-row govuk-!-margin-bottom-6">
     <div class="govuk-grid-column-two-thirds">
-      <span class="govuk-label govuk-label--s">
-        {{ certificationPeriodDuration }}
-      </span>
-      <span>
+      <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{{ certificationPeriodDuration }}</h2>
+      <p class="govuk-body">
         {{
           certificationDetails.certificationPeriodStartDate | duration: certificationDetails.certificationPeriodEndDate
         }}
-      </span>
+      </p>
     </div>
   </div>
 
   <div class="govuk-grid-row govuk-!-margin-bottom-6">
     <div class="govuk-grid-column-two-thirds">
-      <span class="govuk-label govuk-label--s">Select certification status</span>
-      <span class="govuk-hint">{{ hint }}</span>
-      <div formControlName="certificationStatus" legendSize="medium" govuk-radio>
+      <div
+        formControlName="certificationStatus"
+        govuk-radio
+        legend="Select certification status"
+        legendSize="medium"
+        [hint]="hint"
+      >
         <govuk-radio-option value="CERTIFIED" label="Certified">
           <ng-container govukConditionalContent>
-            <span class="govuk-label">Select start date</span>
-            <span class="govuk-hint"
-              >The start date must be today or a past date within the certification period.
-            </span>
-
-            <div formControlName="startDate" govuk-date-input></div>
+            <div
+              formControlName="startDate"
+              govuk-date-input
+              label="Select start date"
+              hint="The start date must be today or a past date within the certification period."
+            ></div>
           </ng-container>
         </govuk-radio-option>
         <govuk-radio-option value="DECERTIFIED" label="Decertified" />
@@ -64,9 +66,13 @@
   </div>
 </form>
 
-<div class="govuk-grid-row">
-  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-  <a class="govuk-link" [routerLink]="['../..']" [replaceUrl]="true" [relativeTo]="activatedRoute">
-    Return to: {{ facilityInfoDTO?.facilityBusinessId }}</a
-  >
-</div>
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a
+  class="govuk-link"
+  [routerLink]="['../..']"
+  fragment="certification-status"
+  [replaceUrl]="true"
+  [relativeTo]="activatedRoute"
+>
+  Return to: {{ facilityBusinessId }}</a
+>

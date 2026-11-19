@@ -11,8 +11,8 @@ export const MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP = {
 export type MeasurementTypeKey = keyof typeof MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP;
 export type MeasurementOptionText = (typeof MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP)[MeasurementTypeKey];
 
-export function transformMeasurementType(value: string): MeasurementOptionText {
-  const text = MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP[value as MeasurementTypeKey];
+export function transformMeasurementType(value: unknown): MeasurementOptionText {
+  const text = typeof value === 'string' ? MEASUREMENT_TYPE_TO_OPTION_TEXT_MAP[value as MeasurementTypeKey] : undefined;
   if (!text) throw new Error('Invalid measurement type');
   return text;
 }

@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -34,6 +34,7 @@ import {
 @Component({
   selector: 'cca-facility-apply-rule',
   templateUrl: './facility-apply-rule.component.html',
+  providers: [FacilityApplyRuleFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -43,8 +44,6 @@ import {
     DecimalPipe,
     RouterLink,
   ],
-  providers: [FacilityApplyRuleFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityApplyRuleComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -146,12 +145,17 @@ function updateFacilityApplyRule(
     const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
     if (facilityIndex === -1) return;
 
+    // `form.value` leaves disabled controls out, so the 3/7ths fields that the form disabled and
+    // reset when the energy consumed is 70% or more would keep their previously saved values.
+    // Read the raw value so the reset is saved as well.
+    const value = form.getRawValue();
+
     draft.facilities[facilityIndex].apply70Rule = {
-      energyConsumed: form.value.energyConsumed,
-      energyConsumedProvision: form.value.energyConsumedProvision,
-      startDate: form.value.startDate,
+      energyConsumed: value.energyConsumed,
+      energyConsumedProvision: value.energyConsumedProvision,
+      startDate: value.startDate,
       energyConsumedEligible: energyConsumedEligible !== null ? String(energyConsumedEligible) : null,
-      evidenceFile: form.value.evidenceFile?.uuid ?? null,
+      evidenceFile: value.evidenceFile?.uuid ?? null,
     };
   });
 }

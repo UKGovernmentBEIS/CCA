@@ -1,5 +1,5 @@
-import { DatePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { TitleCasePipe } from '@angular/common';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -17,9 +17,14 @@ import {
   TextInputComponent,
 } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import { StatusPipe } from '@shared/pipes';
+import { CalendarDatePipe, StatusPipe } from '@shared/pipes';
+import { formatCalendarDate } from '@shared/utils';
 
-import { CertificationPeriodViewInfoService, FacilityInfoViewService, type FacilitySearchResults } from 'cca-api';
+import {
+  CertificationPeriodViewInfoService,
+  FacilitiesSearchInfoViewService,
+  type FacilitySearchResults,
+} from 'cca-api';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 50;
@@ -37,20 +42,17 @@ const DEFAULT_PAGE_SIZE = 50;
     PaginationComponent,
     TableComponent,
     StatusPipe,
-    DatePipe,
+    CalendarDatePipe,
     TitleCasePipe,
   ],
-  providers: [DatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilitiesListComponent {
   private readonly fb = inject(FormBuilder);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly facilityInfoViewService = inject(FacilityInfoViewService);
+  private readonly facilitiesSearchInfoViewService = inject(FacilitiesSearchInfoViewService);
   private readonly certificationPeriodViewInfoService = inject(CertificationPeriodViewInfoService);
   private readonly authStore = inject(AuthStore);
-  private readonly datePipe = inject(DatePipe);
 
   private readonly certificationPeriod = toSignal(
     this.certificationPeriodViewInfoService.getCurrentCertificationPeriod(),
@@ -68,10 +70,7 @@ export class FacilitiesListComponent {
     const period = this.certificationPeriod();
     const range =
       period?.startDate && period?.endDate
-        ? `${this.datePipe.transform(period.startDate, 'd/M/yy')} – ${this.datePipe.transform(
-            period.endDate,
-            'd/M/yy',
-          )}`
+        ? `${formatCalendarDate(period.startDate, 'd/M/yy')} – ${formatCalendarDate(period.endDate, 'd/M/yy')}`
         : '';
 
     const fields: GovukTableColumn[] = [
@@ -128,7 +127,7 @@ export class FacilitiesListComponent {
       switchMap(({ page, pageSize, term }) => {
         this.form.get('term')?.setValue(term, { emitEvent: false });
 
-        return this.facilityInfoViewService.searchFacilities(this.targetUnitId, page - 1, pageSize, term);
+        return this.facilitiesSearchInfoViewService.searchFacilities(this.targetUnitId, page - 1, pageSize, term);
       }),
     ),
     { initialValue: { facilities: [], total: 0 } as FacilitySearchResults },

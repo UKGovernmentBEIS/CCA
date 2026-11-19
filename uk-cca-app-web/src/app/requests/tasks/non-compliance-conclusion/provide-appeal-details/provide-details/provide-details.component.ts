@@ -1,5 +1,4 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,7 +6,7 @@ import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DateInputComponent, TextareaComponent } from '@netz/govuk-components';
 import { MultipleFileInputComponent, UuidFilePair, WizardStepComponent } from '@shared/components';
-import { fileUtils, generateDownloadUrl } from '@shared/utils';
+import { fileUtils, formatCalendarDate, generateDownloadUrl } from '@shared/utils';
 
 import { ProvideAppealDetailsState, ProvideAppealDetailsStore } from '../+state';
 import {
@@ -18,6 +17,8 @@ import {
 
 @Component({
   selector: 'cca-provide-appeal-details',
+  templateUrl: './provide-details.component.html',
+  providers: [ProvideAppealDetailsFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -26,9 +27,6 @@ import {
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [ProvideAppealDetailsFormProvider],
-  templateUrl: './provide-details.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProvideAppealDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -40,7 +38,6 @@ export class ProvideAppealDetailsComponent {
 
   private readonly taskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId);
   protected readonly downloadUrl = computed(() => generateDownloadUrl(this.taskId()?.toString()));
-  protected readonly today = new Date();
 
   onSubmit() {
     const filesValue = this.form.value.files;
@@ -52,7 +49,7 @@ export class ProvideAppealDetailsComponent {
 
     const statePayload: ProvideAppealDetailsState = {
       appealDetails: {
-        registrationDate: new DatePipe('en-GB').transform(this.form.value.registrationDate, 'yyyy-MM-dd'),
+        registrationDate: formatCalendarDate(this.form.value.registrationDate, 'yyyy-MM-dd'),
         files: fileUtils.toUUIDs(uuidFilePairs),
         comments: this.form.value.comments || undefined,
       },

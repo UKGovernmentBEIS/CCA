@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
@@ -30,7 +30,6 @@ import { BuyOutAndSurplusInfoService } from 'cca-api';
     GovukDatePipe,
     DecimalPipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SurplusHistoryComponent {
   private readonly buyoutSurplusInfoService = inject(BuyOutAndSurplusInfoService);
@@ -38,13 +37,7 @@ export class SurplusHistoryComponent {
 
   private readonly targetUnitId = +this.activatedRoute.snapshot.paramMap.get('targetUnitId');
 
-  readonly targetPeriod = this.activatedRoute.snapshot.paramMap.get('targetPeriodType');
   readonly targetUnitBusinessId = this.activatedRoute.snapshot.data.targetUnit.targetUnitAccountDetails.businessId;
 
-  readonly surplusHistory = toSignal(
-    this.buyoutSurplusInfoService.getAllSurplusHistoryByTargetPeriodAndAccountId(
-      this.targetUnitId,
-      this.targetPeriod as 'TP5' | 'TP6',
-    ),
-  );
+  readonly surplusHistory = toSignal(this.buyoutSurplusInfoService.getSurplusHistoryByAccountId(this.targetUnitId));
 }

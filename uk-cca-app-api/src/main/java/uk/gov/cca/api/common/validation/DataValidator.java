@@ -23,7 +23,7 @@ public class DataValidator<T> {
     }
 
     public Optional<BusinessViolation> validate(T section, Function<Set<ConstraintViolation<T>>, List<String>> constructViolationData) {
-        if(ObjectUtils.isEmpty(section)){
+        if (ObjectUtils.isEmpty(section)) {
             return Optional.empty();
         }
 
@@ -43,8 +43,13 @@ public class DataValidator<T> {
     private List<String> constructViolationData(Set<ConstraintViolation<T>> constraintViolations) {
         List<String> violationData = new ArrayList<>();
 
-        constraintViolations.forEach(constraintViolation ->
-                violationData.add(String.format("%s - %s",constraintViolation.getPropertyPath(), constraintViolation.getMessage())));
+        constraintViolations.forEach(constraintViolation -> {
+            String violationMessage = Optional.ofNullable(constraintViolation.getPropertyPath())
+                    .filter(path -> !path.toString().isBlank())
+                    .map(path -> "%s - %s".formatted(path, constraintViolation.getMessage()))
+                    .orElse(constraintViolation.getMessage());
+            violationData.add(violationMessage);
+        });
 
         return violationData;
     }

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
@@ -15,9 +15,9 @@ describe('ChangeCostComponent', () => {
   let fixture: ComponentFixture<ChangeCostComponent>;
   let form: ChangeCostFormModel;
   let mockService: { updateBuyOutCost: Mock };
-  let mockRouter: { navigate: Mock };
+  let mockRouter: Router;
 
-  const tp7Details: TargetPeriodBuyOutDetailsDTO = { id: 7, businessId: 'TP7', buyOutCost: 37 };
+  const tp7Details: TargetPeriodBuyOutDetailsDTO = { id: 7, businessId: 'TP7', buyOutCost: '37' };
 
   const activatedRouteStub = {
     snapshot: {
@@ -32,18 +32,17 @@ describe('ChangeCostComponent', () => {
     mockService = {
       updateBuyOutCost: vi.fn().mockReturnValue(of(undefined)),
     };
-    mockRouter = {
-      navigate: vi.fn(),
-    };
-
     await TestBed.configureTestingModule({
       imports: [ChangeCostComponent],
       providers: [
+        provideRouter([]),
         { provide: ActivatedRoute, useValue: activatedRouteStub },
-        { provide: Router, useValue: mockRouter },
         { provide: BuyOutAndSurplusCostInfoService, useValue: mockService },
       ],
     }).compileComponents();
+
+    mockRouter = TestBed.inject(Router);
+    vi.spyOn(mockRouter, 'navigate').mockResolvedValue(true);
   });
 
   function createComponent(targetPeriodDetails = tp7Details) {
@@ -56,8 +55,11 @@ describe('ChangeCostComponent', () => {
   it('displays the target period and pre-populates its current cost', () => {
     createComponent();
 
-    expect(fixture.nativeElement.querySelector('h1').textContent).toContain('TP7 Buyout cost per tCO2e');
+    expect(fixture.nativeElement.querySelector('h1').textContent).toContain('TP7 Buy-out cost per tCO2e');
     expect(fixture.nativeElement.querySelector('input').value).toBe('37');
+    expect(fixture.nativeElement.querySelector('p').textContent.replace(/\s+/g, ' ').trim()).toBe(
+      'Configure the buy-out cost per tCO2e separately for this Target Period (TP) so that buy-out fees are calculated correctly.',
+    );
   });
 
   it('leaves the cost empty when it has not yet been defined', () => {
@@ -66,11 +68,25 @@ describe('ChangeCostComponent', () => {
     expect(fixture.nativeElement.querySelector('input').value).toBe('');
   });
 
+  it.each([null, undefined])('explains how an unset cost (%s) must be calculated and applied', (buyOutCost) => {
+    createComponent({ id: 9, businessId: 'TP9', buyOutCost });
+
+    const guidance = fixture.nativeElement.querySelector('p').textContent.replace(/\s+/g, ' ').trim();
+
+    expect(guidance).toBe(
+      'Enter the buy-out cost for the selected target period. ' +
+        'The cost amount must have been calculated in accordance with the regulation 12(3) of the Climate Change ' +
+        'Agreements (Administration) Regulations 2012. The buy-out and surplus process will use the amount you ' +
+        "enter after you select 'Confirm'. Any changes you make will not be applied to previous batch runs.",
+    );
+  });
+
   it.each([
     [null, 'required'],
-    [0, 'invalidNatural'],
-    [-1, 'invalidNatural'],
-    [1.25, 'invalidNatural'],
+    ['0', 'invalidPositive'],
+    ['-1', 'invalidPositive'],
+    ['1.255', 'pattern'],
+    ['1000000000000000000', 'pattern'],
   ])('rejects invalid cost %s', (value, expectedError) => {
     createComponent();
 
@@ -79,40 +95,62 @@ describe('ChangeCostComponent', () => {
     expect(form.controls.buyOutCost.hasError(expectedError)).toBe(true);
   });
 
-  it('accepts a positive integer cost', () => {
+  it.each(['42', '1.2', '1.25'])('accepts a positive cost with up to two decimal places %s', (value) => {
     createComponent();
 
-    form.controls.buyOutCost.setValue(42);
+    form.controls.buyOutCost.setValue(value);
 
     expect(form.valid).toBe(true);
   });
 
-  it('displays the positive integer validation error', () => {
+  it.each([null, '', '1.255'])('does not save an invalid cost (%s) when submit is called directly', (value) => {
     createComponent();
-    form.controls.buyOutCost.setValue(1.25);
+    form.controls.buyOutCost.setValue(value);
+
+    fixture.componentInstance.onSubmit();
+
+    expect(mockService.updateBuyOutCost).not.toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+  });
+
+  it('displays the decimal places validation error', () => {
+    createComponent();
+    form.controls.buyOutCost.setValue('1.255');
 
     fixture.nativeElement.querySelector('button[type="submit"]').click();
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.govuk-error-summary').textContent).toContain(
-      'Enter a positive integer value',
+      'Enter a number greater than 0 with up to 2 decimal places',
     );
     expect(fixture.nativeElement.querySelector('.govuk-error-message').textContent).toContain(
-      'Enter a positive integer value',
+      'Enter a number greater than 0 with up to 2 decimal places',
     );
   });
 
   it('updates the selected target period and navigates to confirmation', () => {
     createComponent();
-    form.controls.buyOutCost.setValue(42);
+    form.controls.buyOutCost.setValue('42');
 
     fixture.nativeElement.querySelector('button[type="submit"]').click();
 
-    expect(mockService.updateBuyOutCost).toHaveBeenCalledWith('TP7', { buyOutCost: 42 });
+    expect(mockService.updateBuyOutCost).toHaveBeenCalledWith('TP7', { buyOutCost: '42' });
     expect(mockRouter.navigate).toHaveBeenCalledWith(['confirmation'], {
       relativeTo: TestBed.inject(ActivatedRoute),
       replaceUrl: true,
     });
+  });
+
+  it('preserves the full decimal cost when loading and submitting it', () => {
+    const amount = '999999999999999999.99';
+    createComponent({ ...tp7Details, buyOutCost: amount });
+    const input = fixture.nativeElement.querySelector('input');
+    expect(input.value).toBe(amount);
+    expect(input.type).toBe('text');
+    input.value = '123456789012345678.01';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.nativeElement.querySelector('button[type="submit"]').click();
+    expect(mockService.updateBuyOutCost).toHaveBeenCalledWith('TP7', { buyOutCost: '123456789012345678.01' });
   });
 
   it('logs update errors and does not navigate', () => {
@@ -120,7 +158,7 @@ describe('ChangeCostComponent', () => {
     const loggerSpy = vi.spyOn(logger, 'error').mockImplementation(() => undefined);
     mockService.updateBuyOutCost.mockReturnValueOnce(throwError(() => error));
     createComponent();
-    form.controls.buyOutCost.setValue(42);
+    form.controls.buyOutCost.setValue('42');
 
     fixture.nativeElement.querySelector('button[type="submit"]').click();
 

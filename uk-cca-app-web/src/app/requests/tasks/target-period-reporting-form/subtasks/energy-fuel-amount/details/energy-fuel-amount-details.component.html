@@ -54,14 +54,20 @@
 
   <div class="x-scroll">
     <div class="overflow-auto overflow-auto-table">
-      <govuk-table [columns]="tableColumns()" [data]="tableData()">
+      <govuk-table #fuelTable [columns]="tableColumns()" [data]="tableData()">
         <ng-template let-column="column" let-row="row" let-index="index">
           <ng-container formArrayName="fuels">
             <div [formGroupName]="index">
               @switch (column.field) {
                 @case ('fuelType') {
                   @if (row.value.isCustom) {
-                    <div cca-text-input formControlName="fuelType" class="govuk-!-margin-bottom-0"></div>
+                    <div
+                      cca-text-input
+                      formControlName="fuelType"
+                      [label]="column.header"
+                      [labelHidden]="true"
+                      class="govuk-!-margin-bottom-0"
+                    ></div>
                   } @else {
                     <strong>{{ row.value[column.field] }}</strong>
                   }
@@ -69,7 +75,13 @@
 
                 @case ('co2ConversionFactor') {
                   @if (row.value.isCustom) {
-                    <div cca-text-input formControlName="co2ConversionFactor" class="govuk-!-margin-bottom-0"></div>
+                    <div
+                      cca-text-input
+                      formControlName="co2ConversionFactor"
+                      [label]="column.header"
+                      [labelHidden]="true"
+                      class="govuk-!-margin-bottom-0"
+                    ></div>
                   } @else {
                     {{ row.value[column.field] | number: '1.0-7' }}
                   }
@@ -79,6 +91,8 @@
                   <div
                     cca-text-input
                     formControlName="deliveredEnergy"
+                    [label]="column.header"
+                    [labelHidden]="true"
                     [suffix]="resolvedMeasurementUnit()"
                     class="govuk-!-margin-bottom-0"
                   ></div>
@@ -112,16 +126,16 @@
                 @case ('actions') {
                   @if (row.value.isCustom) {
                     <div class="govuk-!-text-align-center">
-                      <a
-                        class="govuk-!-padding-left-1 govuk-link"
-                        role="button"
-                        tabindex="0"
+                      <button
+                        type="button"
+                        govukSecondaryButton
+                        class="govuk-!-margin-bottom-0"
                         (click)="onRemoveFuel(index)"
-                        (keydown.enter)="onRemoveFuel(index)"
-                        (keydown.space)="onRemoveFuel(index)"
                       >
-                        Delete
-                      </a>
+                        Delete<span class="govuk-visually-hidden">
+                          {{ row.value.fuelType || 'custom fuel ' + customFuelNumber(index) }}</span
+                        >
+                      </button>
                     </div>
                   }
                 }
@@ -139,7 +153,7 @@
 
   @if (nonStandardCount() < 10) {
     <div class="flex-baseline">
-      <button type="button" govukSecondaryButton (click)="onAddFuel()">Add a fuel type</button>
+      <button #addFuelButton type="button" govukSecondaryButton (click)="onAddFuel()">Add a fuel type</button>
       <span class="govuk-hint">You can add up to {{ 10 - nonStandardCount() }} more fuel types</span>
     </div>
   }
@@ -150,8 +164,8 @@
     legend="Was at least 70% of the total energy used in carrying out eligible activities for this period?"
     legendSize="medium"
   >
-    <govuk-radio-option [value]="false" [label]="'No'" />
     <govuk-radio-option [value]="true" [label]="'Yes'" />
+    <govuk-radio-option [value]="false" [label]="'No'" />
   </div>
 
   @if (usesReportingMechanism()) {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, EMPTY } from 'rxjs';
@@ -7,7 +7,12 @@ import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/c
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { TasksApiService, TP_REPORTING_REFRESH_ERROR_MESSAGES, TpReportingRefreshErrorCode } from '@requests/common';
+import {
+  TasksApiService,
+  TP_REPORTING_REFRESH_ERROR_MESSAGES,
+  TP_REPORTING_UNEXPECTED_ERROR,
+  TpReportingRefreshErrorCode,
+} from '@requests/common';
 import { ErrorSummaryComponent, ErrorSummaryInfo } from '@shared/components';
 
 @Component({
@@ -20,7 +25,6 @@ import { ErrorSummaryComponent, ErrorSummaryInfo } from '@shared/components';
     PageHeadingComponent,
     ErrorSummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RefreshBaselineDataComponent {
   private readonly tasksApiService = inject(TasksApiService);
@@ -44,12 +48,10 @@ export class RefreshBaselineDataComponent {
       })
       .pipe(
         catchError((err) => {
-          const info = TP_REPORTING_REFRESH_ERROR_MESSAGES[err.error.code as TpReportingRefreshErrorCode];
+          const code = err?.error?.code as TpReportingRefreshErrorCode;
 
-          if (info) {
-            this.errorSummaryInfo.set(info);
-            this.isErrorSummaryDisplayed.set(true);
-          }
+          this.errorSummaryInfo.set(TP_REPORTING_REFRESH_ERROR_MESSAGES[code] ?? TP_REPORTING_UNEXPECTED_ERROR);
+          this.isErrorSummaryDisplayed.set(true);
 
           return EMPTY;
         }),

@@ -419,4 +419,15 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_ACCOUNT_SEARCH_ADDITIONAL_KEYWORD_Correct_accounts_renamed" author="P70383">
+        <sql>
+            UPDATE account_search_additional_keyword kw
+            SET value = a.name
+            FROM account a
+            WHERE kw.account_id = a.id
+              AND kw.key = 'ACCOUNT_NAME'
+              AND kw.value IS DISTINCT FROM a.name;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

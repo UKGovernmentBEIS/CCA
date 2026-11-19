@@ -6,14 +6,14 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import {
   measurementTypeValidator,
-  normaliseNumber,
   targetCompositionConditionallyRequiredFieldsValidator,
   underlyingAgreementQuery,
   UPLOAD_SECTION_ATTACHMENT_TYPE,
 } from '@requests/common';
 import { FileType, FileValidators, UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
+import { normaliseNumber } from '@shared/utils';
 
 import { TargetComposition } from 'cca-api';
 
@@ -40,7 +40,7 @@ export const TargetCompositionFormProvider: Provider = {
     )();
 
     const sectorSchemeData = requestTaskStore.select(
-      underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
+      underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
     )();
 
     const attachments = requestTaskStore.select(underlyingAgreementQuery.selectAttachments)();
@@ -49,7 +49,7 @@ export const TargetCompositionFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       targetComposition?.calculatorFile,
       attachments,
-      'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_ATTACHMENT',
+      UPLOAD_SECTION_ATTACHMENT_TYPE.UNDERLYING_AGREEMENT_VARIATION_SUBMIT,
       true,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

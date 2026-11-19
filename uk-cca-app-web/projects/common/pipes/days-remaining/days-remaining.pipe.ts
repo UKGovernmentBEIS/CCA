@@ -7,10 +7,12 @@ export class DaysRemainingPipe implements PipeTransform {
   }
 
   calcRemainingDays(providedDate: string): number {
-    const today = new Date();
+    const now = new Date();
     const targetDate = new Date(providedDate);
-    const timeDifference = targetDate.getTime() - today.getTime();
-    const daysLeft = timeDifference / (1000 * 3600 * 24); // Convert the time difference from milliseconds to days
-    return Math.ceil(daysLeft); // Use Math.ceil to round up if the result isn't an integer
+    // Deadlines are calendar dates. Use UTC for arithmetic so local clock changes do not change the day count.
+    const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    const deadline = Date.UTC(targetDate.getUTCFullYear(), targetDate.getUTCMonth(), targetDate.getUTCDate());
+
+    return (deadline - today) / (1000 * 3600 * 24);
   }
 }

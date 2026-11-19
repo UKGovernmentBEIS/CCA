@@ -114,7 +114,13 @@ describe('ItemNamePipe', () => {
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT')).toEqual(
       'TP reporting (TP7, TP8, TP9) - Submit form',
     );
+    expect(pipe.transform('FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT')).toEqual(
+      'PAT reporting - Upload CSV file',
+    );
 
     expect(pipe.transform(null)).toBeNull();
+    expect(pipe.transform('EMISSIONS_TRADING_SCHEME_DATA_SUBMIT')).toBe(
+      'UK emissions trading scheme (UK ETS) reporting - Submit form',
+    );
   });
 });

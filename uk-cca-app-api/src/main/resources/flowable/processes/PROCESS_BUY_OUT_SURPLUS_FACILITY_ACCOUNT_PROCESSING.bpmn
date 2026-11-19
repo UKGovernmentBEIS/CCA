@@ -12,7 +12,7 @@
         <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="Activity_022wprc" name="Do process" flowable:delegateExpression="#{buyOutSurplusFacilityAccountProcessingHandlerFlowable}">
+    <serviceTask id="Activity_022wprc" name="Do process" flowable:delegateExpression="#{buyOutSurplusFacilityAccountProcessingHandlerFlowable}" flowable:async="true">
       <extensionElements>
         <design:stencilid><![CDATA[ServiceTask]]></design:stencilid>
         <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
@@ -24,7 +24,7 @@
         <design:stencilid><![CDATA[StartNoneEvent]]></design:stencilid>
       </extensionElements>
     </startEvent>
-    <endEvent id="Event_0grjtyr" flowable:async="true">
+    <endEvent id="Event_0grjtyr">
       <extensionElements>
         <design:stencilid><![CDATA[EndNoneEvent]]></design:stencilid>
         <design:display_ref_in_diagram><![CDATA[true]]></design:display_ref_in_diagram>

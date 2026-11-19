@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -25,7 +25,6 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
   selector: 'cca-facility-item-undo',
   templateUrl: './facility-item-undo.component.html',
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityItemUndoComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

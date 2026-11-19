@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,6 +27,7 @@ import {
   OVERALL_DECISION_SUBTASK,
   TaskItemStatus,
   TasksApiService,
+  toNullableString,
   UNAVariationReviewRequestTaskPayload,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
@@ -50,6 +51,7 @@ import {
 @Component({
   selector: 'cca-add-baseline-data',
   templateUrl: './add-baseline-data.component.html',
+  providers: [AddBaselineDataFormProvider],
   imports: [
     WizardStepComponent,
     FormsModule,
@@ -63,8 +65,6 @@ import {
     MeasurementTypeToUnitPipe,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [AddBaselineDataFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddBaselineDataComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -207,16 +207,16 @@ function updateBaselineData(
   calculatedPerformance: number,
 ): UnderlyingAgreementVariationReviewSavePayload {
   return produce(actionPayload, (draft) => {
-    draft.targetPeriod6Details.baselineData = {
+    draft.targetPeriod5Details.details.baselineData = {
       isTwelveMonths: form.value.isTwelveMonths,
       baselineDate: form.value.baselineDate.toISOString().split('T')[0],
       explanation: form.value.explanation,
       greenfieldEvidences: fileUtils.toUUIDs(form.value.greenfieldEvidences) as string[],
-      energy: String(form.value.energy),
+      energy: toNullableString(form.value.energy),
       usedReportingMechanism: form.value.usedReportingMechanism,
-      throughput: String(form.value.throughput),
-      energyCarbonFactor: String(form.value.energyCarbonFactor),
-      performance: String(calculatedPerformance),
+      throughput: toNullableString(form.value.throughput),
+      energyCarbonFactor: toNullableString(form.value.energyCarbonFactor),
+      performance: toNullableString(calculatedPerformance),
     };
   });
 }

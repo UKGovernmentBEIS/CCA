@@ -1,16 +1,34 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { ConfigStore } from '../config/config.store';
 
 interface GtmWindow extends Window {
-  dataLayer: Record<string, unknown>[];
+  dataLayer: unknown[];
 }
 
-@Injectable({ providedIn: 'root' })
+export interface ServiceContextEvent {
+  event: 'service_context';
+  user_type: string;
+  login?: true;
+}
+
+export interface JourneyOutcomeEvent {
+  event: 'journey_outcome';
+  journey_id: string;
+  task_name: string;
+  task_outcome: string;
+  variation_modifications: string;
+  variation_modification_count: number;
+}
+
+export type AnalyticsEvent = ServiceContextEvent | JourneyOutcomeEvent;
+
+@Service()
 export class AnalyticsService {
   private readonly configStore = inject(ConfigStore);
 
   private currentScript: HTMLScriptElement;
+  private queuedEvents: AnalyticsEvent[] = [];
 
   enableGoogleTagManager() {
     const gtmContainerId = this.configStore.state?.analytics?.gtmContainerId;
@@ -22,12 +40,12 @@ export class AnalyticsService {
 
     if (this.currentScript) {
       console.warn('GTM script already loaded in DOM - Aborting...');
+      return;
     }
 
     console.log('Logging to Google Analytics - [GTM Container ID]:', gtmContainerId);
 
-    (window as unknown as GtmWindow).dataLayer = (window as unknown as GtmWindow).dataLayer || [];
-    (window as unknown as GtmWindow).dataLayer.push({
+    this.getDataLayer().push({
       'gtm.start': new Date().getTime(),
       event: 'gtm.js',
     });
@@ -41,11 +59,48 @@ export class AnalyticsService {
 
     document.head.insertBefore(gtmScript, firstHeadChild);
     this.currentScript = gtmScript;
+
+    this.flushQueuedEvents();
+  }
+
+  push(event: AnalyticsEvent): void {
+    if (!this.currentScript) {
+      this.queuedEvents.push(event);
+      return;
+    }
+
+    this.getDataLayer().push(event);
   }
 
   removeGoogleTagManager() {
-    document.head.removeChild(this.currentScript);
-    delete (window as unknown as GtmWindow).dataLayer;
-    this.currentScript = null;
+    if (this.currentScript) {
+      document.head.removeChild(this.currentScript);
+      this.currentScript = null;
+    }
+
+    delete this.getWindow().dataLayer;
+    this.queuedEvents = [];
+  }
+
+  /**
+   * Forwards events queued before consent in the same step Tag Manager starts, so Tag Manager reads them when it loads.
+   */
+  private flushQueuedEvents(): void {
+    const queuedEvents = this.queuedEvents;
+    this.queuedEvents = [];
+
+    this.getDataLayer().push(...queuedEvents);
+  }
+
+  private getDataLayer(): unknown[] {
+    const gtmWindow = this.getWindow();
+
+    gtmWindow.dataLayer = gtmWindow.dataLayer || [];
+
+    return gtmWindow.dataLayer;
+  }
+
+  private getWindow(): GtmWindow {
+    return window as unknown as GtmWindow;
   }
 }

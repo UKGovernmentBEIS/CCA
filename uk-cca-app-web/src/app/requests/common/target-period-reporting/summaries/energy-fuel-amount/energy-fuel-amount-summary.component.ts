@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
@@ -12,11 +12,10 @@ import {
   TableComponent,
 } from '@netz/govuk-components';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
-import { to7DecimalPlacesNumber, toNumber } from '@shared/utils';
+import { boolToString, to7DecimalPlacesNumber, toNumber } from '@shared/utils';
 
 import { PerformanceDataFacilityInputEnergyFuelDetails } from 'cca-api';
 
-import { boolToString } from '../../../utils';
 import { EnergyFuelRow } from '../../target-period-reporting-form.types';
 import {
   buildEnergyFuelRows,
@@ -38,7 +37,6 @@ import {
     SummaryListRowValueDirective,
     SummaryListRowActionsDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergyFuelAmountSummaryComponent {
   readonly energyFuelDetails = input<PerformanceDataFacilityInputEnergyFuelDetails>();

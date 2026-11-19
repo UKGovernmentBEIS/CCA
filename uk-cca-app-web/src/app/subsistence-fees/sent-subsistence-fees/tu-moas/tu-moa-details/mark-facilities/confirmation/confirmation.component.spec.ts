@@ -1,11 +1,11 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { mockFacilitiesList, mockTuMoaDetails } from '@shared/components';
+import { mockFacilitiesList, mockTuMoaDetails } from '@shared/components/sector-moa-details/testing/mock-data';
 
 import { TuMoaDetailsStore } from '../../tu-moa-details.store';
 import { ConfirmationComponent } from './confirmation.component';
@@ -20,7 +20,7 @@ describe('ConfirmationComponent', () => {
       imports: [ConfirmationComponent],
       providers: [
         TuMoaDetailsStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub({ type: 'paid' }) },
       ],

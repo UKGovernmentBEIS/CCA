@@ -5,15 +5,15 @@ export const MANAGE_FACILITIES_ROUTES: Routes = [
     path: '',
     children: [
       {
+        title: 'Manage facilities',
         path: '',
         pathMatch: 'full',
+        loadComponent: () => import('./manage-facilities.component').then((c) => c.ManageFacilitiesComponent),
         data: { backlink: '../../', breadcrumb: false },
-        title: 'Manage facilities',
-        loadComponent: () => import('./manage-facilities.component').then((m) => m.ManageFacilitiesComponent),
       },
       {
         path: ':facilityId',
-        loadChildren: () => import('./facility/facility.routes').then((m) => m.FACILITY_ROUTES),
+        loadChildren: () => import('./facility/facility.routes').then((r) => r.FACILITY_ROUTES),
       },
     ],
   },

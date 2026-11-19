@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -29,7 +29,6 @@ import { performanceDataUploadQuery } from '../+state/performance-data-upload-se
     </div>
   `,
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataUploadConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

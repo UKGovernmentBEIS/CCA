@@ -5,7 +5,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { combineLatest, startWith } from 'rxjs';
 
 import { GovukValidators } from '@netz/govuk-components';
-import { BaselineEnergyDraftService, normaliseNumber } from '@requests/common';
+import { BaselineEnergyDraftService } from '@requests/common';
+import { normaliseNumber } from '@shared/utils';
 import { requireProductsValidator, uniqueFieldValidator } from '@shared/validators';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';

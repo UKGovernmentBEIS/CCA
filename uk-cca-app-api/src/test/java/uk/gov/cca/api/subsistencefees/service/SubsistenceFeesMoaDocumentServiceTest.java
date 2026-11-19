@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.subsistencefees.domain.SubsistenceFeesMoa;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.files.documents.service.FileDocumentTokenService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 import uk.gov.netz.api.token.FileToken;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +33,7 @@ class SubsistenceFeesMoaDocumentServiceTest {
     private SubsistenceFeesMoaQueryService subsistenceFeesMoaQueryService;
     
     @Mock
-    private FileDocumentTokenService fileDocumentTokenService;
+    private FileDocumentStorageService fileDocumentStorageService;
     
     @Test
     void generateGetFileDocumentToken() {  
@@ -44,13 +44,13 @@ class SubsistenceFeesMoaDocumentServiceTest {
         final SubsistenceFeesMoa moa = SubsistenceFeesMoa.builder().build();
         
         when(subsistenceFeesMoaQueryService.getSubsistenceFeesMoaByIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString())).thenReturn(moa);
-        when(fileDocumentTokenService.generateGetFileDocumentToken(fileDocumentUuid.toString())).thenReturn(fileToken);
+        when(fileDocumentStorageService.generateGetFileDocumentToken(fileDocumentUuid.toString())).thenReturn(fileToken);
 
         final FileToken result = subsistenceFeesMoaDocumentService.generateGetFileDocumentToken(unaId, fileDocumentUuid);
 
         assertEquals(result, fileToken);
         verify(subsistenceFeesMoaQueryService, times(1)).getSubsistenceFeesMoaByIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString());
-        verify(fileDocumentTokenService, times(1)).generateGetFileDocumentToken(fileDocumentUuid.toString());
+        verify(fileDocumentStorageService, times(1)).generateGetFileDocumentToken(fileDocumentUuid.toString());
     }
 
     @Test
@@ -66,6 +66,6 @@ class SubsistenceFeesMoaDocumentServiceTest {
 
         assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
         verify(subsistenceFeesMoaQueryService, times(1)).getSubsistenceFeesMoaByIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString());
-        verifyNoInteractions(fileDocumentTokenService);
+        verifyNoInteractions(fileDocumentStorageService);
     }
 }

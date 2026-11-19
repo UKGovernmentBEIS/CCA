@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -16,7 +16,6 @@ import { FacilityTargetPeriodReportStore } from '../../../facility-target-period
   selector: 'cca-variation-submission',
   templateUrl: './variation-submission.component.html',
   imports: [PageHeadingComponent, RadioComponent, RadioOptionComponent, ReactiveFormsModule, ButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationSubmissionComponent {
   private readonly router = inject(Router);

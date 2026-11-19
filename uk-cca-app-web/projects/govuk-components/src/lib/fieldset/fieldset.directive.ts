@@ -1,10 +1,20 @@
-import { AfterContentInit, Directive, ElementRef, HostBinding, input, contentChild } from '@angular/core';
+import {
+  AfterContentInit,
+  booleanAttribute,
+  Directive,
+  ElementRef,
+  HostBinding,
+  input,
+  contentChild,
+} from '@angular/core';
 
+import { describedBy } from '../form/described-by';
 import { FieldsetHintDirective } from './fieldset-hint.directive';
 
 @Directive({ selector: 'fieldset[govukFieldset]' })
 export class FieldsetDirective implements AfterContentInit {
   readonly id = input('fieldset');
+  readonly hasError = input(false, { transform: booleanAttribute });
   readonly hint = contentChild(FieldsetHintDirective, { read: ElementRef });
 
   @HostBinding('class.govuk-fieldset') readonly fieldsetClass = true;
@@ -14,7 +24,7 @@ export class FieldsetDirective implements AfterContentInit {
   }
 
   @HostBinding('attr.aria-describedby') get ariaDescribedby() {
-    return this.hint() ? `${this.id()}-hint` : null;
+    return describedBy(this.hint() ? `${this.id()}-hint` : null, this.hasError() ? `${this.id()}-error` : null);
   }
 
   ngAfterContentInit(): void {

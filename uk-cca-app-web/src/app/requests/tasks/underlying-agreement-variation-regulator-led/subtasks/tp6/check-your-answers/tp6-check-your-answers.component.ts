@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -18,7 +18,7 @@ import {
   underlyingAgreementVariationRegulatorLedQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -36,7 +36,6 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Tp6CheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -47,7 +46,7 @@ export class Tp6CheckYourAnswersComponent {
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
 
   private readonly sectorAssociationDetailsSchemeData = this.requestTaskStore.select(
-    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
+    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
   )();
 
   private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();

@@ -1,10 +1,12 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 
-import { SummaryData, SummaryFactory } from '@shared/components';
 import { StatusPipe } from '@shared/pipes';
 import { fileUtils } from '@shared/utils';
 
 import { SubsistenceFeesMoaDetailsDTO } from 'cca-api';
+
+import { SummaryFactory } from '../summary/summary.factory';
+import { SummaryData } from '../summary/type';
 
 export function toSectorMoaDetailsSummary(details: SubsistenceFeesMoaDetailsDTO, isEditable: boolean): SummaryData {
   const statusPipe = new StatusPipe();

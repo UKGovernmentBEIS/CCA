@@ -12,15 +12,15 @@ import org.mapstruct.MappingTarget;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityContainer;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFuel;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFixedConversionFactor;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFuel;
+import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
+import uk.gov.cca.api.workflow.request.flow.common.utils.PerformanceFuelEnergyCalculationCommonFunctionUtil;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityNonStandardFuel;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils.PerformanceDataFacilityCalculationCommonFunctionUtil;
+import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityNonStandardFuel;
 import uk.gov.netz.api.common.config.MapperConfig;
 
-@Mapper(componentModel = "spring", config = MapperConfig.class, imports = PerformanceDataFacilityCalculationCommonFunctionUtil.class)
+@Mapper(componentModel = "spring", config = MapperConfig.class, imports = PerformanceFuelEnergyCalculationCommonFunctionUtil.class)
 public interface PerformanceDataFacilityContainerMapper {
 
     PerformanceDataFacilityContainer toPerformanceDataFacilityContainer(PerformanceDataFacilityBaselineAndTargets baselineAndTargets, PerformanceDataFacilityInputData data);
@@ -45,7 +45,7 @@ public interface PerformanceDataFacilityContainerMapper {
         container.getEnergyFuelDetails().setFuels(fuels);
     }
 
-    @Mapping(target = "primaryConversionFactor", expression = "java(PerformanceDataFacilityCalculationCommonFunctionUtil.NON_STANDARD_FUEL_PRIMARY_FACTOR)")
+    @Mapping(target = "primaryConversionFactor", expression = "java(PerformanceFuelEnergyCalculationCommonFunctionUtil.NON_STANDARD_FUEL_PRIMARY_FACTOR)")
     @Mapping(target = "conversionFactor", expression = "java(nonStandardFuel.getConversionFactor())")
     PerformanceDataFacilityFuel toPerformanceDataFacilityFuel(PerformanceDataFacilityNonStandardFuel nonStandardFuel);
 

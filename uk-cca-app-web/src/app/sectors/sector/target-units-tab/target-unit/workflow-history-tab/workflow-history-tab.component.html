@@ -3,10 +3,15 @@
     <div class="govuk-grid-column-one-third">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          <h3 class="govuk-heading-m">Workflow History</h3>
-          <h3 class="govuk-heading-s">Type</h3>
+          <h3 class="govuk-heading-m">Workflow history</h3>
 
-          <div formControlName="requestTypes" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
+          <div
+            formControlName="requestTypes"
+            class="govuk-checkboxes govuk-checkboxes--small"
+            govuk-checkboxes
+            legend="Type"
+            legendSize="medium"
+          >
             @for (type of workflowTypesMap | keyvalue; track type) {
               <govuk-checkbox [value]="type.value" [label]="type.key" />
             }
@@ -14,8 +19,13 @@
         </div>
 
         <div class="govuk-grid-column-full">
-          <h3 class="govuk-heading-s">Status</h3>
-          <div formControlName="requestStatuses" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
+          <div
+            formControlName="requestStatuses"
+            class="govuk-checkboxes govuk-checkboxes--small"
+            govuk-checkboxes
+            legend="Status"
+            legendSize="medium"
+          >
             @for (status of workflowStatusesMap | keyvalue; track status) {
               <govuk-checkbox [value]="status.value" [label]="status.key" />
             }
@@ -27,33 +37,41 @@
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-!-margin-top-9">
         <ul class="govuk-list">
-          @for (workflow of state().workflowsHistory?.requestDetails; track workflow.id) {
+          @for (workflow of workflows(); track workflow.id) {
             <li class="search-results-list_item govuk-!-margin-bottom-3">
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters govuk-!-margin-bottom-3">
                   <a [routerLink]="['workflow-details', workflow.id]" class="govuk-link">
                     {{ workflow.id }}
-                    {{ workflow?.requestType | workflowType: workflow?.requestMetadata?.['initiatorRoleType'] }}
+                    {{ workflow.requestType | workflowType: workflow.metadata.initiatorRoleType }}
                   </a>
 
-                  @if (workflow?.requestType === 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING') {
+                  @if (workflow.metadata.cca2; as metadata) {
                     <div class="govuk-!-margin-bottom-0">
                       TPR Version:
-                      {{
-                        workflow?.requestMetadata?.['targetPeriodType']
-                          | tprVersion: workflow?.requestMetadata?.['performanceDataReportVersion']
-                      }}
-                      ({{ workflow?.requestMetadata?.['tpOutcome'] | performanceOutcome }})
+                      {{ metadata.targetPeriodType | tprVersion: metadata.performanceDataReportVersion }}
+                      ({{ metadata.tpOutcome | performanceOutcome }})
                     </div>
 
-                    @if (workflow?.requestMetadata?.['transactionId']) {
+                    @if (metadata.transactionId) {
+                      <div class="govuk-!-margin-bottom-0">Transaction ID: {{ metadata.transactionId }}</div>
+                    }
+                  }
+
+                  @if (workflow.metadata.cca3; as metadata) {
+                    @if (metadata.buyOutTransactionIds.length) {
                       <div class="govuk-!-margin-bottom-0">
-                        Transaction ID: {{ workflow?.requestMetadata?.['transactionId'] }}
+                        Buy-out transaction ID(s): {{ metadata.buyOutTransactionIds.join(', ') }}
+                      </div>
+                    }
+                    @if (metadata.refundTransactionIds.length) {
+                      <div class="govuk-!-margin-bottom-0">
+                        Refund transaction ID(s): {{ metadata.refundTransactionIds.join(', ') }}
                       </div>
                     }
                   }
 
-                  <div class="govuk-!-margin-bottom-0">Created {{ workflow.creationDate | date }}</div>
+                  <div class="govuk-!-margin-bottom-0">Created: {{ workflow.creationDate | date }}</div>
                 </div>
 
                 <div class="govuk-grid-column-one-quarter">

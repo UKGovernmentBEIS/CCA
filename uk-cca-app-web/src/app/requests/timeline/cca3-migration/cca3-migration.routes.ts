@@ -5,13 +5,13 @@ export const CCA3_MIGRATION_ROUTES: Routes = [
     path: 'facility',
     children: [
       {
-        path: ':facilityId',
         title: 'Facility',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: ':facilityId',
         loadComponent: () =>
           import('./migrated-facility-details/migrated-facility-details.component').then(
             (c) => c.MigratedFacilityDetailsComponent,
           ),
+        data: { backlink: '../../../', breadcrumb: false },
       },
     ],
   },

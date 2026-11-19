@@ -1,7 +1,5 @@
-import { DatePipe } from '@angular/common';
-
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { fileUtils } from '@shared/utils';
+import { fileUtils, formatCalendarDate } from '@shared/utils';
 
 import { RequestedDocuments } from 'cca-api';
 
@@ -11,13 +9,11 @@ export function toPreAuditReviewRequestedDocumentsSummaryData(
   isEditable: boolean,
   downloadUrl: string,
 ): SummaryData {
-  const datePipe = new DatePipe('en-GB');
-
   return new SummaryFactory()
     .addSection('', '../upload-documents')
     .addRow(
       'Date pre-audit reviewmaterial received',
-      datePipe.transform(requestedDocuments?.auditMaterialReceivedDate, 'dd MMM yyyy'),
+      formatCalendarDate(requestedDocuments?.auditMaterialReceivedDate, 'dd MMM yyyy'),
       { change: isEditable },
     )
     .addFileListRow(

@@ -1,6 +1,7 @@
 import { DecimalPipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  booleanAttribute,
   Component,
   ElementRef,
   NO_ERRORS_SCHEMA,
@@ -30,8 +31,8 @@ import { GovukTextWidthClass, HTMLInputType } from './text-input.type';
 @Component({
   selector: 'div[govuk-text-input]',
   templateUrl: './text-input.component.html',
-  imports: [ErrorMessageComponent, NgClass, NgTemplateOutlet],
   providers: [DecimalPipe],
+  imports: [ErrorMessageComponent, NgClass, NgTemplateOutlet],
   schemas: [NO_ERRORS_SCHEMA],
 })
 export class TextInputComponent extends FormInput implements ControlValueAccessor, OnInit, AfterViewInit {
@@ -39,6 +40,7 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   private readonly renderer = inject(Renderer2);
 
   readonly label = input<string>();
+  readonly labelHidden = input(false, { transform: booleanAttribute });
   readonly labelSize = input<LabelSizeType>();
   readonly hint = input<string>();
   readonly inputType = input<HTMLInputType>('text');
@@ -54,6 +56,8 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   readonly input = viewChild<ElementRef<HTMLInputElement>>('input');
 
   readonly disabled = signal(false);
+
+  readonly isLabelHidden = computed(() => this.labelHidden() || !this.label());
 
   readonly currentLabelSize = computed(() => {
     if (!this.labelSize()) return 'govuk-label';

@@ -1,6 +1,5 @@
 export * from './+state';
 export * from './pipes';
-export * from './testing/mock-data';
 export * from './types';
 export * from './summaries';
 export * from './is-editable.guard';

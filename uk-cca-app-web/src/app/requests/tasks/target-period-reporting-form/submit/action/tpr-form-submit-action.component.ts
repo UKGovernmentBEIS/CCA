@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, EMPTY } from 'rxjs';
@@ -13,6 +13,7 @@ import {
   toResultsDetailsSummaryData,
   toTPRBaselineDataDetails,
   TP_REPORTING_SUBMIT_ERROR_MESSAGES,
+  TP_REPORTING_UNEXPECTED_ERROR,
   TpReportingSubmitErrorCode,
   tprFormQuery,
 } from '@requests/common';
@@ -21,6 +22,11 @@ import { ErrorSummaryComponent, ErrorSummaryInfo, SummaryComponent } from '@shar
 import { PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload } from 'cca-api';
 
 import { createSubmitRequestTaskActionDTO } from '../../transform';
+
+const CANCEL_ERROR_CODES: TpReportingSubmitErrorCode[] = ['TPRDF1002', 'TPRDF1005'];
+
+// Resubmitting cannot succeed until the user refreshes the baseline data or the regulator acts.
+const SUBMIT_BLOCKING_ERROR_CODES: TpReportingSubmitErrorCode[] = ['TPRDF1004', 'TPRDF1008', 'TPRDF1010'];
 
 @Component({
   selector: 'cca-tpr-form-submit-action',
@@ -34,7 +40,6 @@ import { createSubmitRequestTaskActionDTO } from '../../transform';
     ReturnToTaskOrActionPageComponent,
     SummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprFormSubmitActionComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -44,6 +49,7 @@ export class TprFormSubmitActionComponent {
 
   readonly isErrorSummaryDisplayed = signal(false);
   readonly isCancelError = signal(false);
+  readonly isSubmitBlocked = signal(false);
   readonly errorSummaryInfo = signal<ErrorSummaryInfo>({ message: '', link: '', linkText: '' });
 
   protected readonly reportType = this.requestTaskStore.select(tprFormQuery.selectReportType);
@@ -82,13 +88,12 @@ export class TprFormSubmitActionComponent {
       .saveRequestTaskAction(dto)
       .pipe(
         catchError((err) => {
-          const info = TP_REPORTING_SUBMIT_ERROR_MESSAGES[err.error.code as TpReportingSubmitErrorCode];
+          const code = err?.error?.code as TpReportingSubmitErrorCode;
 
-          if (info) {
-            this.errorSummaryInfo.set(info);
-            this.isErrorSummaryDisplayed.set(true);
-            this.isCancelError.set(['TPRDF1002', 'TPRDF1005'].includes(err.error.code));
-          }
+          this.errorSummaryInfo.set(TP_REPORTING_SUBMIT_ERROR_MESSAGES[code] ?? TP_REPORTING_UNEXPECTED_ERROR);
+          this.isErrorSummaryDisplayed.set(true);
+          this.isCancelError.set(CANCEL_ERROR_CODES.includes(code));
+          this.isSubmitBlocked.set(SUBMIT_BLOCKING_ERROR_CODES.includes(code));
 
           return EMPTY;
         }),

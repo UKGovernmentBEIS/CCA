@@ -1,11 +1,11 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { mockRequestTaskItemDTO } from '@requests/common';
+import { mockRequestTaskItemDTO } from '@requests/common/underlying-agreement/testing/mock-data';
 
 import { FacilityContactDetailsComponent } from './facility-contact-details.component';
 
@@ -19,7 +19,7 @@ describe('FacilityContactDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FacilityContactDetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideRouter([]),
         RequestTaskStore,

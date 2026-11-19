@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserProfile } from '@netz/common/auth';
@@ -20,7 +20,6 @@ import { PhaseBannerComponent } from '@netz/govuk-components';
       }
     </govuk-phase-banner>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PhaseBannerComponent, RouterLink],
 })
 export class PhaseBarComponent {

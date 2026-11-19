@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -11,6 +11,7 @@ import {
 } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { assertInCellControlLabelsHidden } from '@testing';
 import { expect, Mocked } from 'vitest';
 
 import {
@@ -64,7 +65,7 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       imports: [EnergyFuelAmountDetailsComponent],
       providers: [
         RequestTaskStore,
-        { provide: Router, useValue: { navigate: vi.fn() } },
+        provideRouter([]),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Report energy/fuel consumption' },
@@ -73,6 +74,8 @@ describe('EnergyFuelAmountDetailsComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
+
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     store = TestBed.inject(RequestTaskStore);
     store.setState(state);
 
@@ -134,6 +137,26 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       expect(getForm().controls.fuels.length).toBe(initialCount + 1);
     });
 
+    it('should update custom primary carbon while typing the conversion factor', () => {
+      component.onAddFuel();
+      fixture.detectChanges();
+      const customRow: HTMLElement = fixture.nativeElement.querySelector('tbody tr:last-child');
+      const enterValue = (controlName: string, value: string) => {
+        const input = customRow.querySelector<HTMLInputElement>(`[formControlName="${controlName}"] input`);
+        input.value = value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+      };
+
+      enterValue('deliveredEnergy', '10');
+      enterValue('co2ConversionFactor', '0.25');
+      expect(customRow.querySelectorAll('td')[4].textContent.trim()).toBe('2.5');
+
+      enterValue('co2ConversionFactor', '0.5');
+      expect(customRow.querySelectorAll('td')[4].textContent.trim()).toBe('5');
+      expect(tasksApiService.saveRequestTaskAction).not.toHaveBeenCalled();
+    });
+
     it('should render primary carbon for standard fuel row', () => {
       // Natural gas: delivered 1000, CO2 factor 0.18254, PE factor 1
       // primaryCarbon = 1000 × 1 × 0.18254 = 182.54 kgCO2e
@@ -149,6 +172,10 @@ describe('EnergyFuelAmountDetailsComponent', () => {
 
     it('should create', () => {
       expect(component).toBeTruthy();
+    });
+
+    it('should hide the labels of controls inside table cells, since the column header names them', () => {
+      assertInCellControlLabelsHidden(fixture.nativeElement);
     });
 
     it('should display the 70% eligible activities question for the reporting period', () => {
@@ -370,7 +397,69 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       expect(form.controls.fuels.length).toBe(countBefore - 1);
     });
 
-    it('should return the duplicate non-standard fuel names validation error', () => {
+    it('should number unnamed custom fuels from 1 in the Delete button name', async () => {
+      component.onAddFuel();
+      component.onAddFuel();
+      await fixture.whenStable();
+
+      const deleteButtons: HTMLButtonElement[] = Array.from(
+        fixture.nativeElement.querySelectorAll('govuk-table tbody button'),
+      );
+      expect(deleteButtons.map((button) => button.textContent.replace(/\s+/g, ' ').trim())).toEqual([
+        'Delete custom fuel 1',
+        'Delete custom fuel 2',
+      ]);
+    });
+
+    it('should move focus to the next custom fuel after removing a row', async () => {
+      component.onAddFuel();
+      component.onAddFuel();
+      fixture.detectChanges();
+      const indexToRemove = getForm().controls.fuels.length - 2;
+
+      const rowsBefore = fixture.nativeElement.querySelectorAll('govuk-table tbody tr');
+      rowsBefore[indexToRemove].querySelector('button').click();
+      await fixture.whenStable();
+
+      const rows = fixture.nativeElement.querySelectorAll('govuk-table tbody tr');
+      expect(document.activeElement).toBe(rows[indexToRemove].querySelector('input'));
+      expect(Array.from(rows[indexToRemove].querySelectorAll('input'), (input: HTMLInputElement) => input.id)).toEqual([
+        `fuels.${indexToRemove}.fuelType`,
+        `fuels.${indexToRemove}.co2ConversionFactor`,
+        `fuels.${indexToRemove}.deliveredEnergy`,
+      ]);
+    });
+
+    it('should move focus to the add button after removing the last row', async () => {
+      component.onAddFuel();
+      fixture.detectChanges();
+
+      component.onRemoveFuel(getForm().controls.fuels.length - 1);
+      await fixture.whenStable();
+
+      expect((document.activeElement as HTMLElement).textContent.trim()).toBe('Add a fuel type');
+    });
+
+    it('should set the duplicate name error on each repeated non-standard fuel name', () => {
+      component.onAddFuel();
+      component.onAddFuel();
+      component.onAddFuel();
+
+      const fuels = getForm().controls.fuels;
+      const customFuels = fuels.controls.filter((control) => control.controls.isCustom.value);
+      customFuels[0].controls.fuelType.setValue('Custom fuel');
+      customFuels[1].controls.fuelType.setValue(' custom FUEL ');
+      customFuels[2].controls.fuelType.setValue('Other fuel');
+      fuels.updateValueAndValidity();
+
+      expect(fuels.errors).toBeNull();
+      expect(customFuels[0].controls.fuelType.errors).toEqual({ duplicateName: 'Enter a unique name for this fuel.' });
+      expect(customFuels[1].controls.fuelType.errors).toEqual({ duplicateName: 'Enter a unique name for this fuel.' });
+      expect(customFuels[2].controls.fuelType.errors).toBeNull();
+      expect(getForm().invalid).toBe(true);
+    });
+
+    it('should clear the duplicate name error once the names differ', () => {
       component.onAddFuel();
       component.onAddFuel();
 
@@ -380,9 +469,36 @@ describe('EnergyFuelAmountDetailsComponent', () => {
       customFuels[1].controls.fuelType.setValue('Custom fuel');
       fuels.updateValueAndValidity();
 
-      expect(fuels.errors).toEqual({
-        duplicateNames: 'Duplicate non-standard fuel names were found. Please ensure each fuel name is unique.',
-      });
+      customFuels[1].controls.fuelType.setValue('Other fuel');
+
+      expect(customFuels[0].controls.fuelType.hasError('duplicateName')).toBe(false);
+      expect(customFuels[1].controls.fuelType.hasError('duplicateName')).toBe(false);
+    });
+
+    it('should show the duplicate name error on the row and in the error summary on submit', () => {
+      component.onAddFuel();
+      component.onAddFuel();
+
+      const customFuels = getForm().controls.fuels.controls.filter((control) => control.controls.isCustom.value);
+      customFuels.forEach((row) =>
+        row.patchValue({ fuelType: 'Custom fuel', co2ConversionFactor: '0.5', deliveredEnergy: '10' }),
+      );
+      fixture.detectChanges();
+
+      const element = fixture.nativeElement as HTMLElement;
+      element.querySelector<HTMLButtonElement>('button[type="submit"]').click();
+      fixture.detectChanges();
+
+      const summaryLinks = Array.from(element.querySelectorAll('.govuk-error-summary__list a')).map((link) =>
+        link.textContent.trim(),
+      );
+      const inlineErrors = Array.from(element.querySelectorAll('.govuk-error-message')).map((error) =>
+        error.textContent.trim(),
+      );
+
+      expect(tasksApiService.saveRequestTaskAction).not.toHaveBeenCalled();
+      expect(summaryLinks).toContain('Enter a unique name for this fuel.');
+      expect(inlineErrors.filter((error) => error.includes('Enter a unique name for this fuel.'))).toHaveLength(2);
     });
   });
 

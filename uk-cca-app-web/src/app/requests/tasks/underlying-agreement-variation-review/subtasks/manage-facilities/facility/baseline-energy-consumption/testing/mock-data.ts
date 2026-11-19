@@ -1,4 +1,10 @@
-import { FacilityBaselineEnergyConsumption, ProductVariableEnergyConsumptionData } from 'cca-api';
+import { ActivatedRouteSnapshot } from '@angular/router';
+
+import {
+  FacilityBaselineEnergyConsumption,
+  ProductVariableEnergyConsumptionData,
+  VariationDetermination,
+} from 'cca-api';
 
 export const mockFacilityId = 'ADS_1-F00001';
 export const mockRequestTaskId = 123;
@@ -102,7 +108,7 @@ export const mockRequestTaskPayload = {
   reviewSectionsCompleted: {},
   reviewGroupDecisions: {},
   facilitiesReviewGroupDecisions: {},
-  determination: { type: null },
+  determination: { type: null as VariationDetermination['type'] | null },
   originalUnderlyingAgreementContainer: {
     underlyingAgreement: mockUnderlyingAgreement,
   },
@@ -119,7 +125,7 @@ export const mockRequestTaskPayloadWithProducts = {
 export const mockActivatedRoute = {
   snapshot: {
     params: { facilityId: mockFacilityId },
-    pathFromRoot: [],
+    pathFromRoot: [] as ActivatedRouteSnapshot[],
   },
 };
 
@@ -133,7 +139,7 @@ export const mockActivatedRouteWithProductParams = {
         return null;
       }),
     },
-    pathFromRoot: [],
+    pathFromRoot: [] as ActivatedRouteSnapshot[],
   },
 };
 

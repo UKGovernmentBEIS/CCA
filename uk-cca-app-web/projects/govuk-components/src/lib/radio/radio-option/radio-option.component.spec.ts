@@ -14,13 +14,6 @@ describe('RadioOptionComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    imports: [
-      RadioComponent,
-      ReactiveFormsModule,
-      RadioOptionComponent,
-      ConditionalContentDirective,
-      TextInputComponent,
-    ],
     template: `
       <div govuk-radio [formControl]="control">
         <govuk-radio-option [value]="1" label="First"></govuk-radio-option>
@@ -33,6 +26,13 @@ describe('RadioOptionComponent', () => {
         </govuk-radio-option>
       </div>
     `,
+    imports: [
+      RadioComponent,
+      ReactiveFormsModule,
+      RadioOptionComponent,
+      ConditionalContentDirective,
+      TextInputComponent,
+    ],
   })
   class TestComponent {
     control = new FormControl();

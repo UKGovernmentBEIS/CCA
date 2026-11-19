@@ -38,7 +38,7 @@ describe('TprCSVUploadCompletedComponent', () => {
 
     expect(summaryValues[0]).toEqual([
       ['Reporting period', 'Report type', 'Uploaded files'],
-      ['TP7', 'Final', 'dummy.csv'],
+      ['TP7', 'Final', 'dummy.csv (opens in a new tab)'],
     ]);
 
     const [headers, values] = summaryValues[1];
@@ -50,12 +50,11 @@ describe('TprCSVUploadCompletedComponent', () => {
       'Submission summary file',
     ]);
 
-    // Date: just assert it matches the expected format, not an exact hour
-    expect(values[0]).toMatch(/^\d{1,2} \w{3} \d{4} - \d{2}:\d{2}:\d{2}$/);
+    expect(values[0]).toBe('3 Jul 2026 - 8:28:35');
 
     expect(values[1]).toBe('1');
     expect(values[2]).toBe('0');
     expect(values[3]).toBe('1');
-    expect(values[4]).toBe('Upload_Summary.csv');
+    expect(values[4]).toBe('Upload_Summary.csv (opens in a new tab)');
   });
 });

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -45,6 +45,7 @@ import { createNotifyOperatorActionDTO } from '../transform';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
+  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
   imports: [
     ErrorSummaryComponent,
     NotifyOperatorOfDecisionComponent,
@@ -52,8 +53,6 @@ import { createNotifyOperatorActionDTO } from '../transform';
     WizardStepComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class UnderlyingAgreementActivationNotifyOperatorComponent {
   private readonly router = inject(Router);
@@ -64,6 +63,7 @@ export default class UnderlyingAgreementActivationNotifyOperatorComponent {
   protected readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
   protected readonly errorForm = inject<ApiErrorFormModel>(API_ERROR_FORM);
   protected readonly isErrorSummaryDisplayed = signal(false);
+  private readonly errorSummary = viewChild(ErrorSummaryComponent);
 
   onSubmit() {
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
@@ -76,6 +76,7 @@ export default class UnderlyingAgreementActivationNotifyOperatorComponent {
         catchBadRequest(ErrorCodes.UNA1001, (res) => {
           setApiErrors(this.errorForm, res);
           this.isErrorSummaryDisplayed.set(true);
+          this.errorSummary()?.focus();
           return EMPTY;
         }),
       )

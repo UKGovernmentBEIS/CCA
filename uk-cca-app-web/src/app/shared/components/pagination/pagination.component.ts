@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, output } from '@angular/core';
+import { Component, computed, effect, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { GovukSelectOption } from '@netz/govuk-components';
+import { PAGE_SIZES } from '@shared/types';
 
 @Component({
   selector: 'cca-pagination',
@@ -11,9 +12,16 @@ import { GovukSelectOption } from '@netz/govuk-components';
       align-items: baseline;
       margin-left: auto !important;
     }
+
+    .govuk-pagination__item--current .govuk-pagination__link {
+      color: var(--govuk-white);
+    }
+
+    .govuk-pagination__item--current .govuk-pagination__link:focus {
+      color: var(--govuk-focus-text-colour);
+    }
   `,
   imports: [ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationComponent {
   readonly count = input.required<number>();
@@ -24,14 +32,7 @@ export class PaginationComponent {
   readonly pageChange = output<number>();
   readonly pageSizeChange = output<number>();
 
-  readonly pageSizeNumbers: GovukSelectOption[] = [
-    { text: '10', value: 10 },
-    { text: '20', value: 20 },
-    { text: '30', value: 30 },
-    { text: '40', value: 40 },
-    { text: '50', value: 50 },
-    { text: '100', value: 100 },
-  ];
+  readonly pageSizeNumbers: GovukSelectOption[] = PAGE_SIZES.map((value) => ({ text: String(value), value }));
 
   readonly totalPages = computed(() => Math.ceil((this.count() || 1) / (this.pageSize() || 1)));
 

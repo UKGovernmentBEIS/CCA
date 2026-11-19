@@ -2,6 +2,7 @@ package uk.gov.cca.api.migration;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 @ConditionalOnAvailableEndpoint(endpoint = MigrationEndpoint.class)
+@ConditionalOnProperty(
+        name = "migration-datasource.enabled",
+        havingValue = "true",
+        matchIfMissing = true
+    )
 public class MigrationDatasourceConfig {
 
 	@Bean(defaultCandidate = false)

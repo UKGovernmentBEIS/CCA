@@ -5,14 +5,16 @@ export const NOTICE_OF_INTENT_NOTIFY_OPERATOR_ROUTES: Routes = [
     path: '',
     children: [
       {
+        title: 'Select who should receive the notice of intent notification',
         path: '',
-        data: { backlink: '../..', breadcrumb: false },
         loadComponent: () => import('./notice-of-intent-notify-operator.component'),
+        data: { backlink: '../..', breadcrumb: false },
       },
       {
+        title: 'Notice of intent sent to operator',
         path: 'confirmation',
-        data: { backlink: false, breadcrumb: false },
         loadComponent: () => import('./confirmation/confirmation.component'),
+        data: { backlink: false, breadcrumb: false },
       },
     ],
   },

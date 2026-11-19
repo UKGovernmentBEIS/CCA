@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/tpr_emissions_trading_scheme_data_ddl.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_create_tpr_emissions_trading_scheme_data_sequence" author="P70383">
+        <createSequence sequenceName="tpr_emissions_trading_scheme_data_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS tpr_emissions_trading_scheme_data_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_table_tpr_emissions_trading_scheme_data" author="P70383">
+        <createTable tableName="tpr_emissions_trading_scheme_data" remarks="Represents the ETS scheme data">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="tpr_emissions_trading_scheme_data_pk"
+                             nullable="false"/>
+            </column>
+            <column name="facility_id" type="bigint" remarks="The facility identifier">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="jsonb" remarks="ETS scheme data representation as json">
+                <constraints nullable="false"/>
+            </column>
+            <column name="target_period_year" type="int" remarks="The reporting target period year">
+                <constraints nullable="false"/>
+            </column>
+            <column name="report_version" type="int" defaultValueNumeric="1" remarks="The reporting version">
+                <constraints nullable="false"/>
+            </column>
+            <column name="submission_date" type="timestamp" remarks="The submission date of ETS scheme data">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint
+                tableName="tpr_emissions_trading_scheme_data"
+                columnNames="facility_id, target_period_year"
+                constraintName="tpr_emissions_trading_scheme_data_uc"/>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS tpr_emissions_trading_scheme_data CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

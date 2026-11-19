@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -18,6 +18,7 @@ import {
 @Component({
   selector: 'cca-peer-review-decision',
   templateUrl: './peer-review-decision.component.html',
+  providers: [PeerReviewDecisionFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -27,8 +28,6 @@ import {
     MultipleFileInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [PeerReviewDecisionFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PeerReviewDecisionComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

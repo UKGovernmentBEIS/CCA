@@ -1,0 +1,48 @@
+@if (errorSummaryInfo(); as error) {
+  <cca-error-summary [errorSummaryInfo]="error" />
+}
+
+<div class="govuk-!-width-three-quarters" style="max-width: 850px">
+  <cca-wizard-step
+    [formGroup]="form"
+    [hideSubmit]="!isEditable()"
+    (formSubmit)="onSubmit()"
+    caption="UK ETS energy/fuel details"
+    heading="Is this facility registered as an ultra-small emitter (USE) in UK ETS?"
+  >
+    <div>
+      <div govuk-radio formControlName="isUltraSmallEmitter">
+        <span govukLegend class="govuk-visually-hidden"
+          >Is this facility registered as an ultra-small emitter (USE) in UK ETS?</span
+        >
+        <govuk-radio-option [value]="true" label="Yes" />
+        <govuk-radio-option [value]="false" label="No" />
+      </div>
+
+      @if (isUltraSmallEmitter() === true) {
+        <div govuk-radio formControlName="provideFuelDetails">
+          <span govukLegend class="govuk-!-font-weight-bold"
+            >Do you want to voluntarily provide details of the fuels used in the year?</span
+          >
+          <govuk-radio-option [value]="true" label="Yes" />
+          <govuk-radio-option [value]="false" label="No" />
+        </div>
+      }
+
+      <div class="govuk-!-padding-top-6 govuk-!-padding-bottom-8" style="max-width: 800px">
+        <govuk-details summary="How do I know if the UK ETS installation is an ultra-small emitter (USE)?">
+          An installation is an ultra-small emitter (USE) if it emitted 2,499 tonnes or less of carbon dioxide
+          equivalent (CO2eq) and is included in the
+          <a
+            class="govuk-link"
+            href="https://assets.publishing.service.gov.uk/media/68ef4c208427701993d5e09f/use-list-2026-2030.ods"
+            >ultra-small emitter list for 2026 to 2030</a
+          >.
+        </govuk-details>
+      </div>
+    </div>
+  </cca-wizard-step>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

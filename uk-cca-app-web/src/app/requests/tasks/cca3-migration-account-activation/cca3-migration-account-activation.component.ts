@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -18,7 +18,6 @@ import { underlyingAgreementActivationQuery } from '../underlying-agreement-acti
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cca3MigrationAccountActivationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

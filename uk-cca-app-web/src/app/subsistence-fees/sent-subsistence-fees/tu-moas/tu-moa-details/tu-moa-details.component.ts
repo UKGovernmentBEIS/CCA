@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationBehaviorOptions, Router, RouterLink } from '@angular/router';
 
 import { switchMap } from 'rxjs';
 
@@ -46,6 +46,7 @@ const DEFAULT_PAGE_SIZE = 30;
 @Component({
   selector: 'cca-tu-moa-details',
   templateUrl: './tu-moa-details.component.html',
+  providers: [TargetUnitFacilitiesListFormProvider, StatusPipe],
   imports: [
     ReactiveFormsModule,
     TagComponent,
@@ -64,8 +65,6 @@ const DEFAULT_PAGE_SIZE = 30;
     RouterLink,
     WarningTextComponent,
   ],
-  providers: [TargetUnitFacilitiesListFormProvider, StatusPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TuMoaDetailsComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);
@@ -145,20 +144,26 @@ export class TuMoaDetailsComponent {
 
   onApplyFilters() {
     if (this.searchForm.invalid) return;
-    this.handleQueryParamsNavigation({
-      page: DEFAULT_PAGE,
-      term: this.searchForm.value.term,
-      markFacilitiesStatus: this.searchForm.value.markFacilitiesStatus,
-    });
+    this.handleQueryParamsNavigation(
+      {
+        page: DEFAULT_PAGE,
+        term: this.searchForm.value.term,
+        markFacilitiesStatus: this.searchForm.value.markFacilitiesStatus,
+      },
+      'manual',
+    );
   }
 
   onClearFilters() {
     this.searchForm.reset();
-    this.handleQueryParamsNavigation({
-      page: DEFAULT_PAGE,
-      term: INITIAL_FORM_VALUES.term,
-      markFacilitiesStatus: INITIAL_FORM_VALUES.markFacilitiesStatus,
-    });
+    this.handleQueryParamsNavigation(
+      {
+        page: DEFAULT_PAGE,
+        term: INITIAL_FORM_VALUES.term,
+        markFacilitiesStatus: INITIAL_FORM_VALUES.markFacilitiesStatus,
+      },
+      'manual',
+    );
   }
 
   onPageChange(page: number) {
@@ -194,11 +199,13 @@ export class TuMoaDetailsComponent {
       term: SubsistenceFeesMoaSearchCriteria['term'];
       markFacilitiesStatus: SubsistenceFeesMoaSearchCriteria['markFacilitiesStatus'];
     }>,
+    scroll?: NavigationBehaviorOptions['scroll'],
   ) {
     this.router.navigate([], {
       queryParams: { ...filters },
       queryParamsHandling: 'merge',
       relativeTo: this.activatedRoute,
+      scroll,
       fragment: 'sector-moas',
     });
   }

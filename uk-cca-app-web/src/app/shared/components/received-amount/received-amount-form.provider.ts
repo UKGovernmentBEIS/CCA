@@ -11,13 +11,13 @@ import {
 import { Observable, of } from 'rxjs';
 
 import { GovukValidators } from '@netz/govuk-components';
-import { normaliseNumber } from '@requests/common';
-import { UuidFilePair } from '@shared/components';
 import { FileEvidenceUploadService } from '@shared/services';
+import { normaliseNumber } from '@shared/utils';
 import BigNumber from 'bignumber.js';
 
 import { SubsistenceFeesMoaReceivedAmountDetailsDTO } from 'cca-api';
 
+import { UuidFilePair } from '../file-input/file-upload-event';
 import { ReceivedAmountStore } from './received-amount.store';
 
 export const RECEIVED_AMOUNT_FORM = new InjectionToken('Received amount form');

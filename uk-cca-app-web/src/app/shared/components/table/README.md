@@ -13,6 +13,7 @@ Its context consists of the current `row` and `column` variables.
 - `data` - An array of objects of any type.
 - `columns` - An array of objects following the `CcaTableColumn` interface. The `field` property is used to determine which value of each object will be rendered.
   The `primary` property is used to determine if the column will be considered as the primary field to be used for handling unique data.
+  Set `isNumeric: true` to right-align both the column header and its cells, including decimal strings and values rendered by a custom template.
 - `caption` - A string to be used as a caption.
 - `selectedRows` - A Map containing any selected rows.
 

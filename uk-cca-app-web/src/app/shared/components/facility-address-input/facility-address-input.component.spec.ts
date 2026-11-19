@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -51,7 +51,7 @@ describe('FacilityAddressInputComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [FacilityAddressInputComponent],
-      providers: [provideHttpClient(), { provide: CountryService, useValue: mockCountryService }],
+      providers: [provideHttpClient(withXhr()), { provide: CountryService, useValue: mockCountryService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);

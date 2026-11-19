@@ -1,5 +1,5 @@
 import { DatePipe, KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -18,7 +18,6 @@ const DEFAULT_PAGE_SIZE = 10;
   selector: 'cca-target-unit-notes',
   templateUrl: './target-unit-notes.component.html',
   imports: [DatePipe, KeyValuePipe, PaginationComponent, RouterLink, ButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitNotesComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -1,5 +1,4 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -15,7 +14,8 @@ import {
 } from '@netz/govuk-components';
 import { TaskItemStatus, TasksApiService, TRACK_CORRECTIVE_ACTION_SUBTASK } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { fileUtils, generateDownloadUrl } from '@shared/utils';
+import { CalendarDatePipe } from '@shared/pipes';
+import { fileUtils, generateDownloadUrl, getToday } from '@shared/utils';
 import { produce } from 'immer';
 
 import { AuditTrackCorrectiveActionsSaveRequestTaskActionPayload, FacilityHeaderInfoDTO, TasksService } from 'cca-api';
@@ -31,10 +31,11 @@ import {
 @Component({
   selector: 'cca-track-corrective-actions-details',
   templateUrl: './track-corrective-actions-details.component.html',
+  providers: [TrackCorrectiveActionDetailsFormProvider],
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    DatePipe,
+    CalendarDatePipe,
     WizardStepComponent,
     DateInputComponent,
     MultipleFileInputComponent,
@@ -44,8 +45,6 @@ import {
     SummaryListRowValueDirective,
     TextareaComponent,
   ],
-  providers: [TrackCorrectiveActionDetailsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrackCorrectiveActionsDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -56,7 +55,7 @@ export class TrackCorrectiveActionsDetailsComponent {
 
   private readonly taskId = this.activatedRoute.snapshot.params.taskId;
   protected readonly actionId = this.activatedRoute.snapshot.params.actionId;
-  protected readonly today = new Date();
+  protected readonly today = getToday();
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 

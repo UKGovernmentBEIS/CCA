@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div
-        legend="Do you want to put this target unit on hold for the next buy-out and surplus batch?"
+        [legend]="'Do you want to put the account ' + businessId + ' on hold for the next buy-out and surplus batch?'"
         legendSize="heading"
         radioSize="large"
         formControlName="changeOnHold"

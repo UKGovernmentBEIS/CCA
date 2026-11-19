@@ -18,9 +18,15 @@ const selectSubmitter: StateSelector<RequestActionState, string | undefined> = c
   (action) => action?.submitter,
 );
 
+const selectRequestId: StateSelector<RequestActionState, string | undefined> = createDescendingSelector(
+  selectAction,
+  (action) => action?.requestId,
+);
+
 export const requestActionQuery = {
   selectAction,
   selectActionType,
   selectActionPayload,
   selectSubmitter,
+  selectRequestId,
 };

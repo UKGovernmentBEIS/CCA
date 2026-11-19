@@ -6,15 +6,24 @@ import { StatusPipe } from '@shared/pipes';
 import { fileUtils } from '@shared/utils';
 
 import {
-  BuyOutSurplusTransactionHistoryDTO,
-  BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload,
+  BuyOutSurplusTransactionDetailAmountChangedHistoryPayload,
+  BuyOutSurplusTransactionDetailHistoryDTOPayload,
+  BuyOutSurplusTransactionDetailPaymentStatusChangedHistoryPayload,
 } from 'cca-api';
-import { BuyOutSurplusTransactionAmountChangedHistoryPayload } from 'cca-api';
 
-export function toStatusHistorySummaryData(transactionHistoryDTO: BuyOutSurplusTransactionHistoryDTO): SummaryData {
+// The generated payload subtypes do not narrow `type` to a literal, so `payload.type === 'AMOUNT_CHANGED'`
+// alone does not discriminate the union. See docs/open-findings.md.
+export function isAmountChangedPayload(
+  payload: BuyOutSurplusTransactionDetailHistoryDTOPayload,
+): payload is BuyOutSurplusTransactionDetailAmountChangedHistoryPayload {
+  return payload.type === 'AMOUNT_CHANGED';
+}
+
+export function toStatusHistorySummaryData(
+  th: BuyOutSurplusTransactionDetailPaymentStatusChangedHistoryPayload,
+): SummaryData {
   const summaryFactory = new SummaryFactory();
 
-  const th = transactionHistoryDTO.payload as BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload;
   const statusesPipe = new StatusPipe();
   const datePipe = new GovukDatePipe();
 
@@ -25,6 +34,13 @@ export function toStatusHistorySummaryData(transactionHistoryDTO: BuyOutSurplusT
       summaryFactory.addRow(
         'Date when the payment was received in the bank account',
         th?.paymentDate ? datePipe.transform(th.paymentDate, 'date') : 'Not provided',
+      );
+    }
+
+    if (th.paymentStatus === 'UNDER_APPEAL') {
+      summaryFactory.addRow(
+        'Date on which the appeal was lodged',
+        th.dateOfAppeal ? datePipe.transform(th.dateOfAppeal, 'date') : 'Not provided',
       );
     }
 
@@ -39,8 +55,7 @@ export function toStatusHistorySummaryData(transactionHistoryDTO: BuyOutSurplusT
   return summaryFactory.create();
 }
 
-export function toAmountHistorySummaryData(transactionHistoryDTO: BuyOutSurplusTransactionHistoryDTO): SummaryData {
-  const th = transactionHistoryDTO.payload as BuyOutSurplusTransactionAmountChangedHistoryPayload;
+export function toAmountHistorySummaryData(th: BuyOutSurplusTransactionDetailAmountChangedHistoryPayload): SummaryData {
   const decimalPipe = new DecimalPipe('en-GB');
 
   return new SummaryFactory()

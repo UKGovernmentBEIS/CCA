@@ -1,4 +1,4 @@
-import { mockRequestTaskState } from '@requests/common';
+import { mockRequestTaskState } from '@requests/common/underlying-agreement/testing/mock-data';
 
 import {
   AuditDetermination,

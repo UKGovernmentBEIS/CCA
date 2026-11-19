@@ -11,6 +11,10 @@ at [GOV.UK Design System](https://design-system.service.gov.uk/components/date-i
 - `min` - The min date value will be used to validate the control against a minimum date.
 - `max` - The max date value will be used to validate the control against a maximum date.
 
+Values and bounds represent calendar dates using UTC fields, for example `new Date('2025-07-15')`.
+Minimum and maximum dates are inclusive; time-of-day fields are ignored. When the bound is today's local date,
+convert its local year, month and day to UTC midnight instead of passing the current timestamp.
+
 ### Examples
 
 ```html

@@ -3,8 +3,14 @@
   <div class="govuk-error-summary__body">
     <ul class="govuk-list govuk-error-summary__list">
       <li>
-        <p class="govuk-!-margin-bottom-3">{{ errorSummaryInfo().message }}</p>
-        <a [routerLink]="errorSummaryInfo().link">{{ errorSummaryInfo().linkText }}</a>
+        <p class="govuk-!-margin-bottom-3">
+          <span class="govuk-visually-hidden">Error: </span>{{ errorSummaryInfo().message }}
+        </p>
+        @if (errorSummaryInfo().linkText) {
+          <a [routerLink]="errorSummaryInfo().link" [queryParams]="errorSummaryInfo().queryParams">{{
+            errorSummaryInfo().linkText
+          }}</a>
+        }
       </li>
     </ul>
   </div>

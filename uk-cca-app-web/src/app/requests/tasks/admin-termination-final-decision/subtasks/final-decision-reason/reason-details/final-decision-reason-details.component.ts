@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,6 +28,7 @@ import {
 @Component({
   selector: 'cca-final-decision-reason-details',
   templateUrl: './final-decision-reason-details.component.html',
+  providers: [FinalDecisionReasonFormProvider],
   imports: [
     WizardStepComponent,
     TextareaComponent,
@@ -36,8 +37,6 @@ import {
     FinalDecisionTypePipe,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [FinalDecisionReasonFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FinalDecisionReasonDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

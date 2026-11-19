@@ -22,7 +22,7 @@ public abstract class PerformanceDataCreateValidator implements RequestCreateByS
     public RequestCreateValidationResult validateAction(Long sectorAssociationId) {
         // Account performance data only available for CCA2 Scheme
         if(!performanceDataCreateSchemeValidator.isAvailableForScheme(SchemeVersion.CCA_2, LocalDate.now())) {
-            return RequestCreateValidationResult.builder().isAvailable(false).build();
+            return RequestCreateValidationResult.builder().available(false).build();
         }
 
         return ccaRequestCreateValidatorService.validate(

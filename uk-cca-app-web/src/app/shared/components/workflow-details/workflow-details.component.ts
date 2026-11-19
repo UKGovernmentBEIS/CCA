@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
@@ -10,10 +10,11 @@ import {
 } from '@netz/common/components';
 import { TimelineItemLinkPipe } from '@netz/common/pipes';
 import { TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
-import { WorkflowNotesComponent } from '@shared/components';
 import { RequestTypeToHeadingPipe, StatusColorPipe, StatusPipe } from '@shared/pipes';
 
 import { ItemDTOResponse, RequestActionInfoDTO, RequestDetailsDTO } from 'cca-api';
+
+import { WorkflowNotesComponent } from '../workflow-notes/workflow-notes.component';
 
 type WorkflowDetailsViewModel = {
   workflowDetails: RequestDetailsDTO;
@@ -38,7 +39,6 @@ type WorkflowDetailsViewModel = {
     TimelineItemComponent,
     WorkflowNotesComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

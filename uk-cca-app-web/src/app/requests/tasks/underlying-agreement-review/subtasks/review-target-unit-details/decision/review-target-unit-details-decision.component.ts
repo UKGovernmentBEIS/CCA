@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -36,6 +36,7 @@ import { resetDetermination } from '../../../utils';
 @Component({
   selector: 'cca-una-summary-target-unit-details',
   templateUrl: './review-target-unit-details-decision.component.html',
+  providers: [decisionFormProvider('TARGET_UNIT_DETAILS')],
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -45,8 +46,6 @@ import { resetDetermination } from '../../../utils';
     ReturnToTaskOrActionPageComponent,
     CompaniesHouseDetailsComponent,
   ],
-  providers: [decisionFormProvider('TARGET_UNIT_DETAILS')],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ReviewTargetUnitDetailsDecisionComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);

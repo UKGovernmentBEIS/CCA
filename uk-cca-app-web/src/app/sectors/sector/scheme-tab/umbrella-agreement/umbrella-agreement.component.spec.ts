@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { FileType, FileUploadEvent } from '@shared/components';
+import { FileType } from '@shared/components';
+import { SchemeVersionEnum } from '@shared/types';
 import { Mocked } from 'vitest';
 
 import {
@@ -20,13 +21,13 @@ describe('UmbrellaAgreementComponent', () => {
   let component: UmbrellaAgreementComponent;
   let fixture: ComponentFixture<UmbrellaAgreementComponent>;
   let route: ActivatedRouteStub;
-  let router: Mocked<Router>;
+  let router: Router;
   let detailsUpdateService: Mocked<SectorAssociationSchemeDetailsUpdateService>;
   let documentUploadService: Mocked<SectorSchemeDocumentUploadService>;
 
   const sectorScheme: SectorAssociationSchemesDTO = {
     sectorAssociationSchemeMap: {
-      CCA_3: {
+      [SchemeVersionEnum.CCA_3]: {
         id: 10,
         umbrellaAgreement: {
           id: 1,
@@ -37,7 +38,7 @@ describe('UmbrellaAgreementComponent', () => {
         },
         umaDate: '2026-01-01',
         sectorDefinition: 'Current sector definition',
-        schemeVersion: 'CCA_3',
+        schemeVersion: SchemeVersionEnum.CCA_3,
         editable: true,
       },
     },
@@ -45,9 +46,6 @@ describe('UmbrellaAgreementComponent', () => {
 
   beforeEach(async () => {
     route = new ActivatedRouteStub({ sectorId: 1 }, null, { sectorScheme });
-    router = {
-      navigate: vi.fn().mockResolvedValue(true),
-    } as unknown as Mocked<Router>;
     detailsUpdateService = {
       updateSectorAssociationSchemeDetails: vi.fn().mockReturnValue(of(null)),
     } as unknown as Mocked<SectorAssociationSchemeDetailsUpdateService>;
@@ -58,12 +56,15 @@ describe('UmbrellaAgreementComponent', () => {
     await TestBed.configureTestingModule({
       imports: [UmbrellaAgreementComponent],
       providers: [
+        provideRouter([]),
         { provide: ActivatedRoute, useValue: route },
-        { provide: Router, useValue: router },
         { provide: SectorAssociationSchemeDetailsUpdateService, useValue: detailsUpdateService },
         { provide: SectorSchemeDocumentUploadService, useValue: documentUploadService },
       ],
     }).compileComponents();
+
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
     fixture = TestBed.createComponent(UmbrellaAgreementComponent);
     component = fixture.componentInstance;
@@ -95,7 +96,7 @@ describe('UmbrellaAgreementComponent', () => {
 
     form.controls.file.setValue({
       file: new File(['text'], 'umbrella-agreement.txt', { type: 'text/plain' }),
-    } as FileUploadEvent);
+    });
     form.controls.file.updateValueAndValidity();
 
     expect(form.controls.file.errors).toEqual({

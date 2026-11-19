@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -15,7 +15,6 @@ import { OperatorUserInvitationStore } from '../store';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PanelComponent, RouterLink],
 })
 export class InvitationExistingConfirmationComponent {

@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityEntity;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityStatus;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.dto.FacilityPerformanceDataStatusInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
@@ -50,6 +51,8 @@ class PerformanceDataFacilityStatusMapperTest {
     			.lockEditable(true)
     			.variationIndicator(false)
     			.variationIndicatorEditable(true)
+				.reportType(PerformanceDataReportType.FINAL)
+				.submissionType(PerformanceDataSubmissionType.PRIMARY)
     			.build();
         
     	FacilityPerformanceDataStatusInfoDTO result = mapper.
@@ -86,6 +89,8 @@ class PerformanceDataFacilityStatusMapperTest {
     			.lockEditable(false)
     			.variationIndicator(true)
     			.variationIndicatorEditable(false)
+				.reportType(PerformanceDataReportType.FINAL)
+				.submissionType(PerformanceDataSubmissionType.PRIMARY)
     			.build();
         
     	FacilityPerformanceDataStatusInfoDTO result = mapper.
@@ -122,6 +127,8 @@ class PerformanceDataFacilityStatusMapperTest {
     			.lockEditable(false)
     			.variationIndicator(true)
     			.variationIndicatorEditable(true)
+				.reportType(PerformanceDataReportType.FINAL)
+				.submissionType(PerformanceDataSubmissionType.PRIMARY)
     			.build();
         
     	FacilityPerformanceDataStatusInfoDTO result = mapper.

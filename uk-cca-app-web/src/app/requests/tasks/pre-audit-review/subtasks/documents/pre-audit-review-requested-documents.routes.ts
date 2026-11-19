@@ -13,28 +13,31 @@ export const PRE_AUDIT_REVIEW_REQUESTED_DOCUMENTS_ROUTES: Routes = [
         children: [],
       },
       {
+        title: 'Upload documents',
         path: 'upload-documents',
-        data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./upload-documents/pre-audit-review-requested-documents-upload.component').then(
             (c) => c.PreAuditReviewRequestedDocumentsUploadComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../../' },
       },
       {
+        title: 'Check your answers',
         path: 'check-your-answers',
-        data: { breadcrumb: false, backlink: '../upload-documents' },
         loadComponent: () =>
           import('./check-your-answers/pre-audit-review-requested-documents-check-your-answers.component').then(
             (c) => c.PreAuditReviewRequestedDocumentsCheckYourAnswersComponent,
           ),
+        data: { breadcrumb: false, backlink: '../upload-documents' },
       },
       {
+        title: 'Summary',
         path: 'summary',
-        data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./summary/pre-audit-review-requested-documents-summary.component').then(
             (c) => c.PreAuditReviewRequestedDocumentsSummaryComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../../' },
       },
     ],
   },

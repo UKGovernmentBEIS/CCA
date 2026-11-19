@@ -1,5 +1,5 @@
 import { DOCUMENT, Location } from '@angular/common';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { NavigationError, Router } from '@angular/router';
 
 import { PendingRequestService } from '@netz/common/services';
@@ -31,7 +31,7 @@ export function recoverFromStaleChunkNavigation(event: NavigationError): void {
   inject(StaleChunkRecoveryService).recover(event.error, skipLocationChange ? undefined : event.url);
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class StaleChunkRecoveryService {
   static readonly RELOADED_AT_KEY = 'cca_stale_chunk_reloaded_at';
 

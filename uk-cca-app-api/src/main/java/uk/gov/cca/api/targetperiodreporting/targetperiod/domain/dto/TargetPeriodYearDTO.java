@@ -1,5 +1,6 @@
 package uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class TargetPeriodYearDTO {
     private LocalDate performanceDataEndDate;
     private LocalDate buyOutStartDate;
     private LocalDate buyOutEndDate;
-    private Integer buyOutCost;
+    private BigDecimal buyOutCost;
     private boolean isCurrent;
     private LocalDate secondaryReportingStartDate;
 }

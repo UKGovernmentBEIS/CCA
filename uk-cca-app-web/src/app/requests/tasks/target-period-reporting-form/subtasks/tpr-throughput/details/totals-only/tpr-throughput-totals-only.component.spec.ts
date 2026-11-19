@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -7,6 +7,7 @@ import { RequestTaskState, RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { roundHalfUpTo7Decimals, TasksApiService } from '@requests/common';
 import { getByText } from '@testing';
+import { produce } from 'immer';
 import { Mocked } from 'vitest';
 
 import { PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload } from 'cca-api';
@@ -83,11 +84,13 @@ describe('TprThroughputTotalsOnlyComponent', () => {
       imports: [TprThroughputTotalsOnlyComponent],
       providers: [
         RequestTaskStore,
-        { provide: Router, useValue: { navigate: vi.fn() } },
+        provideRouter([]),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: TasksApiService, useValue: tasksApiService },
       ],
     }).compileComponents();
+
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
     store = TestBed.inject(RequestTaskStore);
     store.setState(mockTprRequestTaskStateThroughputTotalsOnly);
@@ -100,6 +103,22 @@ describe('TprThroughputTotalsOnlyComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should default actual throughput to 0 when none is saved', () => {
+    store.setState(
+      produce(mockTprRequestTaskStateThroughputTotalsOnly, (draft) => {
+        const payload = draft.requestTaskItem.requestTask
+          .payload as PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
+        delete payload.performanceData.throughputDetails.actualThroughput;
+      }),
+    );
+    fixture = TestBed.createComponent(TprThroughputTotalsOnlyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(component['form'].controls.actualThroughput.value).toBe('0');
+    expect(component['form'].controls.actualThroughput.valid).toBe(true);
   });
 
   it('should remain rendered when actual throughput contains invalid characters', () => {
@@ -196,5 +215,85 @@ describe('TprThroughputTotalsOnlyComponent', () => {
     const apiIntensity = roundHalfUpTo7Decimals(intensity!);
 
     expect(displayedIntensity.toFixed(7)).toBe(Number(apiIntensity).toFixed(7));
+  });
+
+  it('should set zeroEnergy form-level error when delivered energy is 0 and baseline total is non-zero', async () => {
+    const zeroEnergyState = {
+      ...mockTprRequestTaskStateThroughputTotalsOnly,
+      requestTaskItem: {
+        ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem,
+        requestTask: {
+          ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask,
+          payload: {
+            ...basePayload,
+            performanceData: {
+              ...basePayload.performanceData,
+              energyFuelDetails: {
+                ...basePayload.performanceData?.energyFuelDetails,
+                standardFuels: {
+                  GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+                  NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+                },
+                nonStandardFuels: [],
+              },
+            },
+          },
+        },
+      },
+    } as RequestTaskState;
+
+    store.setState(zeroEnergyState);
+
+    fixture = TestBed.createComponent(TprThroughputTotalsOnlyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component['form'].invalid).toBe(true);
+    expect(component['form'].errors).toEqual({
+      zeroEnergy: 'Total energy/fuel amount consumed during the period must be greater than zero',
+    });
+  });
+
+  it('should not set zeroEnergy error when delivered energy is 0 but baseline total is also zero', async () => {
+    const zeroEnergyAllowedState = {
+      ...mockTprRequestTaskStateThroughputTotalsOnly,
+      requestTaskItem: {
+        ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem,
+        requestTask: {
+          ...mockTprRequestTaskStateThroughputTotalsOnly.requestTaskItem.requestTask,
+          payload: {
+            ...basePayload,
+            referenceData: {
+              ...basePayload.referenceData,
+              baselineAndTargets: {
+                ...basePayload.referenceData?.baselineAndTargets,
+                baselineVariableEnergy: '0',
+              },
+            },
+            performanceData: {
+              ...basePayload.performanceData,
+              energyFuelDetails: {
+                ...basePayload.performanceData?.energyFuelDetails,
+                standardFuels: {
+                  GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+                  NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+                },
+                nonStandardFuels: [],
+              },
+            },
+          },
+        },
+      },
+    } as RequestTaskState;
+
+    store.setState(zeroEnergyAllowedState);
+
+    fixture = TestBed.createComponent(TprThroughputTotalsOnlyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component['form'].errors).toBeNull();
   });
 });

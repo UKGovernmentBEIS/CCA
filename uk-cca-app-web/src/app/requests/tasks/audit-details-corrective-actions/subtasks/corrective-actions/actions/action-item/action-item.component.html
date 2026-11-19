@@ -7,7 +7,7 @@
     @if (canRemove()) {
       <div class="govuk-grid-column-one-quarter govuk-!-text-align-right">
         <button type="button" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" (click)="onRemove()">
-          Remove
+          Remove<span class="govuk-visually-hidden"> corrective action {{ index() + 1 }}</span>
         </button>
       </div>
     }

@@ -1,9 +1,9 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -70,20 +70,11 @@ describe('UploadNoticeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [UploadNoticeComponent],
       providers: [
-        provideHttpClient(),
+        provideRouter([]),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideZonelessChangeDetection(),
         { provide: ActivatedRoute, useValue: route },
-        {
-          provide: Router,
-          useValue: {
-            navigate: vi.fn(),
-            url: '/test/upload-notice',
-            events: of({}),
-            createUrlTree: () => ({}),
-            serializeUrl: () => '',
-          },
-        },
         { provide: TasksApiService, useValue: tasksApiService },
         { provide: RequestTaskFileService, useValue: requestTaskFileService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -93,6 +84,7 @@ describe('UploadNoticeComponent', () => {
 
     store = TestBed.inject(RequestTaskStore);
     router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     tasksApiService.saveRequestTaskAction.mockClear();
     requestTaskFileService.buildFormControl.mockClear();
   });
@@ -171,7 +163,7 @@ describe('UploadNoticeComponent', () => {
     createComponent();
 
     component['form'].setValue({
-      file: { uuid: 'uuid-2', file: { name: 'updated-notice.pdf' } as File },
+      file: { uuid: 'uuid-2', file: { name: 'updated-notice.pdf' } },
       comments: 'Updated comments',
     });
     component.onSubmit();
@@ -206,7 +198,7 @@ describe('UploadNoticeComponent', () => {
     });
 
     component['form'].setValue({
-      file: { uuid: 'uuid-2', file: { name: 'updated-notice.pdf' } as File },
+      file: { uuid: 'uuid-2', file: { name: 'updated-notice.pdf' } },
       comments: 'Updated comments',
     });
     component.onSubmit();

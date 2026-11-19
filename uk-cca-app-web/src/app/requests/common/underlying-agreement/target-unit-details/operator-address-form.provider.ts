@@ -1,8 +1,9 @@
 import { InjectionToken, Provider } from '@angular/core';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { underlyingAgreementQuery } from '@requests/common';
 import { AccountAddressFormModel, createAccountAddressForm } from '@shared/components';
+
+import { underlyingAgreementQuery } from '../+state/underlying-agreement.selectors';
 
 export const OPERATOR_ADDRESS_FORM = new InjectionToken<AccountAddressFormModel>('Operator Address Form');
 

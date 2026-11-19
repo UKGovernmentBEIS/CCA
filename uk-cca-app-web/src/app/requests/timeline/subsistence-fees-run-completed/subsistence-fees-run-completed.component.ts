@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,7 +11,6 @@ import { toSubsistenceFeesRunCompletedSummaryData } from './subsistence-fees-run
   selector: 'cca-subsistence-fees-run-completed',
   template: `<cca-summary [data]="data" />`,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubsistenceFeesRunCompletedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

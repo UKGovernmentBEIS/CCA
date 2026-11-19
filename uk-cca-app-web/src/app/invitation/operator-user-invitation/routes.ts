@@ -11,62 +11,66 @@ import { OperatorUserInvitationStore } from './store';
 export const OPERATOR_INVITATION_USER_ROUTES: Routes = [
   {
     path: '',
-    providers: [OperatorUserInvitationFormProvider, OperatorUserInvitationStore],
     canDeactivate: [resetOperatorInvitationStore],
     children: [
       {
+        title: 'Enter your details',
         path: '',
         loadComponent: () =>
           import('./details/operator-user-invitation-details.component').then((c) => c.OperatorUserInvitationComponent),
         canActivate: [OperatorUserInvitationGuard],
       },
       {
+        title: 'Create a password',
         path: 'create-password',
-        data: { backlink: '../' },
-        canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
           import('./create-password/operator-user-create-password.component').then(
             (c) => c.OperatorUserCreatePasswordComponent,
           ),
+        canActivate: [OperatorUserNoTokenGuard],
+        data: { backlink: '../' },
       },
       {
+        title: 'Create a password',
         path: 'set-password-only',
-        canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
           import('./set-password-only/set-password-only.component').then((c) => c.SetPasswordOnlyComponent),
+        canActivate: [OperatorUserNoTokenGuard],
       },
       {
+        title: 'Check your answers',
         path: 'summary',
-        data: { backlink: '../create-password' },
-        canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
           import('./summary/operator-user-invitation-summary.component').then(
             (c) => c.OperatorUserInvitationSummaryComponent,
           ),
+        canActivate: [OperatorUserNoTokenGuard],
+        data: { backlink: '../create-password' },
       },
       {
+        title: "You've successfully activated your user account",
         path: 'confirmed',
-        data: { pageTitle: "You've successfully activated your user account" },
-        canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
           import('../invitation-confirmation/invitation-confirmation.component').then(
             (c) => c.InvitationConfirmationComponent,
           ),
+        canActivate: [OperatorUserNoTokenGuard],
       },
       {
+        title: 'You are successfully added to a target unit account',
         path: 'confirmed-existing',
-        data: { pageTitle: 'You are successfully added to a target unit account' },
-        canActivate: [OperatorUserNoTokenGuard],
         loadComponent: () =>
           import('./invitation-existing-confirmation/invitation-existing-confirmation.component').then(
             (c) => c.InvitationExistingConfirmationComponent,
           ),
+        canActivate: [OperatorUserNoTokenGuard],
       },
       {
+        title: 'This link is invalid/expired',
         path: 'invalid-link',
-        data: { pageTitle: 'This link is invalid/expired' },
         loadComponent: () => import('../invalid-link/invalid-link.component').then((c) => c.InvalidLinkComponent),
       },
     ],
+    providers: [OperatorUserInvitationFormProvider, OperatorUserInvitationStore],
   },
 ];

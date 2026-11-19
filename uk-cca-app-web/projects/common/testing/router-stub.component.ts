@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, NgZone } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -7,7 +7,6 @@ import { expect, vi } from 'vitest';
 @Component({
   selector: 'netz-router-stub',
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RouterStubComponent {}
 

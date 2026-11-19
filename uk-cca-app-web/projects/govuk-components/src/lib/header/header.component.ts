@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { isRouterLink } from '../core/link';
@@ -27,10 +27,9 @@ import { type GovukLinkTarget } from '../types';
 @Component({
   selector: 'govuk-header',
   templateUrl: './header.component.html',
+  host: { class: 'govuk-header' },
   styleUrl: './header.component.scss',
   imports: [RouterLink, NgTemplateOutlet],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'govuk-header' },
 })
 export class GovukHeaderComponent {
   /** Where the GOV.UK logo links to. Defaults to `//gov.uk`. */

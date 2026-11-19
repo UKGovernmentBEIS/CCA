@@ -1,8 +1,8 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { NoticeRecipientsTypePipe, PerformanceOutcomePipe, TprVersionPipe } from '@shared/pipes';
-import { fileUtils } from '@shared/utils';
+import { fileUtils, formatCalendarDate } from '@shared/utils';
 
 import { TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload } from 'cca-api';
 
@@ -11,7 +11,6 @@ const decimalPipe = new DecimalPipe('en-GB');
 export function toSurplusCalculatedSummaryData(
   payload: TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload,
 ): SummaryData {
-  const datePipe = new DatePipe('en-GB');
   const performanceOutcomePipe = new PerformanceOutcomePipe();
   const tprVersionPipe = new TprVersionPipe();
 
@@ -42,7 +41,7 @@ export function toSurplusCalculatedSummaryData(
   }
 
   if (details.dueDate) {
-    summary.addRow('Due date', datePipe.transform(details.dueDate, 'dd MMM yyyy'));
+    summary.addRow('Due date', formatCalendarDate(details.dueDate, 'dd MMM yyyy'));
   }
 
   summary.addRow('Run ID', details.runId);

@@ -11,7 +11,6 @@ describe('FieldsetDirective', () => {
   let element: HTMLElement;
 
   @Component({
-    imports: [FieldsetDirective, FieldsetHintDirective],
     template: `
       <fieldset govukFieldset>
         <legend>Legend</legend>
@@ -20,7 +19,11 @@ describe('FieldsetDirective', () => {
       <fieldset govukFieldset>
         <legend>Legend</legend>
       </fieldset>
+      <fieldset id="error-fieldset" govukFieldset hasError>
+        <div govukFieldsetHint>Hint</div>
+      </fieldset>
     `,
+    imports: [FieldsetDirective, FieldsetHintDirective],
   })
   class TestComponent {}
 
@@ -55,5 +58,11 @@ describe('FieldsetDirective', () => {
   it('should not set described by attribute if there is no hint', () => {
     const fieldset = element.querySelectorAll('fieldset')[1];
     expect(fieldset.getAttribute('aria-describedby')).toBeFalsy();
+  });
+
+  it('should describe the fieldset with the hint and error when hasError is set', () => {
+    const fieldset = element.querySelector('#error-fieldset');
+
+    expect(fieldset.getAttribute('aria-describedby')).toEqual('error-fieldset-hint error-fieldset-error');
   });
 });

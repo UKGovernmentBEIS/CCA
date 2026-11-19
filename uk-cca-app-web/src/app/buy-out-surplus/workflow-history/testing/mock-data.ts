@@ -32,3 +32,10 @@ export const mockRequestActions: RequestActionInfoDTO[] = [
     creationDate: '2025-04-09T11:36:24.703976Z',
   },
 ];
+
+export const mockCca3SubmittedRequestAction: RequestActionInfoDTO = {
+  id: 49,
+  type: 'BUY_OUT_SURPLUS_FACILITY_RUN_SUBMITTED',
+  submitter: 'Regulator England',
+  creationDate: '2026-04-09T11:36:24.703976Z',
+};

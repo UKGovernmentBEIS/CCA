@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,7 +11,6 @@ import { toNoticeOfIntentSummaryData } from '../notice-of-intent-summary-data';
   selector: 'cca-upload-notice-of-intent-summary',
   template: `<cca-summary [data]="summaryData()" />`,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadNoticeOfIntentSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

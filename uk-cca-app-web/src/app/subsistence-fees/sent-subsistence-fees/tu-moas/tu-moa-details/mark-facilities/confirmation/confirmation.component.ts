@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -21,7 +21,6 @@ import { TuMoaDetailsStore } from '../../tu-moa-details.store';
     }
   `,
   imports: [PanelComponent, RouterLink, StatusPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

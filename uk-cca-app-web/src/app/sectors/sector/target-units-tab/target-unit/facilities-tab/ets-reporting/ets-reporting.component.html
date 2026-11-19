@@ -1,0 +1,17 @@
+<div class="govuk-!-width-two-thirds">
+  @if (hasFormErrors()) {
+    <govuk-error-summary [form]="form" />
+  }
+
+  <netz-page-heading>Select the year you are reporting for</netz-page-heading>
+
+  @if (requestCreated()) {
+    <p class="govuk-body" role="status">Opening your UK ETS reporting task...</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div [options]="years" formControlName="targetYear" govuk-select label="Select year"></div>
+
+      <button netzPendingButton govukButton type="submit">Save and continue</button>
+    </form>
+  }
+</div>

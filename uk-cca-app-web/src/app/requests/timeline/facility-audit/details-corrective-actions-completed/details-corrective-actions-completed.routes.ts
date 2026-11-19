@@ -6,19 +6,19 @@ export const FACILITY_AUDIT_DETAILS_CORRECTIVE_ACTIONS_COMPLETED_ROUTES: Routes 
     children: [
       {
         path: 'details',
-        data: { breadcrumb: false, backlink: '../../' },
         loadComponent: () =>
           import('./details/details-corrective-actions-details.component').then(
             (c) => c.DetailsCorrectiveActionsDetailsComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../' },
       },
       {
         path: 'actions',
-        data: { breadcrumb: false, backlink: '../../' },
         loadComponent: () =>
           import('./actions/details-corrective-actions-actions.component').then(
             (c) => c.DetailsCorrectiveActionsActionsComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../' },
       },
     ],
   },

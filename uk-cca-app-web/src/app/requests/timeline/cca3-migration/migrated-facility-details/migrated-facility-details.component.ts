@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -20,7 +20,6 @@ import { toMigratedFacilitySummaryData } from '../migrated-facility-summary-data
     </div>
   `,
   imports: [PageHeadingComponent, SummaryComponent, GovukDatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MigratedFacilityDetailsComponent {
   private readonly requestActionStore = inject(RequestActionStore);

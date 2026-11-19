@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -18,7 +18,6 @@ import { CreateTargetUnitStore } from '../create-target-unit.store';
     </div>
   `,
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationComponent {
   protected readonly operatorName = inject(CreateTargetUnitStore)?.state?.name;

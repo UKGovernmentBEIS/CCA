@@ -6,7 +6,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { getSummaryListData } from '@testing';
 
 import { SurplusCalculatedComponent } from './surplus-calculated.component';
-import { surplusCalculatedActionStateMock } from './tests/mock-data';
+import { surplusCalculated, surplusCalculatedActionStateMock } from './tests/mock-data';
 
 describe('SurplusCalculatedComponent', () => {
   let component: SurplusCalculatedComponent;
@@ -31,6 +31,22 @@ describe('SurplusCalculatedComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('preserves a UTC calendar due date in the summary', () => {
+    const payload: typeof surplusCalculated = {
+      ...surplusCalculated,
+      details: { ...surplusCalculated.details, dueDate: '2025-05-11T00:00:00.000Z' },
+    };
+    actionStore.setState({
+      action: {
+        ...surplusCalculatedActionStateMock.action,
+        payload,
+      },
+    });
+    fixture.detectChanges();
+
+    expect(getSummaryListData(fixture.nativeElement)[0][1][4]).toBe('11 May 2025');
+  });
+
   it('should display the correct data', () => {
     const summaryValues = getSummaryListData(fixture.nativeElement);
 
@@ -41,7 +57,7 @@ describe('SurplusCalculatedComponent', () => {
           'TP6-V4 (Target met)',
           'Secondary',
           'CCA060006',
-          'CCA060006 Secondary buy-out MoA.pdf',
+          'CCA060006 Secondary buy-out MoA.pdf (opens in a new tab)',
           '11 May 2025',
           'BOS-TP6012',
         ],

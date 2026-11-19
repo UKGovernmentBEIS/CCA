@@ -1,0 +1,26 @@
+@if (view(); as view) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <netz-page-heading>{{ view.siteName }}</netz-page-heading>
+      <p class="govuk-caption-m govuk-!-margin-bottom-8">{{ view.creationDate | govukDate: 'datetime' }}</p>
+      <cca-summary [data]="view.summary" />
+
+      @if (view.help; as help) {
+        <details class="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ help.summary }}</span>
+          </summary>
+          <div class="govuk-details__text">
+            <ul class="govuk-list govuk-list--bullet">
+              @for (item of help.terms; track item.term) {
+                <li>
+                  <strong>{{ item.term }}:</strong> {{ item.definition }}
+                </li>
+              }
+            </ul>
+          </div>
+        </details>
+      }
+    </div>
+  </div>
+}

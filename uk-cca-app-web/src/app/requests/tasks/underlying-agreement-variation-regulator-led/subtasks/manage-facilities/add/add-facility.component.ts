@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -30,9 +30,8 @@ import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayloa
 @Component({
   selector: 'cca-add-facility',
   template: `<cca-variation-facility-details-form (submitChange)="onSubmit($event)" />`,
-  imports: [VariationFacilityDetailsFormComponent],
   providers: [VariationFacilityDetailsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [VariationFacilityDetailsFormComponent],
 })
 export class AddFacilityComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

@@ -1,38 +1,32 @@
-import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { BaselineEnergyDraftService, FacilityWizardStep } from '@requests/common';
+import { BaselineEnergyDraftService, FacilityWizardStep, initializeBaselineEnergyDraftGuard } from '@requests/common';
 
 export const BASELINE_ENERGY_CONSUMPTION_ROUTES: Routes = [
   {
     path: '',
-    providers: [BaselineEnergyDraftService],
-    canDeactivate: [
-      () => {
-        inject(BaselineEnergyDraftService).clear();
-        return true;
-      },
-    ],
+    canActivate: [initializeBaselineEnergyDraftGuard],
     children: [
       {
-        path: '',
         title: 'Baseline energy consumption',
-        data: { backlink: `../${FacilityWizardStep.BASELINE_DATA}`, breadcrumb: false },
+        path: '',
         loadComponent: () =>
           import('./baseline-energy-consumption.component').then((c) => c.BaselineEnergyConsumptionComponent),
+        data: { backlink: `../${FacilityWizardStep.BASELINE_DATA}`, breadcrumb: false },
       },
       {
-        path: 'add-product',
         title: 'Add product',
-        data: { backlink: '../', breadcrumb: false },
+        path: 'add-product',
         loadComponent: () => import('./add-product/add-product.component').then((c) => c.AddProductComponent),
+        data: { backlink: '../', breadcrumb: false },
       },
       {
-        path: 'delete-product/:productName',
         title: 'Delete product',
-        data: { backlink: '../../', breadcrumb: false },
+        path: 'delete-product/:productName',
         loadComponent: () => import('./delete-product/delete-product.component').then((c) => c.DeleteProductComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
     ],
+    providers: [BaselineEnergyDraftService],
   },
 ];

@@ -1,7 +1,8 @@
-import { computed, inject, Injector, runInInjectionContext, Signal, signal, WritableSignal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { computed, effect, inject, Injector, Signal, signal, untracked, WritableSignal } from '@angular/core';
 
 import { Observable } from 'rxjs';
+
+import { freeze } from 'immer';
 
 export type StateSelector<S, SL> = (state: S) => SL;
 
@@ -59,7 +60,11 @@ export function createAggregateSelector<S, SL>(...args: any[]): StateSelector<S,
 }
 
 /**
- * A simple implementation of an application store based on [signals](https://angular.io/guide/signals)
+ * A simple implementation of an application store based on [signals](https://angular.io/guide/signals).
+ *
+ * State is immutable. Every state the store holds is deep-frozen, so mutating it in place, including
+ * `Map.set()` / `Map.delete()`, throws at the line that does it. Replace objects, arrays and Maps
+ * instead, e.g. with Immer's `produce()` or `new Map(old)`.
  */
 export abstract class SignalStore<T> {
   private readonly injector = inject(Injector);
@@ -67,8 +72,10 @@ export abstract class SignalStore<T> {
   private readonly _initialState: T;
 
   protected constructor(initialState: T) {
-    this._state = signal(initialState);
-    this._initialState = structuredClone(initialState);
+    // The store must not share references with the caller's object (often a module-level constant):
+    // mutating that object would corrupt the next store instance. The frozen copy is safe to reuse on reset.
+    this._initialState = freeze(structuredClone(initialState), true);
+    this._state = signal(this._initialState);
   }
 
   get state(): T {
@@ -79,23 +86,47 @@ export abstract class SignalStore<T> {
     return this._state.asReadonly();
   }
 
+  /** Shallow-merges a partial state. Unchanged slices keep their references, so their selectors do not recompute. */
   updateState(state: Partial<T>): void {
-    this.setState({ ...structuredClone(this._state()), ...state });
+    this.setState({ ...this._state(), ...state });
   }
 
   setState(state: T) {
-    this._state.set(state);
+    // Already-frozen subtrees are skipped, so this only walks what is new.
+    this._state.set(freeze(state, true));
   }
 
   select<SL = T[keyof T]>(selector: StateSelector<T, SL>): Signal<SL> {
     return computed(() => selector(this._state()));
   }
 
+  /**
+   * Observable view of a selector. Emits the current value, then each change, like `toObservable`.
+   * The effect behind it lives only while subscribed, so short-lived subscribers (guards,
+   * components) do not leave effects running in the store's injector.
+   */
   rxSelect<SL = T[keyof T]>(selector: StateSelector<T, SL>): Observable<SL> {
-    return runInInjectionContext(this.injector, () => toObservable(this.select(selector)));
+    const selected = this.select(selector);
+    return new Observable<SL>((subscriber) => {
+      const watcher = effect(
+        () => {
+          let value: SL;
+          try {
+            value = selected();
+          } catch (error) {
+            untracked(() => subscriber.error(error));
+            return;
+          }
+          // Subscriber code must not become a dependency of the effect.
+          untracked(() => subscriber.next(value));
+        },
+        { injector: this.injector, manualCleanup: true },
+      );
+      return () => watcher.destroy();
+    });
   }
 
   reset(): void {
-    this.setState(structuredClone(this._initialState));
+    this.setState(this._initialState);
   }
 }

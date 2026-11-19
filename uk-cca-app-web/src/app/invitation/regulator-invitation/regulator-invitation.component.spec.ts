@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
@@ -55,7 +55,7 @@ describe('RegulatorInvitationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RegulatorInvitationComponent, PasswordComponent, ReactiveFormsModule, PageHeadingComponent],
       providers: [
-        { provide: Router, useValue: { navigate: vi.fn() } },
+        provideRouter([]),
         { provide: RegulatorUsersRegistrationService, useValue: regulatorUsersRegistrationService },
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
@@ -67,6 +67,7 @@ describe('RegulatorInvitationComponent', () => {
     component = fixture.componentInstance;
     page = new Page(fixture);
     router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     route = TestBed.inject(ActivatedRoute);
     store = TestBed.inject(InvitedRegulatorUserStore);
     store.setState({ email: 'user@cca.uk' });

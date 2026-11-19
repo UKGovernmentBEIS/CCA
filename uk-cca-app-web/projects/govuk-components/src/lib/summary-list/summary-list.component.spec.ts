@@ -1,7 +1,7 @@
+import { provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { SummaryListRowDirective, SummaryListRowKeyDirective, SummaryListRowValueDirective } from './directives';
 import { SummaryListComponent } from './summary-list.component';
@@ -15,8 +15,8 @@ describe('SummaryListComponent', () => {
   let fixture3: ComponentFixture<TemplateTestComponent>;
 
   @Component({
-    imports: [SummaryListComponent],
     template: '<dl govuk-summary-list [details]="details"></dl>',
+    imports: [SummaryListComponent],
   })
   class DetailsTestComponent {
     details = [
@@ -26,7 +26,6 @@ describe('SummaryListComponent', () => {
   }
 
   @Component({
-    imports: [SummaryListComponent],
     template: `
       <dl govuk-summary-list [details]="details">
         <ng-template #keyTemplate let-item>
@@ -37,6 +36,7 @@ describe('SummaryListComponent', () => {
         </ng-template>
       </dl>
     `,
+    imports: [SummaryListComponent],
   })
   class DetailsTemplateTestComponent {
     details = [
@@ -46,7 +46,6 @@ describe('SummaryListComponent', () => {
   }
 
   @Component({
-    imports: [SummaryListComponent, SummaryListRowKeyDirective, SummaryListRowDirective, SummaryListRowValueDirective],
     template: `
       <dl govuk-summary-list [details]="details">
         <div govukSummaryListRow>
@@ -59,6 +58,7 @@ describe('SummaryListComponent', () => {
         </div>
       </dl>
     `,
+    imports: [SummaryListComponent, SummaryListRowKeyDirective, SummaryListRowDirective, SummaryListRowValueDirective],
   })
   class TemplateTestComponent {
     details = [
@@ -75,7 +75,6 @@ describe('SummaryListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         SummaryListComponent,
         DetailsTestComponent,
         DetailsTemplateTestComponent,
@@ -84,6 +83,7 @@ describe('SummaryListComponent', () => {
         SummaryListRowKeyDirective,
         SummaryListRowValueDirective,
       ],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 

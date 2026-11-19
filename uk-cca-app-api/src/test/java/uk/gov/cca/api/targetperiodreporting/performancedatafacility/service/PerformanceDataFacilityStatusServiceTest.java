@@ -299,4 +299,13 @@ class PerformanceDataFacilityStatusServiceTest {
         verify(performanceDataFacilityStatusRepository, times(1))
         .updateVariationIndicatorByFacilityBusinessIdInAndTargetPeriodYear(facilityBusinessIds, year);
     }
+    
+    @Test
+    void shouldLockPerformanceData() {
+        Set<Long> performanceDataIds = Set.of(1L, 2L, 3L);
+
+        service.lockPerformanceData(performanceDataIds);
+
+        verify(performanceDataFacilityStatusRepository).findUnlockedForUpdate(performanceDataIds);
+    }
 }

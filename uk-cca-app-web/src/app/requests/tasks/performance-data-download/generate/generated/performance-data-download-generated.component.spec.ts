@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,7 +40,7 @@ describe('FileHasBeenGeneratedComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PerformanceDataDownloadGeneratedComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -85,8 +85,8 @@ describe('FileHasBeenGeneratedComponent', () => {
   it('should show files', () => {
     expect(page.links).toEqual([
       'cca-help@environment-agency.gov.uk',
-      'ADS_2_TP6_reporting_templates.zip',
-      'ADS_2_TP6_download_errors.csv',
+      'ADS_2_TP6_reporting_templates.zip (opens in a new tab)',
+      'ADS_2_TP6_download_errors.csv (opens in a new tab)',
     ]);
   });
 

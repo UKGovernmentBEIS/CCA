@@ -1,19 +1,18 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { ReceivedAmountStore } from '@shared/components';
-
+import { ReceivedAmountStore } from '../received-amount/received-amount.store';
 import { canActivateMarkFacilitiesGuard } from './mark-facilities/mark-facilities.guard';
 import { SectorMoaTUDetailsStore } from './sector-moa-tu-details/sector-moa-tu-details.store';
 
 export const SECTOR_MOA_DETAILS_ROUTES: Routes = [
   {
+    title: 'Sector MoA',
     path: '',
     loadComponent: () => import('./sector-moa-details.component').then((c) => c.SectorMoaDetailsComponent),
   },
   {
     path: 'tu-details',
-    providers: [SectorMoaTUDetailsStore],
     canActivate: [
       () => {
         inject(SectorMoaTUDetailsStore).initialize();
@@ -33,17 +32,19 @@ export const SECTOR_MOA_DETAILS_ROUTES: Routes = [
           import('./sector-moa-tu-details/sector-moa-tu-details.routes').then((r) => r.SECTOR_MOA_TU_DETAILS_ROUTES),
       },
     ],
+    providers: [SectorMoaTUDetailsStore],
   },
   {
     path: 'received-amount',
-    providers: [ReceivedAmountStore],
     canDeactivate: [
       () => {
         inject(ReceivedAmountStore).reset();
         return true;
       },
     ],
-    loadChildren: () => import('@shared/components').then((r) => r.RECEIVED_AMOUNT_ROUTES),
+    loadChildren: () =>
+      import('@shared/components/received-amount/received-amount.routes').then((r) => r.RECEIVED_AMOUNT_ROUTES),
+    providers: [ReceivedAmountStore],
   },
   {
     path: 'mark-facilities',

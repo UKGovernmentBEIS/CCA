@@ -38,6 +38,12 @@ public class FacilityDataQueryService implements FacilityAuthorityInfoProvider, 
     
     private static final FacilityDetailsMapper FACILITY_DETAILS_MAPPER = Mappers.getMapper(FacilityDetailsMapper.class);
 
+    public List<FacilityDTO> getActiveFacilitiesDataByAccountId(Long accountId) {
+        return findActiveFacilitiesByAccountId(accountId).stream()
+                .map(FACILITY_DETAILS_MAPPER::toFacilityDTO)
+                .toList();
+    }
+
     public FacilityDataDetailsDTO getFacilityData(Long facilityId) {
         return facilityDataRepository.findById(facilityId)
                 .map(FACILITY_DETAILS_MAPPER::toFacilityDetailsResult)

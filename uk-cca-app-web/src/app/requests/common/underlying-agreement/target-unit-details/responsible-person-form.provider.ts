@@ -3,13 +3,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { underlyingAgreementQuery } from '@requests/common';
 import {
   createAccountAddressForm,
   createResponsibleForm,
   ResponsiblePersonFormConfig,
   ResponsiblePersonFormModel,
 } from '@shared/components';
+
+import { underlyingAgreementQuery } from '../+state/underlying-agreement.selectors';
 
 export const RESPONSIBLE_PERSON_FORM = new InjectionToken<ResponsiblePersonFormModel>(
   'Target Unit Responsible Person Form',

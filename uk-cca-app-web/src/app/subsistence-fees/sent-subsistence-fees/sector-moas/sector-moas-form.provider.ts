@@ -14,7 +14,11 @@ export type SectorMoasFormModel = FormGroup<{
   markFacilitiesStatus: FormControl<SubsistenceFeesMoaSearchCriteria['markFacilitiesStatus']>;
 }>;
 
-export const INITIAL_FORM_VALUES = {
+export const INITIAL_FORM_VALUES: {
+  term: SubsistenceFeesMoaSearchCriteria['term'];
+  paymentStatus: SubsistenceFeesMoaSearchCriteria['paymentStatus'];
+  markFacilitiesStatus: SubsistenceFeesMoaSearchCriteria['markFacilitiesStatus'];
+} = {
   term: null,
   paymentStatus: null,
   markFacilitiesStatus: null,

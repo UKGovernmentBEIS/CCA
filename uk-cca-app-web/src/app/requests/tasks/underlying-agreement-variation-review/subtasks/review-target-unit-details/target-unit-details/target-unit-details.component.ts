@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -38,6 +38,7 @@ import { applySaveActionSideEffects, deleteDecision } from '../../../utils';
 @Component({
   selector: 'cca-target-unit-details',
   templateUrl: './target-unit-details.component.html',
+  providers: [TargetUnitDetailsReviewFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -47,8 +48,6 @@ import { applySaveActionSideEffects, deleteDecision } from '../../../utils';
     SelectComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [TargetUnitDetailsReviewFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitDetailsComponent implements OnInit {
   private readonly store = inject(RequestTaskStore);
@@ -134,15 +133,11 @@ export class TargetUnitDetailsComponent implements OnInit {
     this.tasksApiService
       .saveRequestTaskAction(dto)
       .subscribe((payload: UnderlyingAgreementVariationReviewRequestTaskPayload) => {
-        let path = '';
-
-        if (areIdentical) {
-          path = '../check-your-answers';
-        } else {
-          path = isTargetUnitDetailsWizardCompleted(payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails)
+        const path = areIdentical
+          ? '../check-your-answers'
+          : isTargetUnitDetailsWizardCompleted(payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails)
             ? '../decision'
             : `../${ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS}`;
-        }
 
         this.router.navigate([path], { relativeTo: this.activatedRoute });
       });

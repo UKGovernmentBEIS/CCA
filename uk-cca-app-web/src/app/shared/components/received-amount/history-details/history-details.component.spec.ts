@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -20,7 +20,7 @@ describe('HistoryDetailsComponent', () => {
       imports: [HistoryDetailsComponent],
       providers: [
         ReceivedAmountStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub({ detailsId: 1 }) },
       ],
@@ -44,7 +44,7 @@ describe('HistoryDetailsComponent', () => {
     expect(detailsValues).toEqual([
       [
         ['Amount added (GBP)', 'Comments', 'Uploaded evidence'],
-        ['20', 'asdasdasdsad', 'sample_profile1.pngsample_profile.bmp'],
+        ['20', 'asdasdasdsad', 'sample_profile1.png (opens in a new tab) sample_profile.bmp (opens in a new tab)'],
       ],
     ]);
   });

@@ -7,7 +7,6 @@ import { filter, map, tap } from 'rxjs';
 
 @Component({
   selector: 'govuk-skip-link',
-  imports: [RouterLink, AsyncPipe],
   template: `
     <div>
       <a class="govuk-skip-link" [routerLink]="routerLink | async" queryParamsHandling="preserve" [fragment]="anchor()"
@@ -23,6 +22,7 @@ import { filter, map, tap } from 'rxjs';
       position: absolute;
     }
   `,
+  imports: [RouterLink, AsyncPipe],
 })
 export class SkipLinkComponent {
   private readonly route = inject(ActivatedRoute);

@@ -11,6 +11,11 @@ describe('ItemLinkPipe', () => {
 
   const dataSet: DatasetDTO[] = [
     {
+      requestType: 'EMISSIONS_TRADING_SCHEME_DATA',
+      taskType: 'EMISSIONS_TRADING_SCHEME_DATA_SUBMIT',
+      expectedPath: ['/tasks', taskId],
+    },
+    {
       requestType: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW',
       taskType: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW',
       expectedPath: ['/tasks', taskId],

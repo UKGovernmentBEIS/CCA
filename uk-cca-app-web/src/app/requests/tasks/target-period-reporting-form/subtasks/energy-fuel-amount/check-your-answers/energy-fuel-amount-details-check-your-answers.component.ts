@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, of } from 'rxjs';
@@ -55,7 +55,6 @@ import { createRequestTaskActionProcessDTO, toPerformanceDataFacilityDigitalForm
     ReturnToTaskOrActionPageComponent,
     EnergyFuelAmountSummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergyFuelAmountDetailsCheckYourAnswersComponent {
   protected readonly requestTaskStore = inject(RequestTaskStore);

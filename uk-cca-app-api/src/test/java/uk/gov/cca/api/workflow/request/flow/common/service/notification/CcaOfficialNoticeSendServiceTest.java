@@ -23,7 +23,7 @@ import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 import uk.gov.netz.api.notificationapi.mail.config.property.NotificationProperties;
 import uk.gov.netz.api.notificationapi.mail.domain.EmailData;
 import uk.gov.netz.api.notificationapi.mail.domain.EmailNotificationTemplateData;
@@ -61,7 +61,7 @@ class CcaOfficialNoticeSendServiceTest {
     private NotificationEmailService notificationEmailService;
 
     @Mock
-    private FileDocumentService fileDocumentService;
+    private FileDocumentStorageService fileDocumentStorageService;
 
     @Mock
     private NotificationProperties notificationProperties;
@@ -136,7 +136,7 @@ class CcaOfficialNoticeSendServiceTest {
         when(sectorReferenceDetailsService.getSectorAssociationDetails(sectorAssociationId)).thenReturn(sectorAssociationDTO);
         when(notificationProperties.getEmail()).thenReturn(notificationEmail);
         when(notificationEmail.getContactUsLink()).thenReturn("/contact-us");
-        when(fileDocumentService.getFileDTO(fileUuid))
+        when(fileDocumentStorageService.getFileDTO(fileUuid))
                 .thenReturn(fileDTO);
 
         // Invoke
@@ -145,7 +145,7 @@ class CcaOfficialNoticeSendServiceTest {
         // Verify
         verify(sectorReferenceDetailsService, times(1))
                 .getSectorAssociationDetails(sectorAssociationId);
-        verify(fileDocumentService, times(1))
+        verify(fileDocumentStorageService, times(1))
                 .getFileDTO(fileUuid);
         verify(notificationEmailService, times(1))
                 .notifyRecipients(emailData, List.of(sectorAssociationContact.getEmail()));
@@ -212,7 +212,7 @@ class CcaOfficialNoticeSendServiceTest {
                 .thenReturn(accountDetails);
         when(notificationProperties.getEmail()).thenReturn(notificationEmail);
         when(notificationEmail.getContactUsLink()).thenReturn("/contact-us");
-        when(fileDocumentService.getFileDTO(fileUuid))
+        when(fileDocumentStorageService.getFileDTO(fileUuid))
                 .thenReturn(fileDTO);
         when(underlyingAgreementDefaultNoticeRecipients.getType())
                 .thenReturn(CcaRequestType.UNDERLYING_AGREEMENT);
@@ -225,7 +225,7 @@ class CcaOfficialNoticeSendServiceTest {
         // Verify
         verify(accountReferenceDetailsService, times(1))
                 .getTargetUnitAccountDetails(accountId);
-        verify(fileDocumentService, times(1))
+        verify(fileDocumentStorageService, times(1))
                 .getFileDTO(fileUuid);
         verify(notificationEmailService, times(1))
                 .notifyRecipients(
@@ -306,7 +306,7 @@ class CcaOfficialNoticeSendServiceTest {
                 .thenReturn(accountDetails);
         when(notificationProperties.getEmail()).thenReturn(notificationEmail);
         when(notificationEmail.getContactUsLink()).thenReturn("/contact-us");
-        when(fileDocumentService.getFileDTO(fileUuid))
+        when(fileDocumentStorageService.getFileDTO(fileUuid))
                 .thenReturn(fileDTO);
         when(underlyingAgreementDefaultNoticeRecipients.getType())
                 .thenReturn(CcaRequestType.UNDERLYING_AGREEMENT);
@@ -319,7 +319,7 @@ class CcaOfficialNoticeSendServiceTest {
         // Verify
         verify(accountReferenceDetailsService, times(1))
                 .getTargetUnitAccountDetails(accountId);
-        verify(fileDocumentService, times(1))
+        verify(fileDocumentStorageService, times(1))
                 .getFileDTO(fileUuid);
         verify(notificationEmailService, times(1))
                 .notifyRecipients(

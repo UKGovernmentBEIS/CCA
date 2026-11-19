@@ -1,9 +1,10 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
+import { ErrorCodes } from '@error/business-errors';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, MockType } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
@@ -33,7 +34,7 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         { provide: TasksApiService, useValue: tasksApiService },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: RequestTaskStore, useValue: requestTaskStore },
@@ -59,7 +60,7 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
   it('should submit and navigate to confirmation page', async () => {
     const navigateSpy = vi.spyOn(router, 'navigate');
     const tasksApiServiceSpy = vi.spyOn(tasksApiService, 'saveRequestTaskAction');
-    const submitButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find(
+    const submitButton = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
       (button: HTMLButtonElement) => button.textContent?.trim() === 'Confirm and send',
     ) as HTMLButtonElement;
     submitButton.click();
@@ -74,5 +75,31 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
       },
     });
     expect(navigateSpy).toHaveBeenCalledWith(['confirmation'], expect.anything());
+  });
+
+  it('should move focus back to the error summary when the submit fails again', async () => {
+    tasksApiService.saveRequestTaskAction.mockReturnValue(
+      throwError(
+        () =>
+          new HttpErrorResponse({
+            status: 400,
+            error: { code: ErrorCodes.UNA1001, message: 'Complete all sections' },
+          }),
+      ),
+    );
+    const submitButton = Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(
+      (button: HTMLButtonElement) => button.textContent?.trim() === 'Confirm and send',
+    );
+
+    submitButton.click();
+    await fixture.whenStable();
+    const errorSummary = fixture.nativeElement.querySelector('.govuk-error-summary');
+    expect(errorSummary).toBeTruthy();
+
+    submitButton.focus();
+    submitButton.click();
+    await fixture.whenStable();
+
+    expect(document.activeElement).toBe(errorSummary);
   });
 });

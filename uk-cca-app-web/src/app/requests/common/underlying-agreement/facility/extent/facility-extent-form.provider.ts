@@ -4,11 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { underlyingAgreementQuery, UPLOAD_SECTION_ATTACHMENT_TYPE } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 
 import { FacilityExtent } from 'cca-api';
+
+import { underlyingAgreementQuery } from '../../+state/underlying-agreement.selectors';
+import { getAttachmentType, UPLOAD_SECTION_ATTACHMENT_TYPE } from '../../types';
 
 export type FacilityExtentFormModel = {
   manufacturingProcessFile: FormControl<UuidFilePair>;
@@ -43,7 +45,7 @@ export const FacilityExtentFormProvider: Provider = {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         facilityExtent?.manufacturingProcessFile,
         attachments,
-        UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+        getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
         true,
         false,
       ),
@@ -51,7 +53,7 @@ export const FacilityExtentFormProvider: Provider = {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         facilityExtent?.processFlowFile,
         attachments,
-        UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+        getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
         true,
         false,
       ),
@@ -59,7 +61,7 @@ export const FacilityExtentFormProvider: Provider = {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         facilityExtent?.annotatedSitePlansFile,
         attachments,
-        UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+        getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
         true,
         false,
       ),
@@ -67,7 +69,7 @@ export const FacilityExtentFormProvider: Provider = {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         facilityExtent?.eligibleProcessFile,
         attachments,
-        UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+        getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
         true,
         false,
       ),
@@ -78,7 +80,7 @@ export const FacilityExtentFormProvider: Provider = {
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
         facilityExtent?.activitiesDescriptionFile,
         attachments,
-        UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+        getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
         true,
         false,
       ),

@@ -4,8 +4,8 @@ import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/commo
 
 export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
   {
+    title: 'Review application for underlying agreement',
     path: '',
-    providers: [],
     children: [
       {
         path: 'review-target-unit-details',
@@ -35,8 +35,8 @@ export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
           import('./subtasks/overall-decision/overall-decision.routes').then((r) => r.OVERALL_DECISION_ROUTES),
       },
       {
-        path: 'notify-operator',
         title: 'Notify operator of decision',
+        path: 'notify-operator',
         canActivate: [isEditableGuard],
         loadChildren: () =>
           import('./notify-operator/notify-operator.routes').then(
@@ -52,5 +52,6 @@ export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
           ),
       },
     ],
+    providers: [],
   },
 ];

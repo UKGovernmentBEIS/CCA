@@ -2,73 +2,38 @@ package uk.gov.cca.api.web.controller.facility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.facility.domain.dto.FacilitySearchCriteria;
+
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
-import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResults;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilityInfoServiceOrchestrator;
-import uk.gov.cca.api.web.orchestrator.facility.service.FacilitySearchServiceOrchestrator;
-import uk.gov.netz.api.authorization.core.domain.AppUser;
-import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.security.Authorized;
 
-import static uk.gov.cca.api.web.constants.SwaggerApiInfo.INTERNAL_SERVER_ERROR;
-import static uk.gov.cca.api.web.constants.SwaggerApiInfo.OK;
+import java.util.List;
 
-@Validated
 @RestController
-@RequestMapping(path = "/v1.0/facilities/")
+@RequestMapping(path = "/v1.0/facilities/{facilityId}")
 @RequiredArgsConstructor
 @Tag(name = "Facility info view")
-// TODO: to be moved under Account and renamed accordingly
 public class FacilityViewController {
 
     private final FacilityInfoServiceOrchestrator facilityInfoServiceOrchestrator;
-    private final FacilitySearchServiceOrchestrator facilitySearchServiceOrchestrator;
 
-    @GetMapping(path = "/account/{accountId}")
-    @Operation(summary = "Retrieves the current account facilities")
-    @ApiResponse(responseCode = "200", description = OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FacilitySearchResults.class))})
-    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @Authorized(resourceId = "#accountId")
-    public ResponseEntity<FacilitySearchResults> searchFacilities(
-            @PathVariable("accountId") @Parameter(description = "The account id") Long accountId,
-            @RequestParam(value = "term", required = false) @Size(min = 3, max = 256) @Parameter(name = "term", description = "The term to search") String term,
-            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Integer page,
-            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Integer pageSize,
-            @Parameter(hidden = true) AppUser appUser
-    ) {
-        return new ResponseEntity<>(
-                facilitySearchServiceOrchestrator.searchFacilities(
-                        accountId,
-						appUser,
-                        FacilitySearchCriteria.builder()
-                                .term(term)
-                                .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
-                                .build()), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/{facilityId}")
+    @GetMapping
     @Operation(summary = "Retrieves the facility details")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FacilityInfoDTO.class))})
@@ -82,5 +47,19 @@ public class FacilityViewController {
     public ResponseEntity<FacilityInfoDTO> getFacilityDetailsById(
             @PathVariable("facilityId") @Parameter(description = "The facility id") Long facilityId) {
         return new ResponseEntity<>(facilityInfoServiceOrchestrator.getFacilityInfo(facilityId), HttpStatus.OK);
+    }
+
+    @GetMapping("/certifications")
+    @Operation(summary = "Retrieves the facility certifications")
+    @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = FacilityCertificationStatusDTO.class))))
+    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @Authorized(resourceId = "#facilityId")
+    public ResponseEntity<List<FacilityCertificationStatusDTO>> getFacilityCertifications(
+            @PathVariable("facilityId") @Parameter(description = "The facility id") Long facilityId) {
+        return new ResponseEntity<>(facilityInfoServiceOrchestrator.getFacilityCertifications(facilityId), HttpStatus.OK);
     }
 }

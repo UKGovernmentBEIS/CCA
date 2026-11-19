@@ -1,4 +1,4 @@
-import { FactoryProvider, InjectionToken } from '@angular/core';
+import { FactoryProvider, inject, InjectionToken } from '@angular/core';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -12,9 +12,11 @@ import {
 import { map, switchMap, take, timer } from 'rxjs';
 
 import { GovukValidators, MessageValidationErrors } from '@netz/govuk-components';
-import { zxcvbn } from '@zxcvbn-ts/core';
 
 import { PasswordValidationResponseDTO, ValidatePasswordService } from 'cca-api';
+
+import { resolveZxcvbn } from '../password-strength-meter/password-strength-meter.service';
+import { ZXCVBN_CONFIG, ZxcvbnConfigType } from '../password-strength-meter/types';
 
 type PasswordFormModel = {
   email: FormControl<string | null>;
@@ -45,11 +47,6 @@ const apiPasswordErrorMapper = (response: PasswordValidationResponseDTO) => {
   return null;
 };
 
-const strongPasswordValidator: ValidatorFn = (control: AbstractControl): MessageValidationErrors | null => {
-  const strength = zxcvbn(control.value ?? '').score;
-  return strength > 2 ? null : { weakPassword: 'Enter a strong password' };
-};
-
 const passwordsMatch = (group: FormGroup<PasswordFormModel>): ValidationErrors | null =>
   group.controls.password.value === group.controls.validatePassword.value ? null : { notEquivalent: true };
 
@@ -57,6 +54,13 @@ export const passwordFormFactory: FactoryProvider = {
   provide: PASSWORD_FORM,
   deps: [FormBuilder, ValidatePasswordService],
   useFactory: (fb: FormBuilder, validatePasswordService: ValidatePasswordService) => {
+    const zxcvbn = resolveZxcvbn(inject<ZxcvbnConfigType>(ZXCVBN_CONFIG, { optional: true }));
+
+    const strongPasswordValidator: ValidatorFn = (control: AbstractControl): MessageValidationErrors | null => {
+      const strength = zxcvbn.check(control.value ?? '').score;
+      return strength > 2 ? null : { weakPassword: 'Enter a strong password' };
+    };
+
     const apiPasswordValidator: AsyncValidatorFn = (control) =>
       timer(300).pipe(
         switchMap(() =>

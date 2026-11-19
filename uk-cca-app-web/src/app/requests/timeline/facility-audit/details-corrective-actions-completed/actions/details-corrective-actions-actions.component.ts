@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -13,7 +13,6 @@ import { detailsCorrectiveActionsCompletedQuery } from '../details-corrective-ac
     <cca-corrective-actions-summary-details [correctiveActions]="correctiveActions()" [isEditable]="false" />
   `,
   imports: [PageHeadingComponent, CorrectiveActionsSummaryDetailsComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailsCorrectiveActionsActionsComponent {
   private readonly requestTaskActionStore = inject(RequestActionStore);

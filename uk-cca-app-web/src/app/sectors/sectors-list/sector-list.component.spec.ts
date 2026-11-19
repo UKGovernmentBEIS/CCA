@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
@@ -16,7 +16,7 @@ describe('SectorListComponenet', () => {
     await TestBed.configureTestingModule({
       imports: [SectorListComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideRouter([]),
         {
           provide: SectorAssociationInfoViewService,
@@ -58,7 +58,7 @@ describe('SectorListComponenet', () => {
   });
 
   it('should have a table that has sortable columns', async () => {
-    const allHeaders = Array.from(fixture.nativeElement.querySelectorAll('th'));
+    const allHeaders = Array.from<Element>(fixture.nativeElement.querySelectorAll('th'));
     const sectorHeaderEl = allHeaders.find((el: Element) => el.textContent.includes('Sector'));
     expect(sectorHeaderEl).toBeTruthy();
     const mainContactHeaderEl = allHeaders.find((el: Element) => el.textContent.includes('Main Contact'));
@@ -67,7 +67,7 @@ describe('SectorListComponenet', () => {
 
   it('should sort columns based on sector', async () => {
     const component = fixture.componentInstance;
-    const sectors = JSON.parse(JSON.stringify(mockSectors));
+    const sectors: (typeof mockSectors)[number][] = JSON.parse(JSON.stringify(mockSectors));
 
     // asc sorting
     component['sortBy']({ column: 'sector', direction: 'ascending' });
@@ -75,7 +75,7 @@ describe('SectorListComponenet', () => {
     await fixture.whenStable();
     sectors.sort((a, b) => a.sector.localeCompare(b.sector, 'en-GB', { numeric: true, sensitivity: 'base' }));
 
-    let rows = fixture.nativeElement.querySelectorAll('tr td:first-child a');
+    let rows: NodeListOf<Element> = fixture.nativeElement.querySelectorAll('tr td:first-child a');
     rows.forEach((row, idx) => expect(row.textContent.trim()).toEqual(sectors[idx].sector));
 
     // desc sorting
@@ -90,7 +90,7 @@ describe('SectorListComponenet', () => {
 
   it('should sort columns based on main contact', async () => {
     const component = fixture.componentInstance;
-    const sectors = JSON.parse(JSON.stringify(mockSectors));
+    const sectors: (typeof mockSectors)[number][] = JSON.parse(JSON.stringify(mockSectors));
 
     // asc sorting
     component['sortBy']({ column: 'mainContact', direction: 'ascending' });
@@ -98,7 +98,7 @@ describe('SectorListComponenet', () => {
     await fixture.whenStable();
     sectors.sort((a, b) => a.mainContact.localeCompare(b.mainContact, 'en-GB', { numeric: true, sensitivity: 'base' }));
 
-    let rows = fixture.nativeElement.querySelectorAll('tr td:nth-child(2)');
+    let rows: NodeListOf<Element> = fixture.nativeElement.querySelectorAll('tr td:nth-child(2)');
     rows.forEach((row, idx) => expect(row.textContent.trim()).toEqual(sectors[idx].mainContact));
 
     // desc sorting

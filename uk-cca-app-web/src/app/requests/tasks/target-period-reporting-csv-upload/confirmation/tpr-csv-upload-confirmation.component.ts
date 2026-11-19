@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -8,7 +8,7 @@ import { PanelComponent } from '@netz/govuk-components';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel title="Target period report submitted"></govuk-panel>
+        <govuk-panel title="Target period report submitted" />
 
         <h2 class="govuk-heading-m">What happens next</h2>
         <p>
@@ -27,6 +27,5 @@ import { PanelComponent } from '@netz/govuk-components';
     </div>
   `,
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprCsvUploadConfirmationComponent {}

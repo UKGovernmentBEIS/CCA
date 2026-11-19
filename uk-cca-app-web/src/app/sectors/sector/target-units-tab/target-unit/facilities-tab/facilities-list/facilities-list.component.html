@@ -9,7 +9,6 @@
         label="Find a facility"
         hint="Enter at least three characters of the site name or facility ID"
         inputType="search"
-        aria-description="search results will appear below"
       ></div>
     </div>
 
@@ -50,7 +49,7 @@
             }
 
             @case ('schemeExitDate') {
-              {{ row[column.field] | date: 'dd/MM/yyyy' }}
+              {{ row[column.field] | calendarDate: 'dd/MM/yyyy' }}
             }
 
             @case ('certifiedStatus') {

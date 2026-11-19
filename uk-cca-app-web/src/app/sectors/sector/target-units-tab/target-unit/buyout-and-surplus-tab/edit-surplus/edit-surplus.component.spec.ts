@@ -1,7 +1,9 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+
+import { SchemeVersionEnum } from '@shared/types';
 
 import { BuyoutAndSurplusTabStore } from '../buyout-and-surplus-tab.store';
 import { EditSurplusComponent } from './edit-surplus.component';
@@ -16,7 +18,6 @@ describe('EditSurplusHistoryComponent', () => {
       paramMap: {
         get: (key: string) => {
           if (key === 'targetUnitId') return '1';
-          if (key === 'targetPeriodType') return 'TP6';
           return null;
         },
       },
@@ -30,7 +31,7 @@ describe('EditSurplusHistoryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EditSurplusComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         provideHttpClientTesting(),
         BuyoutAndSurplusTabStore,
@@ -41,13 +42,11 @@ describe('EditSurplusHistoryComponent', () => {
     store.setState({
       surplusInfo: {
         excluded: true,
-        surplusGainedDTOList: [
-          {
-            surplusGained: '1',
-            targetPeriod: 'TP6',
-            hasHistory: true,
-          },
-        ],
+        surplusDetails: {
+          surplusGained: '1',
+          hasHistory: true,
+          schemeVersion: SchemeVersionEnum.CCA_2,
+        },
       },
     });
     fixture = TestBed.createComponent(EditSurplusComponent);

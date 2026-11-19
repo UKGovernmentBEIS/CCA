@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -13,7 +13,6 @@ import { underlyingAgreementVariationReviewQuery } from '@requests/common';
     <p>The selected users will receive an email notification of your decision.</p>
     <a class="govuk-link" [routerLink]="['/dashboard']"> Return to: Dashboard </a>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PanelComponent, RouterLink],
 })
 export class NotifyOperatorVariationConfirmationComponent {

@@ -1,7 +1,6 @@
-import { DatePipe } from '@angular/common';
-
 import { formatRelevantFacility, formatRelevantWorkflow, NON_COMPLIANCE_TYPE_LABELS } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
+import { formatCalendarDate } from '@shared/utils';
 
 import { NonComplianceDetails } from 'cca-api';
 
@@ -10,7 +9,6 @@ export function toNonComplianceDetailsSubmittedSummaryData(
   allRelevantWorkflows: Record<string, string> = {},
   allRelevantFacilities: Record<string, string> = {},
 ): SummaryData {
-  const datePipe = new DatePipe('en-GB');
   const summary = new SummaryFactory();
   const relevantWorkflows = details.relevantWorkflows?.map((workflowId) =>
     formatRelevantWorkflow(workflowId, allRelevantWorkflows),
@@ -22,8 +20,8 @@ export function toNonComplianceDetailsSubmittedSummaryData(
   summary
     .addSection('Details')
     .addRow('Type of non-compliance', NON_COMPLIANCE_TYPE_LABELS[details.nonComplianceType])
-    .addRow('When did the operator become non-compliant?', datePipe.transform(details.nonCompliantDate, 'd MMM yyyy'))
-    .addRow('When did the operator become compliant?', datePipe.transform(details.compliantDate, 'd MMM yyyy'))
+    .addRow('When did the operator become non-compliant?', formatCalendarDate(details.nonCompliantDate, 'd MMM yyyy'))
+    .addRow('When did the operator become compliant?', formatCalendarDate(details.compliantDate, 'd MMM yyyy'))
     .addRow('Comments', details.comment);
 
   summary.addSection('Relevant items of non-compliance');

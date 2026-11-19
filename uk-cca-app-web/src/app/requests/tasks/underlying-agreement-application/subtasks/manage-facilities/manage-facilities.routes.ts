@@ -7,28 +7,28 @@ export const MANAGE_FACILITIES_ROUTES: Routes = [
     path: '',
     children: [
       {
+        title: 'Manage facilities',
         path: '',
         pathMatch: 'full',
+        loadComponent: () => import('./manage-facilities.component').then((c) => c.ManageFacilitiesComponent),
         data: { backlink: '../../', breadcrumb: false },
-        title: 'Manage facilities',
-        loadComponent: () => import('./manage-facilities.component').then((m) => m.ManageFacilitiesComponent),
       },
       {
-        path: ManageFacilitiesWizardStep.ADD_FACILITY,
         title: 'Add facility',
+        path: ManageFacilitiesWizardStep.ADD_FACILITY,
+        loadComponent: () => import('./add/add-facility.component').then((c) => c.AddFacilityComponent),
         data: { backlink: '../', breadcrumb: false },
-        loadComponent: () => import('./add/add-facility.component').then((m) => m.AddFacilityComponent),
       },
       {
         path: ':facilityId',
-        loadChildren: () => import('./facility/facility.routes').then((m) => m.FACILITY_ROUTES),
+        loadChildren: () => import('./facility/facility.routes').then((r) => r.FACILITY_ROUTES),
       },
       {
-        path: `:facilityId/${ManageFacilitiesWizardStep.DELETE_FACILITY}`,
         title: 'Delete facility',
-        data: { backlink: '../../', breadcrumb: false },
+        path: `:facilityId/${ManageFacilitiesWizardStep.DELETE_FACILITY}`,
         loadComponent: () =>
-          import('./delete/delete-facility-item.component').then((m) => m.DeleteFacilityItemComponent),
+          import('./delete/delete-facility-item.component').then((c) => c.DeleteFacilityItemComponent),
+        data: { backlink: '../../', breadcrumb: false },
       },
     ],
   },

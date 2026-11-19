@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -7,7 +7,8 @@ import { of } from 'rxjs';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { mockRequestTaskState, TasksApiService } from '@requests/common';
+import { TasksApiService } from '@requests/common';
+import { mockRequestTaskState } from '@requests/common/underlying-agreement/testing/mock-data';
 import { clear, click, getAllByText, getByLabelText, getByRole, getByText, type } from '@testing';
 
 import { ResponsiblePersonComponent } from './responsible-person.component';
@@ -55,20 +56,10 @@ describe('ResponsiblePersonComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ResponsiblePersonComponent, RouterModule.forRoot([])],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: TasksApiService, useValue: tasksApiService },
         { provide: ActivatedRoute, useValue: route },
-        {
-          provide: Router,
-          useValue: {
-            navigate: vi.fn(),
-            url: '/test/responsible-person',
-            events: of({}),
-            createUrlTree: () => ({}),
-            serializeUrl: () => '',
-          },
-        },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Vary the underlying agreement' },
       ],
@@ -76,6 +67,7 @@ describe('ResponsiblePersonComponent', () => {
 
     store = TestBed.inject(RequestTaskStore);
     router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     store.setState(enhancedMockState);
 
     fixture = TestBed.createComponent(ResponsiblePersonComponent);

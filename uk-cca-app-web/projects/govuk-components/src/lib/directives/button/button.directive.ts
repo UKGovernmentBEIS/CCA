@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, HostListener, inject } from '@angular/core';
+import { Directive, ElementRef, HostBinding, inject } from '@angular/core';
 
 @Directive({
   selector:
@@ -37,12 +37,5 @@ export class ButtonDirective {
 
   private static isButton(nativeElement: HTMLButtonElement | HTMLAnchorElement): nativeElement is HTMLButtonElement {
     return nativeElement.tagName === 'BUTTON';
-  }
-
-  @HostListener('keydown', ['$event'])
-  onKeyDown(event: Event): void {
-    if (event instanceof KeyboardEvent && event.code === 'Space') {
-      event.target.dispatchEvent(new MouseEvent('click'));
-    }
   }
 }

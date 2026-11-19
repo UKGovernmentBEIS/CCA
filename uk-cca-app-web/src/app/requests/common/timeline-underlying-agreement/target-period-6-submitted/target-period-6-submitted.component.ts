@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 
 import { toBaselineAndTargetsSummaryData } from '../../underlying-agreement';
 import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-agreement.selectors';
@@ -17,7 +17,6 @@ import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-ag
     </div>
   `,
   imports: [PageHeadingComponent, SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetPeriod6SubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
@@ -27,7 +26,7 @@ export class TargetPeriod6SubmittedComponent {
       isTp5Period: false,
       baselineExists: true,
       sectorSchemeData: this.requestActionStore.select(
-        underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
+        underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
       )(),
       targetPeriodDetails: this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectTargetPeriod6Details,

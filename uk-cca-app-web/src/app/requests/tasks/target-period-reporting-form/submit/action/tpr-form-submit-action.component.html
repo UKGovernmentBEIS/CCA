@@ -89,7 +89,7 @@
   <button netzPendingButton govukWarnButton type="button" (click)="onCancel()" class="govuk-!-margin-top-6">
     Go to cancel task
   </button>
-} @else {
+} @else if (!isSubmitBlocked()) {
   <button netzPendingButton govukButton type="button" (click)="onSubmit()" class="govuk-!-margin-top-6">
     Confirm and submit TPR
   </button>

@@ -74,4 +74,42 @@ describe('WizardStepComponent', () => {
     expect(element.querySelector('.govuk-error-summary')).toBeTruthy();
     expect(hostComponent.onSubmit).not.toHaveBeenCalled();
   });
+
+  it('should move focus back to the error summary on a second failed submit', async () => {
+    const submitButton = element.querySelector<HTMLButtonElement>('button[type="submit"]');
+    submitButton.click();
+    await fixture.whenStable();
+
+    const input = element.querySelector('input');
+    input.focus();
+    submitButton.click();
+    await fixture.whenStable();
+
+    expect(document.activeElement).toBe(element.querySelector('.govuk-error-summary'));
+  });
+
+  it('should show and refocus the error summary for errors set after a valid submit', async () => {
+    hostComponent.formGroup.patchValue({ date: '01/01/2026' });
+    const submitButton = element.querySelector<HTMLButtonElement>('button[type="submit"]');
+    submitButton.click();
+    await fixture.whenStable();
+    expect(hostComponent.onSubmit).toHaveBeenCalledTimes(1);
+
+    hostComponent.formGroup.controls.text.setErrors({ apiError: 'Server rejected the value' });
+    component.showErrorSummary();
+    await fixture.whenStable();
+    expect(document.activeElement).toBe(element.querySelector('.govuk-error-summary'));
+
+    hostComponent.formGroup.controls.text.setValue('changed');
+    submitButton.focus();
+    submitButton.click();
+    await fixture.whenStable();
+    expect(hostComponent.onSubmit).toHaveBeenCalledTimes(2);
+
+    hostComponent.formGroup.controls.text.setErrors({ apiError: 'Server rejected the value again' });
+    component.showErrorSummary();
+    await fixture.whenStable();
+
+    expect(document.activeElement).toBe(element.querySelector('.govuk-error-summary'));
+  });
 });

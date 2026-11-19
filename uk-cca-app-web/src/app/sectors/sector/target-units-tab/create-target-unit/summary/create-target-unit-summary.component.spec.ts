@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -31,7 +31,7 @@ describe('CreateTargetUnitSummaryComponent', () => {
       providers: [
         { provide: ActivatedRoute, useValue: route },
         { provide: CountryService, useValue: mockCountryService },
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         CreateTargetUnitStore,
       ],
     }).compileComponents();

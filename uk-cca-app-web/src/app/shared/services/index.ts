@@ -8,5 +8,7 @@ export * from './keycloak.service';
 export * from './latest-terms.service';
 export * from './latest-terms.store';
 export * from './request-task-file.service';
+export * from './sign-in-tracking.service';
 export * from './stale-chunk-recovery.service';
 export * from './file-evidence-upload.service';
+export * from './spreadsheet-export.service';

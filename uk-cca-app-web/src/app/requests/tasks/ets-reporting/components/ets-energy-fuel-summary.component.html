@@ -1,0 +1,81 @@
+<dl govuk-summary-list class="govuk-!-margin-top-9">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Is this facility registered as an ultra-small emitter (USE) in UK ETS?</dt>
+    <dd govukSummaryListRowValue>{{ answer(inputDetails()?.isUltraSmallEmitter) }}</dd>
+    @if (isEditable()) {
+      <dd govukSummaryListRowActions>
+        <a class="govuk-link" [routerLink]="[questionsLink()]">
+          Change<span class="govuk-visually-hidden"> ultra-small emitter registration</span>
+        </a>
+      </dd>
+    }
+  </div>
+  @if (inputDetails()?.isUltraSmallEmitter === true) {
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Do you want to voluntarily provide details of the fuels used in the year?</dt>
+      <dd govukSummaryListRowValue>{{ answer(inputDetails()?.provideFuelDetails) }}</dd>
+      @if (isEditable()) {
+        <dd govukSummaryListRowActions>
+          <a class="govuk-link" [routerLink]="[questionsLink()]">
+            Change<span class="govuk-visually-hidden"> voluntary fuel details</span>
+          </a>
+        </dd>
+      }
+    </div>
+  }
+</dl>
+
+@if (reportsFuels()) {
+  <h2 class="govuk-heading-m" [class.govuk-!-margin-bottom-2]="!tableRows().length">Energy/fuel amount consumed</h2>
+  @if (tableRows().length) {
+    <div class="x-scroll govuk-!-margin-bottom-9">
+      <govuk-table [columns]="tableColumns()" [data]="tableRows()">
+        <ng-template let-column="column" let-row="row">
+          @switch (column.field) {
+            @case ('fuelType') {
+              <span class="fuel-name">{{ row.fuelType }}</span>
+            }
+            @case ('primaryEnergyConversionFactor') {
+              {{ row.primaryEnergyConversionFactor | number: '1.1-7' }}
+            }
+            @case ('actions') {
+              <ul class="govuk-summary-list__actions-list fuel-actions">
+                <li class="govuk-summary-list__actions-list-item">
+                  <a class="govuk-link" [routerLink]="[detailsLink()]">
+                    Change<span class="govuk-visually-hidden"> {{ row.fuelType }} energy/fuel amount</span>
+                  </a>
+                </li>
+                @if (row.isCustom) {
+                  <li class="govuk-summary-list__actions-list-item">
+                    <button
+                      netzPendingButton
+                      type="button"
+                      class="govuk-link"
+                      (click)="removeFuel.emit(row.nonStandardFuelIndex)"
+                    >
+                      Delete<span class="govuk-visually-hidden"> {{ row.fuelType }}</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            @default {
+              {{ row[column.field] | number: '1.0-7' }}
+            }
+          }
+        </ng-template>
+      </govuk-table>
+    </div>
+  } @else {
+    <p class="govuk-body govuk-!-margin-bottom-8">No delivered energy values provided</p>
+  }
+
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-2">
+    Total {{ isCarbon() ? 'primary CO2e' : 'primary energy' }} ({{ measurementUnit() }})
+  </h3>
+  <p class="govuk-body govuk-!-margin-bottom-6">
+    {{ totals().totalPrimaryEnergy | number: '1.0-7' }} {{ measurementUnit() }}
+  </p>
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Total CO2e emissions (tCO2e)</h3>
+  <p class="govuk-body govuk-!-margin-bottom-9">{{ totals().totalCo2Emissions | number: '1.0-7' }} tCO2e</p>
+}

@@ -61,7 +61,7 @@ describe('OperatorDetailsComponent', () => {
   it('should render "Name" section', () => {
     const detailsList = document.querySelectorAll("[data-testid='name-list'] div");
 
-    const elements = [];
+    const elements: (string | null)[][] = [];
 
     detailsList.forEach((div) => {
       elements.push([div.querySelector('dt').textContent, div.querySelector('dd').textContent]);
@@ -78,7 +78,7 @@ describe('OperatorDetailsComponent', () => {
   it('should render "Organisation details" section', () => {
     const contactList = document.querySelectorAll("[data-testid='organisation-details-list'] div");
 
-    const elements = [];
+    const elements: (string | null)[][] = [];
 
     contactList.forEach((div) => {
       elements.push([div.querySelector('dt').textContent, div.querySelector('dd').textContent]);

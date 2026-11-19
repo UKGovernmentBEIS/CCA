@@ -1,10 +1,19 @@
-<h2 class="govuk-heading-m">What is your decision on the information submitted?</h2>
-<span class="govuk-hint">Use your judgement to make minor changes within the details if needed</span>
-<div govuk-radio formControlName="type">
+<div
+  govuk-radio
+  formControlName="type"
+  legend="What is your decision on the information submitted?"
+  legendSize="medium"
+  hint="Use your judgement to make minor changes within the details if needed"
+>
   @if (isNewFacility()) {
     <govuk-radio-option label="Accepted" value="ACCEPTED">
       <ng-container govukConditionalContent>
-        <div govuk-checkboxes formControlName="changeDate">
+        <div
+          govuk-checkboxes
+          formControlName="changeDate"
+          legend="Change the subsistence charge start date"
+          legendSize="medium"
+        >
           <govuk-checkbox [value]="true" label="I want to change the subsistence charge start date from the default.">
             <ng-container govukConditionalContent>
               <div

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { SummaryComponent } from '@shared/components';
 
@@ -12,7 +12,6 @@ import { toReportSubmittedSummaryData } from './report-submitted-summary-data';
     <cca-summary [data]="summaryData" />
   `,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportSubmittedComponent {
   private readonly performanceReportStore = inject(PerformanceReportStore);

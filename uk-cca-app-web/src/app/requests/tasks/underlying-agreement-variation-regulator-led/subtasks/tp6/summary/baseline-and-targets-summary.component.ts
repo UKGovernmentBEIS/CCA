@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -12,7 +12,7 @@ import {
   underlyingAgreementVariationRegulatorLedQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
@@ -25,7 +25,6 @@ import { generateDownloadUrl } from '@shared/utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaselineAndTargetsSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -38,7 +37,7 @@ export class BaselineAndTargetsSummaryComponent {
     this.baselineTargetPeriod === BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS;
 
   private readonly sectorAssociationDetailsSchemeData = this.requestTaskStore.select(
-    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
+    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
   )();
 
   private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();

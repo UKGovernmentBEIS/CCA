@@ -1,10 +1,10 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
-import { mockUNAReviewRequestTaskState } from '@requests/common';
+import { mockUNAReviewRequestTaskState } from '@requests/common/underlying-agreement/testing/mock-data';
 
 import FacilitySummaryComponent from './facility-summary.component';
 
@@ -19,7 +19,7 @@ describe('FacilitySummaryComponent', () => {
     TestBed.configureTestingModule({
       imports: [FacilitySummaryComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },

@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -16,9 +16,10 @@ import {
   TextareaComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
+import { MultipleFileInputComponent } from '../multiple-file-input/multiple-file-input.component';
+import { WizardStepComponent } from '../wizard/wizard-step.component';
 import { ReceivedAmountStore } from './received-amount.store';
 import {
   RECEIVED_AMOUNT_FORM,
@@ -29,6 +30,7 @@ import {
 @Component({
   selector: 'cca-received-amount',
   templateUrl: './received-amount.component.html',
+  providers: [ReceivedAmountFormProvider],
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
@@ -47,8 +49,6 @@ import {
     TextareaComponent,
     MultipleFileInputComponent,
   ],
-  providers: [ReceivedAmountFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReceivedAmountComponent implements OnInit {
   protected readonly activatedRoute = inject(ActivatedRoute);

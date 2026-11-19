@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { mockUNAReviewRequestTaskState } from '@requests/common';
+import { mockUNAReviewRequestTaskState } from '@requests/common/underlying-agreement/testing/mock-data';
 
 import AuthorisationAdditionalEvidenceSummaryComponent from './authorisation-additional-evidence-summary.component';
 

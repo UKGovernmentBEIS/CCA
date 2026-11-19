@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { TabLazyDirective, TabsComponent } from '@netz/govuk-components';
@@ -34,6 +34,5 @@ import { SiteContactsComponent } from './site-contacts-tab/site-contacts.compone
     ExternalContactsComponent,
     SiteContactsComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegulatorsComponent {}

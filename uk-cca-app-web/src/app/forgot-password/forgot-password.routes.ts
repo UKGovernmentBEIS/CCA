@@ -1,29 +1,25 @@
 import { Routes } from '@angular/router';
 
-import { EmailLinkInvalidComponent } from './email-link-invalid/email-link-invalid.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { SubmitEmailComponent } from './submit-email/submit-email.component';
-import { SubmitOtpComponent } from './submit-otp/submit-otp.component';
-
 export const FORGOT_PASSWORD_ROUTES: Routes = [
   {
+    title: 'Forgot password',
     path: '',
-    data: { pageTitle: 'Forgot password' },
-    component: SubmitEmailComponent,
+    loadComponent: () => import('./submit-email/submit-email.component').then((c) => c.SubmitEmailComponent),
   },
   {
+    title: 'This link is invalid',
     path: 'invalid-link',
-    data: { pageTitle: 'This link is invalid' },
-    component: EmailLinkInvalidComponent,
+    loadComponent: () =>
+      import('./email-link-invalid/email-link-invalid.component').then((c) => c.EmailLinkInvalidComponent),
   },
   {
+    title: 'Reset password',
     path: 'reset-password',
-    data: { pageTitle: 'Reset password' },
-    component: ResetPasswordComponent,
+    loadComponent: () => import('./reset-password/reset-password.component').then((c) => c.ResetPasswordComponent),
   },
   {
+    title: 'Submit otp',
     path: 'otp',
-    data: { pageTitle: 'Submit otp' },
-    component: SubmitOtpComponent,
+    loadComponent: () => import('./submit-otp/submit-otp.component').then((c) => c.SubmitOtpComponent),
   },
 ];

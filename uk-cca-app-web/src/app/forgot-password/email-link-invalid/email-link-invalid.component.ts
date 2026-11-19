@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -16,6 +16,5 @@ import { PageHeadingComponent } from '@netz/common/components';
     </div>
   `,
   imports: [RouterModule, PageHeadingComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailLinkInvalidComponent {}

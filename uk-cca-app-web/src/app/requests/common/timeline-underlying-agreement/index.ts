@@ -5,7 +5,6 @@ export * from './manage-facilities-submitted/manage-facilities-submitted.compone
 export * from './review-target-unit-details-submitted/review-target-unit-details-submitted.component';
 export * from './target-period-5-submitted/target-period-5-submitted.component';
 export * from './target-period-6-submitted/target-period-6-submitted.component';
-export * from './testing/mock-data';
 export * from './timeline-underlying-agreement.selectors';
 export * from './timeline-underlying-agreement.types';
 export * from './variation-details-submitted/variation-details-submitted.component';

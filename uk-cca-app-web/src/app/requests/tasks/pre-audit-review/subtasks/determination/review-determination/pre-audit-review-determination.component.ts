@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,6 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DateInputComponent, RadioComponent, RadioOptionComponent, TextareaComponent } from '@netz/govuk-components';
 import { TaskItemStatus, TasksApiService } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
+import { getToday } from '@shared/utils';
 import { produce } from 'immer';
 
 import { PreAuditReviewSubmitRequestTaskPayload } from 'cca-api';
@@ -23,6 +24,7 @@ import {
 @Component({
   selector: 'cca-pre-audit-review-determination',
   templateUrl: './pre-audit-review-determination.component.html',
+  providers: [PreAuditReviewAuditReasonFormProvider],
   imports: [
     ReactiveFormsModule,
     ReturnToTaskOrActionPageComponent,
@@ -32,8 +34,6 @@ import {
     RadioOptionComponent,
     RadioComponent,
   ],
-  providers: [PreAuditReviewAuditReasonFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreAuditReviewDeterminationComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -41,7 +41,7 @@ export class PreAuditReviewDeterminationComponent {
   private readonly tasksApiService = inject(TasksApiService);
   private readonly requestTaskStore = inject(RequestTaskStore);
 
-  protected readonly today = new Date();
+  protected readonly today = getToday();
   protected readonly form = inject<PreAuditReviewDeterminationFormModel>(PRE_AUDIT_REVIEW_DETERMINATION_FORM);
 
   onSubmit() {

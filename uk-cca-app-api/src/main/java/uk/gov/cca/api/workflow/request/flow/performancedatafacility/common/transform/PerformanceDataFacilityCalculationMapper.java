@@ -1,13 +1,13 @@
 package uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.transform;
 
 import lombok.experimental.UtilityClass;
-
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityCalculatedResults;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityTargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
+import uk.gov.cca.api.workflow.request.flow.common.utils.PerformanceFuelEnergyCalculationCommonFunctionUtil;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils.PerformanceDataFacilityCalculationFunctionUtil;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityCalculatedResults;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,19 +18,19 @@ public class PerformanceDataFacilityCalculationMapper {
     public PerformanceDataFacilityCalculatedResults toPerformanceDataFacilityCalculatedResults(PerformanceDataFacilityCalculationParameters parameters,
                                                                                                PerformanceDataFacilityInputData performanceData) {
         // Calculate
-        BigDecimal actualEnergyCarbon = PerformanceDataFacilityCalculationFunctionUtil.ACTUAL_ENERGY_CARBON
+        BigDecimal actualEnergyCarbon = PerformanceFuelEnergyCalculationCommonFunctionUtil.ACTUAL_ENERGY_CARBON
                 .apply(performanceData.getEnergyFuelDetails(), parameters.getMeasurementType());
         BigDecimal targetEnergyCarbon = PerformanceDataFacilityCalculationFunctionUtil.TARGET_ENERGY_CARBON
                 .apply(parameters, performanceData);
         BigDecimal energyCarbonDifference = PerformanceDataFacilityCalculationFunctionUtil.ENERGY_CARBON_DIFFERENCE
                 .apply(actualEnergyCarbon, targetEnergyCarbon);
         BigDecimal targetImprovement = PerformanceDataFacilityCalculationFunctionUtil
-                .TARGET_IMPROVEMENT.apply(parameters).setScale(7, RoundingMode.HALF_UP);
+                .TARGET_IMPROVEMENT.apply(parameters, performanceData).setScale(7, RoundingMode.HALF_UP);
         BigDecimal weightedConversionFactor = PerformanceDataFacilityCalculationFunctionUtil.WEIGHTED_CONVERSION_FACTOR
                 .apply(performanceData.getEnergyFuelDetails(), actualEnergyCarbon, parameters.getMeasurementType());
         BigDecimal targetCo2Emissions = PerformanceDataFacilityCalculationFunctionUtil.TARGET_TCO2_EMISSIONS
                 .apply(targetEnergyCarbon, weightedConversionFactor, parameters.getMeasurementType());
-        BigDecimal actualCo2Emissions = PerformanceDataFacilityCalculationFunctionUtil.ACTUAL_TCO2_EMISSIONS
+        BigDecimal actualCo2Emissions = PerformanceFuelEnergyCalculationCommonFunctionUtil.ACTUAL_TCO2_EMISSIONS
                 .apply(performanceData.getEnergyFuelDetails(), parameters.getMeasurementType());
         BigDecimal co2EmissionsDifference = PerformanceDataFacilityCalculationFunctionUtil.TCO2_EMISSIONS_DIFFERENCE
                 .apply(actualCo2Emissions, targetCo2Emissions);

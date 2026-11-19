@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -18,7 +18,6 @@ import { toTuReportsSummaryData } from '../tu-reports-summary-data';
   selector: 'cca-performance-report',
   templateUrl: './performance-report.component.html',
   imports: [ReactiveFormsModule, SelectComponent, SummaryComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceReportComponent {
   private readonly targetPeriodPerformanceDataReportOfTheAccountService = inject(
@@ -55,27 +54,28 @@ export class PerformanceReportComponent {
   });
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const selectedValue = this.targetPeriodValue();
+      if (!selectedValue) return;
 
-      if (selectedValue) {
-        this.fetchAccountPerformanceData(selectedValue)
-          .pipe(
-            switchMap((statusInfo) => {
-              this.performanceReportStore.setState({ statusInfo: statusInfo, reportDetails: null });
-              if (statusInfo.reportVersion > 0) {
-                return this.fetchAccountPerformanceSubmittedData(selectedValue).pipe(
-                  tap((reportDetails) => {
-                    this.performanceReportStore.setState({ statusInfo, reportDetails });
-                  }),
-                );
-              }
+      const subscription = this.fetchAccountPerformanceData(selectedValue)
+        .pipe(
+          switchMap((statusInfo) => {
+            this.performanceReportStore.setState({ statusInfo: statusInfo, reportDetails: null });
+            if (statusInfo.reportVersion > 0) {
+              return this.fetchAccountPerformanceSubmittedData(selectedValue).pipe(
+                tap((reportDetails) => {
+                  this.performanceReportStore.setState({ statusInfo, reportDetails });
+                }),
+              );
+            }
 
-              return EMPTY;
-            }),
-          )
-          .subscribe();
-      }
+            return EMPTY;
+          }),
+        )
+        .subscribe();
+
+      onCleanup(() => subscription.unsubscribe());
     });
   }
 

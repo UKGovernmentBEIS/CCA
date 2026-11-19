@@ -1,4 +1,5 @@
 import {
+  FacilityCertificationStatusDTO,
   FacilityInfoDTO,
   ItemDTO,
   ItemDTOResponse,
@@ -31,23 +32,35 @@ export const mockFacilityDetails: FacilityInfoDTO = {
     line1: 'address line 1',
     postcode: '505050',
   },
-  facilityCertificationDetails: [
-    {
-      status: 'CERTIFIED',
-      startDate: '2024-12-12',
-      certificationPeriod: 'CP6',
-      certificationPeriodStartDate: '2023-07-01',
-      certificationPeriodEndDate: '2025-05-30',
-    },
-    {
-      status: 'NOT_YET_DEFINED',
-      startDate: '2025-06-01',
-      certificationPeriod: 'CP7',
-      certificationPeriodStartDate: '2025-06-01',
-      certificationPeriodEndDate: '2027-03-31',
-    },
-  ],
 };
+
+export const mockFacilityCertifications: FacilityCertificationStatusDTO[] = [
+  {
+    certificationPeriodId: 3,
+    schemeVersion: 'CCA_3',
+    status: 'NOT_YET_DEFINED',
+    certificationPeriod: 'CP8',
+    certificationPeriodStartDate: '2027-07-01',
+    certificationPeriodEndDate: '2029-06-30',
+  },
+  {
+    certificationPeriodId: 2,
+    schemeVersion: 'CCA_2',
+    status: 'NOT_YET_DEFINED',
+    certificationPeriod: 'CP7',
+    certificationPeriodStartDate: '2025-07-01',
+    certificationPeriodEndDate: '2027-06-30',
+  },
+  {
+    certificationPeriodId: 1,
+    schemeVersion: 'CCA_2',
+    status: 'CERTIFIED',
+    startDate: '2024-12-12',
+    certificationPeriod: 'CP6',
+    certificationPeriodStartDate: '2023-07-01',
+    certificationPeriodEndDate: '2025-06-30',
+  },
+];
 
 export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = {
   requestDetails: [

@@ -18,7 +18,6 @@ import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -52,16 +51,13 @@ public class CcaFileAttachmentService {
      *
      * @param fileDTO File to be saved
      * @param status Status
-     * @param createdBy Created by
      * @return UUID
-     * @throws IOException in case of an error
      */
     @Transactional
-    public String createSystemFileAttachment(@Valid FileDTO fileDTO, FileStatus status, String createdBy) throws IOException {
+    public String createSystemFileAttachment(@Valid FileDTO fileDTO, FileStatus status) {
         FileAttachment attachment = FILE_ATTACHMENT_MAPPER.toFileAttachment(fileDTO);
         attachment.setUuid(UUID.randomUUID().toString());
         attachment.setStatus(status);
-        attachment.setCreatedBy(createdBy);
 
         this.ccaFileAttachmentRepository.save(attachment);
 
@@ -74,17 +70,15 @@ public class CcaFileAttachmentService {
      * @param files Files to insert
      * @param placeholderFile The placeholder file with the content
      * @param status Status
-     * @throws IOException In case of an error
      */
     @Transactional
-    public void createSystemFileAttachments(List<FileInfoDTO> files, @Valid FileDTO placeholderFile, @NotNull FileStatus status) throws IOException {
+    public void createSystemFileAttachments(List<FileInfoDTO> files, @Valid FileDTO placeholderFile, @NotNull FileStatus status) {
         List<FileAttachment> attachments = new ArrayList<>();
 
         for (FileInfoDTO fileInfo : files) {
             FileAttachment attachment = FILE_ATTACHMENT_MAPPER.toFileAttachment(placeholderFile);
             attachment.setUuid(fileInfo.getUuid());
             attachment.setStatus(status);
-            attachment.setCreatedBy("System");
 
             attachments.add(attachment);
         }

@@ -11,14 +11,12 @@
       formControlName="registrationDate"
       label="When was the appeal registered?"
       hint="The date must be today or in the past"
-      [max]="today"
     ></div>
 
     <cca-multiple-file-input
       formControlName="files"
       [baseDownloadUrl]="downloadUrl()"
       label="Upload appeal file (optional)"
-      hint="Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DXF, BMP or CSV file, no more than 20MB."
     />
 
     <div

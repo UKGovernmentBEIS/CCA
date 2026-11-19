@@ -1,8 +1,8 @@
 <netz-page-heading size="xl" [caption]="'Reset two-factor authentication'">
-  Are you sure you want to reset two-factor authentication for {{ userName$ | async }} ?
+  Are you sure you want to reset two-factor authentication for {{ userName }} ?
 </netz-page-heading>
 
-<p>This will send a two-factor authentication reset email to {{ userName$ | async }}</p>
+<p>This will send a two-factor authentication reset email to {{ userName }}</p>
 
 <div class="govuk-button-group">
   <button type="button" netzPendingButton (click)="reset()" govukWarnButton>Yes, reset authentication</button>

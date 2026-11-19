@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -15,12 +15,11 @@ import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/
 
     <p>The product will be reinstated as live and included when calculating targets.</p>
 
-    <govuk-warning-text assistiveText="">Only undo if the product should remain in scope.</govuk-warning-text>
+    <govuk-warning-text>Only undo if the product should remain in scope.</govuk-warning-text>
 
     <button (click)="onUndo()" class="govuk-button">Undo exclusion</button>
   `,
   imports: [WarningTextComponent, PageHeadingComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UndoProductComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

@@ -1,14 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import {
-  booleanAttribute,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  PLATFORM_ID,
-  signal,
-} from '@angular/core';
+import { booleanAttribute, Component, computed, inject, input, PLATFORM_ID, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { IsActiveMatchOptions, RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -30,7 +21,7 @@ import type { GovukLinkTarget, GovukServiceNavigationItem } from '../types';
  *
  * ```html
  * <govuk-service-navigation
- *   serviceName="Manage your Climate Change Agreement"
+ *   serviceName="Manage your Climate Change Agreements"
  *   [serviceHomepage]="{ routerLink: '/' }"
  *   [navigation]="[{ text: 'Tasks', routerLink: '/dashboard' }]"
  * />
@@ -39,14 +30,13 @@ import type { GovukLinkTarget, GovukServiceNavigationItem } from '../types';
 @Component({
   selector: 'govuk-service-navigation',
   templateUrl: './service-navigation.component.html',
-  imports: [RouterLink, RouterLinkActive],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'govuk-service-navigation',
     '[attr.role]': 'serviceName() ? "region" : null',
     '[attr.aria-label]': 'serviceName() ? ariaLabel() : null',
   },
   styles: ':host { display: block; }',
+  imports: [RouterLink, RouterLinkActive],
 })
 export class GovukServiceNavigationComponent {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));

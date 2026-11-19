@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,7 +11,6 @@ import { toCca3MigrationActivatedSummaryData } from './cca3-migration-activated-
   selector: 'cca-cca3-migration-activated',
   template: `<cca-summary [data]="data" />`,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cca3MigrationActivatedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

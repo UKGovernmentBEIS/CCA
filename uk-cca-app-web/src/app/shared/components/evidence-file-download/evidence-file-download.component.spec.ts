@@ -1,5 +1,5 @@
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withXhr } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -11,6 +11,45 @@ import { Mocked } from 'vitest';
 import { SubsistenceFeesMoAReceivedAmountControllerService } from 'cca-api';
 
 import { EvidenceFileDownloadComponent } from './evidence-file-download.component';
+
+describe('Buy-out and surplus evidence downloads', () => {
+  it.each([
+    {
+      resource: 'facility detail from the route',
+      params: { transactionId: 10, transactionDetailId: 13, uuid: 'evidence-uuid' },
+      data: {},
+      endpoint: 'transaction-details/13',
+    },
+    {
+      resource: 'account detail from the resolver',
+      params: { transactionId: 10, uuid: 'evidence-uuid' },
+      data: { evidenceResource: 'transactionDetail', transactionDetails: { detailId: 14 } },
+      endpoint: 'transaction-details/14',
+    },
+    {
+      resource: 'transaction',
+      params: { transactionId: 10, uuid: 'evidence-uuid' },
+      data: {},
+      endpoint: 'transactions/10',
+    },
+  ])('uses the $resource evidence endpoint', async ({ params, data, endpoint }) => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub(params, {}, data) },
+      ],
+    });
+    const component = TestBed.createComponent(EvidenceFileDownloadComponent).componentInstance;
+    const downloadUrl = firstValueFrom(component.url$);
+    const http = TestBed.inject(HttpTestingController);
+    const request = http.expectOne((req) => req.url === `/api/v1.0/buy-out-surplus/${endpoint}/evidence`);
+    expect(request.request.params.get('fileEvidenceUuid')).toBe('evidence-uuid');
+    request.flush({ token: 'download-token', tokenExpirationMinutes: 1 });
+    await expect(downloadUrl).resolves.toBe('/api/v1.0/file-evidences/download-token');
+    http.verify();
+  });
+});
 
 describe('EvidenceFileDownloadComponent', () => {
   let component: EvidenceFileDownloadComponent;
@@ -30,7 +69,7 @@ describe('EvidenceFileDownloadComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EvidenceFileDownloadComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: activatedRoute },
         {

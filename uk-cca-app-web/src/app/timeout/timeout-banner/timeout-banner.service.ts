@@ -1,11 +1,11 @@
-import { effect, inject, Injectable, OnDestroy, signal } from '@angular/core';
+import { effect, inject, OnDestroy, Service, signal } from '@angular/core';
 
 import { AuthService } from '@shared/services';
 import { KeycloakEventType, KeycloakService } from '@shared/services';
 
 import { environment } from '../../../environments/environment';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TimeoutBannerService implements OnDestroy {
   private readonly keycloak = inject(KeycloakService);
   private readonly authService = inject(AuthService);
@@ -33,8 +33,8 @@ export class TimeoutBannerService implements OnDestroy {
   readonly timeExtensionAllowed = signal(true);
   readonly isVisible = signal(false);
 
-  private countdownTimeout = null;
-  private bannerTimeout = null;
+  private countdownTimeout: ReturnType<typeof setTimeout> | null = null;
+  private bannerTimeout: ReturnType<typeof setTimeout> | null = null;
   private scheduledExpiryTime: number | null = null;
 
   constructor() {
@@ -154,7 +154,8 @@ export class TimeoutBannerService implements OnDestroy {
   private calculateCountdownTime(): number {
     // Calculate milliseconds until token expiration, minus the offset (when to show banner)
     // Using absolute expiry time (exp) ensures countdown is stable across token refreshes
-    const nowMs = Date.now();
+    // Keycloak timestamps are server time; keycloak-js exposes the local/server clock offset.
+    const nowMs = Date.now() - (this.keycloak.keycloakInstance?.timeSkew ?? 0) * 1000;
     const expiryMs = this.refreshTokenParsedExp * 1000;
     const msUntilExpiry = expiryMs - nowMs;
     const msOffset = this.timeOffsetSeconds * 1000;

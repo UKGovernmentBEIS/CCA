@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -10,7 +10,6 @@ import { toDecisionDetailsSummaryData } from './peer-review-decision-summary-dat
   selector: 'cca-underlying-agreement-regulator-led-variation-reviewed-decision',
   template: `<cca-summary [data]="summaryData()" />`,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnARegulatorLedVariationReviewedDecisionDetailsComponent {
   private readonly requestActionStore = inject(RequestActionStore);

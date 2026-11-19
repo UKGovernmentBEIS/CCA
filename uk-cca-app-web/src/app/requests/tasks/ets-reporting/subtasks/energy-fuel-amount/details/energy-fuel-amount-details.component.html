@@ -1,0 +1,143 @@
+@if (errorSummaryInfo(); as error) {
+  <cca-error-summary [errorSummaryInfo]="error" />
+}
+
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="UK ETS energy/fuel details"
+  heading="Enter UK ETS energy/fuel amount consumed"
+>
+  <div class="govuk-!-width-two-thirds">
+    <p class="govuk-!-margin-top-8 govuk-!-margin-bottom-2">
+      Fill in the delivered energy amounts for each fuel type used during the period whose CO2e emissions you are
+      required to report for UK ETS.<br />You can also add a new fuel type if it's not included in the current list.
+    </p>
+
+    <govuk-details summary="I need help with the energy terms">
+      <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>
+          Delivered energy
+          <p class="govuk-hint govuk-!-margin-bottom-2">
+            This is the amount of usable energy that is consumed by a facility, expressed in energy units. This would
+            include the metered amounts of natural gas and other fuels supplied to and used by a facility.
+          </p>
+        </li>
+        <li>
+          @if (isCarbonPrimaryOutput()) {
+            Primary CO2
+            <p class="govuk-hint govuk-!-margin-bottom-2">
+              This is the amount of carbon dioxide emitted, which is calculated as the amount of delivered energy
+              consumed multiplied by the primary energy conversion factor multiplied by the CO2 conversion factor for
+              each fuel type.
+            </p>
+          } @else {
+            Primary energy
+            <p class="govuk-hint govuk-!-margin-bottom-2">
+              This is the amount of energy expressed in its original unconverted form.
+            </p>
+          }
+        </li>
+        <li>
+          Carbon dioxide (CO2e) conversion factor
+          <p class="govuk-hint govuk-!-margin-bottom-2">
+            This is the amount of greenhouse gases emitted (carbon dioxide, methane and nitrous oxides), expressed as
+            total carbon dioxide equivalent (CO2e), for each unit of energy consumed.
+          </p>
+        </li>
+        <li>
+          Primary conversion factor
+          <p class="govuk-hint govuk-!-margin-bottom-0">
+            This is the amount of primary energy consumed to produce each unit of delivered energy. For most fuel types,
+            the primary conversion factor is 1.
+          </p>
+        </li>
+      </ul>
+    </govuk-details>
+  </div>
+
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Reporting year</h2>
+  <p class="govuk-!-margin-bottom-7">{{ targetYear() }}</p>
+
+  <div class="x-scroll">
+    <govuk-table #fuelTable [columns]="tableColumns()" [data]="tableData()">
+      <ng-template let-column="column" let-row="row" let-index="index">
+        <ng-container formArrayName="fuels">
+          <div [formGroupName]="index">
+            @switch (column.field) {
+              @case ('fuelType') {
+                @if (row.value.isCustom) {
+                  <div
+                    cca-text-input
+                    formControlName="fuelType"
+                    [label]="'Name for additional fuel type ' + customFuelNumber(index)"
+                    [labelHidden]="true"
+                    class="govuk-!-margin-bottom-0"
+                  ></div>
+                } @else {
+                  {{ row.value.fuelType }}
+                }
+              }
+              @case ('co2ConversionFactor') {
+                @if (row.value.isCustom) {
+                  <div
+                    cca-text-input
+                    formControlName="co2ConversionFactor"
+                    inputType="number"
+                    numberFormat="1.0-7"
+                    [label]="column.header + ' for additional fuel type ' + customFuelNumber(index)"
+                    [labelHidden]="true"
+                    inputMode="decimal"
+                    class="fuel-conversion-factor govuk-!-margin-bottom-0"
+                  ></div>
+                } @else {
+                  {{ row.value.co2ConversionFactor | number: '1.0-7' }}
+                }
+              }
+              @case ('deliveredEnergy') {
+                <div
+                  cca-text-input
+                  formControlName="deliveredEnergy"
+                  inputType="number"
+                  numberFormat="1.0-7"
+                  [label]="
+                    column.header + ' for ' + (row.value.fuelType || 'additional fuel type ' + customFuelNumber(index))
+                  "
+                  [labelHidden]="true"
+                  [suffix]="deliveredUnit()"
+                  inputMode="decimal"
+                  class="fuel-delivered-energy govuk-!-margin-bottom-0"
+                ></div>
+              }
+              @case ('primaryEnergy') {
+                {{ primaryAmount(row.getRawValue()) | number: '1.0-7' }}
+              }
+              @case ('primaryEnergyConversionFactor') {
+                {{ row.value.primaryEnergyConversionFactor | number: '1.1-7' }}
+              }
+              @case ('actions') {
+                @if (row.value.isCustom) {
+                  <button type="button" class="govuk-link" (click)="onRemoveFuel(index)">
+                    Delete<span class="govuk-visually-hidden">
+                      {{ row.value.fuelType || 'additional fuel type ' + customFuelNumber(index) }}</span
+                    >
+                  </button>
+                }
+              }
+            }
+          </div>
+        </ng-container>
+      </ng-template>
+    </govuk-table>
+  </div>
+
+  @if (nonStandardCount() < 10) {
+    <div class="flex-baseline govuk-!-margin-bottom-7">
+      <button #addFuelButton type="button" govukSecondaryButton (click)="onAddFuel()">Add a fuel type</button>
+      <span class="govuk-hint">You can add up to 10 new fuel types</span>
+    </div>
+  }
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

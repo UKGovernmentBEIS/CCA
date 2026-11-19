@@ -25,7 +25,7 @@ import uk.gov.cca.api.workflow.request.flow.subsistencefees.common.domain.MoaRep
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.common.domain.SubsistenceFeesRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunRequestPayload;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
@@ -39,7 +39,7 @@ class SubsistenceFeesRunGenerateReportServiceTest {
 	private RequestService requestService;
 	
 	@Mock
-	private FileDocumentService fileDocumentService;
+	private FileDocumentStorageService fileDocumentStorageService;
 	
 	@Test
 	void generateReport() {
@@ -93,7 +93,7 @@ class SubsistenceFeesRunGenerateReportServiceTest {
 				.build();
 		
     	when(requestService.findRequestById(requestId)).thenReturn(request);
-    	when(fileDocumentService.createFileDocument(Mockito.any(), Mockito.eq("req subsistence fees summary report.csv"))).thenReturn(reportFile);
+    	when(fileDocumentStorageService.createFileDocument(Mockito.any(), Mockito.eq("req subsistence fees summary report.csv"))).thenReturn(reportFile);
     	
     	service.generateReport(requestId);
     	
@@ -101,7 +101,7 @@ class SubsistenceFeesRunGenerateReportServiceTest {
     	
     	verify(requestService, times(1)).findRequestById(requestId);
     	ArgumentCaptor<byte[]> fileContentCaptor = ArgumentCaptor.forClass(byte[].class);
-    	verify(fileDocumentService, times(1)).createFileDocument(fileContentCaptor.capture(), Mockito.eq("req subsistence fees summary report.csv"));
+    	verify(fileDocumentStorageService, times(1)).createFileDocument(fileContentCaptor.capture(), Mockito.eq("req subsistence fees summary report.csv"));
     	byte[] fileContentCaptured = fileContentCaptor.getValue();
     	String fileContentAsStringCaptured = new String(fileContentCaptured);
     	

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -9,11 +9,14 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { assertInCellControlLabelsHidden } from '@testing';
 
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
 import { ChooseRelevantWorkflowsComponent } from './choose-relevant-workflows.component';
 
-@Component({ template: '' })
+@Component({
+  template: '',
+})
 class DummyComponent {}
 
 describe('ChooseRelevantWorkflowsComponent', () => {
@@ -33,7 +36,7 @@ describe('ChooseRelevantWorkflowsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ChooseRelevantWorkflowsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideRouter([{ path: '**', component: DummyComponent }]),
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
@@ -57,6 +60,10 @@ describe('ChooseRelevantWorkflowsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should hide the labels of controls inside table cells, since the column header names them', () => {
+    assertInCellControlLabelsHidden(fixture.nativeElement);
   });
 
   it('should submit and call saveRequestTaskAction', () => {

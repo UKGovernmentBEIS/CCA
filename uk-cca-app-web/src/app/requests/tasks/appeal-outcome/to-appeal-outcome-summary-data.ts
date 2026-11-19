@@ -1,7 +1,5 @@
-import { DatePipe } from '@angular/common';
-
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { fileUtils } from '@shared/utils';
+import { fileUtils, formatCalendarDate } from '@shared/utils';
 
 import { AppealOutcome, AppealOutcomeTribunalDecision } from './types';
 
@@ -17,7 +15,6 @@ export function toAppealOutcomeSummaryData(
   downloadUrl: string,
 ): SummaryData {
   const changeLink = '../provide-details';
-  const datePipe = new DatePipe('en-GB');
 
   return new SummaryFactory()
     .addSection('')
@@ -25,7 +22,7 @@ export function toAppealOutcomeSummaryData(
       change: isEditable,
       changeLink,
     })
-    .addRow('Date of appeal outcome', datePipe.transform(appealOutcome?.appealOutcomeDate, 'd MMM yyyy'), {
+    .addRow('Date of appeal outcome', formatCalendarDate(appealOutcome?.appealOutcomeDate, 'd MMM yyyy'), {
       change: isEditable,
       changeLink,
     })

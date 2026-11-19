@@ -6,11 +6,11 @@ import { GovukValidators } from '@netz/govuk-components';
 import {
   addBaselineDataConditionallyRequiredFieldsValidator,
   AddBaselineDataFormModel,
-  normaliseNumber,
   underlyingAgreementQuery,
   UPLOAD_SECTION_ATTACHMENT_TYPE,
 } from '@requests/common';
 import { RequestTaskFileService } from '@shared/services';
+import { normaliseNumber } from '@shared/utils';
 
 export const ADD_BASELINE_DATA_FORM = new InjectionToken<AddBaselineDataFormModel>('Add baseline data form');
 

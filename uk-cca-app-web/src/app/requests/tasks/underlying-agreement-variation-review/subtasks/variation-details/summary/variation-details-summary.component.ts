@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -23,7 +23,6 @@ import { generateDownloadUrl } from '@shared/utils';
     <netz-return-to-task-or-action-page />
   `,
   imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class VariationDetailsSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +31,7 @@ import { createNotifyOperatorActionDTO } from '../transform';
 @Component({
   selector: 'cca-notify-operator-regulator-led-variation',
   templateUrl: './notify-operator-regulator-led-variation.component.html',
+  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -41,8 +42,6 @@ import { createNotifyOperatorActionDTO } from '../transform';
     SelectComponent,
     NoticeRecipientsTypePipe,
   ],
-  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotifyOperatorRegulatorLedVariationComponent {
   private readonly store = inject(RequestTaskStore);
@@ -56,6 +55,7 @@ export class NotifyOperatorRegulatorLedVariationComponent {
   protected readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
   protected readonly errorForm = inject<ApiErrorFormModel>(API_ERROR_FORM);
   protected readonly isErrorSummaryDisplayed = signal(false);
+  private readonly errorSummary = viewChild(ErrorSummaryComponent);
 
   private readonly taskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
   private readonly defaultNoticeRecipients = toSignal(this.tasksService.getDefaultNoticeRecipients(this.taskId));
@@ -128,6 +128,7 @@ export class NotifyOperatorRegulatorLedVariationComponent {
         catchBadRequest(ErrorCodes.UNAV1004, (res) => {
           setApiErrors(this.errorForm, res);
           this.isErrorSummaryDisplayed.set(true);
+          this.errorSummary()?.focus();
           return EMPTY;
         }),
       )

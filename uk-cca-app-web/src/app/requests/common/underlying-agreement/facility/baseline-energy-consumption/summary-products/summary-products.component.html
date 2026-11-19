@@ -5,14 +5,13 @@
 
   @if (canChangeProducts()) {
     <div class="govuk-grid-column-one-quarter" style="text-align: end">
-      <button
-        type="button"
+      <a
         class="govuk-button govuk-button--secondary govuk-!-margin-top-5"
         [routerLink]="[`../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`]"
         [relativeTo]="activatedRoute"
       >
         Change
-      </button>
+      </a>
     </div>
   }
 </div>

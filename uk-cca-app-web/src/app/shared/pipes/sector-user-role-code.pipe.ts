@@ -10,7 +10,7 @@ export enum SectorUserRoleCode {
 @Pipe({ name: 'sectorUserRoleCode' })
 export class SectorUserRoleCodePipe implements PipeTransform {
   transform(value: SectorInvitedUserInfoDTO['roleCode']): string {
-    const type = SectorUserRoleCode[value];
+    const type = SectorUserRoleCode[value as keyof typeof SectorUserRoleCode];
     if (!type) throw new Error('invalid role code for sector user');
     return type;
   }

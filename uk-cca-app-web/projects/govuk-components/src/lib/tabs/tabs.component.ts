@@ -1,7 +1,6 @@
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   contentChildren,
@@ -25,7 +24,6 @@ import { TabLazyDirective } from './tab/tab-lazy.directive';
 @Component({
   selector: 'govuk-tabs',
   templateUrl: './tabs.component.html',
-  imports: [AsyncPipe, NgTemplateOutlet, RouterLink],
   styles: `
     .badge {
       color: white;
@@ -36,7 +34,7 @@ import { TabLazyDirective } from './tab/tab-lazy.directive';
       text-decoration: none;
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe, NgTemplateOutlet, RouterLink],
 })
 export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
   private readonly router = inject(Router);

@@ -1,6 +1,6 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h3 class="govuk-heading-m">Details</h3>
+    <h2 class="govuk-heading-m">Details</h2>
   </div>
 
   <div class="govuk-grid-column-one-third">
@@ -76,7 +76,9 @@
             <span>{{ tuDetails().registrationNumberMissingReason }}</span>
           </dd>
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/details'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/details'">
+              Change<span class="govuk-visually-hidden"> reason for not having a registration number</span>
+            </a>
           </dd>
         </div>
       }
@@ -88,7 +90,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/details'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/details'">
+              Change<span class="govuk-visually-hidden"> standard industrial classification (SIC) codes</span>
+            </a>
           </dd>
         }
       </div>
@@ -162,7 +166,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/financial-independence'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/financial-independence'">
+              Change<span class="govuk-visually-hidden"> financial independence status</span>
+            </a>
           </dd>
         }
       </div>
@@ -230,7 +236,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/responsible-person'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/responsible-person'">
+              Change<span class="govuk-visually-hidden"> responsible person job title</span>
+            </a>
           </dd>
         }
       </div>
@@ -250,7 +258,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/responsible-person'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/responsible-person'">
+              Change<span class="govuk-visually-hidden"> responsible person phone number</span>
+            </a>
           </dd>
         }
       </div>
@@ -279,7 +289,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact first name</span>
+            </a>
           </dd>
         }
       </div>
@@ -291,7 +303,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact last name</span>
+            </a>
           </dd>
         }
       </div>
@@ -303,7 +317,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact job title</span>
+            </a>
           </dd>
         }
       </div>
@@ -315,7 +331,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact email address</span>
+            </a>
           </dd>
         }
       </div>
@@ -327,7 +345,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact phone number</span>
+            </a>
           </dd>
         }
       </div>
@@ -339,7 +359,9 @@
         </dd>
         @if (isEditableData().isEditable) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">
+              Change<span class="govuk-visually-hidden"> administrative contact address</span>
+            </a>
           </dd>
         }
       </div>

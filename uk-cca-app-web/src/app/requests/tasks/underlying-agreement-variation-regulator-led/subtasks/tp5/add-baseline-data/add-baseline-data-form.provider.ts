@@ -5,12 +5,13 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import {
   addBaselineDataConditionallyRequiredFieldsValidator,
-  normaliseNumber,
+  getAttachmentType,
   underlyingAgreementQuery,
   UPLOAD_SECTION_ATTACHMENT_TYPE,
 } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
+import { normaliseNumber } from '@shared/utils';
 
 import { BaselineData } from 'cca-api';
 
@@ -45,7 +46,7 @@ export const AddBaselineDataFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       baselineData?.greenfieldEvidences || [],
       attachments,
-      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       false,
       !requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     );

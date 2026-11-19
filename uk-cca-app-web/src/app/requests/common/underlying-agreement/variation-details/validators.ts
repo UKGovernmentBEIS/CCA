@@ -1,9 +1,12 @@
-import { FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { VariationDetailsFormModel } from './form.provider';
 
 export function changesRequiredFieldsValidator(): ValidatorFn {
-  return (group: FormGroup<VariationDetailsFormModel>): ValidationErrors => {
+  return (control: AbstractControl): ValidationErrors => {
+    const group = control as FormGroup<VariationDetailsFormModel>;
+    if (!group || !(group instanceof FormGroup)) return null;
+
     const requireOperatorAssentValue = group.controls.requireOperatorAssent.value;
     const dontRequireOperatorAssentValue = group.controls.dontRequireOperatorAssent.value;
     const otherChangesValue = group.controls.otherChanges.value;

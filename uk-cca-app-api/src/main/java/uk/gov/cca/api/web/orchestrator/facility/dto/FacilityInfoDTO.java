@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uk.gov.cca.api.facility.domain.FacilityDataStatus;
 import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusGainedDTO;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,5 +30,5 @@ public class FacilityInfoDTO {
 
     private FacilityAddressDTO address;
 
-    private List<FacilityCertificationDetailsDTO> facilityCertificationDetails;
+    private SurplusGainedDTO surplusDetails;
 }

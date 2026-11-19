@@ -36,3 +36,12 @@ export const to7DecimalPlacesNumber = (value?: BigNumber | null): number => {
 // This is to format number values like 0E-7
 export const formatScientificZero = (value: string | null | undefined): string | null | undefined =>
   value?.match(/^[-+]?0(?:\.0+)?e[-+]?\d+$/i) ? '0' : value;
+
+// Normalises user entered numbers that may be stored as strings (including scientific), empty values or undefined.
+// Missing or blank values stay null, because Number(null) and Number('') are both 0.
+export function normaliseNumber(field: string | number | null | undefined): number | null {
+  if (field == null || (typeof field === 'string' && field.trim() === '')) return null;
+
+  const value = Number(field);
+  return Number.isNaN(value) ? null : value;
+}

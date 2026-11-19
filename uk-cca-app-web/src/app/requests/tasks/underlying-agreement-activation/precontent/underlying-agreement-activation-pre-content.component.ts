@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -18,7 +18,6 @@ import { underlyingAgreementActivationQuery } from '../una-activation.selectors'
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class UnderlyingAgreementActivationPreContentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

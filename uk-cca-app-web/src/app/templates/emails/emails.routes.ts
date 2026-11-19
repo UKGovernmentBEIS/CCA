@@ -5,14 +5,16 @@ export const EMAILS_ROUTES: Routes = [
     path: ':templateId',
     children: [
       {
+        title: 'Email template',
         path: '',
+        loadComponent: () => import('./email-view/email-view.component').then((c) => c.EmailViewComponent),
         data: { breadcrumb: false, backlink: '../../' },
-        loadComponent: () => import('./email-view/email-view.component').then((m) => m.EmailViewComponent),
       },
       {
+        title: 'Edit email template',
         path: 'edit',
+        loadComponent: () => import('./email-edit/email-edit.component').then((c) => c.EmailEditComponent),
         data: { breadcrumb: false, backlink: '../' },
-        loadComponent: () => import('./email-edit/email-edit.component').then((m) => m.EmailEditComponent),
       },
     ],
   },

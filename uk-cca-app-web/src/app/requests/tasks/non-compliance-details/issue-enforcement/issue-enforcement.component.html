@@ -5,6 +5,10 @@
   heading="Will you be issuing an Enforcement Response Notice?"
 >
   <div formControlName="isEnforcementResponseNoticeRequired" govuk-radio>
+    <ng-container govukLegend>
+      <span class="govuk-visually-hidden">Will you be issuing an Enforcement Response Notice?</span>
+    </ng-container>
+
     <govuk-radio-option [value]="true" label="Yes" />
 
     <govuk-radio-option [value]="false" label="No">

@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayload;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
@@ -29,10 +27,6 @@ public class FacilityPerformanceAccountTemplateDataProcessingRequestPayload exte
     private SectorAssociationInfo sectorAssociationInfo;
 
     private TargetPeriodType targetPeriodType;
-
-    private PerformanceDataReportType reportType;
-
-    private PerformanceDataSubmissionType submissionType;
 
     private LocalDateTime submissionDate;
 

@@ -38,9 +38,9 @@ import { existingControlContainer } from '../../providers/control-container.fact
       <ng-content select="[govukConditionalContent]" />
     </div>
   `,
-  imports: [RadioComponent, FormsModule, ReactiveFormsModule, RadioOptionComponent, AsyncPipe],
   providers: [existingControlContainer],
   viewProviders: [existingControlContainer],
+  imports: [RadioComponent, FormsModule, ReactiveFormsModule, RadioOptionComponent, AsyncPipe],
 })
 export class BooleanRadioGroupComponent implements AfterContentInit, AfterViewInit, OnInit {
   private readonly controlContainer = inject(ControlContainer);

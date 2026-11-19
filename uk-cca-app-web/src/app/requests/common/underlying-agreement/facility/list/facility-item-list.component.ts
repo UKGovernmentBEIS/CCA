@@ -1,16 +1,15 @@
-import { DatePipe } from '@angular/common';
 import { Component, computed, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { GovukTableColumn, SortEvent, TableComponent, TagComponent } from '@netz/govuk-components';
-import { StatusColorPipe, StatusPipe } from '@shared/pipes';
+import { CalendarDatePipe, StatusColorPipe, StatusPipe } from '@shared/pipes';
 
 import { FacilityTimelineItemViewModel } from '../../types';
 
 @Component({
   selector: 'cca-facility-item-list',
   templateUrl: './facility-item-list.component.html',
-  imports: [DatePipe, StatusPipe, StatusColorPipe, TagComponent, TableComponent, RouterLink],
+  imports: [CalendarDatePipe, StatusPipe, StatusColorPipe, TagComponent, TableComponent, RouterLink],
 })
 export class FacilityItemListComponent {
   protected readonly facilityItems = input.required<FacilityTimelineItemViewModel[]>();
@@ -44,7 +43,8 @@ export class FacilityItemListComponent {
 
   onSort(sortEvent: SortEvent): (fa: FacilityTimelineItemViewModel, fb: FacilityTimelineItemViewModel) => number {
     return (fa, fb) => {
-      const diff: number = fa[sortEvent.column].localeCompare(fb[sortEvent.column], 'en-GB', {
+      const column = sortEvent.column as keyof FacilityTimelineItemViewModel;
+      const diff: number = String(fa[column] ?? '').localeCompare(String(fb[column] ?? ''), 'en-GB', {
         numeric: true,
         sensitivity: 'base',
       });

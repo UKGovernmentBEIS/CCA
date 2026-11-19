@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -21,7 +21,7 @@ import {
 } from '@requests/common';
 import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -33,6 +33,7 @@ import { resetDetermination } from '../../../utils';
 @Component({
   selector: 'cca-baseline-and-targets-summary',
   templateUrl: './tp5-decision.component.html',
+  providers: [decisionFormProvider('TARGET_PERIOD5_DETAILS')],
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -43,8 +44,6 @@ import { resetDetermination } from '../../../utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  providers: [decisionFormProvider('TARGET_PERIOD5_DETAILS')],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TP5DecisionComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -63,7 +62,7 @@ export class TP5DecisionComponent {
   )();
 
   private readonly sectorAssociationDetailsSchemeData = this.store.select(
-    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
+    underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersionEnum.CCA_2),
   )();
 
   private readonly targetPeriodDetails = this.store.select(underlyingAgreementQuery.selectTargetPeriodDetails(true))();

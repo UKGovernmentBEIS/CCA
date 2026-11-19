@@ -1,8 +1,8 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -36,8 +36,8 @@ describe('PreAuditReviewDeterminationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PreAuditReviewDeterminationComponent],
       providers: [
-        provideHttpClient(),
-        { provide: Router, useValue: { navigate: vi.fn() } },
+        provideHttpClient(withXhr()),
+        provideRouter([]),
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -46,6 +46,8 @@ describe('PreAuditReviewDeterminationComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
+
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     tasksApiService = TestBed.inject(TasksApiService);
 
     store = TestBed.inject(RequestTaskStore);

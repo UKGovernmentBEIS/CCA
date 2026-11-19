@@ -2,13 +2,11 @@
   <ng-template let-column="column" let-row="row">
     @switch (column.field) {
       @case ('buyOutCost') {
-        <div class="govuk-!-text-align-right">
-          @if (row.buyOutCost === null || row.buyOutCost === undefined) {
-            Not yet defined
-          } @else {
-            £{{ row.buyOutCost | number }} / tCO2e
-          }
-        </div>
+        @if (row.buyOutCost === null || row.buyOutCost === undefined) {
+          Not yet defined
+        } @else {
+          £{{ row.buyOutCost | formatGbp }} / tCO2e
+        }
       }
 
       @case ('actions') {

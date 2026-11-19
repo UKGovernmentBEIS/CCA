@@ -30,7 +30,8 @@ function constructTrackCorrectiveActionsTasks(
   sectionsCompleted?: Record<string, string>,
 ): TaskItem[] {
   const entries: TaskItem[] = Object.values(correctiveActionResponses).map((r) => {
-    const hint = `<p>${r.details}</p>`;
+    const hint = r.details;
+
     const status = sectionsCompleted
       ? (sectionsCompleted[`${TRACK_CORRECTIVE_ACTION_SUBTASK}${r.title}`] ?? TaskItemStatus.NOT_STARTED)
       : '';

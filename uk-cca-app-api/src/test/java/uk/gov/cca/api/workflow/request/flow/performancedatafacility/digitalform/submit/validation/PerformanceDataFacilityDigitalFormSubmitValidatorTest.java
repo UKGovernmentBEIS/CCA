@@ -220,6 +220,8 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormDataValidator.validateData(performanceData, calculationParameters))
                 .thenReturn(List.of(BusinessValidationResult.valid()));
         when(performanceDataFacilityDigitalFormInputCalculatedDataValidator.validateInputCalculatedData(performanceData, calculationParameters))
@@ -244,6 +246,8 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
         verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear);
         verify(performanceDataFacilityDigitalFormDataValidator, times(1))
                 .validateData(performanceData, calculationParameters);
         verify(performanceDataFacilityDigitalFormInputCalculatedDataValidator, times(1))
@@ -324,6 +328,8 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormDataValidator.validateData(performanceData, calculationParameters))
                 .thenReturn(List.of(BusinessValidationResult.valid()));
         when(performanceDataFacilityDigitalFormInputCalculatedDataValidator.validateInputCalculatedData(performanceData, calculationParameters))
@@ -349,6 +355,8 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
         verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear);
         verify(performanceDataFacilityDigitalFormDataValidator, times(1))
                 .validateData(performanceData, calculationParameters);
         verify(performanceDataFacilityDigitalFormInputCalculatedDataValidator, times(1))
@@ -429,6 +437,8 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormDataValidator.validateData(performanceData, calculationParameters))
                 .thenReturn(List.of(BusinessValidationResult.valid()));
         when(performanceDataFacilityDigitalFormInputCalculatedDataValidator.validateInputCalculatedData(performanceData, calculationParameters))
@@ -452,6 +462,8 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
         verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear);
         verify(performanceDataFacilityDigitalFormDataValidator, times(1))
                 .validateData(performanceData, calculationParameters);
         verify(performanceDataFacilityDigitalFormInputCalculatedDataValidator, times(1))
@@ -530,6 +542,8 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormDataValidator.validateData(performanceData, calculationParameters))
                 .thenReturn(List.of(BusinessValidationResult.invalid(List.of())));
 
@@ -551,9 +565,100 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
         verify(performanceDataFacilityValidator, times(1))
                 .validateFacilityProductsEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear);
         verify(performanceDataFacilityDigitalFormDataValidator, times(1))
                 .validateData(performanceData, calculationParameters);
         verifyNoInteractions(performanceDataFacilityDigitalFormInputCalculatedDataValidator, performanceDataFacilityDigitalFormCalculatedDataValidator);
+    }
+
+    @Test
+    void validate_products_earlier_year_not_valid() {
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final PerformanceDataReportType reportType = PerformanceDataReportType.FINAL;
+        final Long accountId = 1L;
+        final Long facilityId = 1L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final Year targetYear = Year.of(2018);
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .improvements(Map.of(TargetImprovementType.TP7, BigDecimal.ONE))
+                .build();
+        final PerformanceDataFacilityReferenceData referenceData = PerformanceDataFacilityReferenceData.builder()
+                .baselineAndTargets(baselineAndTargets)
+                .build();
+        final PerformanceDataFacilityInputData performanceData = PerformanceDataFacilityInputData.builder()
+                .calculatedResults(PerformanceDataFacilityCalculatedResults.builder()
+                        .targetPeriodResultType(PerformanceDataFacilityTargetPeriodResultType.TARGET_MET)
+                        .build())
+                .build();
+        final RequestTask requestTask = RequestTask.builder()
+                .request(Request.builder()
+                        .requestResources(List.of(RequestResource.builder()
+                                .resourceType(ResourceType.ACCOUNT)
+                                .resourceId(accountId.toString())
+                                .build())
+                        )
+                        .build())
+                .payload(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.builder()
+                        .targetPeriodType(targetPeriodType)
+                        .reportType(reportType)
+                        .targetPeriodYear(targetYear)
+                        .referenceData(referenceData)
+                        .facility(FacilityBaseInfoDTO.builder().id(facilityId).facilityBusinessId(facilityBusinessId).build())
+                        .performanceData(performanceData)
+                        .build())
+                .build();
+
+        final TargetPeriodYear targetPeriodYear = TargetPeriodYear.builder().targetYear(targetYear).build();
+        final List<TargetPeriodDetailsDTO> targetPeriods = List.of(
+                TargetPeriodDetailsDTO.builder()
+                        .businessId(TargetPeriodType.TP7)
+                        .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                                .targetPeriodYears(List.of(targetPeriodYear))
+                                .build())
+                        .build()
+        );
+        final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
+
+        when(performanceDataFacilityDigitalFormReferenceDataService
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, targetYear))
+                .thenReturn(baselineAndTargets);
+        when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9)))
+                .thenReturn(targetPeriods);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
+        when(performanceDataFacilityValidator.validateFacilityReportingLock(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityBaselineDateEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsEligibility(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityValidator.validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear))
+                .thenReturn(BusinessValidationResult.invalid(List.of()));
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class, () -> validator.validate(requestTask));
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCT_EXIST_BEFORE_FACILITY_BASE_YEAR);
+        verify(performanceDataFacilityDigitalFormReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, targetYear);
+        verify(targetPeriodService, times(1))
+                .getTargetPeriodDetailsByTargetPeriodTypes(Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityReportingLock(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsEligibility(facility, targetPeriodYear);
+        verify(performanceDataFacilityValidator, times(1))
+                .validateFacilityProductsBeforeFacilityBaseYear(facility, targetPeriodYear);
+        verifyNoInteractions(performanceDataFacilityDigitalFormDataValidator, performanceDataFacilityDigitalFormInputCalculatedDataValidator,
+                performanceDataFacilityDigitalFormCalculatedDataValidator);
     }
 
     @Test
@@ -639,6 +744,7 @@ class PerformanceDataFacilityDigitalFormSubmitValidatorTest {
                 .validateFacilityProductsEligibility(facility, targetPeriodYear);
         verifyNoInteractions(performanceDataFacilityDigitalFormDataValidator, performanceDataFacilityDigitalFormInputCalculatedDataValidator,
                 performanceDataFacilityDigitalFormCalculatedDataValidator);
+        verifyNoMoreInteractions(performanceDataFacilityValidator);
     }
 
     @Test

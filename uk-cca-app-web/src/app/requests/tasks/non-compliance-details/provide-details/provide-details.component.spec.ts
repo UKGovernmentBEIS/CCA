@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
@@ -12,7 +12,9 @@ import { TasksApiService } from '@requests/common';
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
 import { ProvideDetailsComponent } from './provide-details.component';
 
-@Component({ template: '' })
+@Component({
+  template: '',
+})
 class DummyComponent {}
 
 describe('ProvideDetailsComponent', () => {
@@ -31,7 +33,7 @@ describe('ProvideDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProvideDetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideRouter([{ path: '**', component: DummyComponent }]),
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },

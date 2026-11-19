@@ -36,7 +36,7 @@ describe('WorkflowHistoryTabComponent', () => {
       snapshot: {
         params: { facilityId: '1' },
         queryParamMap: queryParamMock,
-        fragment: null,
+        fragment: null as string | null,
       },
       queryParamMap: of(queryParamMock),
     };
@@ -99,6 +99,47 @@ describe('WorkflowHistoryTabComponent', () => {
         }),
       }),
     );
+  });
+
+  it('should allow filtering facility history by UK ETS reporting', () => {
+    const element = fixture.nativeElement as HTMLElement;
+    const label = Array.from(element.querySelectorAll('label')).find((label) =>
+      label.textContent.includes('UK emissions trading scheme (UK ETS) reporting'),
+    );
+    const checkbox = element.querySelector<HTMLInputElement>(`input[id="${label.htmlFor}"]`);
+    checkbox.click();
+
+    expect(routerNavigateSpy).toHaveBeenCalledWith(
+      [],
+      expect.objectContaining({
+        queryParams: expect.objectContaining({ requestTypes: ['EMISSIONS_TRADING_SCHEME_DATA'] }),
+      }),
+    );
+  });
+
+  it('should display the ETS workflow name and data year in facility history', () => {
+    const requestMetadata = { type: 'EMISSIONS_TRADING_SCHEME_DATA', targetYear: 2026 };
+    component.state.update((state) => ({
+      ...state,
+      workflowsHistory: {
+        total: 1,
+        requestDetails: [
+          {
+            id: 'ETS00001-2026-1',
+            requestType: 'EMISSIONS_TRADING_SCHEME_DATA',
+            requestStatus: 'IN_PROGRESS',
+            creationDate: '2027-01-02',
+            requestMetadata,
+          },
+        ],
+      },
+    }));
+    fixture.detectChanges();
+
+    const item = (fixture.nativeElement as HTMLElement).querySelector('.search-results-list_item');
+    expect(item.querySelector('a').textContent).toContain('ETS00001-2026-1 UK ETS reporting');
+    expect(item.textContent).toMatch(/Year:\s*2026/);
+    expect(item.textContent).not.toContain('PAT year');
   });
 
   it('should navigate when page changes', () => {

@@ -2,8 +2,6 @@ import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors, Validat
 
 import { catchError, map, Observable, of } from 'rxjs';
 
-import { SchemeVersions } from '@shared/types';
-
 import { Facility, FacilityService, FacilityTargetComposition } from 'cca-api';
 
 import { FacilityBaselineDataFormModel, FacilityBaselineEnergyConsumptionFormModel } from './types';
@@ -16,7 +14,7 @@ export function facilityExistenceValidator(facilityService: FacilityService): As
     if (!facilityId || control.errors) return of(null);
 
     return facilityService.getActiveFacilityParticipatingSchemeVersions(facilityId).pipe(
-      map((schemeVersions: SchemeVersions) => {
+      map((schemeVersions) => {
         if (schemeVersions && schemeVersions.length > 0) return null;
         return { facilityIdNotExists: 'Enter the facility ID of an existing facility' };
       }),
@@ -25,15 +23,6 @@ export function facilityExistenceValidator(facilityService: FacilityService): As
         return of({ facilityIdError: 'Unable to validate facility ID. Please try again.' });
       }),
     );
-  };
-}
-
-export function futureDateValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const date = new Date();
-    return control.value && control.value > date
-      ? { invalidDate: 'The exclusion date can not be a future date' }
-      : null;
   };
 }
 
@@ -64,7 +53,8 @@ export function facilityBaselineDataConditionallyRequiredFieldsValidator(
   agreementCompositionType: FacilityTargetComposition['agreementCompositionType'],
   isCCA3: boolean,
 ): ValidatorFn {
-  return (group: FacilityBaselineDataFormModel): ValidationErrors | null => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const group = control as FacilityBaselineDataFormModel;
     if (!group || !(group instanceof FormGroup)) return null;
 
     const isTwelveMonths = group.controls.isTwelveMonths.value;
@@ -79,7 +69,10 @@ export function facilityBaselineDataConditionallyRequiredFieldsValidator(
 }
 
 export function facilityBaselineEnergyProductsValidator(): ValidatorFn {
-  return (group: FacilityBaselineEnergyConsumptionFormModel): ValidationErrors | null => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const group = control as FacilityBaselineEnergyConsumptionFormModel;
+    if (!group || !(group instanceof FormGroup)) return null;
+
     const requiresProducts =
       group.controls.hasVariableEnergy.value === true && group.controls.variableEnergyType.value === 'BY_PRODUCT';
 

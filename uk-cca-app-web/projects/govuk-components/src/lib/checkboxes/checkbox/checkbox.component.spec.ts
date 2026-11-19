@@ -14,16 +14,9 @@ describe('CheckboxComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    imports: [
-      CheckboxesComponent,
-      ReactiveFormsModule,
-      CheckboxComponent,
-      TextInputComponent,
-      ConditionalContentDirective,
-    ],
     template: `
       <div govuk-checkboxes [formControl]="control">
-        <govuk-checkbox [value]="1" label="First"></govuk-checkbox>
+        <govuk-checkbox [value]="1" label="First" hint="First hint"></govuk-checkbox>
         <govuk-checkbox [value]="2">
           <ng-container govukLabel>Second</ng-container>
           <ng-container govukConditionalContent>
@@ -33,6 +26,13 @@ describe('CheckboxComponent', () => {
         </govuk-checkbox>
       </div>
     `,
+    imports: [
+      CheckboxesComponent,
+      ReactiveFormsModule,
+      CheckboxComponent,
+      TextInputComponent,
+      ConditionalContentDirective,
+    ],
   })
   class TestComponent {
     control = new FormControl();
@@ -70,5 +70,12 @@ describe('CheckboxComponent', () => {
 
     expect(element.querySelector('.govuk-checkboxes__conditional--hidden')).toBeFalsy();
     expect(hostComponent.hiddenControl.disabled).toBeFalsy();
+  });
+
+  it('should only set aria-describedby when a hint is present', () => {
+    const [first, second] = element.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
+
+    expect(first.getAttribute('aria-describedby')).toBe(`${first.id}-item-hint`);
+    expect(second.hasAttribute('aria-describedby')).toBe(false);
   });
 });

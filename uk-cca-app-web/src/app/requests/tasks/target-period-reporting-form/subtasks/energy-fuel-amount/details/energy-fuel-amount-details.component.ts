@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { afterNextRender, Component, computed, ElementRef, inject, Injector, Signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -45,6 +45,7 @@ import {
 @Component({
   selector: 'cca-energy-fuel-amount-details',
   templateUrl: './energy-fuel-amount-details.component.html',
+  providers: [EnergyFuelAmountDetailsFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -57,8 +58,6 @@ import {
     RadioComponent,
     RadioOptionComponent,
   ],
-  providers: [EnergyFuelAmountDetailsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnergyFuelAmountDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
@@ -66,6 +65,10 @@ export class EnergyFuelAmountDetailsComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly tasksApiService = inject(TasksApiService);
+  private readonly injector = inject(Injector);
+
+  private readonly fuelTable = viewChild('fuelTable', { read: ElementRef });
+  private readonly addFuelButton = viewChild('addFuelButton', { read: ElementRef });
 
   readonly form = inject<FuelForm>(ENERGY_FUEL_AMOUNT_DETAILS_FORM);
 
@@ -127,6 +130,11 @@ export class EnergyFuelAmountDetailsComponent {
 
   protected readonly nonStandardCount = computed(() => this.fuelRows().filter((row) => row.value.isCustom).length);
 
+  // Custom fuels follow the standard ones, so number them from 1 after the standard rows.
+  protected customFuelNumber(index: number): number {
+    return index - (this.fuelRows().length - this.nonStandardCount()) + 1;
+  }
+
   readonly displayRounded = to7DecimalPlacesNumber;
 
   protected readonly tableColumns: Signal<GovukTableColumn[]> = computed(() => [
@@ -156,6 +164,18 @@ export class EnergyFuelAmountDetailsComponent {
 
   onRemoveFuel(index: number) {
     this.form.controls.fuels.removeAt(index);
+
+    // Custom fuels follow the standard ones, so the row now at this index is the next custom fuel, if any.
+    afterNextRender(
+      {
+        write: () => {
+          const rows = this.fuelTable()?.nativeElement.querySelectorAll('tbody tr');
+          const nextFuelInput = rows?.[index]?.querySelector('input');
+          (nextFuelInput ?? this.addFuelButton()?.nativeElement)?.focus();
+        },
+      },
+      { injector: this.injector },
+    );
   }
 
   onSubmit() {

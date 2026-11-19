@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -21,9 +21,8 @@ import { SectorUserInvitationStore } from '../sector-user-invitation.store';
       </div>
     </cca-wizard-step>
   `,
-  imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
   providers: [passwordFormFactory],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
 })
 export class SectorUserInvitationCreatePasswordComponent {
   private readonly store = inject(SectorUserInvitationStore);

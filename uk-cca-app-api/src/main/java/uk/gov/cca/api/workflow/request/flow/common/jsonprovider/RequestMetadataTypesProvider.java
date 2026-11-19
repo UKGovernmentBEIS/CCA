@@ -19,8 +19,8 @@ import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2Te
 import uk.gov.cca.api.workflow.request.flow.cca2termination.processing.domain.Cca2TerminationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestMetadata;
-import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestMetadata;
@@ -57,7 +57,6 @@ public class RequestMetadataTypesProvider implements JsonSubTypesProvider {
 				new NamedType(BuyOutSurplusFacilityRunRequestMetadata.class, BUY_OUT_SURPLUS_FACILITY_RUN),
 				new NamedType(BuyOutSurplusFacilityAccountProcessingRequestMetadata.class, BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING),
 				new NamedType(FacilityCertificationRunRequestMetadata.class, FACILITY_CERTIFICATION_RUN),
-				new NamedType(FacilityCertificationAccountProcessingRequestMetadata.class, FACILITY_CERTIFICATION_ACCOUNT_PROCESSING),
 				new NamedType(Cca3ExistingFacilitiesMigrationRunRequestMetadata.class, CCA3_EXISTING_FACILITIES_MIGRATION_RUN),
 				new NamedType(Cca3ExistingFacilitiesMigrationAccountProcessingRequestMetadata.class, CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING),
 				new NamedType(Cca2ExtensionNoticeRunRequestMetadata.class, CCA2_EXTENSION_NOTICE_RUN),
@@ -68,7 +67,8 @@ public class RequestMetadataTypesProvider implements JsonSubTypesProvider {
 				new NamedType(PerformanceDataFacilityProcessingRequestMetadata.class, PERFORMANCE_DATA_FACILITY_PROCESSING),
 				new NamedType(PerformanceDataFacilityDigitalFormRequestMetadata.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM),
 				new NamedType(FacilityPerformanceAccountTemplateDataUploadRequestMetadata.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD),
-				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestMetadata.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING)
+				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestMetadata.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING),
+				new NamedType(EmissionsTradingSchemeDataRequestMetadata.class, EMISSIONS_TRADING_SCHEME_DATA)
 				);
 	}
 

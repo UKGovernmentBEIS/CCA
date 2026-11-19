@@ -3,7 +3,9 @@
     <govuk-error-summary [form]="formGroup()" />
   }
 
-  <netz-page-heading [caption]="caption()">{{ heading() }}</netz-page-heading>
+  @if (heading()) {
+    <netz-page-heading [caption]="caption()">{{ heading() }}</netz-page-heading>
+  }
 
   <ng-content />
 

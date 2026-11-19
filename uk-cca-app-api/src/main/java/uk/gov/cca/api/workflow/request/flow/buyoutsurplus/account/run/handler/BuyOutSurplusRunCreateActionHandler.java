@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.AccountBuyOutSurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
@@ -34,14 +34,14 @@ public class BuyOutSurplusRunCreateActionHandler implements RequestCACreateActio
 
     private final TargetPeriodService targetPeriodService;
     private final StartProcessRequestService startProcessRequestService;
-    private final BuyOutSurplusQueryService buyOutSurplusQueryService;
+    private final AccountBuyOutSurplusQueryService buyOutSurplusQueryService;
 
     @Override
     @Transactional
     public String process(CompetentAuthorityEnum ca, BuyOutSurplusRunCreateActionPayload payload, AppUser appUser) {
 
         Map<Long, BuyOutSurplusAccountState> accountStates = buyOutSurplusQueryService
-                .getAllEligibleAccountsByTargetPeriod(payload.getTargetPeriodType()).stream()
+                .getEligibleAccountsForBuyOutSurplusByTargetPeriod(payload.getTargetPeriodType()).stream()
                 .collect(Collectors
                         .toMap(TargetUnitAccountBusinessInfoDTO::getAccountId,
                                 dto -> BuyOutSurplusAccountState.builder()

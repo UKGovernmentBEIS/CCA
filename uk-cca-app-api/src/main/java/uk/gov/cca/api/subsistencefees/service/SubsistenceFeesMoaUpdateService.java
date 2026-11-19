@@ -15,6 +15,7 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -47,8 +48,9 @@ public class SubsistenceFeesMoaUpdateService {
         subsistenceFeesMoa.setRegulatorReceivedAmount(currentTotalReceivedAmount);
 
         // submit evidence files
-        detailsDTO.getEvidenceFiles().keySet()
-                .forEach(uuid -> fileEvidenceService.submitFileEvidence(uuid.toString()));
+        Optional.ofNullable(detailsDTO.getEvidenceFiles())
+                .ifPresent(files -> files.keySet()
+                        .forEach(uuid -> fileEvidenceService.submitFileEvidence(uuid.toString())));
 
         // create received amount history
         SubsistenceFeesMoaReceivedAmountHistory receivedAmountHistory = SubsistenceFeesMoaReceivedAmountHistory.builder()

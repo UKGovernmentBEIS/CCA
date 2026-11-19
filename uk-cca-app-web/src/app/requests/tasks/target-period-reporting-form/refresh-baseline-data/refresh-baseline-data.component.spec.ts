@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
@@ -139,11 +140,38 @@ describe('RefreshBaselineDataComponent', () => {
     );
   });
 
-  it('should not display error summary for unknown error codes', () => {
+  it('should show the product base year error when refresh returns TPRDF1010', () => {
+    tasksApiService.saveRequestTaskAction.mockReturnValue(throwError(() => ({ error: { code: 'TPRDF1010' } })));
+
+    component.onRefreshBaselineData();
+    fixture.detectChanges();
+
+    expect(component.isErrorSummaryDisplayed()).toBe(true);
+    expect(component.errorSummaryInfo().linkText).toBe(
+      'Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report',
+    );
+    expect(fixture.nativeElement.textContent).toContain(
+      'Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report',
+    );
+  });
+
+  it('should display a generic error summary for unknown error codes', () => {
     tasksApiService.saveRequestTaskAction.mockReturnValue(throwError(() => ({ error: { code: 'UNKNOWN_CODE' } })));
 
     component.onRefreshBaselineData();
 
-    expect(component.isErrorSummaryDisplayed()).toBe(false);
+    expect(component.isErrorSummaryDisplayed()).toBe(true);
+    expect(component.errorSummaryInfo().message).toBe('Sorry, there is a problem with the service. Try again later.');
+  });
+
+  it('should display a generic error summary on a network failure', () => {
+    tasksApiService.saveRequestTaskAction.mockReturnValue(
+      throwError(() => new HttpErrorResponse({ error: new ProgressEvent('error'), status: 0 })),
+    );
+
+    component.onRefreshBaselineData();
+
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(component.errorSummaryInfo().message).toBe('Sorry, there is a problem with the service. Try again later.');
   });
 });

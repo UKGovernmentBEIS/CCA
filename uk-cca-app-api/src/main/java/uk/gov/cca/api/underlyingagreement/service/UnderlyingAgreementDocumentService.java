@@ -5,7 +5,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import uk.gov.netz.api.files.documents.service.FileDocumentTokenService;
+
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 import uk.gov.netz.api.token.FileToken;
 
 @Service
@@ -13,7 +14,7 @@ import uk.gov.netz.api.token.FileToken;
 public class UnderlyingAgreementDocumentService {
     
     private final UnderlyingAgreementQueryService underlyingAgreementQueryService;
-    private final FileDocumentTokenService fileDocumentTokenService;
+    private final FileDocumentStorageService fileDocumentStorageService;
 
     public FileToken generateGetFileDocumentToken(final Long underlyingAgreementId, final UUID fileDocumentUuid) {
                 
@@ -21,7 +22,7 @@ public class UnderlyingAgreementDocumentService {
         underlyingAgreementQueryService.getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(
         		underlyingAgreementId, fileDocumentUuid.toString());
         
-        return fileDocumentTokenService.generateGetFileDocumentToken(fileDocumentUuid.toString());
+        return fileDocumentStorageService.generateGetFileDocumentToken(fileDocumentUuid.toString());
     }
 
 }

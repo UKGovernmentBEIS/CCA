@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { throwError } from 'rxjs';
 
@@ -16,7 +16,6 @@ describe('TpReportingComponent', () => {
 
   let mockRequestsService: Mocked<RequestsService>;
   let mockRequestItemsService: Mocked<RequestItemsService>;
-  let mockRouter: Mocked<Router>;
 
   beforeEach(async () => {
     mockRequestsService = {
@@ -27,13 +26,10 @@ describe('TpReportingComponent', () => {
       getItemsByRequest: vi.fn(),
     } as unknown as Mocked<RequestItemsService>;
 
-    mockRouter = {
-      navigate: vi.fn(),
-    } as unknown as Mocked<Router>;
-
     await TestBed.configureTestingModule({
       imports: [TpReportingComponent],
       providers: [
+        provideRouter([]),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -45,9 +41,10 @@ describe('TpReportingComponent', () => {
         },
         { provide: RequestsService, useValue: mockRequestsService },
         { provide: RequestItemsService, useValue: mockRequestItemsService },
-        { provide: Router, useValue: mockRouter },
       ],
     }).compileComponents();
+
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
     fixture = TestBed.createComponent(TpReportingComponent);
     component = fixture.componentInstance;
@@ -183,6 +180,23 @@ describe('TpReportingComponent', () => {
 
     expect(component.form.controls.targetPeriodType.errors).toEqual({
       responseError: expect.stringContaining(`error in the facility’s baseline data`),
+    });
+
+    expect(component.hasFormErrors()).toBe(true);
+  });
+
+  it('should handle TPRDF1010 error', () => {
+    component.form.controls.targetPeriodType.setValue('TP7');
+
+    mockRequestsService.processRequestCreateAction.mockReturnValue(
+      throwError(() => ({ error: { code: 'TPRDF1010' } })),
+    );
+
+    component.onSubmit();
+
+    expect(component.form.controls.targetPeriodType.errors).toEqual({
+      responseError:
+        'Product base year for one or more products is less than facility base year. Correct via variation before proceeding with target period report',
     });
 
     expect(component.hasFormErrors()).toBe(true);

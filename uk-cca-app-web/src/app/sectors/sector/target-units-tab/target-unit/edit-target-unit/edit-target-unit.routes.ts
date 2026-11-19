@@ -9,49 +9,50 @@ export const EDIT_TARGET_UNIT_ROUTES: Routes = [
     path: 'edit',
     children: [
       {
+        title: 'Edit target unit details',
         path: 'details',
-        resolve: { subSectorScheme: EditTargetUnitSubSectorResolver },
+        loadComponent: () => import('./edit-details/edit-details.component').then((c) => c.EditDetailsComponent),
+        canDeactivate: [PendingRequestGuard],
         data: {
-          pageTitle: 'Edit target unit details',
           backlink: '../../',
           breadcrumb: false,
         },
-        canDeactivate: [PendingRequestGuard],
-        loadComponent: () => import('./edit-details/edit-details.component').then((c) => c.EditDetailsComponent),
+        resolve: { subSectorScheme: EditTargetUnitSubSectorResolver },
       },
       {
+        title: 'Edit financial independence',
         path: 'financial-independence',
-        data: { backlink: '../../', breadcrumb: false, pageTitle: 'Edit financial independence' },
         loadComponent: () =>
           import('./edit-financial-independence/edit-financial-independence.component').then(
             (c) => c.EditFinancialIndependenceComponent,
           ),
+        data: { backlink: '../../', breadcrumb: false },
       },
       {
+        title: 'Edit responsible person details',
         path: 'responsible-person',
-        data: {
-          pageTitle: 'Edit responsible person details',
-          backlink: '../../',
-          breadcrumb: false,
-        },
-        canDeactivate: [PendingRequestGuard],
         loadComponent: () =>
           import('./edit-responsible-person/edit-responsible-person.component').then(
             (c) => c.EditResponsiblePersonComponent,
           ),
-      },
-      {
-        path: 'administrative-contact',
+        canDeactivate: [PendingRequestGuard],
         data: {
-          pageTitle: 'Edit administrative contact details',
           backlink: '../../',
           breadcrumb: false,
         },
-        canDeactivate: [PendingRequestGuard],
+      },
+      {
+        title: 'Edit administrative contact details',
+        path: 'administrative-contact',
         loadComponent: () =>
           import('./edit-administrative-contact/edit-administrative-contact.component').then(
             (c) => c.EditAdministrativeContactComponent,
           ),
+        canDeactivate: [PendingRequestGuard],
+        data: {
+          backlink: '../../',
+          breadcrumb: false,
+        },
       },
     ],
   },

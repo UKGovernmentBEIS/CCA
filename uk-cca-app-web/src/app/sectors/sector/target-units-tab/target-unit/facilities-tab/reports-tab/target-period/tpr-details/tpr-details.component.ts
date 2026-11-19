@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
@@ -9,13 +9,9 @@ import {
   SummaryListRowKeyDirective,
   SummaryListRowValueDirective,
 } from '@netz/govuk-components';
-import {
-  boolToString,
-  toComparisonDataSummaryData,
-  toResultsDetailsSummaryData,
-  toTPRBaselineDataDetails,
-} from '@requests/common';
+import { toComparisonDataSummaryData, toResultsDetailsSummaryData, toTPRBaselineDataDetails } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { boolToString } from '@shared/utils';
 
 import { FacilityTargetPeriodReportStore } from '../../../facility-target-period-report.store';
 
@@ -31,7 +27,6 @@ import { FacilityTargetPeriodReportStore } from '../../../facility-target-period
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

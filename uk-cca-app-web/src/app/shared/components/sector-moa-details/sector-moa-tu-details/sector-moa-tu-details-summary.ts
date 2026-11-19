@@ -1,9 +1,11 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 
-import { SummaryData, SummaryFactory } from '@shared/components';
 import { MarkingOfFacilitiesStatusPipe } from '@shared/pipes';
 
 import { SubsistenceFeesMoaTargetUnitDetailsDTO } from 'cca-api';
+
+import { SummaryFactory } from '../../summary/summary.factory';
+import { SummaryData } from '../../summary/type';
 
 export function toSectorMoaTUDetailsSummary(details: SubsistenceFeesMoaTargetUnitDetailsDTO): SummaryData {
   const datePipe = new DatePipe('en-GB');

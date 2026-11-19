@@ -11,10 +11,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AvailableTargetPeriodsBuyOutDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.web.orchestrator.buyoutsurplus.dto.AvailableTargetPeriodsBuyOutDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.web.orchestrator.buyoutsurplus.service.BuyOutSurplusServiceOrchestrator;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,7 +40,7 @@ class BuyOutSurplusRunControllerTest {
 	private BuyOutSurplusRunController controller;
 
 	@Mock
-	private BuyOutSurplusQueryService buyOutSurplusQueryService;
+	private BuyOutSurplusServiceOrchestrator buyOutSurplusServiceOrchestrator;
 
 	@BeforeEach
 	void setUp() {
@@ -56,8 +57,8 @@ class BuyOutSurplusRunControllerTest {
 		final List<TargetUnitAccountBusinessInfoDTO> targetPeriodExcludedAccountDTOS = List.of(TargetUnitAccountBusinessInfoDTO.builder()
 				.name(accountName).businessId(accountBusinessId).accountId(accountId).build());
 
-		when(buyOutSurplusQueryService
-				.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType)).thenReturn(targetPeriodExcludedAccountDTOS);
+		when(buyOutSurplusServiceOrchestrator
+				.getExcludedAccountsForBuyOutSurplusRun(targetPeriodType)).thenReturn(targetPeriodExcludedAccountDTOS);
 
 		mockMvc.perform(get(GET_PATH)
 						.contentType(MediaType.APPLICATION_JSON)
@@ -69,8 +70,8 @@ class BuyOutSurplusRunControllerTest {
 				.andExpect(jsonPath("$.[0].businessId").value(accountBusinessId));
 
 
-		verify(buyOutSurplusQueryService, times(1))
-				.getAllExcludedEligibleAccountsByTargetPeriod(targetPeriodType);
+		verify(buyOutSurplusServiceOrchestrator, times(1))
+				.getExcludedAccountsForBuyOutSurplusRun(targetPeriodType);
 	}
 	
 	@Test
@@ -79,7 +80,7 @@ class BuyOutSurplusRunControllerTest {
 
 		final AvailableTargetPeriodsBuyOutDTO availableTargetPeriods = AvailableTargetPeriodsBuyOutDTO.builder().build();
 
-		when(buyOutSurplusQueryService.getAvailableBuyOutTargetPeriods(any(LocalDate.class)))
+		when(buyOutSurplusServiceOrchestrator.getAvailableBuyOutTargetPeriods(any(LocalDate.class)))
 				.thenReturn(availableTargetPeriods);
 
 		mockMvc.perform(get(GET_PATH)
@@ -88,6 +89,6 @@ class BuyOutSurplusRunControllerTest {
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(jsonPath("$").isNotEmpty());
 
-		verify(buyOutSurplusQueryService, times(1)).getAvailableBuyOutTargetPeriods(any(LocalDate.class));
+		verify(buyOutSurplusServiceOrchestrator, times(1)).getAvailableBuyOutTargetPeriods(any(LocalDate.class));
 	}
 }

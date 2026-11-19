@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective } from '@netz/govuk-components';
-import { SummaryComponent } from '@shared/components';
 
+import { SummaryComponent } from '../../summary/summary.component';
 import { ReceivedAmountStore } from '../received-amount.store';
 import { toReceivedAmountSummaryData } from './received-amount-summary';
 
@@ -18,7 +18,6 @@ import { toReceivedAmountSummaryData } from './received-amount-summary';
     <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
   `,
   imports: [PageHeadingComponent, SummaryComponent, ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckYourAnswersComponent {
   private readonly router = inject(Router);
@@ -45,7 +44,8 @@ export class CheckYourAnswersComponent {
   });
 
   onSubmit() {
-    this.receivedAmountStore.submitReceivedAmount(this.moaId);
-    this.router.navigate(['..', 'confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    this.receivedAmountStore.submitReceivedAmount(this.moaId).subscribe(() => {
+      this.router.navigate(['..', 'confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    });
   }
 }

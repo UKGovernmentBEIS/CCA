@@ -2,7 +2,7 @@ import { PercentPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 import { fileUtils } from '@shared/utils';
 
 import { SectorAssociationSchemesDTO, SubsectorAssociationSchemesDTO, TargetCommitmentDTO } from 'cca-api';
@@ -41,7 +41,7 @@ export function toSectorSchemeSummaryData(
   const govukDatePipe = new GovukDatePipe();
   const hasSubSectors = subSectorsLength > 0;
 
-  const cca2Scheme = sectorScheme.sectorAssociationSchemeMap?.[SchemeVersion.CCA_2];
+  const cca2Scheme = sectorScheme.sectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_2];
   if (cca2Scheme) {
     factory.addSection('CCA2 (2013-2024)');
 
@@ -80,7 +80,7 @@ export function toSectorSchemeSummaryData(
     }
   }
 
-  const cca3Scheme = sectorScheme.sectorAssociationSchemeMap?.[SchemeVersion.CCA_3];
+  const cca3Scheme = sectorScheme.sectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_3];
   if (cca3Scheme) {
     factory.addSection('CCA3 (2026-2030)');
 
@@ -135,7 +135,7 @@ export function toSubsectorSchemeSummaryData(subsectorScheme: SubsectorAssociati
   const factory = new SummaryFactory();
   const percentPipe = new PercentPipe('en-GB');
 
-  const cca2Scheme = subsectorScheme.subsectorAssociationSchemeMap?.[SchemeVersion.CCA_2];
+  const cca2Scheme = subsectorScheme.subsectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_2];
   if (cca2Scheme) {
     factory.addSection('CCA2 (2013-2024)').addPlainTextSection('Details');
 
@@ -154,7 +154,7 @@ export function toSubsectorSchemeSummaryData(subsectorScheme: SubsectorAssociati
     }
   }
 
-  const cca3Scheme = subsectorScheme.subsectorAssociationSchemeMap?.[SchemeVersion.CCA_3];
+  const cca3Scheme = subsectorScheme.subsectorAssociationSchemeMap?.[SchemeVersionEnum.CCA_3];
   if (cca3Scheme) {
     factory.addSection('CCA3 (2026-2030)').addPlainTextSection('Details');
 

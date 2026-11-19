@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DateInputComponent, RadioComponent, RadioOptionComponent, TextareaComponent } from '@netz/govuk-components';
 import { TaskItemStatus, TasksApiService } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { fileUtils, generateDownloadUrl } from '@shared/utils';
+import { fileUtils, generateDownloadUrl, getToday } from '@shared/utils';
 import { produce } from 'immer';
 
 import { AuditDetailsCorrectiveActionsSubmitRequestTaskPayload } from 'cca-api';
@@ -24,6 +24,7 @@ import {
 @Component({
   selector: 'cca-audit-details',
   templateUrl: './audit-details.component.html',
+  providers: [PreAuditReviewAuditReasonFormProvider],
   imports: [
     ReactiveFormsModule,
     ReturnToTaskOrActionPageComponent,
@@ -34,8 +35,6 @@ import {
     RadioComponent,
     MultipleFileInputComponent,
   ],
-  providers: [PreAuditReviewAuditReasonFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuditDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -44,7 +43,7 @@ export class AuditDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   private readonly taskId = this.activatedRoute.snapshot.params.taskId;
-  protected readonly today = new Date();
+  protected readonly today = getToday();
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 

@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,9 +41,8 @@ class PerformanceDataGenerateErrorsFileServiceTest {
     private CcaFileAttachmentService ccaFileAttachmentService;
 
     @Test
-    void generateErrorsFile() throws IOException {
+    void generateErrorsFile() {
         final String requestId = "requestId";
-        final String sectorUserAssignee = "sector";
         final String fileCsv = "fileCsv";
 
         final Request request = Request.builder()
@@ -58,12 +56,12 @@ class PerformanceDataGenerateErrorsFileServiceTest {
                                 1L, TargetUnitAccountReport.builder().succeeded(false).accountId(1L).errors(List.of("error1")).build(),
                                 2L, TargetUnitAccountReport.builder().succeeded(true).build()
                         ))
-                        .sectorUserAssignee(sectorUserAssignee)
+                        .sectorUserAssignee("sector")
                         .build())
                 .build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(sectorUserAssignee)))
+        when(ccaFileAttachmentService.createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED)))
                 .thenReturn(fileCsv);
 
         // Invoke
@@ -75,7 +73,7 @@ class PerformanceDataGenerateErrorsFileServiceTest {
                 .contains(FileInfoDTO.builder().uuid(fileCsv).name("acronym_TP6_download_errors.csv").build());
         verify(requestService, times(1)).findRequestById(requestId);
         verify(ccaFileAttachmentService, times(1))
-                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED), eq(sectorUserAssignee));
+                .createSystemFileAttachment(any(), eq(FileStatus.SUBMITTED));
     }
 
     @Test

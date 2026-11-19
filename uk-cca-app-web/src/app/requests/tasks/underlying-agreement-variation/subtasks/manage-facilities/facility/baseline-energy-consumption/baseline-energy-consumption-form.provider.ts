@@ -9,9 +9,9 @@ import {
   BaselineEnergyDraftService,
   FacilityBaselineEnergyConsumptionFormModel,
   facilityBaselineEnergyProductsValidator,
-  normaliseNumber,
   underlyingAgreementQuery,
 } from '@requests/common';
+import { normaliseNumber } from '@shared/utils';
 
 import { FacilityBaselineEnergyConsumption } from 'cca-api';
 
@@ -42,7 +42,7 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
     // Get draft values
     const draft = draftService.draftSignal();
 
-    const products = draft?.products ?? baselineEnergyConsumption?.variableEnergyConsumptionDataByProduct ?? [];
+    const products = draft?.products ?? [];
 
     const productsControl = fb.control<FacilityBaselineEnergyConsumption['variableEnergyConsumptionDataByProduct']>(
       products,
@@ -53,23 +53,17 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
 
     const form = fb.group(
       {
-        totalFixedEnergy: fb.control(
-          normaliseNumber(draft?.totalFixedEnergy ?? baselineEnergyConsumption?.totalFixedEnergy),
-          {
-            validators: [
-              GovukValidators.required('Enter the total fixed energy consumption'),
-              GovukValidators.maxDecimalsValidator(7),
-            ],
-            updateOn: 'change',
-          },
-        ),
-        hasVariableEnergy: fb.control(
-          draft?.hasVariableEnergy ?? baselineEnergyConsumption?.hasVariableEnergy ?? null,
-          {
-            validators: [GovukValidators.required('Select yes if the facility has variable energy consumption')],
-            updateOn: 'change',
-          },
-        ),
+        totalFixedEnergy: fb.control(normaliseNumber(draft?.totalFixedEnergy), {
+          validators: [
+            GovukValidators.required('Enter the total fixed energy consumption'),
+            GovukValidators.maxDecimalsValidator(7),
+          ],
+          updateOn: 'change',
+        }),
+        hasVariableEnergy: fb.control(draft?.hasVariableEnergy ?? null, {
+          validators: [GovukValidators.required('Select yes if the facility has variable energy consumption')],
+          updateOn: 'change',
+        }),
         baselineVariableEnergy: fb.control(normaliseNumber(baselineEnergyConsumption?.baselineVariableEnergy), {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
@@ -84,12 +78,9 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
         throughputUnit: fb.control(baselineEnergyConsumption?.throughputUnit ?? null, {
           updateOn: 'change',
         }),
-        variableEnergyType: fb.control(
-          draft?.variableEnergyType ?? baselineEnergyConsumption?.variableEnergyType ?? null,
-          {
-            updateOn: 'change',
-          },
-        ),
+        variableEnergyType: fb.control(draft?.variableEnergyType ?? null, {
+          updateOn: 'change',
+        }),
         products: productsControl,
       },
       {
@@ -128,6 +119,15 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
     // Sync totalFixedEnergy changes to draft service
     form.controls.totalFixedEnergy.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       draftService.updateTotalFixedEnergy(value?.toString() ?? null);
+    });
+
+    // Sync the variable energy choice too, so it survives the product delete/exclude/undo pages
+    form.controls.hasVariableEnergy.valueChanges.pipe(takeUntilDestroyed()).subscribe((hasVariableEnergy) => {
+      draftService.saveFormSnapshot({ hasVariableEnergy });
+    });
+
+    form.controls.variableEnergyType.valueChanges.pipe(takeUntilDestroyed()).subscribe((variableEnergyType) => {
+      draftService.saveFormSnapshot({ variableEnergyType });
     });
 
     form.controls.variableEnergyType.valueChanges.pipe(takeUntilDestroyed()).subscribe((type) => {

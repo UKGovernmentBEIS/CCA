@@ -2,8 +2,7 @@ import { isDevMode } from '@angular/core';
 
 /**
  * Production-safe logger that suppresses console output in production builds.
- * Uses Angular's `isDevMode()` instead of importing the environment file directly,
- * avoiding module resolution issues in tests with CommonJS dependencies.
+ * `isDevMode()` is false whenever the CLI builds with `optimization`, which the production configuration does.
  *
  * Use this instead of direct console.* calls for any logging that may contain
  * sensitive information (API paths, error details, stack traces).

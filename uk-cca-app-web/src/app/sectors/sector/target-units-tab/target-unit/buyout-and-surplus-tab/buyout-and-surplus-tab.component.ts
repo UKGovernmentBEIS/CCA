@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -35,7 +35,6 @@ import { BuyoutAndSurplusTabStore } from './buyout-and-surplus-tab.store';
     RouterLink,
     DecimalPipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BuyoutAndSurplusTabComponent {
   private readonly buyOutAndSurplusInfoService = inject(BuyOutAndSurplusInfoService);
@@ -51,7 +50,7 @@ export class BuyoutAndSurplusTabComponent {
     this.buyOutAndSurplusInfoService.getBuyOutSurplusInfoByAccountId(this.targetUnitId),
   );
 
-  protected readonly userIsRegulator = this.roleType() === 'REGULATOR';
+  protected readonly userIsRegulator = computed(() => this.roleType() === 'REGULATOR');
 
   constructor() {
     effect(() => {

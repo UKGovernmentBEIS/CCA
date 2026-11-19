@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -30,6 +30,7 @@ import {
 @Component({
   selector: 'cca-edit-sector-user-details',
   templateUrl: './edit-sector-user-details.component.html',
+  providers: [SectorUserDetailsFormProvider],
   imports: [
     RouterLink,
     PageHeadingComponent,
@@ -42,8 +43,6 @@ import {
     RadioOptionComponent,
     PendingButtonDirective,
   ],
-  providers: [SectorUserDetailsFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditSectorUserDetailsComponent {
   private readonly businessErrorService = inject(BusinessErrorService);
@@ -79,7 +78,7 @@ export class EditSectorUserDetailsComponent {
       this.sectorUsersService
         .updateCurrentSectorUser(this.sectorId, data)
         .pipe(
-          catchBadRequest([ErrorCodes.FORM1001, ErrorCodes.SECTOR1001], () =>
+          catchBadRequest<never>([ErrorCodes.FORM1001, ErrorCodes.SECTOR1001], () =>
             this.businessErrorService.showError(sectorUserDetailsUpdateError),
           ),
         )
@@ -91,7 +90,7 @@ export class EditSectorUserDetailsComponent {
       this.sectorUsersService
         .updateSectorUserBySectorAssociationIdAndUserId(this.sectorId, this.sectorUserId, data)
         .pipe(
-          catchBadRequest([ErrorCodes.FORM1001, ErrorCodes.SECTOR1001], () =>
+          catchBadRequest<never>([ErrorCodes.FORM1001, ErrorCodes.SECTOR1001], () =>
             this.businessErrorService.showError(sectorUserDetailsUpdateError),
           ),
         )

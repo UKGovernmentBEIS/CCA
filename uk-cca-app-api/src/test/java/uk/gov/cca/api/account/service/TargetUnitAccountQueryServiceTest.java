@@ -183,6 +183,22 @@ class TargetUnitAccountQueryServiceTest {
     }
 
     @Test
+    void getAllTargetUnitAccountIdsBySectorAssociationIds() {
+        Set<Long> sectorAssociationIds = Set.of(1L);
+        Set<Long> expectedIds = Set.of(1L, 2L, 3L);
+
+        when(repository.findAllIdsBySectorAssociationIdIn(sectorAssociationIds))
+                .thenReturn(expectedIds);
+
+        // Invoke
+        Set<Long> result = service.getAllTargetUnitAccountIdsBySectorAssociationIds(sectorAssociationIds);
+
+        // Verify
+        assertThat(result).containsAll(expectedIds);
+        verify(repository).findAllIdsBySectorAssociationIdIn(sectorAssociationIds);
+    }
+
+    @Test
     void getAccountName() {
         final Long accountId = 1L;
         final String name = "Test Account";

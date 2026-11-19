@@ -1,13 +1,18 @@
-import { AbstractControl, FormArray, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { GovukValidators, MessageValidatorFn } from '@netz/govuk-components';
 
+import { getToday } from '../utils/date';
+
 export function requiredFieldsValidator(): ValidatorFn {
-  return GovukValidators.builder('You must fill all required values', (group: UntypedFormGroup) =>
-    Object.keys(group.controls).find((key) => group.controls[key].hasError('required'))
+  return GovukValidators.builder('You must fill all required values', (control: AbstractControl) => {
+    if (!(control instanceof FormGroup)) return null;
+
+    const group = control as UntypedFormGroup;
+    return Object.keys(group.controls).find((key) => group.controls[key].hasError('required'))
       ? { emptyRequiredFields: true }
-      : null,
-  );
+      : null;
+  });
 }
 
 /** Add **required** and **max length** validators to the given field name. */
@@ -27,8 +32,13 @@ export function facilityIDValidators(requiredMessage: string, patternMessage: st
 
 export function futureDateValidator(errorMessage: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const date = new Date();
-    return control.value && control.value > date ? { invalidDate: errorMessage } : null;
+    const value: unknown = control.value;
+    if (!(value instanceof Date)) return null;
+
+    // DateInputComponent represents the selected calendar date in UTC; today is the user's local date.
+    const selectedDate = Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate());
+
+    return selectedDate > getToday().getTime() ? { invalidDate: errorMessage } : null;
   };
 }
 

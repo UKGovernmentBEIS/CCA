@@ -4,9 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { normaliseNumber, underlyingAgreementQuery } from '@requests/common';
+import { underlyingAgreementQuery } from '@requests/common';
 import { RequestTaskFileService } from '@shared/services';
 import { Improvement } from '@shared/types';
+import { normaliseNumber } from '@shared/utils';
 
 export type FacilityTargetsFormModel = FormGroup<{
   tp7: FormControl<number>;

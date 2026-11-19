@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { of, tap } from 'rxjs';
 
@@ -12,7 +12,7 @@ const initialState: FacilityAuditUpdateDTO = {
   comments: '',
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class FacilityAuditStore extends SignalStore<FacilityAuditUpdateDTO> {
   private readonly facilityAuditControllerService = inject(FacilityAuditControllerService);
 

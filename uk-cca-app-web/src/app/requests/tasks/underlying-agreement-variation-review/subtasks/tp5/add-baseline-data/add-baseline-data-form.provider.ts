@@ -3,13 +3,10 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import {
-  addBaselineDataConditionallyRequiredFieldsValidator,
-  normaliseNumber,
-  underlyingAgreementQuery,
-} from '@requests/common';
+import { addBaselineDataConditionallyRequiredFieldsValidator, underlyingAgreementQuery } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
+import { normaliseNumber } from '@shared/utils';
 
 import { BaselineData } from 'cca-api';
 

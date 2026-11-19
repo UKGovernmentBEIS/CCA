@@ -1,4 +1,4 @@
-import { forwardRef, Injectable } from '@angular/core';
+import { forwardRef, Injectable, Service } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Injectable({ providedIn: 'root', useClass: forwardRef(() => DotFormService) })
@@ -10,7 +10,7 @@ export abstract class FormService {
   abstract getIdentifier(path: string[]): string;
 }
 
-@Injectable()
+@Service({ autoProvided: false })
 export class DotFormService extends FormService {
   getIdentifier(path: string[]): string {
     return path.join('.');

@@ -2105,4 +2105,122 @@ This is an automatic email - please do not reply to this address.')
             <param name="fileDocumentName" value="CCA3 variation acknowledgement letter.docx"/>
         </customChange>
     </changeSet>
+
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_CCA3_signature_image" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_CCA3"/>
+            <param name="fileDocumentName" value="CCA3 agreement.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_VARIATION_COMPLETED_logo_image" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_COMPLETED"/>
+            <param name="fileDocumentName" value="CCA3 variation acknowledgement letter.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_insert_PRIMARY_BUY_OUT_CCA3_document_template" author="loukerip">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="Transaction ID Primary TPx Buy-out MoA updated v2.0.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'PRIMARY_BUY_OUT_CCA3',
+                       'CCA3 Buy-out primary notice',
+                       'ENGLAND',
+                       'Buy-out and surplus batch run',
+                       '2025-03-20 00:00:00',
+                       (select id from file_document_template where file_name = 'Transaction ID Primary TPx Buy-out MoA updated v2.0.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'CCA3 Buy-out primary notice' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'Transaction ID Primary TPx Buy-out MoA updated v2.0.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_insert_SECONDARY_BUY_OUT_CCA3_document_template" author="loukerip">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="Transaction ID Secondary TPx Buy-out MoA updated v2.0.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'SECONDARY_BUY_OUT_CCA3',
+                       'CCA3 Buy-out secondary notice',
+                       'ENGLAND',
+                       'Buy-out and surplus batch run',
+                       '2025-03-20 00:00:00',
+                       (select id from file_document_template where file_name = 'Transaction ID Secondary TPx Buy-out MoA updated v2.0.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'CCA3 Buy-out secondary notice' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'Transaction ID Secondary TPx Buy-out MoA updated v2.0.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_insert_SECONDARY_OVERPAYMENT_BUY_OUT_CCA3_document_template" author="loukerip">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="Transaction ID Secondary TPx Overpayment updated v2.0.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'SECONDARY_OVERPAYMENT_BUY_OUT_CCA3',
+                       'CCA3 Buy-out secondary overpayment letter',
+                       'ENGLAND',
+                       'Buy-out and surplus batch run',
+                       '2025-03-20 00:00:00',
+                       (select id from file_document_template where file_name = 'Transaction ID Secondary TPx Overpayment updated v2.0.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'CCA3 Buy-out secondary overpayment letter' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'Transaction ID Secondary TPx Overpayment updated v2.0.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

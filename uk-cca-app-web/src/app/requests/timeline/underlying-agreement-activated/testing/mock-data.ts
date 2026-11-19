@@ -1,3 +1,5 @@
+import { SchemeVersionEnum } from '@shared/types';
+
 import { DefaultNoticeRecipient, RequestActionDTO, UnderlyingAgreementActivatedRequestActionPayload } from 'cca-api';
 
 const defaultContacts: Array<DefaultNoticeRecipient> = [
@@ -45,7 +47,7 @@ const activatedPayloadDTO: UnderlyingAgreementActivatedRequestActionPayload = {
   },
   underlyingAgreementActivationAttachments: {},
   underlyingAgreementDocuments: {
-    CCA_2: {
+    [SchemeVersionEnum.CCA_2]: {
       name: 'underlying-agreement.pdf',
       uuid: 'abcd-1234',
     },

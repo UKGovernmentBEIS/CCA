@@ -1,17 +1,11 @@
 import { DecimalPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
-import {
-  calculateFixedEnergy,
-  calculateOtherYearsVariableEnergy,
-  calculateTotalEnergy,
-  calculateVariableEnergy,
-} from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { StatusPipe, transformAddress } from '@shared/pipes';
 import { MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '@shared/pipes';
 import { Country, Improvement, SchemeVersions } from '@shared/types';
-import { fileUtils, transformPhoneNumber } from '@shared/utils';
+import { boolToString, fileUtils, transformPhoneNumber } from '@shared/utils';
 
 import {
   Apply70Rule,
@@ -28,7 +22,13 @@ import {
   UnderlyingAgreementVariationFacilityReviewDecision,
 } from 'cca-api';
 
-import { boolToString, isCCA2Scheme, isCCA3Scheme } from '../../utils';
+import { isCCA2Scheme, isCCA3Scheme } from '../../utils';
+import {
+  calculateFixedEnergy,
+  calculateOtherYearsVariableEnergy,
+  calculateTotalEnergy,
+  calculateVariableEnergy,
+} from '../facility/utils';
 import { AgreementCompositionTypePipe, AgreementTypeEnum, ApplicationReasonTypeEnum, CaNameEnum } from '../pipes';
 import { FacilityWizardStep } from '../types';
 import { addFacilityDecisionSummaryData } from './decision-summary-data';
@@ -535,7 +535,7 @@ function toFacilityWizardSummaryFactory(ctx: FacilitySummaryBuildContext): Summa
   const carbonConversionFactorMeasurement =
     facility?.cca3BaselineAndTargets?.baselineData?.carbonConversionFactorMeasurement;
 
-  const baselineYear = baselineData?.baselineDate ? new Date(baselineData.baselineDate).getFullYear() : null;
+  const baselineYear = baselineData?.baselineDate ? new Date(baselineData.baselineDate).getUTCFullYear() : null;
 
   let factory = opts?.factory ?? new SummaryFactory();
 

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
@@ -52,7 +52,7 @@ describe('CloseTaskComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CloseTaskComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideRouter([]),
         { provide: ActivatedRoute, useValue: route },
         { provide: TasksApiService, useValue: tasksApiService },
@@ -84,6 +84,16 @@ describe('CloseTaskComponent', () => {
     requestTaskFileService.buildFormControl.mockClear();
   });
 
+  it('should show the shared upload constraints only once', () => {
+    const upload = fixture.nativeElement.querySelector('cca-multiple-file-input');
+    const hints = upload.querySelectorAll('.govuk-hint');
+    expect(hints).toHaveLength(1);
+    expect(hints[0].textContent).toContain('DIB');
+    expect(hints[0].textContent).not.toContain('DXF');
+    expect(hints[0].textContent).toContain('20MB');
+    expect(upload.querySelector('input[type="file"]').getAttribute('aria-describedby')).toBe(hints[0].id);
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -104,7 +114,7 @@ describe('CloseTaskComponent', () => {
   it('should close the task and navigate to confirmation', () => {
     component['form'].setValue({
       reason: 'There is nothing left to complete.',
-      files: [{ uuid: 'uuid-1', file: { name: 'close-task.pdf' } as File }],
+      files: [{ uuid: 'uuid-1', file: { name: 'close-task.pdf' } }],
     });
 
     component.onSubmit();

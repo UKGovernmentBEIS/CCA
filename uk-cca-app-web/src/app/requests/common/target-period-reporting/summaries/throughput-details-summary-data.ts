@@ -1,22 +1,24 @@
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, PercentPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP } from '@shared/pipes';
 import { Improvement } from '@shared/types';
-import { to7DecimalPlacesNumber, toBigNumber, toNumber } from '@shared/utils';
+import { boolToString, to7DecimalPlacesNumber, toBigNumber, toNumber } from '@shared/utils';
 import BigNumber from 'bignumber.js';
 
 import { PerformanceDataFacilityInputData, PerformanceDataFacilityReferenceData } from 'cca-api';
 
 import { calculateOtherYearsVariableEnergy } from '../../underlying-agreement';
-import { boolToString } from '../../utils';
 import { isCarbonMeasurementType, resolveMeasurementUnit } from '../utils';
 
 type TotalsOnlySummaryDataArgs = {
   referenceData: PerformanceDataFacilityReferenceData;
   performanceData: PerformanceDataFacilityInputData;
   targetVariableEnergy: number | BigNumber | null;
+  baselineEnergyIntensity: BigNumber | null;
+  improvementTarget: BigNumber;
+  reportType: 'INTERIM' | 'FINAL';
   isEditable: boolean;
 };
 
@@ -40,7 +42,7 @@ export function toTPRBaselineDataDetails(
 
   const otherYearsVariableEnergy = calculateOtherYearsVariableEnergy(
     includedBaselineEnergyProducts,
-    new Date(baselineAndTargets?.baselineDate).getFullYear(),
+    new Date(baselineAndTargets?.baselineDate).getUTCFullYear(),
     baselineAndTargets?.variableEnergyType,
   );
 
@@ -131,12 +133,29 @@ export function toTotalsOnlySummaryData(args: TotalsOnlySummaryDataArgs): Summar
   const measurementUnit = resolveMeasurementUnit(args.referenceData);
   const isCarbonMeasurement = isCarbonMeasurementType(measurementUnit);
 
-  const factory = new SummaryFactory()
-    .addSection('Target period throughput details', '../details')
+  const factory = new SummaryFactory().addSection('Target period throughput details', '../details');
+
+  if (baselineAndTargets?.variableEnergyType === 'TOTALS') {
+    factory
+      .addRow(
+        `Baseline ${isCarbonMeasurement ? 'carbon dioxide (CO2)' : 'energy'} intensity (${measurementUnit}/${baselineAndTargets?.throughputUnit})`,
+        decimalPipe.transform(to7DecimalPlacesNumber(args.baselineEnergyIntensity), '1.0-7'),
+      )
+      .addRow(
+        args.reportType === 'INTERIM' ? 'Interim target %' : 'Improvement target %',
+        new PercentPipe('en-GB').transform(args.improvementTarget?.toNumber(), '1.0-3'),
+      );
+  }
+
+  factory
     .addRow(
       `Total throughput (${baselineAndTargets?.throughputUnit})`,
       decimalPipe.transform(args.performanceData?.throughputDetails?.actualThroughput, '1.0-7'),
       { change: args.isEditable },
+    )
+    .addRow(
+      `Adjusted throughput (${baselineAndTargets?.throughputUnit})`,
+      decimalPipe.transform(args.performanceData?.throughputDetails?.adjustedThroughput, '1.0-3'),
     );
 
   if (args.targetVariableEnergy !== null) {

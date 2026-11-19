@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DateInputComponent, DetailsComponent, TextareaComponent } from '@netz/govuk-components';
 import { TaskItemStatus, TasksApiService } from '@requests/common';
 import { FileInputComponent, MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { fileUtils, generateDownloadUrl } from '@shared/utils';
+import { fileUtils, generateDownloadUrl, getToday } from '@shared/utils';
 import { produce } from 'immer';
 
 import { PreAuditReviewSubmitRequestTaskPayload } from 'cca-api';
@@ -24,6 +24,7 @@ import {
 @Component({
   selector: 'cca-pre-audit-review-requested-documents-upload',
   templateUrl: './pre-audit-review-requested-documents-upload.component.html',
+  providers: [PreAuditReviewAuditReasonFormProvider],
   imports: [
     ReactiveFormsModule,
     ReturnToTaskOrActionPageComponent,
@@ -34,8 +35,6 @@ import {
     MultipleFileInputComponent,
     DetailsComponent,
   ],
-  providers: [PreAuditReviewAuditReasonFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreAuditReviewRequestedDocumentsUploadComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -44,7 +43,7 @@ export class PreAuditReviewRequestedDocumentsUploadComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   private readonly taskId = this.activatedRoute.snapshot.params.taskId;
-  protected readonly today = new Date();
+  protected readonly today = getToday();
 
   protected getDownloadUrl(uuid: string) {
     return ['../../file-download', uuid];

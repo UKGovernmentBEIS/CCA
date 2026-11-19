@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -11,6 +11,7 @@ import {
   RadioOptionComponent,
 } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
+import { getToday } from '@shared/utils';
 
 import { FacilityInfoDTO, UpdateFacilityDataService } from 'cca-api';
 
@@ -23,6 +24,7 @@ import {
 @Component({
   selector: 'cca-edit-facility-details',
   templateUrl: './edit-facility-details.component.html',
+  providers: [editFacilityDetailsFormProvider()],
   imports: [
     WizardStepComponent,
     RouterLink,
@@ -32,8 +34,6 @@ import {
     DateInputComponent,
     ConditionalContentDirective,
   ],
-  providers: [editFacilityDetailsFormProvider()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class EditFacilityDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -41,7 +41,7 @@ export default class EditFacilityDetailsComponent {
   private readonly updateFacilityDataService = inject(UpdateFacilityDataService);
 
   protected readonly facilityDetails = this.activatedRoute.snapshot.data.facilityDetails as FacilityInfoDTO;
-  protected readonly today = new Date();
+  protected readonly today = getToday();
 
   protected readonly form = inject<EditFacilityDetailsFormModel>(EDIT_FACILITY_DETAILS_FORM_PROVIDER);
 

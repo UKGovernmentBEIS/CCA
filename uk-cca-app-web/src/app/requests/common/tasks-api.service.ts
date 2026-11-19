@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { catchError, Observable, tap, throwError } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { taskNotFoundError } from '@shared/errors';
 
 import { RequestTaskActionProcessDTO, TasksService } from 'cca-api';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TasksApiService {
   private readonly tasksService = inject(TasksService);
   private readonly pendingRequestService = inject(PendingRequestService);

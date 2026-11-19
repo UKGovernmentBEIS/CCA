@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.run.domain.BuyOutSurplusRunCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.run.domain.BuyOutSurplusFacilityRunCreateActionPayload;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountCreationSubmitApplicationCreateActionPayload;
 import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
@@ -31,6 +32,9 @@ public class RequestCreateActionPayloadSchemasProvider extends SwaggerSchemasAbs
         
         // Performance Data Facility Digital Form
         addResolvedShemas(PerformanceDataFacilityDigitalFormRequestCreateActionPayload.class.getSimpleName(), PerformanceDataFacilityDigitalFormRequestCreateActionPayload.class);
+
+        // Emissions Trading Scheme Data
+        addResolvedShemas(EmissionsTradingSchemeDataRequestCreateActionPayload.class.getSimpleName(), EmissionsTradingSchemeDataRequestCreateActionPayload.class);
     }
     
 }

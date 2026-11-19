@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { CancelConfirmationComponent } from '@netz/common/components';
 
@@ -11,6 +11,5 @@ import { CancelConfirmationComponent } from '@netz/common/components';
     </netz-cancel-confirmation>
   `,
   imports: [CancelConfirmationComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementVariationSubmitConfirmationComponent {}

@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
@@ -13,14 +14,18 @@
     "module": "ES2022",
     "strictPropertyInitialization": false,
     "strictNullChecks": false,
+    "types": ["vitest/globals"],
     "paths": {
       "@netz/common/*": ["./dist/common/*"],
       "@netz/govuk-components": ["./dist/govuk-components"],
       "@error/*": ["src/app/error/*"],
       "@requests/timeline": ["src/app/requests/timeline/index.ts"],
+      "@requests/timeline/*": ["src/app/requests/timeline/*"],
       "@requests/tasks": ["src/app/requests/tasks/index.ts"],
       "@requests/common": ["src/app/requests/common/index.ts"],
+      "@requests/common/*": ["src/app/requests/common/*"],
       "@shared/components": ["src/app/shared/components/index.ts"],
+      "@shared/components/*": ["src/app/shared/components/*"],
       "@shared/config": ["src/app/shared/config/index.ts"],
       "@shared/guards": ["src/app/shared/guards/index.ts"],
       "@shared/services": ["src/app/shared/services/index.ts"],

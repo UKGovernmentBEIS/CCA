@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 import { TASK_STATUS_TAG_MAP, TaskStatusTagMap } from '@netz/common/pipes';
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
@@ -48,8 +48,9 @@ describe('RequestActionComponent', () => {
 
   function createTestModule(content: RequestActionPageContentFactoryMap) {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, RequestActionPageComponent],
+      imports: [RequestActionPageComponent],
       providers: [
+        provideRouter([]),
         { provide: REQUEST_ACTION_PAGE_CONTENT, useValue: content },
         { provide: TASK_STATUS_TAG_MAP, useValue: map },
       ],

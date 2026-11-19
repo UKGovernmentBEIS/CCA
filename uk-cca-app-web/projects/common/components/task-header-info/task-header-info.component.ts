@@ -1,5 +1,5 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 import { DaysRemainingPipe } from '@netz/common/pipes';
 
@@ -18,9 +18,16 @@ import { RequestTaskPayload } from 'cca-api';
       </p>
     }
 
-    @if (isTPRTask() && startDate() !== undefined && startDate() !== null) {
+    @if ((isTPRTask() || isEtsTask()) && startDate() !== undefined && startDate() !== null) {
       <p class="govuk-body govuk-!-margin-bottom-1">
         <strong>Date initiated:</strong> {{ startDate() | date: 'dd/MM/yyyy' }}
+      </p>
+    }
+
+    @if (isEtsTask()) {
+      <p class="govuk-body govuk-!-margin-bottom-1"><strong>Year:</strong> {{ payload()?.targetYear }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-1">
+        <strong>Participates in UK ETS:</strong> {{ payload()?.uketsId ? 'Yes, ' + payload()?.uketsId : 'No' }}
       </p>
     }
 
@@ -34,7 +41,6 @@ import { RequestTaskPayload } from 'cca-api';
       <p class="govuk-body"><strong>Target period report type:</strong> {{ payload()?.reportType | titlecase }}</p>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DaysRemainingPipe, DatePipe, TitleCasePipe],
 })
 export class TaskHeaderInfoComponent {
@@ -42,7 +48,10 @@ export class TaskHeaderInfoComponent {
   protected readonly daysRemaining = input<number>();
   protected readonly startDate = input<string>();
   protected readonly requestType = input<string>();
-  protected readonly payload = input<RequestTaskPayload & { targetPeriodType?: string; reportType?: string }>();
+  protected readonly payload = input<
+    RequestTaskPayload & { targetPeriodType?: string; reportType?: string; targetYear?: number; uketsId?: string }
+  >();
 
   protected readonly isTPRTask = computed(() => this.requestType() === 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM');
+  protected readonly isEtsTask = computed(() => this.requestType() === 'EMISSIONS_TRADING_SCHEME_DATA');
 }

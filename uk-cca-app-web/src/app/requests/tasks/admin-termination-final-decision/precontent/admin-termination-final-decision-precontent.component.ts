@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -17,7 +17,6 @@ import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from '../types';
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminTerminationFinalDecisionPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

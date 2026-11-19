@@ -1,5 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -44,6 +44,7 @@ type SubsistenceFeesState = {
 @Component({
   selector: 'cca-subsistence-fees-tab',
   templateUrl: './subsistence-fees-tab.component.html',
+  providers: [SectorSubsistenceFeesFormProvider, StatusPipe],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -60,8 +61,6 @@ type SubsistenceFeesState = {
     StatusPipe,
     StatusColorPipe,
   ],
-  providers: [SectorSubsistenceFeesFormProvider, StatusPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubsistenceFeesTabComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

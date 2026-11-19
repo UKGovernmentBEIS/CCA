@@ -3,7 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { GovukDatePipe } from '@netz/common/pipes';
 import { SummaryFactory } from '@shared/components';
 import { MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '@shared/pipes';
-import { fileUtils } from '@shared/utils';
+import { boolToString, fileUtils } from '@shared/utils';
 
 import {
   BaselineData,
@@ -14,13 +14,12 @@ import {
   UnderlyingAgreementReviewDecision,
 } from 'cca-api';
 
-import { boolToString } from '../../utils';
 import { AgreementCompositionTypePipe } from '../pipes';
 import { getBaselineUnits, getMeasurementAndThroughputUnits } from '../target-periods';
 import { BaseLineAndTargetsStep } from '../types';
 import { addDecisionSummaryData } from './decision-summary-data';
 
-type BaselineAndTargetsSummaryMetadata = {
+export type BaselineAndTargetsSummaryMetadata = {
   isTp5Period: boolean;
   baselineExists: boolean | null;
   isEditable: boolean;

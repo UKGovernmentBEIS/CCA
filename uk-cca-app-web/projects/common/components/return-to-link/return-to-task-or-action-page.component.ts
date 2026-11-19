@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { ActivatedRoute, RouterLinkWithHref } from '@angular/router';
 
 import {
@@ -11,9 +11,8 @@ import {
 
 @Component({
   selector: 'netz-return-to-task-or-action-page',
-  imports: [RouterLinkWithHref],
   template: `<a class="govuk-link" [routerLink]="returnToUrl()"> Return to: {{ returnToText() }} </a> `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLinkWithHref],
 })
 export class ReturnToTaskOrActionPageComponent {
   private readonly store = inject<RequestTaskStore | RequestActionStore>(TYPE_AWARE_STORE, { optional: true });

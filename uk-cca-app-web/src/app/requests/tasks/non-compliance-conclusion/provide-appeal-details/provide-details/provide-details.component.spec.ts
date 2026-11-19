@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
@@ -49,7 +49,7 @@ describe('ProvideAppealDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProvideAppealDetailsComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideRouter([]),
         ProvideAppealDetailsStore,
@@ -83,6 +83,16 @@ describe('ProvideAppealDetailsComponent', () => {
     requestTaskFileService.buildFormControl.mockClear();
   });
 
+  it('should show the shared upload constraints only once', () => {
+    const upload = fixture.nativeElement.querySelector('cca-multiple-file-input');
+    const hints = upload.querySelectorAll('.govuk-hint');
+    expect(hints).toHaveLength(1);
+    expect(hints[0].textContent).toContain('DIB');
+    expect(hints[0].textContent).not.toContain('DXF');
+    expect(hints[0].textContent).toContain('20MB');
+    expect(upload.querySelector('input[type="file"]').getAttribute('aria-describedby')).toBe(hints[0].id);
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -96,20 +106,45 @@ describe('ProvideAppealDetailsComponent', () => {
   });
 
   it('should reject appeal registration dates in the future', () => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const today = new Date();
+    const tomorrow = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate() + 1));
 
     component['form'].controls.registrationDate.setValue(tomorrow);
 
-    expect(component['form'].controls.registrationDate.errors?.invalidDate).toEqual(
-      'The date must be today or in the past',
+    expect(component['form'].controls.registrationDate.errors).toEqual({
+      invalidDate: 'The date must be today or in the past',
+    });
+  });
+
+  it.each([
+    ['', '', '', 'Enter the date the appeal was registered'],
+    ['31', '', '', 'Enter a full date'],
+    ['31', '2', '2025', 'Enter a real date'],
+    ['1', '1', '2099', 'The date must be today or in the past'],
+  ])('shows one date message and prevents navigation for %s/%s/%s', (day, month, year, message) => {
+    const inputs = fixture.nativeElement.querySelectorAll('[formcontrolname="registrationDate"] input');
+    [day, month, year].forEach((value, index) => {
+      inputs[index].value = value;
+      inputs[index].dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true }));
+    fixture.detectChanges();
+
+    const inlineErrors = fixture.nativeElement.querySelectorAll(
+      '[formcontrolname="registrationDate"] .govuk-error-message > span',
     );
+    expect(Array.from(inlineErrors, (error: HTMLElement) => error.textContent.replace(/\s+/g, ' ').trim())).toEqual([
+      `Error: ${message}`,
+    ]);
+    const summaryErrors = fixture.nativeElement.querySelectorAll('.govuk-error-summary__list a');
+    expect(Array.from(summaryErrors, (error: HTMLElement) => error.textContent.trim())).toEqual([message]);
+    expect(router.navigate).not.toHaveBeenCalled();
   });
 
   it('should store appeal details and navigate to check your answers', () => {
     component['form'].setValue({
-      registrationDate: new Date(2026, 0, 1),
-      files: [{ uuid: 'uuid-1', file: { name: 'appeal.pdf' } as File }],
+      registrationDate: new Date('2026-01-01'),
+      files: [{ uuid: 'uuid-1', file: { name: 'appeal.pdf' } }],
       comments: 'Appeal comments',
     });
 

@@ -9,6 +9,7 @@ import { existingControlContainer } from '@shared/providers';
 @Component({
   selector: 'cca-administrative-contact-input',
   templateUrl: './administrative-contact-input.component.html',
+  viewProviders: [existingControlContainer],
   imports: [
     TextInputComponent,
     ReactiveFormsModule,
@@ -17,7 +18,6 @@ import { existingControlContainer } from '@shared/providers';
     CheckboxComponent,
     CheckboxesComponent,
   ],
-  viewProviders: [existingControlContainer],
 })
 export class AdministrativeContactInputComponent {
   protected readonly sameAddressExists = input(true);

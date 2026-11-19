@@ -1,33 +1,47 @@
 <cca-utility-panel heading="Filters">
   <form [formGroup]="filtersForm" (ngSubmit)="apply()">
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row row-flex flex-wrap align-items-end">
       <div class="govuk-grid-column-one-half">
         <div
           govuk-text-input
           formControlName="term"
-          label="Target unit ID, operator name, transaction ID or sector ID"
+          label="Target unit ID, operator name, transaction ID, sector ID, facility ID or site name"
           widthClass="govuk-!-width-full"
         ></div>
       </div>
 
-      <div class="govuk-grid-column-one-quarter">
-        <div
-          govuk-select
-          formControlName="targetPeriodType"
-          [options]="targetPeriodOptions"
-          label="Period"
-          widthClass="govuk-!-width-full"
-        ></div>
-      </div>
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-row row-flex align-items-end">
+          <div class="govuk-grid-column-one-third">
+            <div
+              govuk-select
+              formControlName="schemeVersion"
+              [options]="schemeVersionOptions"
+              label="Scheme"
+              widthClass="govuk-!-width-full"
+            ></div>
+          </div>
 
-      <div class="govuk-grid-column-one-quarter">
-        <div
-          govuk-select
-          formControlName="buyOutSurplusPaymentStatus"
-          [options]="statusOptions"
-          label="Status"
-          widthClass="govuk-!-width-full"
-        ></div>
+          <div class="govuk-grid-column-one-third">
+            <div
+              govuk-select
+              formControlName="targetPeriodType"
+              [options]="targetPeriodOptions()"
+              label="Period"
+              widthClass="govuk-!-width-full"
+            ></div>
+          </div>
+
+          <div class="govuk-grid-column-one-third">
+            <div
+              govuk-select
+              formControlName="paymentStatus"
+              [options]="statusOptions"
+              label="Status"
+              widthClass="govuk-!-width-full"
+            ></div>
+          </div>
+        </div>
       </div>
     </div>
 

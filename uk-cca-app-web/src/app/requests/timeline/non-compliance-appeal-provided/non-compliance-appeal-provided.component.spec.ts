@@ -37,7 +37,7 @@ describe('NonComplianceAppealProvidedComponent', () => {
     expect(summaryValues).toEqual([
       [
         ['When was the appeal registered?', 'Appeal file', 'Comments'],
-        ['2 Mar 2025', 'Appeal_file.pdf', 'A Martini. Shaken, Not Stirred.'],
+        ['2 Mar 2025', 'Appeal_file.pdf (opens in a new tab)', 'A Martini. Shaken, Not Stirred.'],
       ],
     ]);
   });

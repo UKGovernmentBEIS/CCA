@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output, signal, viewChild } from '@angular/core';
+import { Component, input, output, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -19,7 +19,6 @@ import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
     ButtonDirective,
     ErrorSummaryComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardStepComponent {
   protected readonly showBackLink = input(false);
@@ -33,9 +32,17 @@ export class WizardStepComponent {
 
   protected readonly formSubmit = output<UntypedFormGroup>();
 
-  protected readonly errorSummaryEl = viewChild(ErrorSummaryComponent);
-
   protected readonly isErrorSummaryDisplayed = signal(false);
+  private readonly errorSummary = viewChild(ErrorSummaryComponent);
+
+  /**
+   * Shows the error summary and moves focus to it. Hosts call this after setting errors from an API response, since
+   * those arrive after the submit that the summary refocuses on by itself.
+   */
+  showErrorSummary(): void {
+    this.isErrorSummaryDisplayed.set(true);
+    this.errorSummary()?.focus();
+  }
 
   onSubmit(): void {
     this.formGroup()
@@ -53,7 +60,6 @@ export class WizardStepComponent {
           case 'INVALID':
             this.formGroup().markAllAsTouched();
             this.isErrorSummaryDisplayed.set(true);
-            this.errorSummaryEl()?.container()?.nativeElement.focus();
             break;
         }
       });

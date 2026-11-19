@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -9,19 +9,22 @@ import { logger } from '@shared/utils';
 
 import { BuyOutAndSurplusInfoService } from 'cca-api';
 
+import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 import { BuyoutAndSurplusTabStore } from '../buyout-and-surplus-tab.store';
 
 @Component({
   selector: 'cca-edit-surplus-on-hold',
   templateUrl: './edit-on-hold.component.html',
   imports: [ButtonDirective, FormsModule, RadioComponent, RadioOptionComponent, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditOnHoldComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly buyoutAndSurplusTabStore = inject(BuyoutAndSurplusTabStore);
   private readonly buyOutAndSurplusInfoService = inject(BuyOutAndSurplusInfoService);
+  private readonly activeTargetUnitStore = inject(ActiveTargetUnitStore);
+
+  protected readonly businessId = this.activeTargetUnitStore.state?.targetUnitAccountDetails?.businessId;
 
   private readonly excluded = this.buyoutAndSurplusTabStore.state?.surplusInfo?.excluded;
   private readonly accountId = +this.activatedRoute.snapshot.paramMap.get('targetUnitId');

@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Injectable } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Service } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { EMPTY, map, Observable, pipe, switchMap, take, tap, timer } from 'rxjs';
@@ -6,6 +6,7 @@ import { EMPTY, map, Observable, pipe, switchMap, take, tap, timer } from 'rxjs'
 import { SignalStore } from '@netz/common/store';
 import { ConfigService } from '@shared/config';
 import { HistoryCategory } from '@shared/types';
+import { getToday } from '@shared/utils';
 import { produce } from 'immer';
 
 import {
@@ -56,14 +57,14 @@ const INITIAL_STATE: SubsistenceFeesState = {
   isValidChargeDate: undefined,
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
   private readonly destroyRef = inject(DestroyRef);
   private readonly requestsService = inject(RequestsService);
   private readonly configService = inject(ConfigService);
   private readonly subsistenceFeesRunInfoViewService = inject(SubsistenceFeesRunInfoViewService);
 
-  private readonly today = new Date();
+  private readonly today = getToday();
   private readonly chargeInitDate = new Date(this.configService.getSubsistenceFeesRunTriggerDate());
   private readonly interval = 10000; // ms
 

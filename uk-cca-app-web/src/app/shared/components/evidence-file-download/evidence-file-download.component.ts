@@ -1,11 +1,13 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { combineLatest, expand, map, Observable, of, switchMap, timer } from 'rxjs';
 
 import {
-  BuyOutAndSurplusTransactionInfoViewService,
+  AccountBuyOutSurplusTransactionDTO,
+  BuyOutAndSurplusTransactionDetailInfoViewService,
+  BuyOutAndSurplusTransactionFilesViewService,
   FileEvidencesService,
   FileToken,
   SubsistenceFeesMoAReceivedAmountControllerService,
@@ -24,7 +26,6 @@ type EvidenceFileDownloadInfo = {
     <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
   imports: [AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EvidenceFileDownloadComponent implements AfterViewChecked {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -32,7 +33,10 @@ export class EvidenceFileDownloadComponent implements AfterViewChecked {
   private readonly subsistenceFeesMoAReceivedAmountControllerService = inject(
     SubsistenceFeesMoAReceivedAmountControllerService,
   );
-  private readonly buyOutAndSurplusTransactionInfoViewService = inject(BuyOutAndSurplusTransactionInfoViewService);
+  private readonly buyOutAndSurplusTransactionFilesViewService = inject(BuyOutAndSurplusTransactionFilesViewService);
+  private readonly buyOutAndSurplusTransactionDetailInfoViewService = inject(
+    BuyOutAndSurplusTransactionDetailInfoViewService,
+  );
 
   protected readonly anchor = viewChild<ElementRef<HTMLAnchorElement>>('anchor');
 
@@ -42,6 +46,12 @@ export class EvidenceFileDownloadComponent implements AfterViewChecked {
   readonly url$ = this.activatedRoute.paramMap.pipe(
     map((params): EvidenceFileDownloadInfo => {
       if (params.has('moaId')) return this.subsistenceFeesMoasDownloadInfo(params);
+      if (
+        params.has('transactionDetailId') ||
+        this.activatedRoute.snapshot.data.evidenceResource === 'transactionDetail'
+      ) {
+        return this.buyoutAndSurplusDetailDownloadInfo(params);
+      }
       if (params.has('transactionId')) return this.buyoutAndSurplusDownloadInfo(params);
     }),
     switchMap(({ request, fileType }) =>
@@ -81,10 +91,25 @@ export class EvidenceFileDownloadComponent implements AfterViewChecked {
 
   private buyoutAndSurplusDownloadInfo(params: ParamMap): EvidenceFileDownloadInfo {
     return {
-      request: this.buyOutAndSurplusTransactionInfoViewService.generateBuyOutSurplusTransactionEvidenceFileToken(
+      request: this.buyOutAndSurplusTransactionFilesViewService.generateBuyOutSurplusTransactionEvidenceFileToken(
         +params.get('transactionId'),
         params.get('uuid'),
       ),
+      fileType: 'attachment',
+    };
+  }
+
+  private buyoutAndSurplusDetailDownloadInfo(params: ParamMap): EvidenceFileDownloadInfo {
+    const detailId = params.has('transactionDetailId')
+      ? +params.get('transactionDetailId')
+      : (this.activatedRoute.snapshot.data.transactionDetails as AccountBuyOutSurplusTransactionDTO).detailId;
+
+    return {
+      request:
+        this.buyOutAndSurplusTransactionDetailInfoViewService.generateBuyOutSurplusTransactionDetailEvidenceFileToken(
+          detailId,
+          params.get('uuid'),
+        ),
       fileType: 'attachment',
     };
   }

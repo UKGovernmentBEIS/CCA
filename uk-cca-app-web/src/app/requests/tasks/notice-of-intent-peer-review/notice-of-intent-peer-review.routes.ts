@@ -4,19 +4,23 @@ import { userIsAssigneeGuard } from 'src/app/shared/guards/user-is-assignee.guar
 
 export const NOTICE_OF_INTENT_PEER_REVIEW_ROUTES: Routes = [
   {
+    title: 'Peer review notice of intent',
     path: '',
     children: [
       {
-        path: 'upload-notice-of-intent',
         title: 'Upload notice of intent file',
+        path: 'upload-notice-of-intent',
+        loadComponent: () =>
+          import('@requests/common/notice-of-intent-peer-review/upload-notice-of-intent/upload-notice-of-intent-summary.component').then(
+            (c) => c.UploadNoticeOfIntentSummaryComponent,
+          ),
         data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.UploadNoticeOfIntentSummaryComponent),
       },
       {
         path: 'peer-review-decision',
         canActivate: [userIsAssigneeGuard],
         loadChildren: () =>
-          import('./peer-review-decision/peer-review-decision.routes').then((m) => m.PEER_REVIEW_DECISION_ROUTES),
+          import('./peer-review-decision/peer-review-decision.routes').then((r) => r.PEER_REVIEW_DECISION_ROUTES),
       },
       {
         path: '**',

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { DaysRemainingPipe, ItemLinkPipe, ItemNamePipe } from '@netz/common/pipes';
@@ -12,7 +12,6 @@ import { ItemDTO } from 'cca-api';
 @Component({
   selector: 'netz-related-tasks',
   templateUrl: './related-tasks.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, ItemNamePipe, ItemLinkPipe, DaysRemainingPipe],
 })
 export class RelatedTasksComponent {

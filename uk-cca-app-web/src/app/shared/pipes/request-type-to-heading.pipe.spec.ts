@@ -25,11 +25,15 @@ describe('RequestTypeToHeadingPipe', () => {
     ).toEqual('Underlying agreement variation by regulator');
     expect(pipe.transform('ADMIN_TERMINATION')).toEqual('Admin termination');
     expect(pipe.transform('BUY_OUT_SURPLUS_ACCOUNT_PROCESSING')).toEqual('Buy-out and surplus');
+    expect(pipe.transform('BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING')).toEqual('Buy-out and surplus');
     expect(pipe.transform('CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING')).toEqual('Migration');
     expect(pipe.transform('CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING')).toEqual('Extension');
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DIGITAL_FORM')).toEqual('Target period report');
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DATA_UPLOAD')).toEqual('Target period report');
     expect(pipe.transform('PERFORMANCE_DATA_FACILITY_PROCESSING')).toEqual('Target period report');
+
+    expect(pipe.transform('FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD')).toEqual('PAT report');
+    expect(pipe.transform('FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING')).toEqual('PAT report');
   });
 
   it('should transform PERFORMANCE_DATA_SPREADSHEET_PROCESSING with metadata', () => {

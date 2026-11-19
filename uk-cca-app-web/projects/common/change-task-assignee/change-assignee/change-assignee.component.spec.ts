@@ -31,6 +31,7 @@ describe('ChangeAssigneeComponent', () => {
       { id: '7b91199c-4770-4d4b-a0ed-d6d9667de157', firstName: 'Darth', lastName: 'Vader' },
     ]),
   );
+  Object.assign(pendingRequestService, { isRequestPending$: of(false) });
   pendingRequestService.trackRequest.mockReturnValue(((source$) => source$) as MonoTypeOperatorFunction<unknown>);
 
   class Page extends BasePage<ChangeAssigneeComponent> {

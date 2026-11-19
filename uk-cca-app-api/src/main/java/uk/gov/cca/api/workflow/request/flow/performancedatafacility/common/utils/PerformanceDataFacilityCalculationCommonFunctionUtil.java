@@ -1,52 +1,30 @@
 package uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils;
 
+import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.ObjectUtils;
+import uk.gov.cca.api.common.domain.FourFunction;
+import uk.gov.cca.api.common.domain.TriFunction;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFixedConversionFactor;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityProductVariableEnergyData;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
+import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
-import java.util.function.Function;
-
-import org.apache.commons.lang3.ObjectUtils;
-
-import lombok.experimental.UtilityClass;
-import uk.gov.cca.api.common.domain.FourFunction;
-import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.common.domain.TriFunction;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityProductVariableEnergyData;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityNonStandardFuel;
 
 @UtilityClass
 public class PerformanceDataFacilityCalculationCommonFunctionUtil {
-	
-	public final BigDecimal NON_STANDARD_FUEL_PRIMARY_FACTOR = BigDecimal.ONE;
-
-    public final BiFunction<Map<PerformanceDataFacilityFixedConversionFactor, PerformanceDataFacilityFuelEnergyConsumption>, Function<Map.Entry<PerformanceDataFacilityFixedConversionFactor, PerformanceDataFacilityFuelEnergyConsumption>, BigDecimal>, BigDecimal> TOTAL_STANDARD_FUELS_DELIVERED_ENERGY =
-            (standardFuels, predicate) ->
-                    standardFuels.entrySet().stream()
-                            .filter(data -> data.getValue() != null)
-                            .map(predicate)
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    public final BiFunction<List<PerformanceDataFacilityNonStandardFuel>, Function<PerformanceDataFacilityNonStandardFuel, BigDecimal>, BigDecimal> TOTAL_NON_STANDARD_FUELS_DELIVERED_ENERGY =
-            (nonStandardFuels, predicate) ->
-                    nonStandardFuels.stream()
-                            .filter(fuel -> fuel.getDeliveredEnergy() != null)
-                            .map(predicate)
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     /**
      * Total baseline variable energy divided by Total baseline throughput
@@ -192,42 +170,6 @@ public class PerformanceDataFacilityCalculationCommonFunctionUtil {
                         PerformanceDataFacilityCalculationCommonFunctionUtil.PRODUCT_ENERGY
                                 .apply(calculatedParameters, originalProduct, data)
                 ).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    /**
-     * Primary energy = Delivered energy x Primary conversion factor
-     * Primary carbon = Delivered energy x Primary conversion factor x CO2 conversion factor
-     */
-    public final BiFunction<Map.Entry<PerformanceDataFacilityFixedConversionFactor, PerformanceDataFacilityFuelEnergyConsumption>, MeasurementType, BigDecimal> PRIMARY_ENERGY_STANDARD_FUEL =
-            (entry, measurementType) ->
-                    switch (measurementType) {
-                        case ENERGY_KWH, ENERGY_MWH, ENERGY_GJ ->
-                                entry.getValue().getDeliveredEnergy().multiply(entry.getKey().getPrimaryFactor(), MathContext.DECIMAL128);
-                        case CARBON_KG -> entry.getValue().getDeliveredEnergy()
-                                .multiply(entry.getKey().getPrimaryFactor(), MathContext.DECIMAL128)
-                                .multiply(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(entry.getKey(), measurementType), MathContext.DECIMAL128);
-                        case CARBON_TONNE -> entry.getValue().getDeliveredEnergy()
-		                        .multiply(entry.getKey().getPrimaryFactor(), MathContext.DECIMAL128)
-		                        .multiply(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(entry.getKey(), measurementType), MathContext.DECIMAL128)
-		                        .divide(BigDecimal.valueOf(1000), 20, RoundingMode.HALF_UP);
-    };
-
-    /**
-     * Primary energy = Delivered energy x Primary conversion factor
-     * Primary carbon = Delivered energy x Primary conversion factor x CO2 conversion factor
-     */
-    public final BiFunction<PerformanceDataFacilityNonStandardFuel, MeasurementType, BigDecimal> PRIMARY_ENERGY_NON_STANDARD_FUEL =
-            (nonStandardFuel, measurementType) ->
-                    switch (measurementType) {
-                        case ENERGY_KWH, ENERGY_MWH, ENERGY_GJ -> nonStandardFuel.getDeliveredEnergy()
-                                .multiply(NON_STANDARD_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128);
-                        case CARBON_KG -> nonStandardFuel.getDeliveredEnergy()
-                                .multiply(NON_STANDARD_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128)
-                                .multiply(nonStandardFuel.getConversionFactor(), MathContext.DECIMAL128);
-                        case CARBON_TONNE -> nonStandardFuel.getDeliveredEnergy()
-		                        .multiply(NON_STANDARD_FUEL_PRIMARY_FACTOR, MathContext.DECIMAL128)
-		                        .multiply(nonStandardFuel.getConversionFactor(), MathContext.DECIMAL128)
-		                        .divide(BigDecimal.valueOf(1000), 20, RoundingMode.HALF_UP);
-    };
 
     /**
      * Split by product: Sum of [(BY energy/carbon intensity x Adjusted throughput for each product) x (1 - improvement % or Interim target %)]

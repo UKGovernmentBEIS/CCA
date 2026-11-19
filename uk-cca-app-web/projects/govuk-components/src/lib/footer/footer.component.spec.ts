@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -28,7 +28,6 @@ describe('GovukFooterComponent', () => {
       </govuk-footer>
     `,
     imports: [GovukFooterComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush,
   })
   class TestComponent {
     readonly navigation = signal<GovukFooterNavigation[]>([]);

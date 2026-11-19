@@ -1,43 +1,57 @@
-<govuk-table [columns]="columns" [data]="state().transactions">
-  <ng-template let-column="column" let-row="row">
-    @switch (column.field) {
-      @case ('accountBusinessId') {
-        <span class="govuk-!-font-weight-bold">{{ row.accountBusinessId }}</span>
-      }
+<p
+  class="govuk-body"
+  [class.govuk-visually-hidden]="state().transactions?.length !== 0"
+  tabindex="-1"
+  role="status"
+  aria-live="polite"
+>
+  {{ state().transactions?.length === 0 ? 'There are no results to show.' : '' }}
+</p>
 
-      @case ('operatorName') {
-        <span>{{ row.operatorName }}</span>
-      }
+@if (tableData().length) {
+  <govuk-table [columns]="columns" [data]="tableData()">
+    <ng-template let-column="column" let-row="row">
+      @switch (column.field) {
+        @case ('accountBusinessId') {
+          <span class="govuk-!-font-weight-bold">{{ row.accountBusinessId }}</span>
+        }
 
-      @case ('transactionCode') {
-        <a [routerLink]="['transactions', row.id]" fragment="transaction-details" class="govuk-link">
-          <span>{{ row.transactionCode }}</span>
-        </a>
-      }
+        @case ('operatorName') {
+          <span>{{ row.operatorName }}</span>
+        }
 
-      @case ('creationDate') {
-        <span>{{ row.creationDate | govukDate: 'date' }}</span>
-      }
+        @case ('transactionCode') {
+          <a [routerLink]="row.transactionLink" [fragment]="row.transactionFragment" class="govuk-link">
+            <span>{{ row.transactionCode }}</span>
+          </a>
+        }
 
-      @case ('paymentStatus') {
-        <span class="govuk-tag govuk-tag--{{ row.paymentStatus | statusColor }}">{{ row.paymentStatus | status }}</span>
-      }
+        @case ('creationDate') {
+          <span>{{ row.creationDate | govukDate: 'date' }}</span>
+        }
 
-      @case ('buyOutFee') {
-        <span>{{ row.buyOutFee | number }}</span>
-      }
+        @case ('paymentStatus') {
+          <span class="govuk-tag govuk-tag--{{ row.paymentStatus | statusColor }}">{{
+            row.paymentStatus | status
+          }}</span>
+        }
 
-      @default {
-        <span>{{ row[column.field] }}</span>
-      }
-    }
-  </ng-template>
-</govuk-table>
+        @case ('buyOutFee') {
+          {{ row.buyOutFee | formatGbp }}
+        }
 
-<cca-pagination
-  [count]="state().totalItems"
-  [currentPage]="state().currentPage"
-  [pageSize]="state().pageSize"
-  (pageChange)="onPageChange($event)"
-  (pageSizeChange)="onPageSizeChange($event)"
-/>
+        @default {
+          <span>{{ row[column.field] }}</span>
+        }
+      }
+    </ng-template>
+  </govuk-table>
+
+  <cca-pagination
+    [count]="state().totalItems"
+    [currentPage]="state().currentPage"
+    [pageSize]="state().pageSize"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  />
+}

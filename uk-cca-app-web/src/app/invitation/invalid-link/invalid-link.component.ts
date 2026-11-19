@@ -1,19 +1,13 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
-import { map } from 'rxjs';
+import { Component, input } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 
 @Component({
   selector: 'cca-invalid-link',
   templateUrl: './invalid-link.component.html',
-  imports: [PageHeadingComponent, AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [PageHeadingComponent],
 })
 export class InvalidLinkComponent {
-  private readonly route = inject(ActivatedRoute);
-
-  protected readonly errorCode$ = this.route.queryParamMap.pipe(map((queryParamMap) => queryParamMap.get('code')));
+  /** `code` query param: the error code of the rejected invitation link. */
+  readonly code = input<string>();
 }

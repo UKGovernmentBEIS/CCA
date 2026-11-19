@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -11,7 +11,6 @@ import { toEnforcementResponseNoticeSummaryData } from '../enforcement-response-
   selector: 'cca-upload-enforcement-response-notice-summary',
   template: `<cca-summary [data]="summaryData()" />`,
   imports: [SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadEnforcementResponseNoticeSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

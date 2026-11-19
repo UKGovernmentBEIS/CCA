@@ -191,4 +191,67 @@
         </sql>
     </changeSet>
 
+    <changeSet id="0_1_0_INSERT_CP8_CP9_CP10_TPR_CERTIFICATION_PERIOD" author="P70383">
+        <sql>
+            INSERT INTO tpr_certification_period (id, target_period_id, business_id, name, certification_batch_trigger_date, start_date, end_date)
+            VALUES (nextval('tpr_certification_period_seq'),
+                    (select id from tpr_target_period where business_id = 'TP7'),
+                    'CP8',
+                    'CP8 (2027-2029)',
+                    '2027-07-01',
+                    '2027-07-01',
+                    '2029-06-30'),
+                   (nextval('tpr_certification_period_seq'),
+                    (select id from tpr_target_period where business_id = 'TP8'),
+                    'CP9',
+                    'CP9 (2029-2031)',
+                    '2029-07-01',
+                    '2029-07-01',
+                    '2031-06-30'),
+                   (nextval('tpr_certification_period_seq'),
+                    (select id from tpr_target_period where business_id = 'TP9'),
+                    'CP10',
+                    'CP10 (2031-2033)',
+                    '2031-07-01',
+                    '2031-07-01',
+                    '2033-03-31');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM tpr_certification_period WHERE business_id IN ('CP8', 'CP9', 'CP10');
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_TPR_TARGET_PERIOD_update_secondary_reporting_start_date_for_cca3" author="loukerip@unisystems.gr">
+        <sql>
+            UPDATE tpr_target_period
+            SET secondary_reporting_start_date = '2027-07-01'
+            WHERE business_id = 'TP7';
+            
+            UPDATE tpr_target_period
+            SET secondary_reporting_start_date = '2029-07-01'
+            WHERE business_id = 'TP8';
+            
+            UPDATE tpr_target_period
+            SET secondary_reporting_start_date = '2031-07-01'
+            WHERE business_id = 'TP9';
+        </sql>
+        <rollback>
+            <sql>
+            UPDATE tpr_target_period
+            SET secondary_reporting_start_date = '2027-07-02'
+            WHERE business_id = 'TP7';
+            
+            UPDATE tpr_target_period
+            SET secondary_reporting_start_date = '2029-07-02'
+            WHERE business_id = 'TP8';
+            
+            UPDATE tpr_target_period
+            SET secondary_reporting_start_date = '2031-07-02'
+            WHERE business_id = 'TP9';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

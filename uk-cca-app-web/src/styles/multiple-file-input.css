@@ -11,12 +11,9 @@
   display: flex;
   text-align: center;
   padding: var(--govuk-spacing-9) var(--govuk-spacing-3);
-  transition:
-    outline-offset 0.1s ease-in-out,
-    background-color 0.1s linear;
 }
 
-.cca-multi-file-upload__dropzone label {
+.cca-multi-file-upload__dropzone button {
   margin-bottom: 0;
   display: inline-block;
   width: auto;
@@ -30,7 +27,27 @@
 
 .cca-multi-file-upload__dropzone [type='file'] {
   position: absolute;
-  left: -9999em;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  border: 0;
+  white-space: nowrap;
+}
+
+.cca-file-upload__button-wrapper {
+  display: inline-block;
+}
+
+.cca-file-upload__button-wrapper:focus-within .govuk-button {
+  border-color: var(--govuk-focus-colour);
+  outline: 3px solid transparent;
+  box-shadow: inset 0 0 0 1px var(--govuk-focus-colour);
+  color: var(--govuk-focus-text-colour);
+  background-color: var(--govuk-focus-colour);
 }
 
 .cca-multi-file-upload--dragover {
@@ -38,13 +55,10 @@
   outline-color: #6f777b;
 }
 
-.cca-multi-file-upload--focused {
-  background-color: var(--govuk-focus-colour);
-  color: var(--govuk-focus-text-colour);
-  box-shadow:
-    0 -2px var(--govuk-focus-colour),
-    0 4px var(--govuk-focus-text-colour);
-  outline: none;
+.cca-multi-file-upload__dropzone:focus-within {
+  outline: 3px solid var(--govuk-focus-colour);
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 2px var(--govuk-black);
 }
 
 .cca-multi-file-upload__error {

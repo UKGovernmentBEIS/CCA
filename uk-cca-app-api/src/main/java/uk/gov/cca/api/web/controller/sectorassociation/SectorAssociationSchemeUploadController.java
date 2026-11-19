@@ -52,8 +52,8 @@ public class SectorAssociationSchemeUploadController {
             @Parameter(hidden = true) AppUser authUser,
             @RequestPart("file") @Parameter(description = "The umbrella agreement file", required = true) MultipartFile file) throws IOException {
 
-        final FileDTO fileDTO = fileDtoMapper.toFileDTO(file);
-        final String fileUuid = sectorAssociationSchemeDocumentService.createSectorAssociationSchemeDocument(fileDTO, authUser);
+        final FileDTO fileDTO = fileDtoMapper.toFileDTO(file, authUser.getUserId());
+        final String fileUuid = sectorAssociationSchemeDocumentService.createSectorAssociationSchemeDocument(fileDTO);
         FileUuidDTO fileUuidDTO = FileUuidDTO.builder().uuid(fileUuid).build();
 
         return new ResponseEntity<>(fileUuidDTO, HttpStatus.OK);

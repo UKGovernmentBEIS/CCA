@@ -1,7 +1,5 @@
-import { DatePipe } from '@angular/common';
-
-import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
+import { boolToString, formatCalendarDate } from '@shared/utils';
 
 import { AuditDetermination } from 'cca-api';
 
@@ -9,11 +7,9 @@ export function toPreAuditReviewDeterminationSummaryData(
   determination: AuditDetermination,
   isEditable: boolean,
 ): SummaryData {
-  const datePipe = new DatePipe('en-GB');
-
   return new SummaryFactory()
     .addSection('', '../review-determination')
-    .addRow('Review completion date', datePipe.transform(determination?.reviewCompletionDate, 'dd MMM yyyy'), {
+    .addRow('Review completion date', formatCalendarDate(determination?.reviewCompletionDate, 'dd MMM yyyy'), {
       change: isEditable,
     })
     .addTextAreaRow(

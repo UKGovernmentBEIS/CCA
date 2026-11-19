@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -17,7 +17,6 @@ import { nonComplianceConclusionQuery } from '../non-compliance-conclusion.selec
     <netz-return-to-task-or-action-page />
   `,
   imports: [CcaSummaryComponent, PageHeadingComponent, ReturnToTaskOrActionPageComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConclusionSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

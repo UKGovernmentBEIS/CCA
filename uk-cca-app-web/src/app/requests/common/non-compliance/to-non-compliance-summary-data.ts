@@ -1,10 +1,9 @@
-import { DatePipe } from '@angular/common';
-
 import { SummaryData, SummaryFactory } from '@shared/components';
+import { boolToString, formatCalendarDate } from '@shared/utils';
 
 import { NonComplianceDetails } from 'cca-api';
 
-import { alphabeticalCompare, boolToString } from '../utils';
+import { alphabeticalCompare } from '../utils';
 import { formatRelevantFacility, formatRelevantWorkflow } from './format-relevant-items';
 import { NON_COMPLIANCE_TYPE_LABELS } from './non-compliance-type-labels';
 
@@ -14,7 +13,6 @@ export function toNonComplianceSummaryData(
   allRelevantFacilities: Record<string, string>,
   isEditable: boolean,
 ): SummaryData {
-  const datePipe = new DatePipe('en-GB');
   const factory = new SummaryFactory();
 
   const nonComplianceTypeLabel = details?.nonComplianceType
@@ -35,14 +33,22 @@ export function toNonComplianceSummaryData(
       change: isEditable,
       changeLink: '../provide-details',
     })
-    .addRow('When did the operator become non-compliant?', formatDate(details?.nonCompliantDate, datePipe), {
-      change: isEditable,
-      changeLink: '../provide-details',
-    })
-    .addRow('When did the operator become compliant?', formatDate(details?.compliantDate, datePipe), {
-      change: isEditable,
-      changeLink: '../provide-details',
-    })
+    .addRow(
+      'When did the operator become non-compliant?',
+      formatCalendarDate(details?.nonCompliantDate, 'dd MMM yyyy') ?? '',
+      {
+        change: isEditable,
+        changeLink: '../provide-details',
+      },
+    )
+    .addRow(
+      'When did the operator become compliant?',
+      formatCalendarDate(details?.compliantDate, 'dd MMM yyyy') ?? '',
+      {
+        change: isEditable,
+        changeLink: '../provide-details',
+      },
+    )
     .addTextAreaRow('Comments', details?.comment ?? '', {
       change: isEditable,
       changeLink: '../provide-details',
@@ -80,12 +86,4 @@ export function toNonComplianceSummaryData(
   }
 
   return factory.create();
-}
-
-function formatDate(date: string | null | undefined, datePipe: DatePipe): string {
-  if (!date) {
-    return '';
-  }
-
-  return datePipe.transform(date, 'dd MMM yyyy') ?? '';
 }

@@ -158,5 +158,12 @@
             </dropColumn>
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_MODIFY_TPR_TARGET_PERIOD_buy_out_cost_column_TO_numeric" author="P70383">
+        <modifyDataType tableName="tpr_target_period" columnName="buy_out_cost" newDataType="numeric" />
+        <rollback>
+            <modifyDataType tableName="tpr_target_period" columnName="buy_out_cost" newDataType="int" />
+        </rollback>
+    </changeSet>
     
 </databaseChangeLog>

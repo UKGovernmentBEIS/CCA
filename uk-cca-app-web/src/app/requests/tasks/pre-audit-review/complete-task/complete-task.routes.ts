@@ -5,16 +5,18 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 
 export const PRE_AUDIT_REVIEW_COMPLETE_TASK_ROUTES: Routes = [
   {
+    title: 'Complete task',
     path: '',
+    loadComponent: () => import('./complete-task.component').then((c) => c.CompleteTaskComponent),
     canActivate: [() => inject(RequestTaskStore).select(requestTaskQuery.selectIsEditable)()],
     data: { breadcrumb: false, backlink: '../..' },
-    loadComponent: () => import('./complete-task.component').then((c) => c.CompleteTaskComponent),
   },
   {
+    title: 'Pre-audit review complete',
     path: 'confirmation',
-    canActivate: [() => inject(RequestTaskStore).select(requestTaskQuery.selectIsEditable)()],
-    data: { breadcrumb: false },
     loadComponent: () =>
       import('./confirmation/confirmation.component').then((c) => c.PreAuditReviewConfirmationComponent),
+    canActivate: [() => inject(RequestTaskStore).select(requestTaskQuery.selectIsEditable)()],
+    data: { breadcrumb: false },
   },
 ];

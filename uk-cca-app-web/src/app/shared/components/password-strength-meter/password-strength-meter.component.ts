@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 
 import { PasswordStrengthMeterService } from './password-strength-meter.service';
 import { ProgressBarDirective } from './progress-bar.directive';
@@ -7,9 +7,8 @@ import { Feedback, FeedbackResult } from './types';
 @Component({
   selector: 'cca-password-strength-meter',
   templateUrl: './password-strength-meter.component.html',
-  imports: [ProgressBarDirective],
   providers: [PasswordStrengthMeterService],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ProgressBarDirective],
 })
 export class PasswordStrengthMeterComponent {
   private readonly passwordStrengthMeterService = inject(PasswordStrengthMeterService);
@@ -50,7 +49,7 @@ export class PasswordStrengthMeterComponent {
       return this.passwordStrengthMeterService.scoreWithFeedback(password);
     }
 
-    const feedbackResult = {
+    const feedbackResult: FeedbackResult = {
       score: this.passwordStrengthMeterService.score(password),
       feedback: null,
     };

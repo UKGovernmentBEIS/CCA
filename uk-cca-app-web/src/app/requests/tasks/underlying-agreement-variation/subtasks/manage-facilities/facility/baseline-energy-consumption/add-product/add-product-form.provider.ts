@@ -7,7 +7,8 @@ import { combineLatest, startWith } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { BaselineEnergyDraftService, normaliseNumber, underlyingAgreementQuery } from '@requests/common';
+import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/common';
+import { normaliseNumber } from '@shared/utils';
 import { requireProductsValidator, uniqueFieldValidator } from '@shared/validators';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';

@@ -57,8 +57,8 @@
       </div>
 
       <div class="govuk-grid-column-two-thirds govuk-!-margin-top-6">
-        <a routerLink="file-download/{{ zipFile().uuid }}" class="govuk-link" target="_blank" rel="noopener noreferrer">
-          {{ zipFile().name }}
+        <a routerLink="file-download/{{ zipFile().uuid }}" class="govuk-link" target="_blank" rel="noreferrer noopener">
+          {{ zipFile().name }}<span class="govuk-visually-hidden"> (opens in a new tab)</span>
         </a>
       </div>
 
@@ -73,9 +73,14 @@
       </div>
 
       <div class="govuk-grid-column-two-thirds govuk-!-margin-top-6">
-        <a routerLink="file-download/{{ errorsFile().uuid }}" class="govuk-link" target="_blank">{{
-          errorsFile().name
-        }}</a>
+        <a
+          routerLink="file-download/{{ errorsFile().uuid }}"
+          class="govuk-link"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          {{ errorsFile().name }}<span class="govuk-visually-hidden"> (opens in a new tab)</span>
+        </a>
       </div>
 
       <span class="govuk-grid-column-two-thirds govuk-!-margin-top-1">Click link to begin your download</span>

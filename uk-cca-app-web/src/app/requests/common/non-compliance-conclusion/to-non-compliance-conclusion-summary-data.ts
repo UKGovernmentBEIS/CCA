@@ -1,11 +1,7 @@
-import { DatePipe } from '@angular/common';
-
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { fileUtils } from '@shared/utils';
+import { boolToString, fileUtils, formatCalendarDate } from '@shared/utils';
 
 import { NonComplianceConclusion } from 'cca-api';
-
-import { boolToString } from '../utils';
 
 export function toNonComplianceConclusionSummaryData(
   conclusion: NonComplianceConclusion,
@@ -13,7 +9,6 @@ export function toNonComplianceConclusionSummaryData(
   isEditable: boolean,
   downloadUrl: string,
 ): SummaryData {
-  const datePipe = new DatePipe('en-GB');
   const factory = new SummaryFactory();
   const details = conclusion?.details;
 
@@ -29,7 +24,7 @@ export function toNonComplianceConclusionSummaryData(
   if (details?.complianceRestored) {
     factory.addRow(
       'When did the operator become compliant?',
-      datePipe.transform(details.complianceRestoredDate, 'dd MMM yyyy') ?? '',
+      formatCalendarDate(details.complianceRestoredDate, 'dd MMM yyyy') ?? '',
       {
         change: isEditable,
         changeLink,
@@ -43,7 +38,7 @@ export function toNonComplianceConclusionSummaryData(
   });
 
   if (details?.penaltyPaid) {
-    factory.addRow('When did the operator pay?', datePipe.transform(details.penaltyPaymentDate, 'dd MMM yyyy') ?? '', {
+    factory.addRow('When did the operator pay?', formatCalendarDate(details.penaltyPaymentDate, 'dd MMM yyyy') ?? '', {
       change: isEditable,
       changeLink,
     });

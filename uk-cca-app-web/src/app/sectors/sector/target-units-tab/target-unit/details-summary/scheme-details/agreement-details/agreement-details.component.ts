@@ -1,5 +1,4 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 import {
   SummaryListComponent,
@@ -9,6 +8,7 @@ import {
   SummaryListRowValueDirective,
 } from '@netz/govuk-components';
 import { SummaryDownloadFilesComponent } from '@shared/components';
+import { CalendarDatePipe } from '@shared/pipes';
 import { DownloadableFile } from '@shared/utils';
 
 import { UnderlyingAgreementDocumentDetailsDTO } from 'cca-api';
@@ -23,9 +23,8 @@ import { UnderlyingAgreementDocumentDetailsDTO } from 'cca-api';
     SummaryListRowValueDirective,
     SummaryListRowActionsDirective,
     SummaryDownloadFilesComponent,
-    DatePipe,
+    CalendarDatePipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AgreementDetailsComponent {
   protected readonly agreement = input.required<UnderlyingAgreementDocumentDetailsDTO>();

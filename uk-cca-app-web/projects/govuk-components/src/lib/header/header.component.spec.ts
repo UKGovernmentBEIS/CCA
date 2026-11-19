@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -24,7 +24,6 @@ describe('GovukHeaderComponent', () => {
       </govuk-header>
     `,
     imports: [GovukHeaderComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush,
   })
   class TestComponent {
     readonly homepage = signal<GovukLinkTarget | undefined>(undefined);

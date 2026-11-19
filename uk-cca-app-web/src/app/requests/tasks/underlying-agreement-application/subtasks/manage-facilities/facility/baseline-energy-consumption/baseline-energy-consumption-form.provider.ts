@@ -9,9 +9,9 @@ import {
   BaselineEnergyDraftService,
   FacilityBaselineEnergyConsumptionFormModel,
   facilityBaselineEnergyProductsValidator,
-  normaliseNumber,
   underlyingAgreementQuery,
 } from '@requests/common';
+import { normaliseNumber } from '@shared/utils';
 
 import { FacilityBaselineEnergyConsumption } from 'cca-api';
 
@@ -47,7 +47,7 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
       },
     );
 
-    const totalFixedEnergyValue = draft?.totalFixedEnergy == null ? null : normaliseNumber(draft.totalFixedEnergy);
+    const totalFixedEnergyValue = normaliseNumber(draft?.totalFixedEnergy);
 
     const form = fb.group(
       {
@@ -121,6 +121,15 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
     // Sync totalFixedEnergy changes to draft service
     form.controls.totalFixedEnergy.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       draftService.updateTotalFixedEnergy(value?.toString() ?? null);
+    });
+
+    // Sync the variable energy choice too, so it survives the product delete/exclude/undo pages
+    form.controls.hasVariableEnergy.valueChanges.pipe(takeUntilDestroyed()).subscribe((hasVariableEnergy) => {
+      draftService.saveFormSnapshot({ hasVariableEnergy });
+    });
+
+    form.controls.variableEnergyType.valueChanges.pipe(takeUntilDestroyed()).subscribe((variableEnergyType) => {
+      draftService.saveFormSnapshot({ variableEnergyType });
     });
 
     // React to variableEnergyType changes

@@ -17,44 +17,49 @@ export const TRACK_ACTIONS_ROUTES: Routes = [
         children: [],
       },
       {
+        title: 'Has the corrective action been carried out?',
         path: 'is-carried-out',
-        data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./is-carried-out/track-corrective-actions-is-carried-out.component').then(
             (c) => c.TrackCorrectiveActionsIsCarriedOutComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../../' },
       },
       {
+        title: 'Corrective actions carried out details',
         path: 'details',
-        data: { breadcrumb: false, backlink: '../is-carried-out' },
         loadComponent: () =>
           import('./details/track-corrective-actions-details.component').then(
             (c) => c.TrackCorrectiveActionsDetailsComponent,
           ),
+        data: { breadcrumb: false, backlink: '../is-carried-out' },
       },
       {
+        title: 'Check your answers',
         path: 'check-your-answers',
+        loadComponent: () =>
+          import('./check-your-answers/track-corrective-actions-check-your-answers.component').then(
+            (c) => c.TrackCorrectiveActionsCheckYourAnswersComponent,
+          ),
+        data: {
+          breadcrumb: false,
+          backlink: ({ isActionCarriedOut }: { isActionCarriedOut: boolean }) =>
+            isActionCarriedOut ? '../details' : '../is-carried-out',
+        },
         resolve: {
           isActionCarriedOut: (route: ActivatedRouteSnapshot) =>
             inject(RequestTaskStore).select(trackCorrectiveActionsQuery.selectAuditTrackCorrectiveActions)()
               ?.correctiveActionResponses[route.params.actionId]?.isActionCarriedOut,
         },
-        data: {
-          breadcrumb: false,
-          backlink: ({ isActionCarriedOut }) => (isActionCarriedOut ? '../details' : '../is-carried-out'),
-        },
-        loadComponent: () =>
-          import('./check-your-answers/track-corrective-actions-check-your-answers.component').then(
-            (c) => c.TrackCorrectiveActionsCheckYourAnswersComponent,
-          ),
       },
       {
+        title: 'Check your answers',
         path: 'summary',
-        data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./summary/track-corrective-actions-summary.component').then(
             (c) => c.TrackCorrectiveActionsSummaryComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../../' },
       },
     ],
   },

@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { FileType } from '@shared/components';
 import { Mocked } from 'vitest';
 
-import { DocumentTemplatesService } from 'cca-api';
+import { DocumentTemplatesService, DocumentTemplateViewDTO } from 'cca-api';
 
 import { mockDocumentTemplateViewDTO } from '../../testing/mock-data';
 import { DocumentEditComponent } from './document-edit.component';
@@ -150,7 +150,11 @@ describe('DocumentEditComponent', () => {
   });
 
   it('should initialize form with null when no file data exists', () => {
-    const templateWithoutFile = { ...mockDocumentTemplateViewDTO, fileUuid: null, filename: null };
+    const templateWithoutFile: DocumentTemplateViewDTO = {
+      ...mockDocumentTemplateViewDTO,
+      fileUuid: null,
+      filename: null,
+    };
     documentTemplatesService.getDocumentTemplateById.mockReturnValue(of(templateWithoutFile));
 
     const newFixture = TestBed.createComponent(DocumentEditComponent);

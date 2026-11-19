@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
@@ -22,7 +22,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
     </div>
   `,
   imports: [RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TwoFaLinkComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

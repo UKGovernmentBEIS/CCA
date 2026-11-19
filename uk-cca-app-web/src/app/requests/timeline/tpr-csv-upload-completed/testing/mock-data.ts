@@ -17,7 +17,8 @@ const mockRequestActionDTO: RequestActionDTO = {
       facilitiesSucceeded: 0,
       facilitiesFailed: 1,
       uploadSummaryFile: '9d665a85-46f8-49c7-be18-57570df14559',
-      submittedDate: '2026-07-03T12:28:35.663493945Z',
+      // The API sends an instant; the summary displays its local date and time.
+      submittedDate: new Date(2026, 6, 3, 8, 28, 35).toISOString(),
     },
     uploadAttachments: {
       '409e0469-b221-4d19-8035-12f6224c15cb': 'dummy.csv',

@@ -1,5 +1,4 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -8,7 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DateInputComponent, RadioComponent, RadioOptionComponent, TextareaComponent } from '@netz/govuk-components';
 import { TasksApiService } from '@requests/common';
 import { FileInputComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils';
+import { formatCalendarDate, generateDownloadUrl } from '@shared/utils';
 
 import { createSaveActionDTO } from '../transform';
 import { AppealOutcome } from '../types';
@@ -20,6 +19,8 @@ import {
 
 @Component({
   selector: 'cca-appeal-outcome-provide-details',
+  templateUrl: './provide-details.component.html',
+  providers: [AppealOutcomeFormProvider],
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -30,9 +31,6 @@ import {
     TextareaComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [AppealOutcomeFormProvider],
-  templateUrl: './provide-details.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProvideDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -41,7 +39,6 @@ export class ProvideDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   protected readonly form = inject<AppealOutcomeFormModel>(APPEAL_OUTCOME_FORM);
-  protected readonly today = new Date();
 
   private readonly requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId);
   protected readonly getDownloadUrl = (uuid: string) =>
@@ -50,7 +47,7 @@ export class ProvideDetailsComponent {
   onSubmit() {
     const appealOutcome: AppealOutcome = {
       tribunalDecision: this.form.controls.tribunalDecision.value,
-      appealOutcomeDate: new DatePipe('en-GB').transform(this.form.controls.appealOutcomeDate.value, 'yyyy-MM-dd'),
+      appealOutcomeDate: formatCalendarDate(this.form.controls.appealOutcomeDate.value, 'yyyy-MM-dd'),
       file: this.form.controls.file.value?.uuid ?? null,
       comments: this.form.controls.comments.value ?? null,
     };

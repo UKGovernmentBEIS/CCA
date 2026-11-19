@@ -70,4 +70,8 @@ public class CcaRequestTaskType {
 
     // CCA3 PAT
     public static final String FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT = "FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT";
+
+    // Emissions Trading Scheme Data
+    public static final String EMISSIONS_TRADING_SCHEME_DATA_SUBMIT = "EMISSIONS_TRADING_SCHEME_DATA_SUBMIT";
+
 }

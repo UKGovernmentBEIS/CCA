@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
@@ -6,7 +6,7 @@ import { ActivatedRoute, provideRouter } from '@angular/router';
 import { AuthStore } from '@netz/common/auth';
 import { BreadcrumbService } from '@netz/common/navigation';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
-import { KeycloakService } from '@shared/services';
+import { AnalyticsService, KeycloakService, SignInTrackingService } from '@shared/services';
 
 import { UserStateDTO } from 'cca-api';
 
@@ -22,6 +22,20 @@ describe('AppComponent', () => {
   // The service navigation reads `matchMedia` while constructing its `isDesktop`
   // signal, so the viewport has to be decided before the fixture exists.
   const realMatchMedia = window.matchMedia;
+
+  const analyticsService = { push: vi.fn(), enableGoogleTagManager: vi.fn() };
+
+  const serviceContextEvents = () =>
+    analyticsService.push.mock.calls
+      .map(([event]) => event as Record<string, unknown>)
+      .filter((event) => event['event'] === 'service_context');
+  const lastServiceContextEvent = () => serviceContextEvents().at(-1);
+
+  const createApp = () => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  };
 
   const setUser = (roleType: UserStateDTO['roleType'], loginStatus?: UserStateDTO['status']) => {
     authStore.setUserState({ roleType, status: loginStatus });
@@ -58,7 +72,7 @@ describe('AppComponent', () => {
     }
 
     get buyOutSurplusLink() {
-      return this.query<HTMLAnchorElement>('a[href="/buyout-surplus?buyOutSurplusPaymentStatus=AWAITING_PAYMENT"]');
+      return this.query<HTMLAnchorElement>('a[href="/buyout-surplus?paymentStatus=AWAITING_PAYMENT"]');
     }
 
     get templatesLink() {
@@ -76,6 +90,30 @@ describe('AppComponent', () => {
     get breadcrumbs() {
       return this.queryAll<HTMLLIElement>('.govuk-breadcrumbs__list-item');
     }
+
+    get taskInformationRegion() {
+      return this.query<HTMLElement>('section[aria-label="Task information"]');
+    }
+
+    get phaseBar() {
+      return this.query<HTMLElement>('cca-phase-bar');
+    }
+
+    get workflowTaskHeader() {
+      return this.query<HTMLElement>('cca-workflow-task-header');
+    }
+
+    get mainContent() {
+      return this.query<HTMLElement>('main');
+    }
+
+    get breadcrumbsElement() {
+      return this.query<HTMLElement>('netz-breadcrumbs');
+    }
+
+    get backLink() {
+      return this.query<HTMLElement>('netz-back-link');
+    }
   }
 
   beforeEach(async () => {
@@ -86,7 +124,8 @@ describe('AppComponent', () => {
       providers: [
         provideRouter([]),
         KeycloakService,
-        provideHttpClient(),
+        { provide: AnalyticsService, useValue: analyticsService },
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
@@ -99,18 +138,115 @@ describe('AppComponent', () => {
     authStore.setIsLoggedIn(true);
     authStore.setUserState({ roleType: 'OPERATOR', status: 'NO_AUTHORITY' });
     breadcrumbService = TestBed.inject(BreadcrumbService);
-    fixture = TestBed.createComponent(AppComponent);
-    component = fixture.componentInstance;
+    sessionStorage.clear();
+    createApp();
     page = new Page(fixture);
-    fixture.detectChanges();
   });
 
   afterEach(() => {
+    sessionStorage.clear();
     window.matchMedia = realMatchMedia;
   });
 
   it('should create the app', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should report the signed in user type to analytics on page load', () => {
+    expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'operator' });
+  });
+
+  it('should not report a page load when the user is not signed in', () => {
+    authStore.reset();
+    analyticsService.push.mockClear();
+
+    createApp();
+
+    expect(analyticsService.push).not.toHaveBeenCalled();
+
+    authStore.setIsLoggedIn(false);
+    analyticsService.push.mockClear();
+
+    createApp();
+
+    expect(analyticsService.push).not.toHaveBeenCalled();
+  });
+
+  it('should report an unknown user type when the role type is missing or empty', () => {
+    authStore.setUserState({ status: 'ENABLED' });
+
+    createApp();
+
+    expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'unknown' });
+
+    authStore.setUserState({ roleType: '', status: 'ENABLED' });
+
+    createApp();
+
+    expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'unknown' });
+  });
+
+  it('should report an unfamiliar role type in lowercase', () => {
+    authStore.setUserState({ roleType: 'NEW_SECTOR_ROLE', status: 'ENABLED' });
+
+    createApp();
+
+    expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'new_sector_role' });
+  });
+
+  it('should report a completed sign-in and clear the sign-in flag', () => {
+    sessionStorage.setItem(SignInTrackingService.SIGN_IN_STARTED_KEY, String(Date.now()));
+
+    createApp();
+
+    expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'operator', login: true });
+    expect(sessionStorage.getItem(SignInTrackingService.SIGN_IN_STARTED_KEY)).toBeNull();
+  });
+
+  it('should not report a completed sign-in for an abandoned sign-in', () => {
+    sessionStorage.setItem(SignInTrackingService.SIGN_IN_STARTED_KEY, String(Date.now() - 31 * 60 * 1000));
+
+    createApp();
+
+    expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'operator' });
+    expect(sessionStorage.getItem(SignInTrackingService.SIGN_IN_STARTED_KEY)).toBeNull();
+  });
+
+  it('should not report a completed sign-in for an existing session', () => {
+    createApp();
+
+    expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'operator' });
+    expect(lastServiceContextEvent()).not.toHaveProperty('login');
+  });
+
+  it('should clear the sign-in flag when the user is not signed in', () => {
+    sessionStorage.setItem(SignInTrackingService.SIGN_IN_STARTED_KEY, String(Date.now()));
+    authStore.reset();
+    analyticsService.push.mockClear();
+
+    createApp();
+
+    expect(analyticsService.push).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem(SignInTrackingService.SIGN_IN_STARTED_KEY)).toBeNull();
+  });
+
+  it('should not enable Tag Manager before analytics cookies have been accepted', () => {
+    expect(analyticsService.enableGoogleTagManager).not.toHaveBeenCalled();
+    expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'operator' });
+  });
+
+  it('should still report the page load when session storage is unavailable', () => {
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('session storage is unavailable');
+    });
+
+    try {
+      createApp();
+
+      expect(lastServiceContextEvent()).toEqual({ event: 'service_context', user_type: 'operator' });
+    } finally {
+      getItemSpy.mockRestore();
+    }
   });
 
   it('should render the footer', () => {
@@ -167,9 +303,7 @@ describe('AppComponent', () => {
     expect(page.buyOutSurplusLink).toBeFalsy();
 
     setUser('REGULATOR', 'ENABLED');
-    expect(page.buyOutSurplusLink?.getAttribute('href')).toBe(
-      '/buyout-surplus?buyOutSurplusPaymentStatus=AWAITING_PAYMENT',
-    );
+    expect(page.buyOutSurplusLink?.getAttribute('href')).toBe('/buyout-surplus?paymentStatus=AWAITING_PAYMENT');
   });
 
   it('should not render the navigation list if user is disabled', () => {
@@ -202,6 +336,18 @@ describe('AppComponent', () => {
 
     setUser('REGULATOR', 'ENABLED');
     expect(page.templatesLink).toBeTruthy();
+  });
+
+  it('should place the phase and task header inside a named region, with breadcrumbs and back link outside main', () => {
+    expect(page.taskInformationRegion).toBeTruthy();
+    expect(page.taskInformationRegion.contains(page.workflowTaskHeader)).toBe(true);
+
+    expect(page.phaseBar).toBeTruthy();
+    expect(page.taskInformationRegion.contains(page.phaseBar)).toBe(false);
+
+    expect(page.mainContent).toBeTruthy();
+    expect(page.mainContent.contains(page.breadcrumbsElement)).toBe(false);
+    expect(page.mainContent.contains(page.backLink)).toBe(false);
   });
 
   it('should display breadcrumbs', () => {

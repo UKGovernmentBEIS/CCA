@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserId } from '@netz/common/auth';
@@ -28,7 +28,6 @@ import { ActiveSectorUserStore } from '../active-sector-user.store';
     PhoneNumberPipe,
     RouterLink,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorUserDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

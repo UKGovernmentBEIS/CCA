@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -21,7 +21,6 @@ import { enforcementResponseNoticeQuery } from '../../../enforcement-response-no
     <netz-return-to-task-or-action-page />
   `,
   imports: [SummaryComponent, PageHeadingComponent, ReturnToTaskOrActionPageComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class SummaryPageComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

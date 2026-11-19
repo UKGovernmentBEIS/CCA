@@ -43,6 +43,21 @@ class FacilityDataQueryServiceTest {
     
     @Mock
     private SchemeTerminationHelper schemeTerminationHelper;
+
+    @Test
+    void getActiveFacilitiesDataByAccountId() {
+        final Long accountId = 1L;
+        final FacilityData facility = FacilityData.builder().id(1L).build();
+
+        when(repository.findFacilityDataByAccountIdAndClosedDateIsNull(accountId)).thenReturn(List.of(facility));
+
+        // Invoke
+        List<FacilityDTO> facilities = service.getActiveFacilitiesDataByAccountId(accountId);
+
+        // Verify
+        assertThat(facilities).containsExactly(FacilityDTO.builder().id(1L).build());
+        verify(repository, times(1)).findFacilityDataByAccountIdAndClosedDateIsNull(accountId);
+    }
     
     @Test
     void getFacilityData() {

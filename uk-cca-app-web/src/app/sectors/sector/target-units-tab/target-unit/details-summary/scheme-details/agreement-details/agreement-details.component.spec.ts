@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { SchemeVersionEnum } from '@shared/types';
 
 import { AgreementDetailsComponent } from './agreement-details.component';
 
@@ -28,7 +29,7 @@ describe('AgreementDetailsComponent', () => {
     ]);
     componentRef.setInput('mainColumnClass', 'govuk-grid-column-two-thirds');
     componentRef.setInput('agreement', {
-      ['CCA_3']: {
+      [SchemeVersionEnum.CCA_3]: {
         activationDate: '2025-09-30',
         fileDocument: {
           name: 'ADS_1-T00002 CCA3 Underlying Agreement v1.pdf',
@@ -42,6 +43,21 @@ describe('AgreementDetailsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it.each(['', 'T00:00:00.000Z'])('preserves activation and termination calendar dates with suffix %s', (suffix) => {
+    componentRef.setInput('agreement', {
+      activationDate: `2025-03-30${suffix}`,
+      terminatedDate: `2025-10-26${suffix}`,
+    });
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    const values = Array.from(element.querySelectorAll('dd.govuk-summary-list__value')).map((value) =>
+      value.textContent.trim(),
+    );
+    expect(values).toContain('30 Mar 2025');
+    expect(values).toContain('26 Oct 2025');
   });
 
   it('should display correct view', () => {

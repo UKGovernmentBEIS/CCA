@@ -13,23 +13,26 @@ export const AUDIT_DETAILS_ROUTES: Routes = [
         children: [],
       },
       {
+        title: 'Details of the audit',
         path: 'details',
-        data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () => import('./details/audit-details.component').then((c) => c.AuditDetailsComponent),
+        data: { breadcrumb: false, backlink: '../../../' },
       },
       {
+        title: 'Check your answers',
         path: 'check-your-answers',
-        data: { breadcrumb: false, backlink: '../details' },
         loadComponent: () =>
           import('./check-your-answers/audit-details-check-your-answers.component').then(
             (c) => c.AuditDetailsCheckYourAnswersComponent,
           ),
+        data: { breadcrumb: false, backlink: '../details' },
       },
       {
+        title: 'Summary',
         path: 'summary',
-        data: { breadcrumb: false, backlink: '../../../' },
         loadComponent: () =>
           import('./summary/audit-details-summary.component').then((c) => c.AuditDetailsSummaryComponent),
+        data: { breadcrumb: false, backlink: '../../../' },
       },
     ],
   },

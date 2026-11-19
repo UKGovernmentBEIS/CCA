@@ -99,4 +99,8 @@ public class FtpProperties {
     @Valid
     @NotBlank
     private String serverCca3TargetCalculatorFileMigrationDirectory;
+
+    @Valid
+    @NotBlank
+    private String serverTransactionHistoryFileMigrationDirectory;
 }

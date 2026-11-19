@@ -1,17 +1,17 @@
 package uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.validation;
 
 import org.springframework.stereotype.Service;
-
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityProductVariableEnergyData;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityThroughputDetails;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.validation.PerformanceDataFacilityViolation;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
+import uk.gov.cca.api.workflow.request.flow.common.utils.PerformanceFuelEnergyCalculationCommonFunctionUtil;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils.PerformanceDataFacilityCalculationCommonFunctionUtil;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils.PerformanceDataFacilityCalculationCommonFunctionUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -25,7 +25,7 @@ public class PerformanceDataFacilityDigitalFormInputCalculatedDataValidator {
     private static final String ERROR_MESSAGE = "%s %s: %s";
 
     public List<BusinessValidationResult> validateInputCalculatedData(final PerformanceDataFacilityInputData performanceData,
-                                                       final PerformanceDataFacilityCalculationParameters calculationParameters) {
+                                                                      final PerformanceDataFacilityCalculationParameters calculationParameters) {
         List<BusinessValidationResult> validationResults = new ArrayList<>();
 
         // Validate fuels
@@ -46,7 +46,7 @@ public class PerformanceDataFacilityDigitalFormInputCalculatedDataValidator {
                 .INVALID_PRIMARY_ENERGY_DATA.getMessage();
 
         energyFuelDetails.getStandardFuels().entrySet().forEach(entry -> {
-            BigDecimal expected = PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
+            BigDecimal expected = PerformanceFuelEnergyCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
                     .apply(entry, calculationParameters.getMeasurementType()).setScale(7, RoundingMode.HALF_UP);
 
             validationResults.add(ValidatorHelper.validateBigDecimalEquals(String.format(ERROR_MESSAGE, primaryErrorMessage, entry.getKey().name(), expected))
@@ -54,7 +54,7 @@ public class PerformanceDataFacilityDigitalFormInputCalculatedDataValidator {
         });
 
         energyFuelDetails.getNonStandardFuels().forEach(fuel -> {
-            BigDecimal expected = PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
+            BigDecimal expected = PerformanceFuelEnergyCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
                     .apply(fuel, calculationParameters.getMeasurementType()).setScale(7, RoundingMode.HALF_UP);
 
             validationResults.add(ValidatorHelper.validateBigDecimalEquals(String.format(ERROR_MESSAGE, primaryErrorMessage, fuel.getName(), expected))
@@ -62,7 +62,7 @@ public class PerformanceDataFacilityDigitalFormInputCalculatedDataValidator {
         });
 
         // Validate Throughput Adjustment Factor
-        if(energyFuelDetails.getThroughputAdjustmentFactor() != null) {
+        if (energyFuelDetails.getThroughputAdjustmentFactor() != null) {
             String throughputAdjustmentFactorErrorMessage = PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage
                     .INVALID_FUELS_THROUGHPUT_ADJUSTMENT_FACTOR_DATA.getMessage() + " : %s";
             BigDecimal expectedThroughputAdjustmentFactor = PerformanceDataFacilityCalculationCommonFunctionUtil.THROUGHPUT_ADJUSTMENT_FACTOR
@@ -84,7 +84,7 @@ public class PerformanceDataFacilityDigitalFormInputCalculatedDataValidator {
                 .INVALID_VARIABLE_ENERGY_DATA.getMessage();
 
         // Validate target improvement
-        if(throughputDetails.getTargetImprovement() != null) {
+        if (throughputDetails.getTargetImprovement() != null) {
             BigDecimal targetImprovement = calculationParameters.getTargetImprovement().setScale(7, RoundingMode.HALF_UP);
 
             validationResults.add(ValidatorHelper.validateBigDecimalEquals(String.format(ERROR_MESSAGE, variableEnergyMessage, "targetImprovement", targetImprovement))
@@ -92,7 +92,7 @@ public class PerformanceDataFacilityDigitalFormInputCalculatedDataValidator {
         }
 
         // Validate adjusted throughput
-        if(throughputDetails.getAdjustedThroughput() != null) {
+        if (throughputDetails.getAdjustedThroughput() != null) {
             BigDecimal adjustedThroughput = PerformanceDataFacilityCalculationCommonFunctionUtil.ADJUSTED_THROUGHPUT
                     .apply(calculationParameters.getUsedReportingMechanism(), performanceData.getEnergyFuelDetails(), throughputDetails.getActualThroughput())
                     .setScale(7, RoundingMode.HALF_UP);
@@ -109,7 +109,7 @@ public class PerformanceDataFacilityDigitalFormInputCalculatedDataValidator {
                 .process(totalTargetVariableEnergy, throughputDetails.getTotalTargetVariableEnergy()));
 
         // Validate Products
-        if(!throughputDetails.getVariableEnergyConsumptionDataByProduct().isEmpty()) {
+        if (!throughputDetails.getVariableEnergyConsumptionDataByProduct().isEmpty()) {
             // For each product
             throughputDetails.getVariableEnergyConsumptionDataByProduct().forEach(product -> {
                 Optional<ProductVariableEnergyConsumptionData> originalProductFound = calculationParameters.getVariableEnergyConsumptionDataByProduct().stream()

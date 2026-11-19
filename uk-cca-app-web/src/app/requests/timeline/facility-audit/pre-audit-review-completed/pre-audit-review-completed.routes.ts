@@ -6,27 +6,27 @@ export const FACILITY_AUDIT_PRE_AUDIT_REVIEW_COMPLETED_ROUTES: Routes = [
     children: [
       {
         path: 'reason',
-        data: { breadcrumb: false, backlink: '../../' },
         loadComponent: () =>
           import('./reason/pre-audit-review-completed-reason.component').then(
             (c) => c.PreAuditReviewCompletedReasonComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../' },
       },
       {
         path: 'requested-documents',
-        data: { breadcrumb: false, backlink: '../../' },
         loadComponent: () =>
           import('./documents/pre-audit-reason-completed-documents.component').then(
             (c) => c.PreAuditReasonCompletedDocumentsComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../' },
       },
       {
         path: 'determination',
-        data: { breadcrumb: false, backlink: '../../' },
         loadComponent: () =>
           import('./determination/pre-audit-reason-completed-determination.component').then(
             (c) => c.PreAuditReasonCompletedDeterminationComponent,
           ),
+        data: { breadcrumb: false, backlink: '../../' },
       },
     ],
   },

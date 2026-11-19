@@ -10,11 +10,14 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.Adm
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.run.domain.BuyOutSurplusRunCompletedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.processing.domain.BuyOutSurplusFacilityAccountProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.facility.run.domain.BuyOutSurplusFacilityRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.processing.domain.Cca2TerminationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
@@ -26,6 +29,8 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComp
 import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilitySubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.upload.domain.PerformanceDataFacilityDataUploadCompletedRequestActionPayload;
@@ -130,7 +135,18 @@ public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
                 // Performance Data Facility Digital Form
                 new NamedType(PerformanceDataFacilitySubmittedRequestActionPayload.class, PERFORMANCE_DATA_FACILITY_SUBMITTED_PAYLOAD),
                 // Performance Data Facility CSV Form
-                new NamedType(PerformanceDataFacilityDataUploadCompletedRequestActionPayload.class, PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED_PAYLOAD)
+                new NamedType(PerformanceDataFacilityDataUploadCompletedRequestActionPayload.class, PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED_PAYLOAD),
+
+                // CCA3 PAT
+                new NamedType(FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED_PAYLOAD),
+                new NamedType(FacilityPerformanceAccountTemplateDataUploadCompletedRequestActionPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_UPLOAD_COMPLETED_PAYLOAD),
+                
+                // Buy Out Surplus Facility
+                new NamedType(BuyOutSurplusFacilityRunCompletedRequestActionPayload.class, BUY_OUT_SURPLUS_FACILITY_RUN_COMPLETED_PAYLOAD),
+                new NamedType(BuyOutSurplusFacilityAccountProcessingSubmittedRequestActionPayload.class, BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD),
+
+                // ETS
+                new NamedType(EmissionsTradingSchemeDataSubmittedRequestActionPayload.class, EMISSIONS_TRADING_SCHEME_DATA_SUBMITTED_PAYLOAD)
         );
     }
 

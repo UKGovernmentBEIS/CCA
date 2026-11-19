@@ -43,7 +43,7 @@ public class RequestCreateActionFacilityResourceTypeHandler <T extends RequestCr
                         .findFirst()
                         .map(requestCreateByFacilityValidator ->
                                 requestCreateByFacilityValidator.validateAction(facilityId))
-                        .orElse(RequestCreateValidationResult.builder().valid(true).isAvailable(true).build())
+                        .orElse(RequestCreateValidationResult.builder().valid(true).available(true).build())
         );
         validationResults.add(
                 requestCreateByFacilityRelatedRequestValidators
@@ -52,7 +52,7 @@ public class RequestCreateActionFacilityResourceTypeHandler <T extends RequestCr
                         .findFirst()
                         .map(requestCreateByFacilityRelatedRequestValidator ->
                                 requestCreateByFacilityRelatedRequestValidator.validateAction(facilityId, payload))
-                        .orElse(RequestCreateValidationResult.builder().valid(true).isAvailable(true).build())
+                        .orElse(RequestCreateValidationResult.builder().valid(true).available(true).build())
         );
 
         boolean isValid = validationResults.stream().allMatch(RequestCreateValidationResult::isValid);

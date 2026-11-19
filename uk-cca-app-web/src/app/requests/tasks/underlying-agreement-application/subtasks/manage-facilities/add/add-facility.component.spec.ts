@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -7,7 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { FacilityDetailsFormModel, mockRequestTaskState, TasksApiService } from '@requests/common';
+import { FacilityDetailsFormModel, TasksApiService } from '@requests/common';
+import { mockRequestTaskState } from '@requests/common/underlying-agreement/testing/mock-data';
 import { AccountAddressFormModel } from '@shared/components';
 
 import { FacilityService } from 'cca-api';
@@ -27,7 +28,7 @@ describe('AddFacilityComponent', () => {
       imports: [AddFacilityComponent],
       providers: [
         RequestTaskStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         {
           provide: FacilityService,

@@ -1,5 +1,6 @@
 import { RequestTaskState } from '@netz/common/store';
 import { UNAVariationRegulatorLedRequestTaskPayload } from '@requests/common';
+import { SchemeVersionEnum } from '@shared/types';
 
 import {
   Facility,
@@ -19,7 +20,7 @@ const facilities: Facility[] = [
       name: 'fac3-1-1',
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: ['CCA_3'],
+      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
       facilityAddress: {
         line1: 'addr1',
         city: 'kjhn',
@@ -114,7 +115,7 @@ const facilitiesOriginal: Facility[] = [
       name: 'fac3-1-1',
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: ['CCA_3'],
+      participatingSchemeVersions: [SchemeVersionEnum.CCA_3],
       facilityAddress: {
         line1: 'addr1',
         city: 'kjhn',
@@ -330,10 +331,10 @@ export const mockTargetUnitDetails: TargetUnitAccountDetails = {
 
 export const mockOriginalUnAContainer: UnderlyingAgreementContainer = {
   schemeDataMap: {
-    CCA_2: {
+    [SchemeVersionEnum.CCA_2]: {
       sectorMeasurementType: 'ENERGY_KWH',
     },
-    CCA_3: {
+    [SchemeVersionEnum.CCA_3]: {
       sectorMeasurementType: 'ENERGY_KWH',
     },
   },
@@ -362,15 +363,15 @@ export const mockOriginalUnAContainer: UnderlyingAgreementContainer = {
 export const mockUnAVariationRegulatorLedRequestTaskPayload: UNAVariationRegulatorLedRequestTaskPayload = {
   payloadType: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT_PAYLOAD',
   sendEmailNotification: true,
-  workflowSchemeVersion: 'CCA_3',
+  workflowSchemeVersion: SchemeVersionEnum.CCA_3,
   accountReferenceData: {
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       schemeDataMap: {
-        CCA_2: {
+        [SchemeVersionEnum.CCA_2]: {
           sectorMeasurementType: 'ENERGY_KWH',
         },
-        CCA_3: {
+        [SchemeVersionEnum.CCA_3]: {
           sectorMeasurementType: 'ENERGY_KWH',
         },
       },

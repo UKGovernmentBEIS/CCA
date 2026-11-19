@@ -6,12 +6,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.facility.service.FacilityDataQueryService;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertification;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusDTO;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusUpdateDTO;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.repository.FacilityCertificationRepository;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.validation.FacilityCertificationValidationService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.CertificationPeriodService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,10 +38,10 @@ class FacilityCertificationServiceTest {
     private FacilityCertificationService facilityCertificationService;
 
     @Mock
-    private FacilityCertificationRepository facilityCertificationRepository;
+    private CertificationPeriodService certificationPeriodService;
 
     @Mock
-    private FacilityDataQueryService facilityDataQueryService;
+    private FacilityCertificationRepository facilityCertificationRepository;
 
     @Mock
     private FacilityCertificationValidationService validationService;
@@ -91,6 +96,61 @@ class FacilityCertificationServiceTest {
     }
 
     @Test
+    void getFacilityCertifications() {
+        final Long facilityId = 1L;
+
+        final FacilityCertification facilityCertification = FacilityCertification.builder()
+                .facilityId(facilityId)
+                .certificationPeriodId(11L)
+                .certificationStatus(FacilityCertificationStatus.CERTIFIED)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .build();
+        final CertificationPeriodDTO cp6 = CertificationPeriodDTO.builder()
+                .id(11L)
+                .certificationPeriodType(CertificationPeriodType.CP6)
+                .schemeVersion(SchemeVersion.CCA_2)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 2, 1))
+                .build();
+        final CertificationPeriodDTO cp7 = CertificationPeriodDTO.builder()
+                .id(22L)
+                .certificationPeriodType(CertificationPeriodType.CP7)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .startDate(LocalDate.of(2026, 1, 1))
+                .endDate(LocalDate.of(2027, 1, 1))
+                .build();
+
+        final FacilityCertificationStatusDTO certified = FacilityCertificationStatusDTO.builder()
+                .certificationPeriodId(11L)
+                .schemeVersion(SchemeVersion.CCA_2)
+                .certificationPeriod(CertificationPeriodType.CP6)
+                .certificationPeriodStartDate(LocalDate.of(2020, 1, 1))
+                .certificationPeriodEndDate(LocalDate.of(2020, 2, 1))
+                .status(FacilityCertificationStatus.CERTIFIED)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .build();
+        final FacilityCertificationStatusDTO notCertified = FacilityCertificationStatusDTO.builder()
+                .certificationPeriodId(22L)
+                .schemeVersion(SchemeVersion.CCA_3)
+                .certificationPeriod(CertificationPeriodType.CP7)
+                .certificationPeriodStartDate(LocalDate.of(2026, 1, 1))
+                .certificationPeriodEndDate(LocalDate.of(2027, 1, 1))
+                .status(FacilityCertificationStatus.NOT_YET_DEFINED)
+                .build();
+
+        when(facilityCertificationRepository.findAllByFacilityId(facilityId)).thenReturn(List.of(facilityCertification));
+        when(certificationPeriodService.getAllCertificationPeriods()).thenReturn(List.of(cp6, cp7));
+
+        // Invoke
+        final List<FacilityCertificationStatusDTO> result = facilityCertificationService.getFacilityCertifications(facilityId);
+
+        // Verify
+        assertThat(result).hasSize(2).containsExactly(notCertified, certified);
+        verify(facilityCertificationRepository, times(1)).findAllByFacilityId(facilityId);
+        verify(certificationPeriodService, times(1)).getAllCertificationPeriods();
+    }
+
+    @Test
     void updateOrCreateFacilityCertificationStatus_update() {
 
         final Long facilityId = 99L;
@@ -114,6 +174,8 @@ class FacilityCertificationServiceTest {
 
         facilityCertificationService.updateOrCreateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);
 
+        verify(validationService, times(1))
+                .validateFacilityCertificationByCertificationPeriod(eq(facilityCertificationStatusUpdateDTO), any());
         verify(facilityCertificationRepository, times(1))
                 .findByFacilityIdAndCertificationPeriodId(facilityId, 1L);
         assertEquals(facilityCertification.getCertificationStatus(), facilityCertificationStatusUpdateDTO.getCertificationStatus());
@@ -135,6 +197,8 @@ class FacilityCertificationServiceTest {
 
         facilityCertificationService.updateOrCreateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);
 
+        verify(validationService, times(1))
+                .validateFacilityCertificationByCertificationPeriod(eq(facilityCertificationStatusUpdateDTO), any());
         verify(facilityCertificationRepository, times(1))
                 .findByFacilityIdAndCertificationPeriodId(facilityId, 1L);
         verify(facilityCertificationRepository, times(1))

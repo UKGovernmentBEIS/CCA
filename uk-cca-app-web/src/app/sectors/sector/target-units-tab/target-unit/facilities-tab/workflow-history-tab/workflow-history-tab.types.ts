@@ -22,7 +22,9 @@ export enum RequestWorkflowHistoryStatus {
 
 export const workflowTypesMap: Record<string, string | string[]> = {
   'Facility audit': 'FACILITY_AUDIT',
+  'Performance account template (PAT) reporting': 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING',
   'Target period (TP) reporting': 'PERFORMANCE_DATA_FACILITY_PROCESSING',
+  'UK emissions trading scheme (UK ETS) reporting': 'EMISSIONS_TRADING_SCHEME_DATA',
 };
 
 export const workflowStatusesMap: Record<string, string> = {

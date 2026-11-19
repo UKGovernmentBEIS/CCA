@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.bpmn.exception.BpmnExecutionException;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.domain.FacilityPerformanceAccountTemplateUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestMetadata;
@@ -22,6 +23,8 @@ import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstan
 import java.time.Year;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,7 +46,6 @@ class FacilityPerformanceAccountTemplateProcessingHandlerFlowableTest {
 
     @Test
     void execute() throws BpmnExecutionException {
-        //TODO: enhance
         final String requestId = "requestId";
         final String assignee = "sectorUserAssignee";
         final FacilityPerformanceAccountTemplateUploadReport facilityReport = FacilityPerformanceAccountTemplateUploadReport.builder().facilityId(1L).build();
@@ -70,11 +72,12 @@ class FacilityPerformanceAccountTemplateProcessingHandlerFlowableTest {
 
         // Verify
         assertThat(facilityReport.getErrors()).isEmpty();
-        assertThat(metadata.getReportVersion()).isEqualTo(1);
         verify(execution, times(1)).getVariable(BpmnProcessConstants.REQUEST_ID);
         verify(execution, times(1)).getVariable(CcaBpmnProcessConstants.FACILITY_REPORT);
         verify(requestService, times(1)).findRequestById(requestId);
         verify(facilityPerformanceAccountTemplateProcessingService, times(1)).doProcess(requestPayload, facilityReport);
+        verify(requestService, times(1))
+                .addActionToRequest(eq(request), any(), eq(CcaRequestActionType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED), eq(assignee));
     }
 
     @Test

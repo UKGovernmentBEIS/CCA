@@ -23,7 +23,7 @@ import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.token.FileToken;
-import uk.gov.netz.api.workflow.request.application.attachment.requestaction.RequestActionAttachmentService;
+import uk.gov.netz.api.workflow.request.application.attachment.requestaction.RequestActionFileAttachmentService;
 
 @RestController
 @RequestMapping(path = "/v1.0/request-action-attachments")
@@ -31,7 +31,7 @@ import uk.gov.netz.api.workflow.request.application.attachment.requestaction.Req
 @RequiredArgsConstructor
 public class RequestActionAttachmentController {
 
-    private final RequestActionAttachmentService requestActionAttachmentService;
+    private final RequestActionFileAttachmentService requestActionFileAttachmentService;
 
     @GetMapping(path = "/{id}")
     @Operation(summary = "Generate the token to get the file with the provided uuid that belongs to the provided request action")
@@ -48,7 +48,7 @@ public class RequestActionAttachmentController {
             @PathVariable("id") @Parameter(description = "The request action id") Long requestActionId,
             @RequestParam("attachmentUuid") @Parameter(name = "attachmentUuid", description = "The attachment uuid") @NotNull UUID attachmentUuid) {
         FileToken getFileAttachmentToken =
-                requestActionAttachmentService.generateGetFileAttachmentToken(requestActionId, attachmentUuid);
+                requestActionFileAttachmentService.generateGetFileAttachmentToken(requestActionId, attachmentUuid);
         return new ResponseEntity<>(getFileAttachmentToken, HttpStatus.OK);
     }
 }

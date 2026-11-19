@@ -104,16 +104,30 @@ function srmConsistencyValidator(formGroup: FormGroup): ValidatorFn {
   };
 }
 
-function uniqueCustomFuelTypeValidator(formArray: FormArray<FuelRowForm>) {
-  const names = formArray.controls
+/**
+ * Sets the duplicate error on each repeated fuel type control, rather than on the array, so the error shows on the
+ * row and the error summary links to it.
+ */
+function uniqueCustomFuelTypeValidator(formArray: FormArray<FuelRowForm>): ValidationErrors | null {
+  const fuelTypeControls = formArray.controls
     .filter((control) => control.controls.isCustom.value)
-    .map((control) => (control.controls.fuelType.value ?? '').trim().toLowerCase())
-    .filter(Boolean);
+    .map((control) => control.controls.fuelType);
 
-  const hasDuplicate = names.some((name, index) => names.indexOf(name) !== index);
-  return hasDuplicate
-    ? { duplicateNames: 'Duplicate non-standard fuel names were found. Please ensure each fuel name is unique.' }
-    : null;
+  const toName = (control: FormControl<string>) => (control.value ?? '').trim().toLowerCase();
+
+  fuelTypeControls.forEach((control) => {
+    const name = toName(control);
+    const isDuplicate = !!name && fuelTypeControls.some((other) => other !== control && toName(other) === name);
+    const { duplicateName: _, ...otherErrors } = (control.errors ?? {}) as Record<string, unknown>;
+
+    if (isDuplicate) {
+      control.setErrors({ ...otherErrors, duplicateName: 'Enter a unique name for this fuel.' }, { emitEvent: false });
+    } else if (control.hasError('duplicateName')) {
+      control.setErrors(Object.keys(otherErrors).length > 0 ? otherErrors : null, { emitEvent: false });
+    }
+  });
+
+  return null;
 }
 
 export const EnergyFuelAmountDetailsFormProvider: Provider = {
@@ -206,7 +220,7 @@ export function createNonStandardFuelRowGroup(
     {
       fuelKey: fb.control<string | null>(null),
       fuelType: fb.control(initial?.fuelType ?? ''),
-      co2ConversionFactor: fb.control(String(initial?.co2ConversionFactor ?? '')),
+      co2ConversionFactor: fb.control(String(initial?.co2ConversionFactor ?? ''), { updateOn: 'change' }),
       deliveredEnergy: fb.control<string | null>(
         initial?.deliveredEnergy != null ? String(initial.deliveredEnergy) : null,
         { updateOn: 'change' },

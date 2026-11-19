@@ -1,13 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  TemplateRef,
-  input,
-  contentChildren,
-  contentChild,
-} from '@angular/core';
+import { Component, HostBinding, TemplateRef, input, contentChildren, contentChild } from '@angular/core';
 
 import {
   SummaryListColumnDirective,
@@ -23,9 +15,8 @@ import { SummaryItem } from './summary-list.interface';
  */
 @Component({
   selector: 'dl[govuk-summary-list]',
-  imports: [SummaryListRowKeyDirective, SummaryListRowDirective, NgTemplateOutlet, SummaryListRowValueDirective],
   templateUrl: './summary-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [SummaryListRowKeyDirective, SummaryListRowDirective, NgTemplateOutlet, SummaryListRowValueDirective],
 })
 export class SummaryListComponent {
   readonly details = input<SummaryItem[]>([]);

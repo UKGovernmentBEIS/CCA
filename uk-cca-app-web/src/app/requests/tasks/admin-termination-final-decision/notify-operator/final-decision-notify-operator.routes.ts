@@ -5,14 +5,16 @@ export const FINAL_DECISION_NOTIFY_OPERATOR_ROUTES: Routes = [
     path: '',
     children: [
       {
+        title: 'Notify operator of decision',
         path: '',
-        data: { backlink: '../..', breadcrumb: false },
         loadComponent: () => import('./final-decision-notify-operator.component'),
+        data: { backlink: '../..', breadcrumb: false },
       },
       {
+        title: 'Admin termination final decision notice sent to operator',
         path: 'confirmation',
-        data: { breadcrumb: false },
         loadComponent: () => import('./confirmation/confirmation.component'),
+        data: { breadcrumb: false },
       },
     ],
   },

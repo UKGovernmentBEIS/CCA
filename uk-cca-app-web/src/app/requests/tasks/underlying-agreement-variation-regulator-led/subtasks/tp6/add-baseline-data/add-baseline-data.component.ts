@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,6 +22,7 @@ import {
   isTargetPeriodWizardCompleted,
   TaskItemStatus,
   TasksApiService,
+  toNullableString,
   UNAVariationRegulatorLedRequestTaskPayload,
   underlyingAgreementQuery,
   underlyingAgreementVariationRegulatorLedQuery,
@@ -38,6 +39,7 @@ import { ADD_BASELINE_DATA_FORM, addBaselineDataFormProvider } from './add-basel
 @Component({
   selector: 'cca-add-baseline-data',
   templateUrl: './add-baseline-data.component.html',
+  providers: [addBaselineDataFormProvider],
   imports: [
     WizardStepComponent,
     FormsModule,
@@ -51,8 +53,6 @@ import { ADD_BASELINE_DATA_FORM, addBaselineDataFormProvider } from './add-basel
     MeasurementTypeToUnitPipe,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [addBaselineDataFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddBaselineDataComponent {
   private readonly route = inject(ActivatedRoute);
@@ -107,7 +107,7 @@ export class AddBaselineDataComponent {
   protected readonly dateIsStartof2018 = computed(() => {
     const date = this.baselineDateValue() as Date;
     if (!date) return false;
-    return date.getFullYear() === 2018 && date.getMonth() === 0 && date.getDate() === 1;
+    return date.getUTCFullYear() === 2018 && date.getUTCMonth() === 0 && date.getUTCDate() === 1;
   });
 
   onSubmit() {
@@ -126,7 +126,7 @@ export class AddBaselineDataComponent {
         energy: this.form.value.energy,
         throughput: this.form.value.throughput,
         energyCarbonFactor: this.form.value.energyCarbonFactor,
-        performance: String(this.calculatedPerformance()),
+        performance: toNullableString(this.calculatedPerformance()),
         usedReportingMechanism: this.form.value.usedReportingMechanism,
       } as BaselineData;
     });

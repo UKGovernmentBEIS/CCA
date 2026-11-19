@@ -1,3 +1,4 @@
+import { normaliseNumber } from '@shared/utils';
 import BigNumber from 'bignumber.js';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';
@@ -14,9 +15,12 @@ export function calculateEnergyConsumedEligible(energyConsumed: number, energyCo
     .toNumber();
 }
 
-// Normalises user entered numbers that may be stored as strings (including scientific), empty values or undefined
-export function normaliseNumber(field: string | number | null | undefined): number | null {
-  return Number.isNaN(Number(field)) ? null : Number(field);
+/**
+ * Converts a numeric form value back to the API's string form, keeping a cleared value as `null` instead of
+ * the literal string 'null'.
+ */
+export function toNullableString(value: string | number | null | undefined): string | null {
+  return value == null ? null : String(value);
 }
 
 export function calculateFixedEnergy(totalFixedEnergy: string | number | null | undefined): string | null {
@@ -40,7 +44,7 @@ export function calculateVariableEnergy(
     const sum = (products ?? [])
       .filter((product) => (product.productStatus ?? '').toUpperCase() !== 'EXCLUDED')
       .filter((product) => Number(product.baselineYear) === facilityBaselineYear)
-      .reduce((acc, product) => acc + normaliseNumber(product.energy), 0);
+      .reduce((acc, product) => acc + (normaliseNumber(product.energy) ?? 0), 0);
 
     return sum.toString();
   }
@@ -71,7 +75,7 @@ export function calculateOtherYearsVariableEnergy(
   const sum = (products ?? [])
     .filter((product) => (product.productStatus ?? '').toUpperCase() !== 'EXCLUDED')
     .filter((product) => Number(product.baselineYear) !== facilityBaselineYear)
-    .reduce((acc, product) => acc + normaliseNumber(product.energy), 0);
+    .reduce((acc, product) => acc + (normaliseNumber(product.energy) ?? 0), 0);
 
   return sum > 0 ? sum.toString() : null;
 }

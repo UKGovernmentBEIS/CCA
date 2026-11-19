@@ -6,25 +6,22 @@ import { PendingRequestGuard } from '@shared/guards';
 import { SectorGuard } from './sector.guard';
 import { ActiveSectorStore } from './sector/active-sector.store';
 import { SECTOR_ROUTES } from './sector/sector.routes';
-import { SectorListComponent } from './sectors-list/sector-list.component';
+import { sectorBreadcrumb } from './sector/sector-breadcrumb';
 
 export const SECTORS_ROUTES: Routes = [
   {
+    title: 'Sectors',
     path: '',
-    data: { pageTitle: 'Sectors' },
-    component: SectorListComponent,
+    loadComponent: () => import('./sectors-list/sector-list.component').then((c) => c.SectorListComponent),
     canDeactivate: [PendingRequestGuard],
   },
   {
+    title: 'Sector details',
     path: ':sectorId',
-    providers: [ActiveSectorStore],
     canActivate: [SectorGuard],
-    data: {
-      pageTitle: 'Sector details',
-      breadcrumb: ({ details }) =>
-        `${details.sectorAssociationDetails.acronym} - ${details.sectorAssociationDetails.commonName}`,
-    },
+    data: { breadcrumb: sectorBreadcrumb },
     resolve: { details: () => inject(ActiveSectorStore).state },
     children: SECTOR_ROUTES,
+    providers: [ActiveSectorStore],
   },
 ];

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -19,7 +19,7 @@ import {
 } from '@requests/common';
 import { SummaryComponent, WizardStepComponent } from '@shared/components';
 import { CountryService } from '@shared/services';
-import { SchemeVersion } from '@shared/types';
+import { SchemeVersionEnum } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -44,7 +44,7 @@ import { resetDetermination } from '../../../../utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <a class="govuk-link" routerLink="../..">Return to: Manage facilities</a>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [facilityDecisionFormProvider()],
   imports: [
     SummaryComponent,
     PageHeadingComponent,
@@ -53,7 +53,6 @@ import { resetDetermination } from '../../../../utils';
     WizardStepComponent,
     RouterLink,
   ],
-  providers: [facilityDecisionFormProvider()],
 })
 export class FacilityDecisionComponent {
   private readonly store = inject(RequestTaskStore);
@@ -80,7 +79,7 @@ export class FacilityDecisionComponent {
   );
 
   private readonly schemeVersion = computed(() =>
-    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersion.CCA_3 : SchemeVersion.CCA_2,
+    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersionEnum.CCA_3 : SchemeVersionEnum.CCA_2,
   );
 
   private readonly sectorSchemeData = computed(() =>

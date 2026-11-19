@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -31,6 +31,7 @@ type CompanyNumberState = {
 @Component({
   selector: 'cca-company-registration-number',
   templateUrl: './company-registration-number.component.html',
+  providers: [CompanyRegistrationNumberFormProvider],
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -41,8 +42,6 @@ type CompanyNumberState = {
     ConditionalContentDirective,
     DetailsComponent,
   ],
-  providers: [CompanyRegistrationNumberFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompanyRegistrationNumberComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

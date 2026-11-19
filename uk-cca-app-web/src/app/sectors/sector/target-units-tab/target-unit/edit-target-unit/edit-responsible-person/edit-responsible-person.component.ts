@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -15,9 +15,8 @@ import {
 @Component({
   selector: 'cca-edit-responsible-person',
   templateUrl: './edit-responsible-person.component.html',
-  imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, ResponsiblePersonInputComponent],
   providers: [EditResponsiblePersonFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, ResponsiblePersonInputComponent],
 })
 export class EditResponsiblePersonComponent {
   private readonly updateTargetUnitAccountService = inject(UpdateTargetUnitAccountService);

@@ -3,10 +3,13 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { GovukValidators } from '@netz/govuk-components';
-import { createCommonFileAsyncValidators, FileUploadEvent, FileUploadService } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
 import { AccountNoteDto, AccountNotesService, RequestNoteDto, RequestNotesService } from 'cca-api';
+
+import { FileUploadService } from '../../file-input/file-upload.service';
+import { FileUploadEvent } from '../../file-input/file-upload-event';
+import { createCommonFileAsyncValidators } from '../../file-input/file-validators';
 
 export type EditNoteFormModel = FormGroup<{
   note: FormControl<string>;
@@ -31,10 +34,7 @@ export const EditNoteFormProvider: Provider = {
 
     const attachments = note?.payload?.files ?? {};
 
-    const prepopulatedFiles: FileUploadEvent[] = fileUtils.toFiles(
-      Object.keys(attachments),
-      attachments,
-    ) as FileUploadEvent[];
+    const prepopulatedFiles: FileUploadEvent[] = fileUtils.toFiles(Object.keys(attachments), attachments);
 
     const filesControl = fb.control<FileUploadEvent[]>(prepopulatedFiles, {
       asyncValidators: [

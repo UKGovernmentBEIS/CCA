@@ -1,4 +1,5 @@
-import { Component, HostBinding, input, inject, computed } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, HostBinding, input, inject, computed, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl, UntypedFormControl } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
@@ -11,12 +12,14 @@ import { FormService } from '../form';
 */
 @Component({
   selector: 'div[govukFileUpload],govuk-file-upload',
-  imports: [ErrorMessageComponent],
   templateUrl: './file-upload.component.html',
+  imports: [ErrorMessageComponent],
 })
-export class FileUploadComponent implements ControlValueAccessor {
+export class FileUploadComponent implements ControlValueAccessor, OnInit {
   private readonly ngControl = inject(NgControl, { self: true, optional: true });
   private readonly formService = inject(FormService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly accepted = input<string>();
   readonly isMultiple = input<boolean>();
@@ -35,6 +38,12 @@ export class FileUploadComponent implements ControlValueAccessor {
   constructor() {
     const ngControl = this.ngControl;
     ngControl.valueAccessor = this;
+  }
+
+  ngOnInit(): void {
+    // With OnPush, control status changes (disable/enable, validity) originate outside this
+    // component's template, so the component needs to mark itself for check.
+    this.control.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
   }
 
   get control(): UntypedFormControl {

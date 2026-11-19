@@ -5,13 +5,14 @@ export const SUBMIT_ROUTES: Routes = [
     path: '',
     children: [
       {
-        path: '',
         title: 'Submit to regulator',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: '',
         loadComponent: () =>
           import('./action/variation-submit-action.component').then((c) => c.VariationSubmitActionComponent),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
+        title: 'Variation application sent to regulator',
         path: 'confirmation',
         loadComponent: () =>
           import('./confirmation/variation-submit-confirmation.component').then(

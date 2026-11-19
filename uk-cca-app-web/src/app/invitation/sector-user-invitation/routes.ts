@@ -12,25 +12,27 @@ import { SectorUserInvitationStore } from './sector-user-invitation.store';
 export const SECTOR_USER_INVITATION_ROUTES: Routes = [
   {
     path: 'sector-user',
-    data: { blockSignInRedirect: true, pageTitle: 'Create user account' },
-    providers: [SectorUserInvitationStore],
+    data: { blockSignInRedirect: true },
     children: [
       {
+        title: 'Enter your details',
         path: '',
         loadComponent: () => import('./sector-user-invitation.component').then((c) => c.SectorUserInvitationComponent),
         canActivate: [SectorUserInvitationGuard],
         canDeactivate: [PendingRequestGuard],
       },
       {
+        title: 'Create a password',
         path: 'create-password',
-        data: { backlink: '../' },
         loadComponent: () =>
           import('./sector-user-invitation-create-password/sector-user-invitation-create-password.component').then(
             (c) => c.SectorUserInvitationCreatePasswordComponent,
           ),
         canActivate: [SectorUserNoTokenGuard],
+        data: { backlink: '../' },
       },
       {
+        title: 'Create a password',
         path: 'set-password-only',
         loadComponent: () =>
           import('./sector-user-invitation-password-only/sector-user-invitation-password-only.component').then(
@@ -39,17 +41,18 @@ export const SECTOR_USER_INVITATION_ROUTES: Routes = [
         canActivate: [SectorUserNoTokenGuard],
       },
       {
+        title: 'Check your answers',
         path: 'summary',
-        data: { backlink: '../create-password' },
         loadComponent: () =>
           import('./sector-user-invitation-summary/sector-user-invitation-summary.component').then(
             (c) => c.SectorUserInvitationSummaryComponent,
           ),
         canActivate: [SectorUserNoTokenGuard],
+        data: { backlink: '../create-password' },
       },
       {
+        title: "You've successfully activated your user account",
         path: 'confirmed',
-        data: { pageTitle: "You've successfully activated your user account" },
         loadComponent: () =>
           import('../invitation-confirmation/invitation-confirmation.component').then(
             (c) => c.InvitationConfirmationComponent,
@@ -58,8 +61,8 @@ export const SECTOR_USER_INVITATION_ROUTES: Routes = [
         canDeactivate: [resetSectorInvitationStore],
       },
       {
+        title: 'You are successfully added to a sector account',
         path: 'confirmed-existing',
-        data: { pageTitle: 'You are successfully added to a sector account' },
         loadComponent: () =>
           import('../invitation-existing-confirmation/invitation-existing-confirmation.component').then(
             (c) => c.InvitationExistingConfirmationComponent,
@@ -67,10 +70,11 @@ export const SECTOR_USER_INVITATION_ROUTES: Routes = [
         canActivate: [SectorUserNoTokenGuard],
       },
       {
+        title: 'This link is invalid/expired',
         path: 'invalid-link',
-        data: { pageTitle: 'This link is invalid/expired' },
         loadComponent: () => import('../invalid-link/invalid-link.component').then((c) => c.InvalidLinkComponent),
       },
     ],
+    providers: [SectorUserInvitationStore],
   },
 ];

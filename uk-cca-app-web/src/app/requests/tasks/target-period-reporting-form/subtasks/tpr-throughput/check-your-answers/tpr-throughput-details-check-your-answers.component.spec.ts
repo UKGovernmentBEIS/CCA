@@ -130,7 +130,7 @@ const mockByProductState = {
           },
           energyFuelDetails: {
             standardFuels: {
-              GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
+              GRID_ELECTRICITY: { deliveredEnergy: '100', primaryEnergy: '210' },
               NON_GRID_ELECTRICITY: { deliveredEnergy: '0', primaryEnergy: '0' },
             },
             atLeastSeventyPercentEnergyUsed: false,
@@ -223,6 +223,7 @@ describe('TprThroughputDetailsCheckYourAnswersComponent', () => {
   it('should build summary data with throughput section', () => {
     expect(getByText(/Target period throughput details/, fixture.nativeElement)).toBeTruthy();
     expect(getByText(/Total throughput/, fixture.nativeElement)).toBeTruthy();
+    expect(getByText(/Adjusted throughput/, fixture.nativeElement)).toBeTruthy();
   });
 
   it('should call api with completed status and navigate on submit', () => {

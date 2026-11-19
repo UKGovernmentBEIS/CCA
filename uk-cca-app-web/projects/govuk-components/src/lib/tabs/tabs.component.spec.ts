@@ -1,9 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Router, provideRouter } from '@angular/router';
 
 import { delay, of } from 'rxjs';
 
@@ -17,7 +16,6 @@ describe('TabsComponent', () => {
   let router: Router;
 
   @Component({
-    imports: [TabsComponent, AsyncPipe, TabDirective],
     template: `
       <govuk-tabs>
         @for (tab of tabs$ | async; track tab) {
@@ -30,9 +28,10 @@ describe('TabsComponent', () => {
           <p>This is another paragraph</p>
         </ng-template>
 
-        <ng-template govukTab [id]="syncTab.id" [label]="syncTab.label"></ng-template>
+        <ng-template govukTab [id]="syncTab().id" [label]="syncTab().label"></ng-template>
       </govuk-tabs>
     `,
+    imports: [TabsComponent, AsyncPipe, TabDirective],
   })
   class TestComponent {
     tabs$ = of([
@@ -41,12 +40,13 @@ describe('TabsComponent', () => {
       { id: 'span', label: 'A span', body: 'This is a span' },
     ]).pipe(delay(200));
 
-    syncTab = { id: 'paragraph3', label: 'A static link', body: 'This is a static link' };
+    syncTab = signal({ id: 'paragraph3', label: 'A static link', body: 'This is a static link' });
   }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, TabsComponent, TestComponent, TabDirective],
+      imports: [TabsComponent, TestComponent, TabDirective],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
@@ -174,9 +174,7 @@ describe('TabsComponent', () => {
     vi.advanceTimersByTime(200);
     fixture.detectChanges();
 
-    hostComponent.syncTab.label = 'Another static link';
-
-    fixture.changeDetectorRef.markForCheck();
+    hostComponent.syncTab.set({ ...hostComponent.syncTab(), label: 'Another static link' });
     fixture.detectChanges();
 
     expect(getAnchorTexts()).toContain('Another static link');

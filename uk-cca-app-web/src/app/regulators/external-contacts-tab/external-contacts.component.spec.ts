@@ -9,7 +9,9 @@ import { CaExternalContactsDTO, CaExternalContactsService } from 'cca-api';
 
 import { ExternalContactsComponent } from './external-contacts.component';
 
-@Component({ template: '' })
+@Component({
+  template: '',
+})
 class DummyComponent {}
 
 describe('ExternalContactsComponent', () => {
@@ -80,7 +82,7 @@ describe('ExternalContactsComponent', () => {
       indexes.map((index) => [
         caExternalContacts.caExternalContacts[index].email,
         caExternalContacts.caExternalContacts[index].description,
-        'Delete',
+        `Delete ${caExternalContacts.caExternalContacts[index].name}`,
       ]),
     );
   };

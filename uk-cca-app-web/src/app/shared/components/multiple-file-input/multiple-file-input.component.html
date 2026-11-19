@@ -1,13 +1,15 @@
 <div class="cca-multi-file-upload cca-multi-file-upload--enhanced">
   <div class="govuk-form-group" [class.govuk-form-group--error]="shouldDisplayErrors">
-    <label [for]="id" [class]="'govuk-label govuk-label--' + headerSize()" id="{{ 'l.' + id }}">{{ label() }}</label>
+    <label [for]="id" [id]="'l.' + id" [class]="'govuk-label govuk-label--' + headerSize()">{{ label() }}</label>
 
-    @if (!hint()) {
+    @if (showFilesizeHint()) {
       <span [id]="id + '-hint-file-size'" class="govuk-hint">
         Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or
         CSV file, no more than 20MB.
       </span>
-    } @else {
+    }
+
+    @if (hint()) {
       <span [id]="id + '-hint'" class="govuk-hint">{{ hint() }}</span>
     }
 
@@ -19,45 +21,52 @@
       (dragleave)="onDragLeave()"
       (dragover)="onDragOver($event)"
       (drop)="onDrop($event)"
-      [class.cca-multi-file-upload--dragover]="isDraggedOver"
+      [class.cca-multi-file-upload--dragover]="isDraggedOver()"
       class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
     >
       <input
         #input
         (blur)="onFileBlur()"
         (change)="onFileChange($event)"
-        (focus)="onFileFocus()"
         [accept]="accepted()"
-        [class.cca-multi-file-upload--focused]="isFocused"
-        [disabled]="isDisabled"
+        [attr.aria-describedby]="describedBy"
+        [disabled]="isDisabled()"
         [id]="id"
         [name]="id"
-        [attr.aria-labelledby]="'l.' + id + ' ld.' + id"
         class="govuk-file-upload cca-multi-file-upload__input"
         multiple
+        tabindex="-1"
         type="file"
       />
 
       <p class="govuk-body">{{ dropzoneHintText() }}</p>
 
-      <label
-        [class.govuk-button--disabled]="isDisabled"
-        [for]="id"
-        id="{{ 'ld.' + id }}"
+      <button
+        #filePickerButton
+        type="button"
         class="govuk-button govuk-button--secondary"
+        [id]="'ld.' + id"
+        [attr.aria-labelledby]="'l.' + id + ' ld.' + id"
+        [attr.aria-describedby]="describedBy"
+        [disabled]="isDisabled()"
+        (blur)="onFileBlur()"
+        (click)="onFilePickerButtonClick()"
       >
         {{ dropzoneButtonText() }}
-      </label>
+      </button>
 
-      <div aria-live="polite" class="govuk-visually-hidden" role="status">{{ uploadStatusText$ | async }}</div>
+      <div aria-live="polite" class="govuk-visually-hidden" role="status">
+        {{ uploadStatusText$ | async }}
+      </div>
     </div>
   </div>
 
   <cca-file-upload-list
     [listTitle]="listTitle()"
+    [emptyListText]="emptyListText()"
     [headerSize]="headerSize()"
     (fileDelete)="onFileDeleteClick($event)"
     [files]="uploadedFiles$ | async"
-    [isDisabled]="isDisabled"
+    [isDisabled]="isDisabled()"
   />
 </div>

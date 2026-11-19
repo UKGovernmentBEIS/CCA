@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -9,7 +9,7 @@ export const initialState: TermsDTO = {
   version: null,
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LatestTermsStore extends SignalStore<TermsDTO> {
   constructor() {
     super(initialState);

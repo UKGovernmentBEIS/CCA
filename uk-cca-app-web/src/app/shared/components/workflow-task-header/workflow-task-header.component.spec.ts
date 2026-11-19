@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -27,7 +27,7 @@ describe('WorkflowTaskHeaderComponent', () => {
       await TestBed.configureTestingModule({
         imports: [WorkflowTaskHeaderComponent],
         providers: [
-          provideHttpClient(),
+          provideHttpClient(withXhr()),
           provideHttpClientTesting(),
           {
             provide: TasksService,
@@ -72,7 +72,7 @@ describe('WorkflowTaskHeaderComponent', () => {
       await TestBed.configureTestingModule({
         imports: [WorkflowTaskHeaderComponent],
         providers: [
-          provideHttpClient(),
+          provideHttpClient(withXhr()),
           provideHttpClientTesting(),
           {
             provide: TasksService,

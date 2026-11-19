@@ -109,6 +109,52 @@ describe('FileUploadService', () => {
     });
   });
 
+  // The value shape must not be assumed: a scalar handed to the multiple files validator used to throw
+  // from `value.map`, and must still be uploaded.
+  it('should upload a single entry handed to the multiple files validator', () => {
+    testScheduler.run(({ cold, expectObservable, flush }) => {
+      const file = new File(['content'], 'single-entry.txt');
+      const control = new FormControl({ file });
+      const upload$ = vi.fn(() =>
+        cold<HttpEvent<FileUuidDTO>>('--a|', {
+          a: new HttpResponse({ status: HttpStatusCode.Ok, body: { uuid: 'abcd' } }),
+        }),
+      );
+
+      expectObservable(service.uploadMany(upload$)(control) as Observable<MessageValidationErrors>).toBe('---(a|)', {
+        a: null,
+      });
+
+      flush();
+
+      expect(upload$).toHaveBeenCalledWith(file);
+    });
+  });
+
+  // The single file validator must tolerate a list value: only the first entry that still has a file to
+  // upload may be uploaded, and only once.
+  it('should upload the pending file of a list handed to the single file validator', () => {
+    testScheduler.run(({ cold, expectObservable, flush }) => {
+      const uploaded = new File(['content'], 'uploaded.txt');
+      const pending = new File(['content'], 'pending.txt');
+      const control = new FormControl([{ file: uploaded, uuid: 'abcd' }, { uuid: 'efgh' }, { file: pending }]);
+      const upload$ = vi.fn(() =>
+        cold<HttpEvent<FileUuidDTO>>('--a|', {
+          a: new HttpResponse({ status: HttpStatusCode.Ok, body: { uuid: 'ijkl' } }),
+        }),
+      );
+
+      expectObservable(service.upload(upload$)(control) as Observable<MessageValidationErrors>).toBe('--a|', {
+        a: null,
+      });
+
+      flush();
+
+      expect(upload$).toHaveBeenCalledTimes(1);
+      expect(upload$).toHaveBeenCalledWith(pending);
+    });
+  });
+
   it('should upload a single file exactly at the maximum size', () => {
     testScheduler.run(({ cold, expectObservable, flush }) => {
       const file = new File(['content'], 'at-limit.txt');

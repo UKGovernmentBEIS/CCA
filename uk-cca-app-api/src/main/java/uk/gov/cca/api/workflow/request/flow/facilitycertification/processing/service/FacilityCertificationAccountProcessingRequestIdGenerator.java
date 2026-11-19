@@ -3,7 +3,7 @@ package uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.se
 import org.springframework.stereotype.Service;
 
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
-import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
 import uk.gov.netz.api.workflow.request.flow.common.service.RequestIdGenerator;
 
@@ -16,11 +16,11 @@ public class FacilityCertificationAccountProcessingRequestIdGenerator implements
 
     @Override
     public String generate(RequestParams params) {
-        final FacilityCertificationAccountProcessingRequestMetadata metadata =
-                (FacilityCertificationAccountProcessingRequestMetadata) params.getRequestMetadata();
+        final FacilityCertificationAccountProcessingRequestPayload payload =
+                (FacilityCertificationAccountProcessingRequestPayload) params.getRequestPayload();
 
-        final String accountAcronym = metadata.getAccountBusinessId();
-        final String parentRequestId = metadata.getParentRequestId();
+        final String accountAcronym = payload.getAccountBusinessId();
+        final String parentRequestId = payload.getParentRequestId();
 
         return String.format(REQUEST_ID_FORMATTER, accountAcronym, parentRequestId);
     }

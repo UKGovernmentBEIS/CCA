@@ -7,6 +7,7 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.Adm
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
@@ -133,6 +134,9 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
 
         // CCA3 PAT
         addResolvedShemas(FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class.getSimpleName(), FacilityPerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class);
+
+        // ETS
+        addResolvedShemas(EmissionsTradingSchemeDataSaveRequestTaskActionPayload.class.getSimpleName(), EmissionsTradingSchemeDataSaveRequestTaskActionPayload.class);
     }
 
 }

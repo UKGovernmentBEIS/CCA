@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 
 import { produce } from 'immer';
 
@@ -11,7 +11,7 @@ export interface BaselineEnergyDraft {
   products: ProductVariableEnergyConsumptionData[];
 }
 
-@Injectable()
+@Service({ autoProvided: false })
 export class BaselineEnergyDraftService {
   private readonly _draft = signal<BaselineEnergyDraft | null>(null);
 
@@ -21,7 +21,8 @@ export class BaselineEnergyDraftService {
 
   /**
    * Initialize draft from store data. This is idempotent - subsequent calls are no-ops.
-   * Call this when the form provider first initializes.
+   * Called by `initializeBaselineEnergyDraftGuard` (after a `clear`) when the routes activate; the form
+   * provider's call is then a no-op.
    */
   initializeFromStore(storeData: FacilityBaselineEnergyConsumption | null | undefined): void {
     if (this.draftSignal() !== null) return;
@@ -81,7 +82,7 @@ export class BaselineEnergyDraftService {
     const current = this.draftSignal();
 
     const updated = produce(current, (draft) => {
-      const index = draft.products.findIndex((p) => p.productName === productName);
+      const index = draft.products?.findIndex((p) => p.productName === productName) ?? -1;
       if (index !== -1) {
         draft.products.splice(index, 1);
       }
@@ -98,7 +99,7 @@ export class BaselineEnergyDraftService {
     const current = this.draftSignal();
 
     const updated = produce(current, (draft) => {
-      const product = draft.products.find((p) => p.productName === productName);
+      const product = draft.products?.find((p) => p.productName === productName);
       if (product) {
         product.productStatus = 'EXCLUDED';
       }
@@ -115,7 +116,7 @@ export class BaselineEnergyDraftService {
     const current = this.draftSignal();
 
     const updated = produce(current, (draft) => {
-      const product = draft.products.find((p) => p.productName === productName);
+      const product = draft.products?.find((p) => p.productName === productName);
       if (product) {
         product.productStatus = 'LIVE';
       }
@@ -125,7 +126,8 @@ export class BaselineEnergyDraftService {
   }
 
   /**
-   * Clear the draft state. Call this after successful API submission.
+   * Clear the draft state. Called after a successful save, and by `initializeBaselineEnergyDraftGuard` before
+   * re-seeding.
    */
   clear(): void {
     this._draft.set(null);

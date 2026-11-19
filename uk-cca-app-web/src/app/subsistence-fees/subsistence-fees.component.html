@@ -19,14 +19,12 @@
 @if (!canInitiateSubsistenceRun()) {
   @if (!isValidChargeDate()) {
     <div class="govuk-!-margin-bottom-9">
-      <govuk-warning-text assistiveText="">
-        New payment requests will become available after 1 Apr 2025
-      </govuk-warning-text>
+      <govuk-warning-text> New payment requests will become available after 1 Apr 2025 </govuk-warning-text>
     </div>
   } @else {
     @if (isActivePolling()) {
       <div class="govuk-!-margin-bottom-9">
-        <govuk-warning-text assistiveText="">
+        <govuk-warning-text>
           Payment request run is <a [routerLink]="[]" fragment="workflow-history" class="govuk-link">in progress</a>,
           you cannot initiate a new one until it has finished
         </govuk-warning-text>

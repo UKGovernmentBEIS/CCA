@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TaskSection } from '@netz/common/model';
@@ -25,8 +25,8 @@ import { StatusTagColorPipe, StatusTagTextPipe } from '@netz/common/pipes';
               }
 
               @if (task.hint) {
-                <div class="govuk-task-list__hint">
-                  <span>{{ truncateText(task.hint) }}</span>
+                <div class="govuk-task-list__hint" style="white-space: pre-line;">
+                  {{ truncateText(task.hint) }}
                 </div>
               }
             </div>
@@ -51,14 +51,13 @@ import { StatusTagColorPipe, StatusTagTextPipe } from '@netz/common/pipes';
       }
     </ul>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, StatusTagColorPipe, StatusTagTextPipe],
 })
 export class TaskListComponent {
   protected readonly sections = input<TaskSection[]>([]);
 
   truncateText(text: string): string {
-    if (text.length > 250) return text.substring(0, 250) + '...';
+    if (text.length > 250) return `${text.substring(0, 250)}...`;
     return text;
   }
 }

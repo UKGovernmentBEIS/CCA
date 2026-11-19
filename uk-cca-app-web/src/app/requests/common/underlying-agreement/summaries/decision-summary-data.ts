@@ -1,7 +1,5 @@
-import { DatePipe } from '@angular/common';
-
 import { SummaryFactory } from '@shared/components';
-import { fileUtils } from '@shared/utils';
+import { fileUtils, formatCalendarDate } from '@shared/utils';
 
 import { UnderlyingAgreementFacilityReviewDecision, UnderlyingAgreementReviewDecision } from 'cca-api';
 
@@ -45,7 +43,6 @@ export function addDecisionSummaryData(args: AddDecisionSummaryDataArgs): Summar
 
 export function addFacilityDecisionSummaryData(args: AddFacilityDecisionSummaryDataArgs): SummaryFactory {
   const { factory, decision, attachments, isEditable, downloadUrl } = args;
-  const datePipe = new DatePipe('en-GB');
 
   const f = factory.addSection('Decision Summary', '../decision');
 
@@ -58,7 +55,7 @@ export function addFacilityDecisionSummaryData(args: AddFacilityDecisionSummaryD
   );
 
   if (decision?.changeStartDate) {
-    f.addRow('Start date of paying the subsistence charge fee', datePipe.transform(decision?.startDate, 'dd/MM/yyyy'), {
+    f.addRow('Start date of paying the subsistence charge fee', formatCalendarDate(decision?.startDate, 'dd/MM/yyyy'), {
       change: isEditable,
     });
   }

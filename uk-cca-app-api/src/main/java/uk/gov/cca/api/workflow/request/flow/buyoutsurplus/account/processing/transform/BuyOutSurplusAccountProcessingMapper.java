@@ -1,10 +1,14 @@
 package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.transform;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionCreateDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransactionCreate;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusTransactionDetailCreate;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutCalculatedDetails;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
@@ -15,6 +19,8 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.dom
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6BuyOutSurplusAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.account.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.netz.api.common.config.MapperConfig;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring", config = MapperConfig.class, imports = {PerformanceDataSubmissionType.class})
 public interface BuyOutSurplusAccountProcessingMapper {
@@ -58,11 +64,18 @@ public interface BuyOutSurplusAccountProcessingMapper {
     @Mapping(target = "paymentStatus", source = "requestPayload.buyOutSurplus.paymentStatus")
     @Mapping(target = "transactionCode", source = "requestPayload.buyOutSurplus.transactionCode")
     @Mapping(target = "officialNotice", source = "requestPayload.officialNotice")
-    @Mapping(target = "dueDate", source = "requestPayload.buyOutSurplus.buyOutSurplusContainer.invoicedPaymentDeadline")
+    @Mapping(target = "dueDate", source = "requestPayload.buyOutSurplus.invoicedPaymentDeadline")
     @Mapping(target = "runId", source = "metadata.parentRequestId")
     BuyOutSurplusDetails toBuyOutSurplusDetails(
             BuyOutSurplusAccountProcessingRequestPayload requestPayload, BuyOutSurplusAccountProcessingRequestMetadata metadata);
 
-    @Mapping(target = "buyOutFee", source = "buyOutSurplusContainer.invoicedBuyOutFee")
-    BuyOutSurplusTransactionCreateDTO toBuyOutSurplusTransactionCreateDTO(BuyOutSurplusResult result);
+    BuyOutSurplusTransactionCreate toBuyOutSurplusTransactionCreate(BuyOutSurplusResult result, Long accountId, TargetPeriodType targetPeriodType);
+
+    @AfterMapping
+    default void setTransactionDetail(@MappingTarget BuyOutSurplusTransactionCreate transaction, BuyOutSurplusResult result) {
+        transaction.setDetails(List.of(toBuyOutSurplusTransactionDetailCreate(result)));
+    }
+
+    @Mapping(target = "buyOutFee", source = "result.buyOutSurplusContainer.invoicedBuyOutFee")
+    BuyOutSurplusTransactionDetailCreate toBuyOutSurplusTransactionDetailCreate(BuyOutSurplusResult result);
 }

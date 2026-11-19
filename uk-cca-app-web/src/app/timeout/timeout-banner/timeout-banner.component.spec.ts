@@ -73,6 +73,11 @@ describe('TimeoutBannerComponent', () => {
     expect(component.isDialogOpen()).toBeFalsy();
   });
 
+  it('should associate the dialog title with the dialog', () => {
+    expect(dialogElement.getAttribute('aria-labelledby')).toBe('dialog-title');
+    expect(fixture.nativeElement.querySelector('#dialog-title')).toBeTruthy();
+  });
+
   it('should call extendSession when continue button clicked', () => {
     timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
@@ -94,14 +99,14 @@ describe('TimeoutBannerComponent', () => {
   });
 
   it('should show extend session message when timeExtensionAllowed is true', () => {
-    const textDiv = fixture.nativeElement.querySelector('[aria-relevant="additions"][aria-hidden="true"]');
+    const textDiv = fixture.nativeElement.querySelector('[aria-hidden="true"]');
     expect(textDiv.innerHTML).toContain('if you do not respond');
   });
 
   it('should show no-extension message when timeExtensionAllowed is false', () => {
     timeoutBannerServiceMock.timeExtensionAllowed.set(false);
     fixture.detectChanges();
-    const textDiv = fixture.nativeElement.querySelector('[aria-relevant="additions"][aria-hidden="true"]');
+    const textDiv = fixture.nativeElement.querySelector('[aria-hidden="true"]');
     expect(textDiv.innerHTML).toContain('automatically signed out');
   });
 
@@ -120,8 +125,9 @@ describe('TimeoutBannerComponent', () => {
   });
 
   it('should manage focus on dialog open/close', () => {
-    const button = fixture.nativeElement.querySelector('.govuk-button');
-    button.focus();
+    const trigger = document.createElement('button');
+    document.body.appendChild(trigger);
+    trigger.focus();
 
     timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
@@ -129,6 +135,8 @@ describe('TimeoutBannerComponent', () => {
 
     timeoutBannerServiceMock.isVisible.set(false);
     fixture.detectChanges();
-    expect(document.activeElement).toBe(button);
+    expect(document.activeElement).toBe(trigger);
+
+    trigger.remove();
   });
 });

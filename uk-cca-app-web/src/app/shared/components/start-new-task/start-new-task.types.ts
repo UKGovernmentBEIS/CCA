@@ -18,7 +18,9 @@ export const processActionsDetailsTypesMap: Partial<Record<RequestDetailsDTO['re
   PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: 'upload PAT spreadsheets',
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING: 'CCA3 Migration',
   PERFORMANCE_DATA_FACILITY_DIGITAL_FORM: 'TP reporting',
+  EMISSIONS_TRADING_SCHEME_DATA: 'UK ETS reporting',
   PERFORMANCE_DATA_FACILITY_DATA_UPLOAD: 'TP reporting (TP7, TP8, TP9)',
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: 'PAT reporting - Upload CSV file',
 };
 
 export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[]> = {
@@ -30,12 +32,21 @@ export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[
     'PERFORMANCE_DATA_UPLOAD',
     'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
     'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM',
+    'EMISSIONS_TRADING_SCHEME_DATA',
     'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD',
+    'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
   ],
   VERIFIER: [],
 };
 
 export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestType'], WorkflowDisplayContent> = {
+  EMISSIONS_TRADING_SCHEME_DATA: {
+    title: 'UK emissions trading scheme (UK ETS) reporting - Submit form',
+    hint: 'Start a UK emissions trading scheme (UK ETS) reporting task using a form.',
+    button: 'Start UK ETS reporting task',
+    type: 'EMISSIONS_TRADING_SCHEME_DATA',
+    errors: [],
+  },
   FACILITY_AUDIT: {
     title: 'Audit facility',
     button: 'Start audit task',
@@ -94,6 +105,12 @@ export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestTyp
     hint: 'Start a TP reporting task for the whole sector using a CSV file for TP7, TP8, TP9.',
     button: 'Start TP reporting task',
     type: 'PERFORMANCE_DATA_FACILITY_DATA_UPLOAD',
+    errors: [],
+  },
+  FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: {
+    title: 'PAT reporting - Upload CSV file',
+    button: 'Start PAT reporting task',
+    type: 'FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
     errors: [],
   },
 };

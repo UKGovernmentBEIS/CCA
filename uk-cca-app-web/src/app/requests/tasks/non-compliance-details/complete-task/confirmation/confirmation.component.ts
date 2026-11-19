@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -8,7 +8,7 @@ import { nonComplianceDetailsQuery } from '@requests/common';
 @Component({
   selector: 'cca-non-compliance-confirmation',
   template: `
-    <govuk-panel title="Non-compliance details completed"></govuk-panel>
+    <govuk-panel title="Non-compliance details completed" />
 
     @if (isEnforcementResponseNoticeRequired()) {
       <h3 class="govuk-heading-m">What happens next</h3>
@@ -18,7 +18,6 @@ import { nonComplianceDetailsQuery } from '@requests/common';
     <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true"> Return to: dashboard </a>
   `,
   imports: [PanelComponent, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NonComplianceConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

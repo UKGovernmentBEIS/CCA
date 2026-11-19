@@ -5,9 +5,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { normaliseNumber, underlyingAgreementQuery, UPLOAD_SECTION_ATTACHMENT_TYPE } from '@requests/common';
+import { getAttachmentType, underlyingAgreementQuery, UPLOAD_SECTION_ATTACHMENT_TYPE } from '@requests/common';
 import { FileType, FileValidators, UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
+import { normaliseNumber } from '@shared/utils';
 
 import { Apply70Rule } from 'cca-api';
 
@@ -38,7 +39,7 @@ export const facilityApplyRuleFormProvider: Provider = {
       requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
       applyRule?.evidenceFile,
       attachments,
-      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      getAttachmentType(UPLOAD_SECTION_ATTACHMENT_TYPE, requestTaskType),
       true,
       false,
     );

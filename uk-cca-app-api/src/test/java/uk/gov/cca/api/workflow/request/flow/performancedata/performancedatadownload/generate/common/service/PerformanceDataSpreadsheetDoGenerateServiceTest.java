@@ -11,8 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.bpmn.exception.BpmnExecutionException;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.domain.TargetPeriodDocumentTemplate;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.generate.common.domain.PerformanceDataSpreadsheetGenerateRequestMetadata;
-import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.generate.common.domain.PerformanceDataSpreadsheetGenerateRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.generate.tp6.service.TP6PerformanceDataSpreadsheetGenerateExcelService;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.attachments.service.FileAttachmentService;
 import uk.gov.netz.api.files.common.domain.FileStatus;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
@@ -20,7 +21,6 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -59,7 +59,6 @@ class PerformanceDataSpreadsheetDoGenerateServiceTest {
         final String requestId = "requestId";
         final long accountId = 1L;
 
-        final String sectorUserAssignee = "sector";
         final String fileName = "excel.xlsx";
         final String fileUUID = UUID.randomUUID().toString();
         final PerformanceDataSpreadsheetGenerateRequestMetadata metadata = PerformanceDataSpreadsheetGenerateRequestMetadata.builder()
@@ -68,9 +67,6 @@ class PerformanceDataSpreadsheetDoGenerateServiceTest {
         final Request request = Request.builder()
                 .id(requestId)
                 .metadata(metadata)
-                .payload(PerformanceDataSpreadsheetGenerateRequestPayload.builder()
-                        .sectorUserAssignee(sectorUserAssignee)
-                        .build())
                 .build();
         final FileDTO report = FileDTO.builder().fileName(fileName).build();
 
@@ -78,7 +74,7 @@ class PerformanceDataSpreadsheetDoGenerateServiceTest {
         when(tp6PerformanceDataSpreadsheetGenerateExcelService.getTemplateType())
                 .thenReturn(TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6);
         when(tp6PerformanceDataSpreadsheetGenerateExcelService.generate(metadata, accountId)).thenReturn(report);
-        when(fileAttachmentService.createFileAttachment(report, FileStatus.SUBMITTED, sectorUserAssignee)).thenReturn(fileUUID);
+        when(fileAttachmentService.createFileAttachment(report, FileStatus.SUBMITTED)).thenReturn(fileUUID);
 
         // Invoke
         FileInfoDTO result = performanceDataSpreadsheetDoGenerateService.doGenerate(requestId, accountId);
@@ -93,7 +89,7 @@ class PerformanceDataSpreadsheetDoGenerateServiceTest {
         verify(tp6PerformanceDataSpreadsheetGenerateExcelService, times(1))
                 .generate(metadata, accountId);
         verify(fileAttachmentService, times(1))
-                .createFileAttachment(report, FileStatus.SUBMITTED, sectorUserAssignee);
+                .createFileAttachment(report, FileStatus.SUBMITTED);
     }
 
     @Test
@@ -101,7 +97,6 @@ class PerformanceDataSpreadsheetDoGenerateServiceTest {
         final String requestId = "requestId";
         final long accountId = 1L;
 
-        final String sectorUserAssignee = "sector";
         final String fileName = "excel.xlsx";
         final PerformanceDataSpreadsheetGenerateRequestMetadata metadata = PerformanceDataSpreadsheetGenerateRequestMetadata.builder()
                 .targetPeriodDocument(TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6)
@@ -109,9 +104,6 @@ class PerformanceDataSpreadsheetDoGenerateServiceTest {
         final Request request = Request.builder()
                 .id(requestId)
                 .metadata(metadata)
-                .payload(PerformanceDataSpreadsheetGenerateRequestPayload.builder()
-                        .sectorUserAssignee(sectorUserAssignee)
-                        .build())
                 .build();
         final FileDTO report = FileDTO.builder().fileName(fileName).build();
 
@@ -119,8 +111,8 @@ class PerformanceDataSpreadsheetDoGenerateServiceTest {
         when(tp6PerformanceDataSpreadsheetGenerateExcelService.getTemplateType())
                 .thenReturn(TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6);
         when(tp6PerformanceDataSpreadsheetGenerateExcelService.generate(metadata, accountId)).thenReturn(report);
-        when(fileAttachmentService.createFileAttachment(report, FileStatus.SUBMITTED, sectorUserAssignee))
-                .thenThrow(new IOException("Exception"));
+        when(fileAttachmentService.createFileAttachment(report, FileStatus.SUBMITTED))
+                .thenThrow(new BusinessException(ErrorCode.INVALID_FILE_TYPE));
 
         // Invoke
         BpmnExecutionException ex = assertThrows(BpmnExecutionException.class, () ->
@@ -134,6 +126,6 @@ class PerformanceDataSpreadsheetDoGenerateServiceTest {
         verify(tp6PerformanceDataSpreadsheetGenerateExcelService, times(1))
                 .generate(metadata, accountId);
         verify(fileAttachmentService, times(1))
-                .createFileAttachment(report, FileStatus.SUBMITTED, sectorUserAssignee);
+                .createFileAttachment(report, FileStatus.SUBMITTED);
     }
 }

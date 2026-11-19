@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -15,7 +15,6 @@ const DEFAULT_PAGE_SIZE = 10;
   selector: 'cca-migrated-facilities-list',
   templateUrl: './migrated-facilities-list.component.html',
   imports: [ReactiveFormsModule, RouterLink, PaginationComponent, TableComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MigratedFacilitiesListComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -63,7 +62,8 @@ export class MigratedFacilitiesListComponent {
 
   onSort<T>(sortEvent: SortEvent): (fa: T, fb: T) => number {
     return (fa, fb) => {
-      const diff: number = fa[sortEvent.column].localeCompare(fb[sortEvent.column], 'en-GB', {
+      const column = sortEvent.column as keyof T;
+      const diff: number = String(fa[column] ?? '').localeCompare(String(fb[column] ?? ''), 'en-GB', {
         numeric: true,
         sensitivity: 'base',
       });

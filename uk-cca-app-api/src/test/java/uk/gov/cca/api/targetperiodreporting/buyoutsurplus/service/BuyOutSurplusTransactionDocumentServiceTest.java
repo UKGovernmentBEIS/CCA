@@ -5,7 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.netz.api.files.documents.service.FileDocumentTokenService;
+
+import uk.gov.netz.api.files.documents.service.storage.FileDocumentStorageService;
 import uk.gov.netz.api.token.FileToken;
 
 import java.util.UUID;
@@ -18,10 +19,10 @@ import static org.mockito.Mockito.when;
 class BuyOutSurplusTransactionDocumentServiceTest {
     
     @Mock
-    private BuyOutSurplusQueryService buyOutSurplusQueryService;
+    private BuyOutSurplusTransactionQueryService buyOutSurplusTransactionQueryService;
     
     @Mock
-    private FileDocumentTokenService fileDocumentTokenService;
+    private FileDocumentStorageService fileDocumentStorageService;
     
     @InjectMocks
     private BuyOutSurplusTransactionDocumentService service;
@@ -33,15 +34,15 @@ class BuyOutSurplusTransactionDocumentServiceTest {
         String documentUuidString = documentUuid.toString();
         FileToken expectedToken = new FileToken(documentUuidString, 1);
         
-        when(buyOutSurplusQueryService.existsBuyOutSurplusTransactionByIdAndDocumentId(transactionId, documentUuidString))
+        when(buyOutSurplusTransactionQueryService.existsBuyOutSurplusTransactionByIdAndDocumentId(transactionId, documentUuidString))
                 .thenReturn(true);
-        when(fileDocumentTokenService.generateGetFileDocumentToken(documentUuidString))
+        when(fileDocumentStorageService.generateGetFileDocumentToken(documentUuidString))
                 .thenReturn(expectedToken);
         
         FileToken result = service.generateGetFileDocumentToken(transactionId, documentUuid);
         
-        verify(buyOutSurplusQueryService).existsBuyOutSurplusTransactionByIdAndDocumentId(transactionId, documentUuidString);
-        verify(fileDocumentTokenService).generateGetFileDocumentToken(documentUuidString);
+        verify(buyOutSurplusTransactionQueryService).existsBuyOutSurplusTransactionByIdAndDocumentId(transactionId, documentUuidString);
+        verify(fileDocumentStorageService).generateGetFileDocumentToken(documentUuidString);
         assertEquals(expectedToken, result);
     }
 }

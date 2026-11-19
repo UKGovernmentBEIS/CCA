@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.files.attachments.service.FileAttachmentTokenService;
+import uk.gov.netz.api.files.attachments.service.storage.FileAttachmentStorageService;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.token.FileToken;
 
@@ -17,7 +17,7 @@ import uk.gov.netz.api.token.FileToken;
 public class PerformanceAccountTemplateDataAttachmentService {
 
 	private final PerformanceAccountTemplateDataQueryService performanceAccountTemplateDataQueryService;
-	private final FileAttachmentTokenService fileAttachmentTokenService;
+	private final FileAttachmentStorageService fileAttachmentStorageService;
 
 	public FileToken generateGetAttachmentToken(Long accountId, TargetPeriodType targetPeriodType,
 			UUID fileAttachmentUuid) {
@@ -28,6 +28,6 @@ public class PerformanceAccountTemplateDataAttachmentService {
 			throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND);
 		}
 
-		return fileAttachmentTokenService.generateGetFileAttachmentToken(fileReport.getUuid());
+		return fileAttachmentStorageService.generateGetFileAttachmentToken(fileReport.getUuid());
 	}
 }

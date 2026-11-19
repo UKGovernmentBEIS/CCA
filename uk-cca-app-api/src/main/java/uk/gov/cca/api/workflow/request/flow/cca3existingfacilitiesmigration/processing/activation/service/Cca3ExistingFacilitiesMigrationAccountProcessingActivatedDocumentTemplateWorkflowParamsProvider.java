@@ -4,13 +4,13 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
-import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
+import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateSyncWorkflowParamsProvider;
 
 import java.util.Map;
 
 @Component
 public class Cca3ExistingFacilitiesMigrationAccountProcessingActivatedDocumentTemplateWorkflowParamsProvider implements
-        DocumentTemplateWorkflowParamsProvider<Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload> {
+        DocumentTemplateSyncWorkflowParamsProvider<Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload> {
 
     @Override
     public Map<String, Object> constructParams(Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload payload) {

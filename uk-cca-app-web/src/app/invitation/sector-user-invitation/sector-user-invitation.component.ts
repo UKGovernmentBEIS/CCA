@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -24,6 +24,7 @@ import {
 @Component({
   selector: 'cca-sector-user-invitation',
   templateUrl: './sector-user-invitation.component.html',
+  providers: [SectorUserInvitationFormProvider],
   imports: [
     PageHeadingComponent,
     ErrorSummaryComponent,
@@ -35,8 +36,6 @@ import {
     RadioOptionComponent,
     PendingButtonDirective,
   ],
-  providers: [SectorUserInvitationFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorUserInvitationComponent implements OnInit {
   private readonly breadcrumbsService = inject(BreadcrumbService);

@@ -3,9 +3,12 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { GovukValidators } from '@netz/govuk-components';
-import { createCommonFileAsyncValidators, FileUploadEvent, FileUploadService } from '@shared/components';
 
 import { AccountNotesService, RequestNotesService } from 'cca-api';
+
+import { FileUploadService } from '../../file-input/file-upload.service';
+import { FileUploadEvent } from '../../file-input/file-upload-event';
+import { createCommonFileAsyncValidators } from '../../file-input/file-validators';
 
 export type AddNoteFormModel = FormGroup<{
   note: FormControl<string>;

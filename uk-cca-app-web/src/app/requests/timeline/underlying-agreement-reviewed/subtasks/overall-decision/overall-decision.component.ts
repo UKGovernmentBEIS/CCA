@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -16,7 +16,6 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
     </div>
   `,
   imports: [PageHeadingComponent, SummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverallDecisionComponent {
   private readonly requestActionStore = inject(RequestActionStore);

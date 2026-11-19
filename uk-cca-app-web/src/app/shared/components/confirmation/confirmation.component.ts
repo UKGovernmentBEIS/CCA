@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, input, OnInit, TemplateRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { BreadcrumbService } from '@netz/common/navigation';
@@ -25,7 +25,6 @@ import { PanelComponent } from '@netz/govuk-components';
     </div>
   `,
   imports: [PanelComponent, RouterLink, NgTemplateOutlet],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationSharedComponent implements OnInit {
   protected readonly title = input<string>(undefined);

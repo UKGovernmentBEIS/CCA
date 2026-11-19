@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -24,6 +24,7 @@ import {
 @Component({
   selector: 'cca-add-product',
   templateUrl: './add-product.component.html',
+  providers: [AddProductFormProvider],
   imports: [
     ReactiveFormsModule,
     AddProductItemComponent,
@@ -31,8 +32,6 @@ import {
     ErrorSummaryComponent,
     AddProductItemComponent,
   ],
-  providers: [AddProductFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddProductComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);

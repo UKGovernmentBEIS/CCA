@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -34,7 +34,6 @@ import { MiReportsListComponent } from './mi-reports-list/mi-reports-list.compon
     </div>
   `,
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, MiReportsListComponent, ErrorSummaryComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiReportsComponent {
   private readonly fb = inject(FormBuilder);
@@ -43,11 +42,13 @@ export class MiReportsComponent {
     exportError: this.fb.control<string>(null),
   });
   protected readonly isErrorSummaryDisplayed = signal(false);
+  private readonly errorSummary = viewChild(ErrorSummaryComponent);
 
   onExportError(errorMessage: string | null) {
     if (errorMessage) {
       this.form.controls.exportError.setErrors({ apiError: errorMessage });
       this.isErrorSummaryDisplayed.set(true);
+      this.errorSummary()?.focus();
     } else {
       this.form.controls.exportError.setErrors(null);
       this.isErrorSummaryDisplayed.set(false);

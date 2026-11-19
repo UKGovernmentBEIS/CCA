@@ -18,7 +18,7 @@ type PermissionsForm = Record<string, FormControl<'NONE' | 'EXECUTE' | 'VIEW_ONL
 
 type DetailsForm = {
   user: FormGroup<UserForm>;
-  signature: FormControl<{ uuid: string; file: File }>;
+  signature: FormControl<UuidFilePair | null>;
   permissions: FormGroup<PermissionsForm>;
 };
 
@@ -91,10 +91,10 @@ export function createForm(
     permissions: permissionsGroup,
     signature: fb.control(
       user?.signature?.uuid
-        ? ({
-            uuid: user?.signature.uuid,
-            file: { name: user?.signature.name } as File,
-          } as UuidFilePair)
+        ? {
+            uuid: user.signature.uuid,
+            file: { name: user.signature.name },
+          }
         : null,
       {
         validators: [

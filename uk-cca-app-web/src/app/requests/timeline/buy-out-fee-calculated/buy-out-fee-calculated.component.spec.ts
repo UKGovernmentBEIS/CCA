@@ -6,7 +6,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { getSummaryListData } from '@testing';
 
 import { BuyOutFeeCalculatedComponent } from './buy-out-fee-calculated.component';
-import { buyoutFeeCalculatedActionStateMock } from './tests/mock-data';
+import { buyoutFeeCalculated, buyoutFeeCalculatedActionStateMock } from './tests/mock-data';
 
 describe('BuyOutFeeCalculatedComponent', () => {
   let component: BuyOutFeeCalculatedComponent;
@@ -31,6 +31,22 @@ describe('BuyOutFeeCalculatedComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('preserves a UTC calendar due date in the summary', () => {
+    const payload: typeof buyoutFeeCalculated = {
+      ...buyoutFeeCalculated,
+      details: { ...buyoutFeeCalculated.details, dueDate: '2025-07-01T00:00:00.000Z' },
+    };
+    actionStore.setState({
+      action: {
+        ...buyoutFeeCalculatedActionStateMock.action,
+        payload,
+      },
+    });
+    fixture.detectChanges();
+
+    expect(getSummaryListData(fixture.nativeElement)[0][1][4]).toBe('01 Jul 2025');
+  });
+
   it('should display the correct data', () => {
     const summaryValues = getSummaryListData(fixture.nativeElement);
 
@@ -41,7 +57,7 @@ describe('BuyOutFeeCalculatedComponent', () => {
           'TP6-V1 (Buy-out required)',
           'Primary',
           'CCA060001',
-          'CCA060001 Primary buy-out MoA.pdf',
+          'CCA060001 Primary buy-out MoA.pdf (opens in a new tab)',
           '01 Jul 2025',
           'BOS-TP6003',
         ],

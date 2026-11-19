@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -13,7 +13,6 @@ import { PanelComponent } from '@netz/govuk-components';
     </div>
   </div>`,
   imports: [PanelComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddConfirmationComponent {
   private readonly route = inject(ActivatedRoute);

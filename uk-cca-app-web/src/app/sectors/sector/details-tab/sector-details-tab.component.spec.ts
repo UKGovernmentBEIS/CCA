@@ -33,7 +33,7 @@ describe('SectorDetailsTabComponent', () => {
   it('should render "details" section', () => {
     const detailsList = document.querySelectorAll("[data-testid='details-list'] div");
 
-    const elements = [];
+    const elements: (string | null)[][] = [];
 
     detailsList.forEach((div) => {
       elements.push([div.querySelector('dt').textContent, div.querySelector('dd').textContent]);
@@ -52,7 +52,7 @@ describe('SectorDetailsTabComponent', () => {
   it('should render "contacts" section', () => {
     const contactList = document.querySelectorAll("[data-testid='contact-list'] div");
 
-    const elements = [];
+    const elements: (string | null)[][] = [];
 
     contactList.forEach((div) => {
       elements.push([div.querySelector('dt').textContent, div.querySelector('dd').textContent]);

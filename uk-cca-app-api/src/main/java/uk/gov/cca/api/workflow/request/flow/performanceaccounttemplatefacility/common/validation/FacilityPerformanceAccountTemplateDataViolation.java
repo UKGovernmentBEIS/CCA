@@ -28,9 +28,14 @@ public class FacilityPerformanceAccountTemplateDataViolation extends BusinessVio
     @Getter
     public enum FacilityPerformanceAccountTemplateDataViolationMessage {
         INVALID_PERFORMANCE_ACCOUNT_TEMPLATE_DATA("Invalid performance account template data"),
-        PERFORMANCE_ACCOUNT_TEMPLATE_SUBMISSION_DATE_HAS_EXPIRED("The PAT workflow has expired and can no longer be submitted"),
-        ATTACHMENT_NOT_FOUND("Attachment not found"),
-        ;
+        INVALID_FACILITY_ID("The facility does not exist in DB or does not belong to selected sector"),
+        INVALID_FACILITY_ACTIVATION_DATE("Facility entry date is after 1 January in the reporting period"),
+        INVALID_FACILITY_CLOSE_DATE("Facility close date is not after 1 January in the reporting period"),
+        INVALID_IMPLEMENTATION_DATE("Implementation date outside valid range"),
+        INVALID_ACTION_CATEGORY_TYPE("Contradictory information submitted for facility - correct and resubmit"),
+        FACILITY_PROCESS_FAILED("Facility process failed"),
+        PROCESS_NOT_COMPLETED("Upload process not completed"),
+        ATTACHMENT_NOT_FOUND("Attachment not found");
 
         private final String message;
 

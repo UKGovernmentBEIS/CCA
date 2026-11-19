@@ -1,4 +1,5 @@
 import { AuthState } from '@netz/common/auth';
+import { SchemeVersionEnum } from '@shared/types';
 
 import {
   CcaOperatorUserDetailsDTO,
@@ -75,7 +76,7 @@ export const mockSectorDetails: SectorAssociationResponseDTO = {
 
 export const mockSectorScheme: SectorAssociationSchemesDTO = {
   sectorAssociationSchemeMap: {
-    ['CCA_2']: {
+    [SchemeVersionEnum.CCA_2]: {
       id: 0,
       umbrellaAgreement: {
         uuid: 'uuid-ambrella',
@@ -101,7 +102,7 @@ export const mockSectorScheme: SectorAssociationSchemesDTO = {
       },
       umaDate: '2026-01-01',
       sectorDefinition: 'sector definition',
-      schemeVersion: 'CCA_2',
+      schemeVersion: SchemeVersionEnum.CCA_2,
     },
   },
   subsectorAssociations: [
@@ -119,7 +120,7 @@ export const mockSectorScheme: SectorAssociationSchemesDTO = {
 export const mockSubSectorDetails: SubsectorAssociationSchemesDTO = {
   name: 'sub-sector-name',
   subsectorAssociationSchemeMap: {
-    ['CCA_2']: {
+    [SchemeVersionEnum.CCA_2]: {
       id: 1,
       targetSet: {
         id: 0,
@@ -204,14 +205,14 @@ export const duplicateEmailResponse = {
   code: 'AUTHORITY1005',
   message: 'User status cannot be updated',
   security: true,
-  data: [],
+  data: [] as unknown[],
 };
 
 export const userAlreadyExists = {
   code: 'USER1001',
   message: 'User is already registered',
   security: true,
-  data: [],
+  data: [] as unknown[],
 };
 
 export const mockPhoneCodeCoutries = {
@@ -354,14 +355,14 @@ export const mockTargetUnitAccountDetails: TargetUnitAccountDetailsDTO = {
 export const mockUnderlyingAgreementDetails: UnderlyingAgreementDetailsDTO = {
   id: 1,
   underlyingAgreementDocumentMap: {
-    ['CCA_2']: {
+    [SchemeVersionEnum.CCA_2]: {
       activationDate: '2024-09-30',
       fileDocument: {
         name: 'ADS_1-T00002 CCA2 Underlying Agreement v1.pdf',
         uuid: '3a4ac334-73d0-492d-9639-a7e2f4bdd647',
       },
     },
-    ['CCA_3']: {
+    [SchemeVersionEnum.CCA_3]: {
       activationDate: '2025-09-30',
       fileDocument: {
         name: 'ADS_1-T00002 CCA3 Underlying Agreement v1.pdf',
@@ -371,7 +372,7 @@ export const mockUnderlyingAgreementDetails: UnderlyingAgreementDetailsDTO = {
   },
 };
 
-export const mockTargetUnitAccount = (sectorAssociationId) => ({
+export const mockTargetUnitAccount = (sectorAssociationId: number) => ({
   targetUnitAccountDetails: {
     id: 4,
     businessId: 'ADS_1-T00004',

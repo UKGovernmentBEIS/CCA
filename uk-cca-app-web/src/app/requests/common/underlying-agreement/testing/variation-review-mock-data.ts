@@ -1,5 +1,5 @@
 import { RequestTaskState } from '@netz/common/store';
-import { UNAVariationReviewRequestTaskPayload } from '@requests/common';
+import { SchemeVersionEnum } from '@shared/types';
 
 import {
   Facility,
@@ -8,6 +8,8 @@ import {
   TargetUnitAccountDetails,
   UnderlyingAgreementVariationPayload,
 } from 'cca-api';
+
+import { UNAVariationReviewRequestTaskPayload } from '../types';
 
 const facilities: Facility[] = [
   {
@@ -24,7 +26,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: ['CCA_2'],
+      participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -81,7 +83,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
-      participatingSchemeVersions: ['CCA_2'],
+      participatingSchemeVersions: [SchemeVersionEnum.CCA_2],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -274,14 +276,14 @@ export const mockUNAVariationReviewRequestTaskPayload: UNAVariationReviewRequest
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'kWh' },
+        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'kWh' },
       },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementVariationReview,
   originalUnderlyingAgreementContainer: {
     schemeDataMap: {
-      ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'kWh' },
+      [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'kWh' },
     },
     underlyingAgreement: mockUnderlyingAgreementVariationReview,
     underlyingAgreementAttachments: {

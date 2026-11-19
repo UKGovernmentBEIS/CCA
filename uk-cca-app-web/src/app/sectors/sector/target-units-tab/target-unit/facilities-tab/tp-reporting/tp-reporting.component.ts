@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,7 +38,6 @@ import {
     DetailsComponent,
     TitleCasePipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TpReportingComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -49,6 +48,7 @@ export class TpReportingComponent {
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
 
   readonly hasFormErrors = signal(false);
+  private readonly errorSummary = viewChild(ErrorSummaryComponent);
 
   private readonly availablePeriods = this.activatedRoute.snapshot.data
     .availablePeriods as PerformanceDataReportTypeDTO[];
@@ -98,6 +98,7 @@ export class TpReportingComponent {
           }
 
           this.hasFormErrors.set(true);
+          this.errorSummary()?.focus();
           return EMPTY;
         }),
       )

@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -35,7 +35,7 @@ describe('OperatorUserInvitationSummaryComponent', () => {
       imports: [OperatorUserInvitationSummaryComponent],
       providers: [
         OperatorUserInvitationStore,
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },
       ],
@@ -56,7 +56,7 @@ describe('OperatorUserInvitationSummaryComponent', () => {
   it('should render "details" section with correct data', () => {
     const detailsList = document.querySelectorAll("[data-testid='operator-user-invitation-details-list'] div");
 
-    const elements = [];
+    const elements: (string | null)[][] = [];
 
     detailsList.forEach((div) => {
       elements.push([div.querySelector('dt').textContent.trim(), div.querySelector('dd').textContent.trim()]);
@@ -75,7 +75,7 @@ describe('OperatorUserInvitationSummaryComponent', () => {
       "[data-testid='operator-user-invitation-organisation-details-list'] div",
     );
 
-    const elements = [];
+    const elements: (string | null)[][] = [];
 
     detailsList.forEach((div) => {
       elements.push([div.querySelector('dt').textContent.trim(), div.querySelector('dd').textContent.trim()]);
@@ -92,7 +92,7 @@ describe('OperatorUserInvitationSummaryComponent', () => {
   it('should render "password" section with no visible data', () => {
     const detailsList = document.querySelectorAll("[data-testid='operator-user-invitation-password'] div");
 
-    const elements = [];
+    const elements: (string | null)[][] = [];
 
     detailsList.forEach((div) => {
       elements.push([div.querySelector('dt').textContent.trim(), div.querySelector('dd').textContent.trim()]);

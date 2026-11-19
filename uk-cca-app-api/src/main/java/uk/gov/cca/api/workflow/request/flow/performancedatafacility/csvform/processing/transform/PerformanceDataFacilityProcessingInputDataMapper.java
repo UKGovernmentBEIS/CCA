@@ -1,6 +1,6 @@
 package uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.processing.transform;
 
-import static uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor.*;
+import static uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFixedConversionFactor.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,16 +14,17 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import lombok.experimental.UtilityClass;
 import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityFixedConversionFactor;
+import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFixedConversionFactor;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityProductVariableEnergyData;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityThroughputDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.VariableEnergyDepictionType;
+import uk.gov.cca.api.workflow.request.flow.common.utils.PerformanceFuelEnergyCalculationCommonFunctionUtil;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityCalculationParameters;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
+import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputEnergyFuelDetails;
-import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityNonStandardFuel;
+import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityNonStandardFuel;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.utils.PerformanceDataFacilityCalculationCommonFunctionUtil;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.csvform.common.domain.PerformanceDataFacilityUploadCsvData;
 
@@ -178,11 +179,11 @@ public class PerformanceDataFacilityProcessingInputDataMapper {
 
     private PerformanceDataFacilityFuelEnergyConsumption convertToStandardFuel(PerformanceDataFacilityFixedConversionFactor factor,
                                                                                BigDecimal deliveredEnergy, MeasurementType measurementType) {
-    	    	
+
         Map.Entry<PerformanceDataFacilityFixedConversionFactor, PerformanceDataFacilityFuelEnergyConsumption> entry = Map
                 .entry(factor, PerformanceDataFacilityFuelEnergyConsumption.builder().deliveredEnergy(deliveredEnergy).build());
 
-        BigDecimal primaryEnergy = PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
+        BigDecimal primaryEnergy = PerformanceFuelEnergyCalculationCommonFunctionUtil.PRIMARY_ENERGY_STANDARD_FUEL
                 .apply(entry, measurementType).setScale(7, RoundingMode.HALF_UP);
 
         return PerformanceDataFacilityFuelEnergyConsumption.builder()
@@ -199,7 +200,7 @@ public class PerformanceDataFacilityProcessingInputDataMapper {
         if(!hasNonStandardFuelData || isOtherFuelAmountZero) {
         	return;
         }
-        
+
         PerformanceDataFacilityNonStandardFuel fuel = PerformanceDataFacilityNonStandardFuel.builder()
                 .name(otherFuelName)
                 .conversionFactor(otherFuelConversionFactor)
@@ -208,13 +209,13 @@ public class PerformanceDataFacilityProcessingInputDataMapper {
 
         // PrimaryEnergy
         BigDecimal primaryEnergy = !ObjectUtils.isEmpty(otherFuelConversionFactor) && !ObjectUtils.isEmpty(otherFuelAmount)
-                ? PerformanceDataFacilityCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
+                ? PerformanceFuelEnergyCalculationCommonFunctionUtil.PRIMARY_ENERGY_NON_STANDARD_FUEL
                     .apply(fuel, measurementType).setScale(7, RoundingMode.HALF_UP)
                 : BigDecimal.ZERO;
         fuel.setPrimaryEnergy(primaryEnergy);
 
         nonStandardFuels.add(fuel);
-        
+
     }
 
     private void addToVariableEnergyConsumptionData(boolean isSrmValid, String productName, BigDecimal productActualThroughput,
@@ -225,7 +226,7 @@ public class PerformanceDataFacilityProcessingInputDataMapper {
         if(!hasAnyProductAttribute) {
         	return;
         }
-        
+
         Optional<ProductVariableEnergyConsumptionData> originalProductFound = calculationParameters.getVariableEnergyConsumptionDataByProduct().stream()
                 .filter(p -> ObjectUtils.compare(p.getProductName(), productName) == 0)
                 .findFirst();

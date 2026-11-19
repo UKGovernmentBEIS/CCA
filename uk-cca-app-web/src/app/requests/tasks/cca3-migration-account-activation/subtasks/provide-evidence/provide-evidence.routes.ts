@@ -13,22 +13,22 @@ export const PROVIDE_EVIDENCE_ROUTES: Routes = [
         children: [],
       },
       {
-        path: 'details',
         title: 'Provide evidence',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'details',
         loadComponent: () => import('./details/provide-evidence-details.component'),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: 'check-your-answers',
         title: 'Check your answers',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'check-your-answers',
         loadComponent: () => import('./check-answers/provide-evidence-check-answers.component'),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: 'summary',
-        data: { backlink: '../../../', breadcrumb: false },
         title: 'Summary details',
+        path: 'summary',
         loadComponent: () => import('./summary/provide-evidence-summary.component'),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
         path: '**',

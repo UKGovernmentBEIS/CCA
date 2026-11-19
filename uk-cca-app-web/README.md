@@ -109,6 +109,26 @@ yarn test:frontend:coverage
 The coverage can the be found in the command line or in the `coverage/` folder which
 will be generated inside the parent folder of each project.
 
+### Local timezone regression tests
+
+The date regression tests live in the regular `*.spec.ts` files and run with the normal test commands.
+To also run all application and library tests in UTC, Europe/London (UK daylight saving),
+America/New_York (negative offsets), and Asia/Tokyo (positive offsets throughout the year), run:
+
+```shell script
+yarn test:timezones
+```
+
+This optional local runner starts a fresh process with `TZ` set for each suite and timezone.
+It does not change the application's timezone or the Jenkins pipeline. Running all four zones takes
+roughly four times as long as one full test run.
+
+Node supports the [`TZ` environment variable](https://nodejs.org/api/cli.html#tz).
+[Vitest recommends setting it before workers start](https://vitest.dev/guide/common-errors.html#time-zone-does-not-change-in-worker-threads):
+changing it inside a spec has no effect on `Date` in thread pools. Runtime changes can work with fork pools,
+but require restoring process state and do not rerun the other component and workflow specs in that timezone.
+The runner reuses the existing tests without depending on a particular worker pool.
+
 ## Snapshot testing
 
 Due to the nature of the deadlines we decided to use [Snapshot testing](https://vitest.dev/guide/snapshot). Snapshot testing does a good test on the rendered mark up but does not test http action and we currently don't use it after any mutations on the

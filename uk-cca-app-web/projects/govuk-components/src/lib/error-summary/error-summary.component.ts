@@ -1,35 +1,45 @@
 import { AsyncPipe, KeyValue, KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import {
+  afterNextRender,
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  OnChanges,
-  input,
-  viewChildren,
-  viewChild,
-  inject,
   DOCUMENT,
+  ElementRef,
+  inject,
+  Injector,
+  input,
+  OnChanges,
+  viewChild,
+  viewChildren,
 } from '@angular/core';
-import { AbstractControl, FormControlStatus, NgForm, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import {
+  AbstractControl,
+  FormControlStatus,
+  FormSubmittedEvent,
+  NgForm,
+  UntypedFormArray,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 
-import { map, Observable, startWith, tap } from 'rxjs';
+import { filter, map, Observable, startWith, switchMap, take, tap } from 'rxjs';
 
 import { FormService } from '../form';
+import { displayValidationErrors } from '../error-message/display-validation-errors';
 import { NestedMessageValidationErrors } from './nested-message-validation-errors';
 
 @Component({
   selector: 'govuk-error-summary',
-  imports: [RouterLink, KeyValuePipe, AsyncPipe, NgTemplateOutlet],
   templateUrl: './error-summary.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink, KeyValuePipe, AsyncPipe, NgTemplateOutlet],
 })
 export class ErrorSummaryComponent implements OnChanges, AfterViewInit {
   private readonly document = inject(DOCUMENT);
   private readonly formService = inject(FormService);
   private readonly title = inject(Title);
+  private readonly injector = inject(Injector);
 
   readonly form = input<UntypedFormGroup | NgForm>(null);
 
@@ -39,6 +49,32 @@ export class ErrorSummaryComponent implements OnChanges, AfterViewInit {
   errorList$: Observable<NestedMessageValidationErrors>;
 
   private formControl: UntypedFormGroup;
+
+  constructor() {
+    // A summary that mounts on submit is focused by ngAfterViewInit. One that is already mounted
+    // only re-renders its list, so move focus on every later submit that leaves errors, once any
+    // async validation has settled.
+    toObservable(this.form)
+      .pipe(
+        map((form) => (form instanceof UntypedFormGroup ? form : form?.control)),
+        filter(Boolean),
+        switchMap((control) =>
+          control.events.pipe(
+            filter((event) => event instanceof FormSubmittedEvent),
+            switchMap(() =>
+              control.statusChanges.pipe(
+                startWith(control.status),
+                filter((status) => status !== 'PENDING'),
+                take(1),
+                filter((status) => status === 'INVALID'),
+              ),
+            ),
+          ),
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => afterNextRender({ read: () => this.focusContainer() }, { injector: this.injector }));
+  }
 
   ngOnChanges(): void {
     const form = this.form();
@@ -62,9 +98,15 @@ export class ErrorSummaryComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const container = this.container();
-    if (container?.nativeElement?.scrollIntoView) container.nativeElement.scrollIntoView();
-    if (container?.nativeElement?.focus) container.nativeElement.focus();
+    this.focusContainer();
+  }
+
+  /**
+   * Moves focus to the summary after the next render. The summary refocuses by itself when it mounts and after a
+   * form submit; pages that set errors from an API response or a button click call this from their error branch.
+   */
+  focus(): void {
+    afterNextRender({ read: () => this.focusContainer() }, { injector: this.injector });
   }
 
   errorClick(path: string): void {
@@ -117,23 +159,31 @@ export class ErrorSummaryComponent implements OnChanges, AfterViewInit {
   };
 
   private getAbstractControlErrors(control: AbstractControl, path: string[] = []): NestedMessageValidationErrors {
-    let childControlErrors;
+    let childControlErrors: Record<string, NestedMessageValidationErrors>;
 
     if (control instanceof UntypedFormGroup) {
       childControlErrors = Object.entries(control.controls)
         .map(([key, value]) => ({ [key]: this.getAbstractControlErrors(value, path.concat([key])) }))
         .reduce((errors, controlErrors) => ({ ...errors, ...controlErrors }), {});
     } else if (control instanceof UntypedFormArray) {
-      childControlErrors = control.controls.map((arrayControlItem, index) =>
-        this.getAbstractControlErrors(arrayControlItem, path.concat([String(index)])),
-      );
+      childControlErrors = control.controls
+        .map((arrayControlItem, index) => ({
+          [index]: this.getAbstractControlErrors(arrayControlItem, path.concat([String(index)])),
+        }))
+        .reduce((errors, controlErrors) => ({ ...errors, ...controlErrors }), {});
     }
 
     return {
       path: this.formService.getIdentifier(path),
-      self: control.errors,
+      self: displayValidationErrors(control.errors),
       controls: childControlErrors,
     };
+  }
+
+  private focusContainer(): void {
+    const container = this.container();
+    if (container?.nativeElement?.scrollIntoView) container.nativeElement.scrollIntoView();
+    if (container?.nativeElement?.focus) container.nativeElement.focus();
   }
 
   private sanitizeSelector(selector: string): string {

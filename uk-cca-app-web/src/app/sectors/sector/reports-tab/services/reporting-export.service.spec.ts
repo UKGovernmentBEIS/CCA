@@ -1,8 +1,78 @@
-import { SectorFacilityPerformanceDataReportItemDTO } from 'cca-api';
+import { TestBed } from '@angular/core/testing';
 
-import { toFacilityPerformanceDataExportRows } from './reporting-export.service';
+import { of } from 'rxjs';
+
+import { SpreadsheetExportService } from '@shared/services';
+
+import {
+  SectorFacilityPerformanceDataReportItemDTO,
+  SectorLevelPerformanceAccountTemplateDataViewPagesService,
+  SectorLevelPerformanceDataViewPagesService,
+} from 'cca-api';
+
+import { mockPatAccountsReport, mockPatFacilitiesReport } from '../pat/testing/mock-data';
+import {
+  ReportingExportService,
+  toFacilityPerformanceDataExportRows,
+  toPatExportRows,
+} from './reporting-export.service';
 
 describe('ReportingExportService', () => {
+  it.each([
+    {
+      year: 2024,
+      method: 'getSectorAccountPerformanceAccountTemplateDataReportList' as const,
+      response: mockPatAccountsReport,
+    },
+    {
+      year: 2026,
+      method: 'getSectorFacilityPerformanceAccountTemplateDataReportList' as const,
+      response: mockPatFacilitiesReport,
+    },
+  ])('downloads all filtered $year PAT results as CSV', ({ year, method, response }) => {
+    const spreadsheetExportService = { exportToCsv: vi.fn() };
+    const api = {
+      getSectorAccountPerformanceAccountTemplateDataReportList: vi.fn().mockReturnValue(of(mockPatAccountsReport)),
+      getSectorFacilityPerformanceAccountTemplateDataReportList: vi.fn().mockReturnValue(of(mockPatFacilitiesReport)),
+    };
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: SpreadsheetExportService, useValue: spreadsheetExportService },
+        { provide: SectorLevelPerformanceAccountTemplateDataViewPagesService, useValue: api },
+        { provide: SectorLevelPerformanceDataViewPagesService, useValue: {} },
+      ],
+    });
+
+    TestBed.inject(ReportingExportService).exportPatData(
+      1,
+      {
+        term: 'ADS',
+        targetPeriodYear: year,
+        status: 'OUTSTANDING',
+        pageNumber: 2,
+        pageSize: 50,
+      },
+      125,
+    );
+
+    expect(api[method]).toHaveBeenCalledWith(1, {
+      term: 'ADS',
+      targetPeriodYear: year,
+      status: 'OUTSTANDING',
+      pageNumber: 0,
+      pageSize: 125,
+    });
+    const otherMethod =
+      year === 2024
+        ? api.getSectorFacilityPerformanceAccountTemplateDataReportList
+        : api.getSectorAccountPerformanceAccountTemplateDataReportList;
+    expect(otherMethod).not.toHaveBeenCalled();
+    expect(spreadsheetExportService.exportToCsv).toHaveBeenCalledExactlyOnceWith(
+      toPatExportRows(response.items, year !== 2024),
+      'pat_reporting.csv',
+    );
+  });
+
   const facilityReportItem = {
     accountId: 1,
     facilityId: 10,
@@ -126,5 +196,41 @@ describe('ReportingExportService', () => {
         'Surplus gained (tCO2e)': '0',
       }),
     );
+  });
+
+  it('labels PAT export rows by facility for CCA3 years', () => {
+    const rows = toPatExportRows(
+      [
+        {
+          id: 40,
+          businessId: 'ADS-F00040',
+          name: 'Facility 40',
+          submissionDate: '2027-04-25T00:00:00',
+          status: 'SUBMITTED',
+        },
+      ],
+      true,
+    );
+
+    expect(rows[0]).toEqual({
+      'Facility ID': 'ADS-F00040',
+      'Facility site name': 'Facility 40',
+      'Date submitted': '2027-04-25T00:00:00',
+      Status: 'Submitted',
+    });
+  });
+
+  it('labels PAT export rows by target unit for TP6', () => {
+    const rows = toPatExportRows(
+      [{ id: 1, businessId: 'ADS-T00040', name: 'Operator name', status: 'OUTSTANDING' }],
+      false,
+    );
+
+    expect(rows[0]).toEqual({
+      'Target unit ID': 'ADS-T00040',
+      Operator: 'Operator name',
+      'Date submitted': undefined,
+      Status: 'Outstanding',
+    });
   });
 });

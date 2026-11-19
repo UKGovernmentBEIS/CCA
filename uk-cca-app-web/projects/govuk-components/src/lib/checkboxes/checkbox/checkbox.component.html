@@ -8,7 +8,7 @@
       (blur)="onBlur()"
       (change)="onChange($event)"
       [attr.aria-controls]="conditional() ? identifier + 'conditional' : null"
-      [attr.aria-describedby]="identifier + '-item-hint'"
+      [attr.aria-describedby]="hint() ? identifier + '-item-hint' : null"
       [attr.value]="value()"
       [checked]="isChecked()"
       [disabled]="isDisabled()"

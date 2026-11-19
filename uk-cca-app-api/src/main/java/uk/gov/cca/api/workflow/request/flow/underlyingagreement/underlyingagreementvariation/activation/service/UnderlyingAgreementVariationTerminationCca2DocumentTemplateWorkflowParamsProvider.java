@@ -10,14 +10,14 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.n
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
+import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateSyncWorkflowParamsProvider;
 
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class UnderlyingAgreementVariationTerminationCca2DocumentTemplateWorkflowParamsProvider implements
-        DocumentTemplateWorkflowParamsProvider<UnderlyingAgreementVariationRequestPayload> {
+        DocumentTemplateSyncWorkflowParamsProvider<UnderlyingAgreementVariationRequestPayload> {
 
     private final DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
 

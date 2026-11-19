@@ -4,6 +4,8 @@ import { TaskSection } from '@netz/common/model';
 import { RequestTaskPageContentFactory } from '@netz/common/request-task';
 import { RequestTaskStore } from '@netz/common/store';
 import {
+  isEnergyFuelDataConfirmable,
+  isThroughputDataConfirmable,
   TaskItemStatus,
   TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK,
   TPR_FORM_THROUGHPUT_DETAILS_SUBTASK,
@@ -78,9 +80,14 @@ function calculateThroughputDetailsTaskStatus(
   );
 }
 
-function canSubmit(payload: PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload): boolean {
+export function canSubmit(payload: PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload): boolean {
   return (
     calculateThroughputDetailsTaskStatus(payload) === TaskItemStatus.COMPLETED &&
-    payload?.sectionsCompleted?.[TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK] === TaskItemStatus.COMPLETED
+    payload?.sectionsCompleted?.[TPR_FORM_ENERGY_FUEL_DETAILS_SUBTASK] === TaskItemStatus.COMPLETED &&
+    isThroughputDataConfirmable(payload?.referenceData?.baselineAndTargets, payload?.performanceData) &&
+    isEnergyFuelDataConfirmable(
+      payload?.performanceData?.energyFuelDetails,
+      payload?.referenceData?.baselineAndTargets?.usedReportingMechanism,
+    )
   );
 }

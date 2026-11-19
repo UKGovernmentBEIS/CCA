@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -8,11 +8,11 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { mockVariationReviewRequestTaskState } from '@requests/common/underlying-agreement/testing/variation-review-mock-data';
 import { Mocked } from 'vitest';
 
 import { ReferenceDataService } from 'cca-api';
 
-import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { ReviewTargetUnitDetailsDecisionComponent } from './review-target-unit-details-decision.component';
 
 describe('Review Target Unit Details Decision', () => {
@@ -31,7 +31,7 @@ describe('Review Target Unit Details Decision', () => {
     await TestBed.configureTestingModule({
       imports: [ReviewTargetUnitDetailsDecisionComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         RequestTaskStore,

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 
@@ -27,7 +27,6 @@ const DEFAULT_PAGE_SIZE = 10;
     StatusPipe,
     StatusColorPipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowHistoryTabComponent {
   private readonly activatedRoute = inject(ActivatedRoute);

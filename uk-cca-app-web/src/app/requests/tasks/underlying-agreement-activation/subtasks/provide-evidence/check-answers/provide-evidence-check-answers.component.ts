@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -39,7 +39,6 @@ import { underlyingAgreementActivationQuery } from '../../../una-activation.sele
     PendingButtonDirective,
     ReturnToTaskOrActionPageComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ProvideEvidenceCheckAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

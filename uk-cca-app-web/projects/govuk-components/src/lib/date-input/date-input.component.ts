@@ -1,6 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, DoCheck, OnDestroy, OnInit, input, inject } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 
 import { BehaviorSubject, combineLatest, filter, takeUntil } from 'rxjs';
 
@@ -16,9 +23,9 @@ import { DateInputValidators } from './date-input.validators';
  */
 @Component({
   selector: 'div[govuk-date-input]',
-  imports: [ErrorMessageComponent, ReactiveFormsModule, FieldsetHintDirective, LegendDirective, FieldsetDirective],
   templateUrl: './date-input.component.html',
   providers: [DatePipe],
+  imports: [ErrorMessageComponent, ReactiveFormsModule, FieldsetHintDirective, LegendDirective, FieldsetDirective],
 })
 export class DateInputComponent extends FormInput implements ControlValueAccessor, OnInit, DoCheck, OnDestroy {
   private readonly datePipe = inject(DatePipe);
@@ -40,7 +47,8 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
     { updateOn: 'change' },
   );
 
-  private initialValidator: ValidatorFn;
+  private readonly dateValidator: ValidatorFn = () => this.validate();
+  private validatedControl: AbstractControl;
   private touch$ = new BehaviorSubject(false);
   private min$ = new BehaviorSubject(null);
   private max$ = new BehaviorSubject(null);
@@ -53,8 +61,8 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
 
   override ngOnInit(): void {
     super.ngOnInit();
-    this.initialValidator = this.control.validator;
-    this.control.setValidators([this.validate.bind(this)]);
+    this.validatedControl = this.control;
+    this.validatedControl.addValidators(this.dateValidator);
     this.control.updateValueAndValidity();
 
     this.touch$
@@ -76,7 +84,9 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
       .subscribe((value) => this.onChange(value));
   }
 
-  ngDoCheck(): void {
+  override ngDoCheck(): void {
+    super.ngDoCheck();
+
     if (this.touch$.getValue() !== this.control.touched) {
       this.touch$.next(this.control.touched);
     }
@@ -93,8 +103,12 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
   }
 
   override ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+    super.ngOnDestroy();
+
+    if (this.validatedControl?.hasValidator(this.dateValidator)) {
+      this.validatedControl.removeValidators(this.dateValidator);
+      this.validatedControl.updateValueAndValidity({ emitEvent: false });
+    }
   }
 
   hasFieldError(identifier: string): boolean {
@@ -106,6 +120,7 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
         (!fieldControl.value && this.control.errors?.incomplete) ||
         this.control.errors?.minDate ||
         this.control.errors?.maxDate ||
+        this.control.errors?.invalidDate ||
         (identifier === 'day' && (this.control.errors?.leapYear || this.control.errors?.day))
       );
     } else {
@@ -114,7 +129,12 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
   }
 
   registerOnChange(onChange: (_: Date) => void): void {
-    this.onChange = (values) => onChange(this.formGroup.invalid ? null : DateInputValidators.buildDate(values));
+    this.onChange = (values) =>
+      onChange(
+        this.formGroup.invalid || DateInputValidators.getCombinedValidationResults(this.formGroup, false)
+          ? null
+          : DateInputValidators.buildDate(values),
+      );
   }
 
   registerOnTouched(onBlur: () => any): void {
@@ -124,9 +144,9 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
   writeValue(value: Date | null): void {
     if (value) {
       this.formGroup.setValue({
-        day: value.getDate(),
-        month: value.getMonth() + 1,
-        year: value.getFullYear(),
+        day: value.getUTCDate(),
+        month: value.getUTCMonth() + 1,
+        year: value.getUTCFullYear(),
       });
     } else {
       this.formGroup.reset();
@@ -152,13 +172,6 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
       ...this.formGroup.get('day').errors,
       ...this.formGroup.get('month').errors,
       ...this.formGroup.get('year').errors,
-      ...this.validateControl(),
-    };
-  }
-
-  private validateControl(): ValidationErrors {
-    return {
-      ...(this.initialValidator ? this.initialValidator(this.control) : null),
       ...this.combinedRulesValidator(),
       ...this.beforeOrAfterDateValidator(),
     };
@@ -178,24 +191,21 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
     return {
       ...GovukValidators.builder(
         errorMessage,
-        DateInputValidators.combinedRulesValidator(this.formGroup, this.isRequired()),
+        DateInputValidators.combinedRulesValidator(this.isRequired()),
       )(this.formGroup),
     };
   }
 
   // other validators
   private beforeOrAfterDateValidator(): ValidationErrors {
-    const errorMessage =
-      DateInputValidators.buildDate(this.formGroup.value) < this.min()
-        ? `This date must be the same as or after ${this.datePipe.transform(this.min(), 'd MMMM y')}`
-        : DateInputValidators.buildDate(this.formGroup.value) > this.max()
-          ? `This date must be the same as or before ${this.datePipe.transform(this.max(), 'd MMMM y')}`
-          : '';
-    return {
-      ...GovukValidators.builder(
-        errorMessage,
-        DateInputValidators.minMaxDateValidator(this.min(), this.max()),
-      )(this.control),
-    };
+    const errors = DateInputValidators.minMaxDateValidator(this.min(), this.max())(this.control);
+
+    return errors?.minDate
+      ? { minDate: `This date must be the same as or after ${this.datePipe.transform(this.min(), 'd MMMM y', 'UTC')}` }
+      : errors?.maxDate
+        ? {
+            maxDate: `This date must be the same as or before ${this.datePipe.transform(this.max(), 'd MMMM y', 'UTC')}`,
+          }
+        : null;
   }
 }

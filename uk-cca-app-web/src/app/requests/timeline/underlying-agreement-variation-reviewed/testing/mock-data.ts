@@ -1,5 +1,7 @@
 import { RequestActionState } from '@netz/common/store';
-import { mockTargetUnitDetails, UnderlyingAgreementVariationDecisionRequestActionPayload } from '@requests/common';
+import { UnderlyingAgreementVariationDecisionRequestActionPayload } from '@requests/common';
+import { mockTargetUnitDetails } from '@requests/common/underlying-agreement/testing/mock-data';
+import { SchemeVersionEnum } from '@shared/types';
 
 import {
   DefaultNoticeRecipient,
@@ -28,7 +30,7 @@ const facilities: Array<Facility> = [
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
       facilityAddress: operatorAddress,
-      participatingSchemeVersions: ['CCA_2', 'CCA_3'],
+      participatingSchemeVersions: [SchemeVersionEnum.CCA_2, SchemeVersionEnum.CCA_3],
     },
     facilityContact: {
       email: 'test29@test.com',
@@ -65,7 +67,7 @@ const facilities: Array<Facility> = [
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
       facilityAddress: operatorAddress,
-      participatingSchemeVersions: ['CCA_2', 'CCA_3'],
+      participatingSchemeVersions: [SchemeVersionEnum.CCA_2, SchemeVersionEnum.CCA_3],
     },
     facilityContact: {
       email: 'test29@test.com',
@@ -274,7 +276,7 @@ const underlyingAgreementVariationPayload: UnderlyingAgreementVariationDecisionR
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+        [SchemeVersionEnum.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH' },
       },
     },
   },
@@ -303,7 +305,7 @@ const mockAcceptedRequestActionDTO: RequestActionDTO = {
       files: [],
     },
     underlyingAgreementDocuments: {
-      CCA_2: {
+      [SchemeVersionEnum.CCA_2]: {
         name: 'underlying-agreement.pdf',
         uuid: 'abcd-1234',
       },

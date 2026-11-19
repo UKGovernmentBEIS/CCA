@@ -9,8 +9,8 @@ describe('InsetTextDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    imports: [InsetTextDirective],
     template: ` <div #insetText govukInsetText>Some text</div>`,
+    imports: [InsetTextDirective],
   })
   class TestComponent {
     readonly insetTextDiv = viewChild<ElementRef>('insetText');

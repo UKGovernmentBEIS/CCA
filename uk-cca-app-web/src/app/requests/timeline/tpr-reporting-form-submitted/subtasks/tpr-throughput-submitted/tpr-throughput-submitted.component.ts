@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -12,7 +12,6 @@ import { to7DecimalPlacesNumber, toNumber } from '@shared/utils';
   selector: 'cca-tpr-throughput-submitted',
   templateUrl: './tpr-throughput-submitted.component.html',
   imports: [DecimalPipe, PageHeadingComponent, TableComponent, MeasurementTypeToUnitPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TprThroughputSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);

@@ -2,7 +2,7 @@
   [for]="identifier"
   [id]="'l.' + identifier"
   [class]="currentLabelSize()"
-  [class.govuk-visually-hidden]="!label()"
+  [class.govuk-visually-hidden]="isLabelHidden()"
 >
   {{ label() }}
 </label>
@@ -20,26 +20,33 @@
 <textarea
   #textArea
   (blur)="handleBlur(getInputValue($event))"
-  [attr.aria-describedby]="hint() ? identifier + '-hint' : null"
+  [attr.aria-describedby]="
+    describedBy(
+      maxLength() ? identifier + '-info' : null,
+      hint() ? identifier + '-hint' : null,
+      shouldDisplayErrors ? identifier + '-error' : null
+    )
+  "
   [formControl]="control"
   [id]="identifier"
   [name]="identifier"
   [rows]="rows()"
   class="govuk-textarea govuk-!-margin-bottom-1"
   [class.govuk-textarea--error]="
-    shouldDisplayErrors || (maxLength() !== undefined && exceedsMaxLength(textArea.value?.length))
+    shouldDisplayErrors ||
+    (maxLength() !== undefined && exceedsMaxLength($safeNavigationMigration(textArea.value?.length)))
   "
 ></textarea>
 
 @if (maxLength()) {
   <span
-    [class.govuk-error-message]="exceedsMaxLength(textArea.value?.length)"
-    [class.govuk-hint]="!exceedsMaxLength(textArea.value?.length)"
+    [class.govuk-error-message]="exceedsMaxLength($safeNavigationMigration(textArea.value?.length))"
+    [class.govuk-hint]="!exceedsMaxLength($safeNavigationMigration(textArea.value?.length))"
     [id]="identifier + '-info'"
     aria-live="polite"
     class="govuk-character-count__message"
   >
-    @if (exceedsMaxLength(textArea.value?.length)) {
+    @if (exceedsMaxLength($safeNavigationMigration(textArea.value?.length))) {
       @if (textArea.value?.length - maxLength() > 1) {
         You have {{ textArea.value?.length - maxLength() }} characters too many
       }
@@ -49,7 +56,7 @@
       }
     }
 
-    @if (approachesMaxLength(textArea.value?.length)) {
+    @if (approachesMaxLength($safeNavigationMigration(textArea.value?.length))) {
       @if (maxLength() - textArea.value?.length === 1) {
         You have {{ maxLength() - textArea.value?.length }} character remaining
       }

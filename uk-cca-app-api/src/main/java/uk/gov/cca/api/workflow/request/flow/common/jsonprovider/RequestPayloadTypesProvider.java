@@ -1,37 +1,5 @@
 package uk.gov.cca.api.workflow.request.flow.common.jsonprovider;
 
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.ADMIN_TERMINATION_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_ACCOUNT_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_RUN_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_FACILITY_RUN_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA2_EXTENSION_NOTICE_RUN_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_RUN_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_AUDIT_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_CERTIFICATION_RUN_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.NON_COMPLIANCE_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_DOWNLOAD_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_DATA_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_DATA_UPLOAD_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_GENERATE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_SPREADSHEET_GENERATE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_SPREADSHEET_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_UPLOAD_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.SECTOR_MOA_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.SUBSISTENCE_FEES_RUN_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.TARGET_UNIT_ACCOUNT_CREATION_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.TARGET_UNIT_MOA_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.UNDERLYING_AGREEMENT_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.UNDERLYING_AGREEMENT_VARIATION_REQUEST_PAYLOAD;
-
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -48,6 +16,8 @@ import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.common.domain.Cc
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.common.domain.FacilityPerformanceAccountTemplateDataProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.processing.domain.FacilityPerformanceAccountTemplateProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatefacility.upload.domain.FacilityPerformanceAccountTemplateDataUploadRequestPayload;
@@ -73,6 +43,8 @@ import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.do
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
+
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.*;
 
 @Component
 public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
@@ -108,6 +80,7 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
 				new NamedType(BuyOutSurplusAccountProcessingRequestPayload.class, BUY_OUT_SURPLUS_ACCOUNT_PROCESSING_PAYLOAD),
 
 				new NamedType(FacilityCertificationRunRequestPayload.class, FACILITY_CERTIFICATION_RUN_REQUEST_PAYLOAD),
+				new NamedType(FacilityCertificationAccountProcessingRequestPayload.class, FACILITY_CERTIFICATION_ACCOUNT_PROCESSING_REQUEST_PAYLOAD),
 
 				new NamedType(Cca3ExistingFacilitiesMigrationRunRequestPayload.class, CCA3_EXISTING_FACILITIES_MIGRATION_RUN_REQUEST_PAYLOAD),
 				new NamedType(Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload.class, CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_PAYLOAD),
@@ -126,7 +99,9 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
 				new NamedType(FacilityPerformanceAccountTemplateProcessingRequestPayload.class, FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_PAYLOAD),
 				
 				new NamedType(BuyOutSurplusFacilityRunRequestPayload.class, BUY_OUT_SURPLUS_FACILITY_RUN_REQUEST_PAYLOAD),
-				new NamedType(BuyOutSurplusFacilityAccountProcessingRequestPayload.class, BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_PAYLOAD)
+				new NamedType(BuyOutSurplusFacilityAccountProcessingRequestPayload.class, BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_PAYLOAD),
+
+				new NamedType(EmissionsTradingSchemeDataRequestPayload.class, EMISSIONS_TRADING_SCHEME_DATA_PAYLOAD)
 		);
 	}
 

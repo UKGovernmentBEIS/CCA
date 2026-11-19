@@ -1,45 +1,31 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-
-import { ActivatedRouteStub } from '@netz/common/testing';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 
 import { InvalidLinkComponent } from './invalid-link.component';
 
 describe('InvalidLinkComponent', () => {
-  let component: InvalidLinkComponent;
-  let fixture: ComponentFixture<InvalidLinkComponent>;
-  let element: HTMLElement;
-
-  const activatedRoute = new ActivatedRouteStub();
+  let harness: RouterTestingHarness;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InvalidLinkComponent, RouterTestingModule],
-      providers: [{ provide: ActivatedRoute, useValue: activatedRoute }],
+      providers: [
+        provideRouter([{ path: 'invalid-link', component: InvalidLinkComponent }], withComponentInputBinding()),
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(InvalidLinkComponent);
-    component = fixture.componentInstance;
-    element = fixture.nativeElement;
-    fixture.detectChanges();
+    harness = await RouterTestingHarness.create();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should display expired link message if code is EMAIL1001', async () => {
+    await harness.navigateByUrl('/invalid-link?code=EMAIL1001', InvalidLinkComponent);
+
+    expect(harness.routeNativeElement.querySelector('h1').textContent).toEqual('This link has expired');
   });
 
-  it('should display expired link message if code is EMAIL1001', () => {
-    activatedRoute.setQueryParamMap({ code: 'EMAIL1001' });
-    fixture.detectChanges();
+  it('should display invalid link message on any non expired code', async () => {
+    await harness.navigateByUrl('/invalid-link?code=TOKEN1001', InvalidLinkComponent);
 
-    expect(element.querySelector('h1').textContent).toEqual('This link has expired');
-  });
-
-  it('should display invalid link message on any non expired code', () => {
-    activatedRoute.setQueryParamMap({ code: 'TOKEN1001' });
-    fixture.detectChanges();
-
-    expect(element.querySelector('h1').textContent).toEqual('This link is invalid');
+    expect(harness.routeNativeElement.querySelector('h1').textContent).toEqual('This link is invalid');
   });
 });

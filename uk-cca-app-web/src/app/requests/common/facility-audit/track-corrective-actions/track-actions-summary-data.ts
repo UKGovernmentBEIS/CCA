@@ -1,8 +1,5 @@
-import { DatePipe } from '@angular/common';
-
-import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { fileUtils } from '@shared/utils';
+import { boolToString, fileUtils, formatCalendarDate } from '@shared/utils';
 
 import { AuditCorrectiveActionResponse } from 'cca-api';
 
@@ -12,12 +9,10 @@ export function toTrackActionSummaryData(
   isEditable: boolean,
   downloadUrl: string,
 ): SummaryData {
-  const datePipe = new DatePipe('en-GB');
-
   const factory = new SummaryFactory()
     .addSection('')
     .addTextAreaRow('Corrective action details', action?.details)
-    .addRow('Corrective action deadline', datePipe.transform(action?.deadline, 'dd MMM yyyy'))
+    .addRow('Corrective action deadline', formatCalendarDate(action?.deadline, 'dd MMM yyyy'))
 
     .addSection('Corrective action carried out details')
     .addRow(
@@ -35,7 +30,7 @@ export function toTrackActionSummaryData(
 
   if (action?.isActionCarriedOut) {
     factory
-      .addRow('Date carried out', datePipe.transform(action?.actionCarriedOutDate, 'dd MMM yyyy'), {
+      .addRow('Date carried out', formatCalendarDate(action?.actionCarriedOutDate, 'dd MMM yyyy'), {
         change: isEditable,
         changeLink: '../details',
       })

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -22,7 +22,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
   selector: 'cca-target-composition',
   template: `<cca-common-facility-target-composition (submitted)="onSubmit($event)" />`,
   imports: [CommonFacilityTargetCompositionComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetCompositionComponent {
   private readonly store = inject(RequestTaskStore);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -16,7 +16,9 @@ import {
   ApiErrorFormProvider,
   setApiErrors,
   TasksApiService,
+  underlyingAgreementVariationQuery,
 } from '@requests/common';
+import { AnalyticsService } from '@shared/services';
 
 import { createSubmitActionDTO } from '../../transform';
 
@@ -29,7 +31,7 @@ import { createSubmitActionDTO } from '../../transform';
 
     <netz-page-heading size="xl">Send variation application to regulator</netz-page-heading>
 
-    <govuk-warning-text assistiveText="">
+    <govuk-warning-text>
       You will not be able to make any changes until the regulator has completed the review.
     </govuk-warning-text>
 
@@ -45,6 +47,7 @@ import { createSubmitActionDTO } from '../../transform';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
+  providers: [ApiErrorFormProvider],
   imports: [
     ButtonDirective,
     ErrorSummaryComponent,
@@ -54,21 +57,23 @@ import { createSubmitActionDTO } from '../../transform';
     WarningTextComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [ApiErrorFormProvider],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationSubmitActionComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly analyticsService = inject(AnalyticsService);
   private readonly tasksApiService = inject(TasksApiService);
   private readonly store = inject(RequestTaskStore);
 
   protected readonly errorForm = inject<ApiErrorFormModel>(API_ERROR_FORM);
   protected readonly isErrorSummaryDisplayed = signal(false);
+  private readonly errorSummary = viewChild(ErrorSummaryComponent);
 
   submit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
     const dto = createSubmitActionDTO(requestTaskId);
+    const modifications =
+      this.store.select(underlyingAgreementVariationQuery.selectVariationDetails)()?.modifications ?? [];
 
     this.tasksApiService
       .saveRequestTaskAction(dto)
@@ -76,9 +81,21 @@ export class VariationSubmitActionComponent {
         catchBadRequest(ErrorCodes.UNAV1001, (res) => {
           setApiErrors(this.errorForm, res);
           this.isErrorSummaryDisplayed.set(true);
+          this.errorSummary()?.focus();
           return EMPTY;
         }),
       )
-      .subscribe(() => this.router.navigate(['confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true }));
+      .subscribe(() => {
+        this.analyticsService.push({
+          event: 'journey_outcome',
+          journey_id: 'J_016',
+          task_name: 'cca_variation',
+          task_outcome: 'submitted',
+          variation_modifications: modifications.map((modification) => modification.toLowerCase()).join('|'),
+          variation_modification_count: modifications.length,
+        });
+
+        this.router.navigate(['confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+      });
   }
 }

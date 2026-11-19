@@ -1,8 +1,10 @@
+import { SchemeVersionEnum } from '@shared/types';
+
 export const mockBuyoutInfo = {
   excluded: false,
   surplusGainedDTOList: [
     {
-      targetPeriod: 'TP6',
+      schemeVersion: SchemeVersionEnum.CCA_2,
       surplusGained: '1.213',
       hasHistory: true,
     },

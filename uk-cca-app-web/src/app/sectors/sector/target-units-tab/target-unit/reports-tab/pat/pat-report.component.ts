@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal } from '@angular/core';
+import { Component, computed, effect, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -34,7 +34,6 @@ import { PatReportStore } from '../../pat-report-store';
     SummaryListRowValueDirective,
     RouterLink,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PatReportComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -66,26 +65,27 @@ export class PatReportComponent {
   );
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const selectedValue = this.targetPeriodValue();
+      if (!selectedValue) return;
 
-      if (selectedValue) {
-        this.fetchPatReportInfoDTO(selectedValue)
-          .pipe(
-            switchMap((reportInfo) => {
-              this.patReportStore.setState({ reportInfo: reportInfo, reportDetails: null });
-              if (reportInfo?.targetPeriodName) {
-                return this.fetchPatReportSubmittedData(selectedValue).pipe(
-                  tap((reportDetails) => {
-                    this.patReportStore.setState({ reportInfo, reportDetails });
-                  }),
-                );
-              }
-              return EMPTY;
-            }),
-          )
-          .subscribe();
-      }
+      const subscription = this.fetchPatReportInfoDTO(selectedValue)
+        .pipe(
+          switchMap((reportInfo) => {
+            this.patReportStore.setState({ reportInfo: reportInfo, reportDetails: null });
+            if (reportInfo?.targetPeriodName) {
+              return this.fetchPatReportSubmittedData(selectedValue).pipe(
+                tap((reportDetails) => {
+                  this.patReportStore.setState({ reportInfo, reportDetails });
+                }),
+              );
+            }
+            return EMPTY;
+          }),
+        )
+        .subscribe();
+
+      onCleanup(() => subscription.unsubscribe());
     });
   }
 

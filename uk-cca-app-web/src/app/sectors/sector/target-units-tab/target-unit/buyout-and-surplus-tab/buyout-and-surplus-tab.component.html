@@ -6,9 +6,11 @@
         <dt govukSummaryListRowKey>On hold</dt>
         <dd govukSummaryListRowValue>{{ buyOutSurplusInfo()?.excluded ? 'Yes' : 'No' }}</dd>
 
-        @if (userIsRegulator) {
+        @if (userIsRegulator()) {
           <dd govukSummaryListRowActions>
-            <a class="govuk-link" [routerLink]="['buyout-surplus', 'edit-on-hold']">Change</a>
+            <a class="govuk-link" [routerLink]="['buyout-surplus', 'edit-on-hold']">
+              Change<span class="govuk-visually-hidden"> on hold</span>
+            </a>
           </dd>
         }
       </div>
@@ -16,29 +18,35 @@
   </div>
 </div>
 
-@for (bsi of buyOutSurplusInfo()?.surplusGainedDTOList; track bsi) {
+@if (buyOutSurplusInfo()?.surplusDetails; as details) {
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <h2 class="govuk-heading-m">Surplus</h2>
       <dl govuk-summary-list>
         <div govukSummaryListRow>
-          <dt govukSummaryListRowKey>{{ bsi.targetPeriod }} surplus gained (tCO2e)</dt>
-          <dd govukSummaryListRowValue>{{ bsi.surplusGained | number }}</dd>
-          <dd govukSummaryListRowActions>
-            @if (bsi.hasHistory) {
-              <a class="govuk-link" [routerLink]="['buyout-surplus', bsi.targetPeriod, 'surplus-history']">
-                View history
-              </a>
-            }
+          <dt govukSummaryListRowKey>CCA2 Surplus gained (tCO2e)</dt>
+          <dd govukSummaryListRowValue>{{ details?.surplusGained | number }}</dd>
+          @if (details?.hasHistory || userIsRegulator()) {
+            <dd govukSummaryListRowActions>
+              <ul class="govuk-summary-list__actions-list">
+                @if (details?.hasHistory) {
+                  <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link" [routerLink]="['buyout-surplus', 'surplus-history']">
+                      View history<span class="govuk-visually-hidden"> of CCA2 surplus gained</span>
+                    </a>
+                  </li>
+                }
 
-            @if (bsi.hasHistory && userIsRegulator) {
-              <span class="opacity-m"> | </span>
-            }
-
-            @if (userIsRegulator) {
-              <a class="govuk-link" [routerLink]="['buyout-surplus', bsi.targetPeriod, 'edit-surplus']"> Change </a>
-            }
-          </dd>
+                @if (userIsRegulator()) {
+                  <li class="govuk-summary-list__actions-list-item">
+                    <a class="govuk-link" [routerLink]="['buyout-surplus', 'edit-surplus']">
+                      Change<span class="govuk-visually-hidden"> CCA2 surplus gained (tCO2e)</span>
+                    </a>
+                  </li>
+                }
+              </ul>
+            </dd>
+          }
         </div>
       </dl>
     </div>

@@ -216,16 +216,17 @@ class RequestNoteControllerTest {
         final MockMultipartFile
             noteFile = new MockMultipartFile(noteName, noteOriginalFileName, noteContentType, noteContent);
         final FileDTO fileDTO = FileDTO.builder()
-            .fileName(noteOriginalFileName)
-            .fileType(noteContentType)
-            .fileContent(noteContent)
-            .fileSize(noteFile.getSize())
-            .build();
+                .fileName(noteOriginalFileName)
+                .fileType(noteContentType)
+                .fileContent(noteContent)
+                .fileSize(noteFile.getSize())
+                .createdBy("id")
+                .build();
         final UUID noteUuid = UUID.randomUUID();
         final String requestId = "reqId";
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
-        when(fileNoteService.uploadRequestFile(authUser.getUserId(), fileDTO, requestId))
+        when(fileNoteService.uploadRequestFile(fileDTO, requestId))
             .thenReturn(FileUuidDTO.builder().uuid(noteUuid.toString()).build());
 
         mockMvc.perform(

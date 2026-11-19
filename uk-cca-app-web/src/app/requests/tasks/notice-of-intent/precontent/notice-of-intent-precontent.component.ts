@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -29,7 +29,6 @@ import { UPLOAD_NOTICE_OF_INTENT_SUBTASK } from '../notice-of-intent.types';
     }
   `,
   imports: [ButtonDirective, PendingButtonDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NoticeOfIntentPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);

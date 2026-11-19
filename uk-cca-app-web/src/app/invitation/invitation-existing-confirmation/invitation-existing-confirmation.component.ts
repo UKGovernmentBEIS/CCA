@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -20,7 +20,6 @@ import { SectorUserInvitationStore } from '../sector-user-invitation/sector-user
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PanelComponent, RouterLink, SectorUserRoleCodePipe],
 })
 export class InvitationExistingConfirmationComponent {

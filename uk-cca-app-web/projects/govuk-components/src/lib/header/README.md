@@ -25,7 +25,7 @@ macros; the wrapper supplies the banner landmark from the GOV.UK page template.
   </govuk-header>
 
   <govuk-service-navigation
-    serviceName="Manage your Climate Change Agreement"
+    serviceName="Manage your Climate Change Agreements"
     [serviceHomepage]="{ routerLink: '/' }"
     [navigation]="[
       { text: 'Tasks', routerLink: '/dashboard' },

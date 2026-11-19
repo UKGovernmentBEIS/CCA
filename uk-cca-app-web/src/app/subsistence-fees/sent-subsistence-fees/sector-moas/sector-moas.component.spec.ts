@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -6,7 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { mockSectorMoas, mockSentSubsistenceFeesDetails } from '@shared/components';
+import {
+  mockSectorMoas,
+  mockSentSubsistenceFeesDetails,
+} from '@shared/components/sector-moa-details/testing/mock-data';
 import { Mocked } from 'vitest';
 
 import { SubsistenceFeesRunInfoViewService } from 'cca-api';
@@ -29,7 +32,7 @@ describe('SectorMoasComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SectorMoasComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: SubsistenceFeesRunInfoViewService, useValue: subsistenceFeesRunInfoViewService },

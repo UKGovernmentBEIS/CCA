@@ -1,47 +1,50 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 
-import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { mockClass } from '@netz/common/testing';
 import { AuthService } from '@shared/services';
 
 import { TimedOutComponent } from './timed-out.component';
 
 describe('TimedOutComponent', () => {
-  let component: TimedOutComponent;
-  let fixture: ComponentFixture<TimedOutComponent>;
+  let harness: RouterTestingHarness;
 
   const authService = mockClass(AuthService);
-  const activatedRoute = new ActivatedRouteStub(null, { idle: 30 });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TimedOutComponent],
       providers: [
+        provideRouter([{ path: 'timed-out', component: TimedOutComponent }], withComponentInputBinding()),
         { provide: AuthService, useValue: authService },
-        { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TimedOutComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    harness = await RouterTestingHarness.create();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should sign in again on button click', () => {
+  it('should sign in again on button click', async () => {
+    await harness.navigateByUrl('/timed-out?idle=30', TimedOutComponent);
     const loginSpy = vi.spyOn(authService, 'login');
-    const button = fixture.nativeElement.querySelector('button');
 
-    button.click();
+    harness.routeNativeElement.querySelector('button').click();
 
     expect(loginSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should show idle time properly', () => {
-    const message = fixture.nativeElement.querySelector('p').innerHTML;
-    expect(message).toContain('We have reset your session because you did not do anything for less than a minute .');
+  it('should show the idle time from the query param', async () => {
+    await harness.navigateByUrl('/timed-out?idle=30', TimedOutComponent);
+
+    expect(harness.routeNativeElement.querySelector('p').textContent).toContain(
+      'We have reset your session because you did not do anything for less than a minute .',
+    );
+  });
+
+  it('should show the expired message without an idle query param', async () => {
+    await harness.navigateByUrl('/timed-out', TimedOutComponent);
+
+    expect(harness.routeNativeElement.querySelector('p').textContent).toContain(
+      'We have reset your session because it expired.',
+    );
   });
 });

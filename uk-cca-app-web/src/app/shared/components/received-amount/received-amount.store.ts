@@ -1,6 +1,6 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
-import { catchError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -32,7 +32,7 @@ const INITIAL_STATE: ReceivedAmountState = {
   changeType: 'add',
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class ReceivedAmountStore extends SignalStore<ReceivedAmountState> {
   private readonly subsistenceFeesMoAReceivedAmountControllerService = inject(
     SubsistenceFeesMoAReceivedAmountControllerService,
@@ -49,11 +49,6 @@ export class ReceivedAmountStore extends SignalStore<ReceivedAmountState> {
   getAndSetReceivedAmount(moaId: number) {
     this.subsistenceFeesMoAReceivedAmountControllerService
       .getSubsistenceFeesMoaReceivedAmountInfo(moaId)
-      .pipe(
-        catchError((err) => {
-          throw new Error(err.message);
-        }),
-      )
       .subscribe((response) => {
         this.updateState({
           transactionId: response.transactionId,
@@ -66,16 +61,10 @@ export class ReceivedAmountStore extends SignalStore<ReceivedAmountState> {
       });
   }
 
-  submitReceivedAmount(moaId: number) {
-    this.subsistenceFeesMoAReceivedAmountControllerService
-      .updateSubsistenceFeesMoaReceivedAmount(moaId, this.state.details)
-      .pipe(
-        catchError((err) => {
-          throw new Error(err);
-        }),
-      )
-      .subscribe(() => {
-        this.updateState({ details: this.state.details });
-      });
+  submitReceivedAmount(moaId: number): Observable<void> {
+    return this.subsistenceFeesMoAReceivedAmountControllerService.updateSubsistenceFeesMoaReceivedAmount(
+      moaId,
+      this.state.details,
+    );
   }
 }

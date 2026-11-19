@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -23,7 +23,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
   selector: 'cca-company-registration-number',
   template: `<cca-common-company-registration-number (submitted)="onSubmit($event)" />`,
   imports: [CommonCompanyRegistrationNumberComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompanyRegistrationNumberComponent {
   private readonly store = inject(RequestTaskStore);

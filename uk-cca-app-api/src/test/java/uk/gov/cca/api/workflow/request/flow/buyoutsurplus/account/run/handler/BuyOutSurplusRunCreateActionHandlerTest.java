@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.AccountBuyOutSurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
@@ -49,7 +49,7 @@ class BuyOutSurplusRunCreateActionHandlerTest {
     private TargetPeriodService targetPeriodService;
 
     @Mock
-    private BuyOutSurplusQueryService buyOutSurplusQueryService;
+    private AccountBuyOutSurplusQueryService buyOutSurplusQueryService;
 
     @Test
     void process() {
@@ -94,7 +94,7 @@ class BuyOutSurplusRunCreateActionHandlerTest {
         when(startProcessRequestService.startProcess(requestParams))
                 .thenReturn(Request.builder().id("request-id").build());
         when(buyOutSurplusQueryService
-                .getAllEligibleAccountsByTargetPeriod(payload.getTargetPeriodType()))
+                .getEligibleAccountsForBuyOutSurplusByTargetPeriod(payload.getTargetPeriodType()))
                 .thenReturn(List.of(accountBusinessInfoDTO));
 
 
@@ -105,7 +105,7 @@ class BuyOutSurplusRunCreateActionHandlerTest {
         verify(targetPeriodService, times(1)).getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
         verify(startProcessRequestService, times(1)).startProcess(requestParams);
         verify(buyOutSurplusQueryService, times(1))
-                .getAllEligibleAccountsByTargetPeriod(targetPeriodType);
+                .getEligibleAccountsForBuyOutSurplusByTargetPeriod(targetPeriodType);
     }
 
     @Test

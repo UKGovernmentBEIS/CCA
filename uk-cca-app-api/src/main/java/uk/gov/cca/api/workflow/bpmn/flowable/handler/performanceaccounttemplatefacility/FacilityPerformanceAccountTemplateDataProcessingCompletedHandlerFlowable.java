@@ -2,6 +2,7 @@ package uk.gov.cca.api.workflow.bpmn.flowable.handler.performanceaccounttemplate
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class FacilityPerformanceAccountTemplateDataProcessingCompletedHandlerFlowable implements JavaDelegate {
 
     private final RequestService requestService;
+    private static final String EMPTY_JSON_OBJECT = "{}";
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -33,10 +35,12 @@ public class FacilityPerformanceAccountTemplateDataProcessingCompletedHandlerFlo
             Map<Long, FacilityPerformanceAccountTemplateUploadReport> facilityReports = requestPayload.getFacilityReports();
 
             ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
             execution.setVariable(CcaBpmnProcessConstants.FACILITY_REPORTS, mapper.writeValueAsString(facilityReports));
             execution.setVariable(CcaBpmnProcessConstants.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_MESSAGE_FAILED, false);
         } catch (JsonProcessingException e) {
             log.error("Cannot generate message for request {}", requestPayload.getParentRequestId(), e);
+            execution.setVariable(CcaBpmnProcessConstants.FACILITY_REPORTS, EMPTY_JSON_OBJECT);
             execution.setVariable(CcaBpmnProcessConstants.FACILITY_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING_MESSAGE_FAILED, true);
         } finally {
             execution.setVariable(BpmnProcessConstants.REQUEST_DELETE_UPON_TERMINATE, true);

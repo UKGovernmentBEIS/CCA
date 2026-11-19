@@ -6,11 +6,12 @@
     (formSubmit)="submit()"
   >
     @if (isAccepted()) {
-      <p class="govuk-label--m govuk-!-margin-bottom-1">
-        Does this variation result in changes to the current underlying agreement?
-      </p>
-
-      <div govuk-radio formControlName="variationImpactsAgreement">
+      <div
+        govuk-radio
+        formControlName="variationImpactsAgreement"
+        legend="Does this variation result in changes to the current underlying agreement?"
+        legendSize="medium"
+      >
         <govuk-radio-option
           hint="A new version of the underlying agreement will be generated, even if there are no changes from the
                       current version, and you must upload evidence of the operator's assent"
@@ -70,6 +71,8 @@
       govuk-textarea
       [hint]="!showNoChangesGuidance() ? 'This will be included in the official notice' : ''"
       formControlName="additionalInformation"
+      [label]="additionalInfoLabel()"
+      [labelHidden]="true"
     ></div>
 
     <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files" label="Upload a file (optional)" />

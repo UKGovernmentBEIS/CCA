@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -37,7 +37,6 @@ const DEFAULT_PAGE_SIZE = 50;
     PaginationComponent,
     ButtonDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataReportTableComponent {
   private readonly sectorLevelPerformanceDataViewPagesService = inject(SectorLevelPerformanceDataViewPagesService);

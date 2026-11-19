@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { TaskListComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
@@ -10,7 +10,6 @@ import { getAllUnderlyingAgreementSections } from '../underlying-agreement-submi
   selector: 'cca-underlying-agreement-submitted-task-list',
   template: `<netz-task-list [sections]="sections()" />`,
   imports: [TaskListComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class UnderlyingAgreementSubmittedTaskListComponent {
   private readonly requestActionStore = inject(RequestActionStore);

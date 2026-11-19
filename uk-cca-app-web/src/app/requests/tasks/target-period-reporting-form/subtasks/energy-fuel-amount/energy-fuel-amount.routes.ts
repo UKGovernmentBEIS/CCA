@@ -12,29 +12,29 @@ export const ENERGY_FUEL_AMOUNT_ROUTES: Routes = [
         children: [],
       },
       {
-        path: 'summary',
         title: 'Summary',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'summary',
         loadComponent: () =>
           import('./summary/energy-fuel-amount-details-summary.component').then(
             (c) => c.EnergyFuelAmountDetailsSummaryComponent,
           ),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: 'check-your-answers',
         title: 'Check your answers',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'check-your-answers',
         loadComponent: () =>
           import('./check-your-answers/energy-fuel-amount-details-check-your-answers.component').then(
             (c) => c.EnergyFuelAmountDetailsCheckYourAnswersComponent,
           ),
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: 'details',
         title: 'Provide energy/fuel amount consumed',
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'details',
         loadComponent: () =>
           import('./details/energy-fuel-amount-details.component').then((c) => c.EnergyFuelAmountDetailsComponent),
+        data: { backlink: '../../../', breadcrumb: false },
       },
     ],
   },

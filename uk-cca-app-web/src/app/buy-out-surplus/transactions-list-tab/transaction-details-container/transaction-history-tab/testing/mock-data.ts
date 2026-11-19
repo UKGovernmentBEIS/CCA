@@ -1,6 +1,6 @@
-import { BuyOutSurplusTransactionHistoryDTO } from 'cca-api';
+import { BuyOutSurplusTransactionDetailHistoryDTO } from 'cca-api';
 
-export const mockTransactionHistory: BuyOutSurplusTransactionHistoryDTO[] = [
+export const mockTransactionHistory: BuyOutSurplusTransactionDetailHistoryDTO[] = [
   {
     id: 59,
     submitter: 'Regulator England',
@@ -14,6 +14,7 @@ export const mockTransactionHistory: BuyOutSurplusTransactionHistoryDTO[] = [
       },
       type: 'PAYMENT_STATUS_CHANGED',
       paymentStatus: 'UNDER_APPEAL',
+      dateOfAppeal: '2025-05-20',
     },
   },
   {

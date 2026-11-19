@@ -14,24 +14,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import uk.gov.cca.api.facility.domain.FacilityDataStatus;
 import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
-import uk.gov.cca.api.facility.domain.dto.FacilitySearchCriteria;
-import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationDetailsDTO;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
-import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResultExtendedDTO;
-import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResults;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilityInfoServiceOrchestrator;
-import uk.gov.cca.api.web.orchestrator.facility.service.FacilitySearchServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
@@ -42,7 +37,6 @@ import java.util.List;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
@@ -50,7 +44,7 @@ import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 @ExtendWith(MockitoExtension.class)
 class FacilityViewControllerTest {
 
-    private static final String FACILITIES_CONTROLLER_PATH = "/v1.0/facilities";
+    private static final String FACILITIES_CONTROLLER_PATH = "/v1.0/facilities/{facilityId}";
 
     private MockMvc mockMvc;
 
@@ -67,13 +61,7 @@ class FacilityViewControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @Mock
-    private FacilitySearchServiceOrchestrator facilitySearchService;
-
-    @Mock
     private FacilityInfoServiceOrchestrator facilityInfoServiceOrchestrator;
-
-    @Mock
-    private FacilityDataQueryService facilityDataQueryService;
 
     @BeforeEach
     void setUp() {
@@ -99,48 +87,6 @@ class FacilityViewControllerTest {
     }
 
     @Test
-    void searchFacilities() throws Exception {
-        final Long accountId = 1L;
-        final String facilityBusinessId = "SA-F00001";
-        final String siteName = "site1";
-        final AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
-        final String term = "SA-";
-        final int page = 0;
-        final int pageSize = 30;
-
-        final FacilitySearchResultExtendedDTO facilitySearchResultExtendedDTO =
-                new FacilitySearchResultExtendedDTO(1L, facilityBusinessId, siteName, null, FacilityDataStatus.LIVE, FacilityCertificationStatus.CERTIFIED, null);
-
-
-        final FacilitySearchCriteria facilitySearchCriteria = FacilitySearchCriteria.builder()
-                .term(term)
-                .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
-                .build();
-
-        final FacilitySearchResults facilitySearchResults = FacilitySearchResults.builder()
-                .facilities(List.of(facilitySearchResultExtendedDTO))
-                .total(1L)
-                .build();
-
-        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(facilitySearchService.searchFacilities(accountId, user, facilitySearchCriteria)).thenReturn(facilitySearchResults);
-
-        //invoke
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get(FACILITIES_CONTROLLER_PATH + "/account/" + accountId)
-                        .param("term", facilitySearchCriteria.getTerm())
-                        .param("page", String.valueOf(facilitySearchCriteria.getPaging().getPageNumber()))
-                        .param("size", String.valueOf(facilitySearchCriteria.getPaging().getPageSize()))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").value(1))
-                .andExpect(jsonPath("$.facilities[0].id").value(facilitySearchResults.getFacilities().get(0).getId()));
-
-        verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(facilitySearchService, times(1)).searchFacilities(accountId, user, facilitySearchCriteria);
-    }
-
-    @Test
     void getFacilityDetailsById() throws Exception {
 
         final Long facilityId = 1L;
@@ -157,10 +103,6 @@ class FacilityViewControllerTest {
                 .siteName(siteName)
                 .status(FacilityDataStatus.LIVE)
                 .address(accountAddressDTO)
-                .facilityCertificationDetails(List.of(FacilityCertificationDetailsDTO.builder()
-                        .certificationPeriod(CertificationPeriodType.CP6)
-                        .status(FacilityCertificationStatus.CERTIFIED)
-                        .build()))
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -168,12 +110,36 @@ class FacilityViewControllerTest {
 
         //invoke
         mockMvc.perform(MockMvcRequestBuilders
-                        .get(FACILITIES_CONTROLLER_PATH + "/" + facilityId)
+                        .get(FACILITIES_CONTROLLER_PATH, facilityId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.facilityId").value(facilityInfoDTO.getFacilityId()));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
         verify(facilityInfoServiceOrchestrator, times(1)).getFacilityInfo(facilityId);
+    }
+
+    @Test
+    void getFacilityCertifications() throws Exception {
+        final Long facilityId = 1L;
+        final AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
+
+        final List<FacilityCertificationStatusDTO> certifications = List.of(FacilityCertificationStatusDTO.builder()
+                .certificationPeriod(CertificationPeriodType.CP6)
+                .status(FacilityCertificationStatus.CERTIFIED)
+                .build());
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+        when(facilityInfoServiceOrchestrator.getFacilityCertifications(facilityId)).thenReturn(certifications);
+
+        //invoke
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(FACILITIES_CONTROLLER_PATH + "/certifications", facilityId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value(FacilityCertificationStatus.CERTIFIED.name()));
+
+        verify(appSecurityComponent, times(1)).getAuthenticatedUser();
+        verify(facilityInfoServiceOrchestrator, times(1)).getFacilityCertifications(facilityId);
     }
 }

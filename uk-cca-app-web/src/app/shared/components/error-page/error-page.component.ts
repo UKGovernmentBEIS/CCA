@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 
@@ -13,7 +13,6 @@ import { PageHeadingComponent } from '@netz/common/components';
     </div>
   `,
   imports: [PageHeadingComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorPageComponent {
   protected readonly heading = input<string>(undefined);

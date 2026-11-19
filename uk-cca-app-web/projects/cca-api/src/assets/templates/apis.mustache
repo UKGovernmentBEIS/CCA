@@ -1,0 +1,10 @@
+{{#apiInfo}}
+  {{#apis}}
+    {{#operations}}
+      export * from './{{ classFilename }}';
+    {{/operations}}
+    {{#withInterfaces}}
+      export * from './{{ classFilename }}Interface';
+    {{/withInterfaces}}
+  {{/apis}}
+{{/apiInfo}}

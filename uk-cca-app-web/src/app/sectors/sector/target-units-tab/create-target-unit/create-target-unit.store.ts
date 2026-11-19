@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
@@ -19,7 +19,7 @@ const INITIAL_STATE: TargetUnitAccountPayload = {
   isCompanyRegistrationNumber: null,
 };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class CreateTargetUnitStore extends SignalStore<TargetUnitAccountPayload> {
   sameAddressWithOperator = false;
   sameAddressWithResponsiblePerson = false;

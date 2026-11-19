@@ -1,0 +1,37 @@
+@if (errorSummaryInfo(); as error) {
+  <cca-error-summary [errorSummaryInfo]="error" />
+}
+
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form()"
+  caption="Change"
+  heading="Surplus gained"
+  submitText="Confirm"
+>
+  <dl govuk-summary-list [hasBorders]="false" class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Current amount (tCO2e)</dt>
+      <dd govukSummaryListRowValue>{{ currentSurplus() | surplusAmount }}</dd>
+    </div>
+  </dl>
+
+  <div
+    formControlName="surplus"
+    govuk-text-input
+    inputMode="numeric"
+    label="New amount (tCO2e)"
+    widthClass="govuk-!-width-one-third"
+  ></div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div
+        formControlName="comments"
+        govuk-textarea
+        label="Comments"
+        hint="Explain why you are changing the amount of surplus gained"
+      ></div>
+    </div>
+  </div>
+</cca-wizard-step>

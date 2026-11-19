@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.RequestPayload;
 
 import java.util.HashMap;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class FacilityCertificationRunRequestPayload extends RequestPayload {
 
     private CertificationPeriodDTO certificationPeriodDetails;
+
+    private TargetPeriodInfoDTO targetPeriod;
 
     private FacilityCertificationRunSummary runSummary;
 

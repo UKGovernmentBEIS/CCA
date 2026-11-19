@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ControlContainer, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { LabelDirective } from '../directives';
@@ -14,19 +14,26 @@ describe('TextInputComponent', () => {
   let hostNumericComponent: TestNumericComponent;
   let fixtureTestComponent: ComponentFixture<TestComponent>;
   let fixtureNumericComponent: ComponentFixture<TestNumericComponent>;
+  let fixtureLabelHiddenComponent: ComponentFixture<TestLabelHiddenComponent>;
 
   @Component({
-    imports: [TextInputComponent, ReactiveFormsModule, LabelDirective],
     template: `
       <div govuk-text-input [formControl]="control" [prefix]="prefix()" [suffix]="suffix()" label="First control"></div>
       <div govuk-text-input [formControl]="control" [prefix]="prefix()" [suffix]="suffix()">
         <ng-container govukLabel>Second control <span class="govuk-visually-hidden">hidden</span></ng-container>
       </div>
       <form [formGroup]="group">
-        <div govuk-text-input formControlName="text" label="Form control"></div>
+        <div
+          govuk-text-input
+          formControlName="text"
+          label="Form control"
+          hint="Enter at least five characters"
+          autoComplete="email"
+        ></div>
         <button type="submit">Submit</button>
       </form>
     `,
+    imports: [TextInputComponent, ReactiveFormsModule, LabelDirective],
   })
   class TestComponent {
     control = new FormControl();
@@ -39,12 +46,34 @@ describe('TextInputComponent', () => {
   }
 
   @Component({
-    imports: [TextInputComponent, ReactiveFormsModule],
     template: '<div govuk-text-input [formControl]="control" inputType="number" [numberFormat]="format()"></div>',
+    imports: [TextInputComponent, ReactiveFormsModule],
   })
   class TestNumericComponent {
     control = new FormControl(null, GovukValidators.max(5, 'Max test'));
     format = signal<string | null>(null);
+  }
+
+  @Component({
+    template: `
+      <form [formGroup]="form">
+        <div govuk-text-input formControlName="visible" label="Visible control"></div>
+        <div govuk-text-input formControlName="hidden" label="Hidden control" labelHidden></div>
+        <div govuk-text-input formControlName="stringFalse" label="String false control" labelHidden="false"></div>
+        <div govuk-text-input formControlName="projected" labelHidden>
+          <ng-container govukLabel>Projected hidden</ng-container>
+        </div>
+      </form>
+    `,
+    imports: [TextInputComponent, ReactiveFormsModule, LabelDirective],
+  })
+  class TestLabelHiddenComponent {
+    form = new FormGroup({
+      visible: new FormControl(null),
+      hidden: new FormControl(null),
+      stringFalse: new FormControl(null),
+      projected: new FormControl(null),
+    });
   }
 
   beforeEach(async () => {
@@ -52,6 +81,7 @@ describe('TextInputComponent', () => {
 
     fixtureTestComponent = TestBed.createComponent(TestComponent);
     fixtureNumericComponent = TestBed.createComponent(TestNumericComponent);
+    fixtureLabelHiddenComponent = TestBed.createComponent(TestLabelHiddenComponent);
     hostTestComponent = fixtureTestComponent.componentInstance;
     hostNumericComponent = fixtureNumericComponent.componentInstance;
     testComponent = fixtureTestComponent.debugElement.query(By.directive(TextInputComponent))
@@ -59,6 +89,7 @@ describe('TextInputComponent', () => {
     numericComponent = fixtureNumericComponent.debugElement.query(By.directive(TextInputComponent)).componentInstance;
     fixtureTestComponent.detectChanges();
     fixtureNumericComponent.detectChanges();
+    fixtureLabelHiddenComponent.detectChanges();
   });
 
   it('should create', () => {
@@ -196,6 +227,29 @@ describe('TextInputComponent', () => {
     expect(hostNumericComponent.control.value).not.toEqual('');
   });
 
+  it('should render the autocomplete attribute', () => {
+    const hostElement: HTMLElement = fixtureTestComponent.nativeElement;
+    const firstInput = hostElement.querySelector<HTMLInputElement>('input');
+    const formInput = hostElement.querySelector<HTMLInputElement>('input[name="text"]');
+    expect(firstInput.getAttribute('autocomplete')).toBe('on');
+    expect(formInput.getAttribute('autocomplete')).toBe('email');
+  });
+
+  it('should describe the input with its hint and error', () => {
+    const element: HTMLElement = fixtureTestComponent.nativeElement;
+    const input = element.querySelector<HTMLInputElement>('input[name="text"]');
+    const hint = element.querySelector<HTMLElement>(`#${input.id}-hint`);
+
+    expect(hint).toBeTruthy();
+    expect(input.getAttribute('aria-describedby')).toEqual(hint.id);
+
+    hostTestComponent.group.get('text').patchValue('abc');
+    element.querySelector('form').dispatchEvent(new Event('submit'));
+    fixtureTestComponent.detectChanges();
+
+    expect(input.getAttribute('aria-describedby')).toEqual(`${hint.id} ${input.id}-error`);
+  });
+
   it('should display custom labels', () => {
     const element: HTMLElement = fixtureTestComponent.nativeElement;
     const labels = Array.from(element.querySelectorAll('label'));
@@ -205,6 +259,70 @@ describe('TextInputComponent', () => {
       'Second control hidden',
       'Form control',
     ]);
-    expect(element.querySelector('.govuk-visually-hidden').textContent).toEqual('hidden');
+    expect(element.querySelector('label .govuk-visually-hidden').textContent).toEqual('hidden');
+  });
+
+  it('should hide the label when labelHidden is set, keeping it in place for the accessible name', () => {
+    const element: HTMLElement = fixtureLabelHiddenComponent.nativeElement;
+    const labels = Array.from(element.querySelectorAll('label'));
+
+    expect(labels.map((label) => label.textContent.trim())).toEqual([
+      'Visible control',
+      'Hidden control',
+      'String false control',
+      'Projected hidden',
+    ]);
+    expect(labels.map((label) => label.classList.contains('govuk-visually-hidden'))).toEqual([
+      false,
+      true,
+      false,
+      true,
+    ]);
+
+    const hiddenLabel = labels[1];
+    expect(hiddenLabel.getAttribute('for')).toBeTruthy();
+    expect(element.querySelector(`[id="${hiddenLabel.getAttribute('for')}"]`)).toBeTruthy();
+  });
+});
+
+describe('TextInputComponent in a form array', () => {
+  @Component({
+    template: `
+      <form [formGroup]="form">
+        <ng-container formArrayName="items">
+          @for (item of form.controls.items.controls; let i = $index; track item) {
+            <div [formGroupName]="i">
+              <div govuk-text-input formControlName="name" label="Item name"></div>
+            </div>
+          }
+        </ng-container>
+        <button type="button" (click)="form.controls.items.removeAt(0)">Remove first</button>
+      </form>
+    `,
+    imports: [ReactiveFormsModule, TextInputComponent],
+  })
+  class ArrayHostComponent {
+    readonly form = new FormGroup({
+      items: new FormArray(['a', 'b', 'c'].map((name) => new FormGroup({ name: new FormControl(name) }))),
+    });
+  }
+
+  it('should update input ids and label targets when an earlier row group is removed', async () => {
+    const fixture = TestBed.createComponent(ArrayHostComponent);
+    await fixture.whenStable();
+
+    const element: HTMLElement = fixture.nativeElement;
+    element.querySelector('button').click();
+    await fixture.whenStable();
+
+    const inputs = Array.from(element.querySelectorAll('input'));
+    expect(inputs.map((input) => [input.id, input.value])).toEqual([
+      ['items.0.name', 'b'],
+      ['items.1.name', 'c'],
+    ]);
+    expect(Array.from(element.querySelectorAll('label')).map((label) => label.getAttribute('for'))).toEqual([
+      'items.0.name',
+      'items.1.name',
+    ]);
   });
 });

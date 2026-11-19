@@ -8,6 +8,8 @@ export const mockTransactionsResponse: BuyOutSurplusTransactionsListDTO = {
       operatorName: 'Test Operator',
       transactionCode: 'TRX-001',
       creationDate: '2024-01-01T00:00:00Z',
+      schemeVersion: 'CCA_2',
+      resourceType: 'ACCOUNT',
       paymentStatus: 'PAID',
       buyOutFee: '',
     },

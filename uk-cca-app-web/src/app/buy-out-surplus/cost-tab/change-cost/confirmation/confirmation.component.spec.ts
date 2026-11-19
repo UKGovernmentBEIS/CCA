@@ -28,7 +28,7 @@ describe('ConfirmationComponent', () => {
 
   it('confirms the target period cost was updated', () => {
     expect(fixture.nativeElement.querySelector('.govuk-panel').textContent).toContain(
-      'TP7 Buyout cost per tCO2e updated',
+      'TP7 Buy-out cost per tCO2e updated',
     );
   });
 

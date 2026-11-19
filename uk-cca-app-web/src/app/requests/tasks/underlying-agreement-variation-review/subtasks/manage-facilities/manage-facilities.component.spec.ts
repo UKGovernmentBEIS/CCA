@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { mockRequestTaskState, TaskItemStatus } from '@requests/common';
+import { TaskItemStatus } from '@requests/common';
+import { mockRequestTaskState } from '@requests/common/underlying-agreement/testing/mock-data';
 
 import { ManageFacilitiesComponent } from './manage-facilities.component';
 
@@ -53,6 +54,7 @@ describe('ManageFacilitiesComponent', () => {
       queryParams: { page: 1, ...formValues },
       queryParamsHandling: 'merge',
       relativeTo: route,
+      scroll: 'manual',
     });
   });
 
@@ -66,6 +68,7 @@ describe('ManageFacilitiesComponent', () => {
       queryParams: { page: 1, term: null, workflowStatus: null },
       queryParamsHandling: 'merge',
       relativeTo: route,
+      scroll: 'manual',
     });
   });
 

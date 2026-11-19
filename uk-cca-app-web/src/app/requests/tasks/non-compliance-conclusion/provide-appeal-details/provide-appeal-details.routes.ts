@@ -7,7 +7,6 @@ import { ProvideAppealDetailsStore } from './+state';
 export const PROVIDE_APPEAL_DETAILS_ROUTES: Routes = [
   {
     path: '',
-    providers: [ProvideAppealDetailsStore],
     canDeactivate: [
       () => {
         inject(ProvideAppealDetailsStore).reset();
@@ -21,16 +20,18 @@ export const PROVIDE_APPEAL_DETAILS_ROUTES: Routes = [
         redirectTo: 'provide-details',
       },
       {
-        path: 'provide-details',
         title: 'Provide appeal details',
-        canActivate: [nonComplianceConclusionEditableGuard],
-        data: { backlink: '../../../', breadcrumb: false },
+        path: 'provide-details',
         loadComponent: () =>
           import('./provide-details/provide-details.component').then((c) => c.ProvideAppealDetailsComponent),
+        canActivate: [nonComplianceConclusionEditableGuard],
+        data: { backlink: '../../../', breadcrumb: false },
       },
       {
-        path: 'check-your-answers',
         title: 'Check your answers',
+        path: 'check-your-answers',
+        loadComponent: () =>
+          import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
         canActivate: [
           nonComplianceConclusionEditableGuard,
           (route: ActivatedRouteSnapshot) =>
@@ -39,14 +40,14 @@ export const PROVIDE_APPEAL_DETAILS_ROUTES: Routes = [
               : createUrlTreeFromSnapshot(route, ['../provide-details']),
         ],
         data: { backlink: '../provide-details', breadcrumb: false },
-        loadComponent: () =>
-          import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
       },
       {
+        title: 'Appeal registration details submitted',
         path: 'confirmation',
-        data: { backlink: false, breadcrumb: false },
         loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+        data: { backlink: false, breadcrumb: false },
       },
     ],
+    providers: [ProvideAppealDetailsStore],
   },
 ];
