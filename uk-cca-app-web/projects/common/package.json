@@ -1,12 +1,24 @@
 {
+  "exports": {
+    ".": "./src/public-api.ts",
+    "./auth": "./auth/index.ts",
+    "./change-task-assignee": "./change-task-assignee/index.ts",
+    "./components": "./components/index.ts",
+    "./directives": "./directives/index.ts",
+    "./model": "./model/index.ts",
+    "./navigation": "./navigation/index.ts",
+    "./pipes": "./pipes/index.ts",
+    "./request-action": "./request-action/index.ts",
+    "./request-task": "./request-task/index.ts",
+    "./services": "./services/index.ts",
+    "./store": "./store/index.ts",
+    "./testing": "./testing/index.ts"
+  },
   "name": "@netz/common",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^22.2.5",
-    "@angular/core": "^22.2.5"
-  },
-  "dependencies": {
-    "tslib": "^2.9.1"
+    "@angular/common": "^22.3.0",
+    "@angular/core": "^22.3.0"
   },
   "sideEffects": false
 }

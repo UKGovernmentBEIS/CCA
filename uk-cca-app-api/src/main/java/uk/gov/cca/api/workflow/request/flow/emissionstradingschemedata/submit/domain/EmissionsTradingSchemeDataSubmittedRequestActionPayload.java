@@ -24,7 +24,4 @@ public class EmissionsTradingSchemeDataSubmittedRequestActionPayload extends Cca
     @NotNull
     @Valid
     private EmissionsTradingSchemeDataContainer performanceData;
-
-    @Valid
-    private EmissionsTradingSchemeDataCalculatedResults calculatedResults;
 }

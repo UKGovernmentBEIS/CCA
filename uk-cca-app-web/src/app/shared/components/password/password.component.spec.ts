@@ -3,7 +3,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
 import { of } from 'rxjs';
@@ -70,19 +69,36 @@ describe('PasswordComponent', () => {
 
     // Errors appear in error summary + inline for each field
     expect(getAllByText('Please enter your password').length).toBeGreaterThanOrEqual(1);
-    expect(getAllByText('Enter a strong password').length).toBeGreaterThanOrEqual(1);
     expect(getAllByText('Re-enter your password').length).toBeGreaterThanOrEqual(2);
   });
 
-  it('should not accept weak password', async () => {
-    type(document.getElementById('password') as HTMLInputElement, '12345678');
-    insertValidatePassword('12345678');
+  it('should not accept a weak password', async () => {
+    mockValidatePasswordService.validatePassword.mockReturnValue(
+      of({ errors: [{ code: 'WEAK', message: 'Password is too weak' }] }),
+    );
+
+    type(document.getElementById('password') as HTMLInputElement, 'password123123');
+    insertValidatePassword('password123123');
     click(getByText('Submit'));
     fixture.detectChanges();
-    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
 
-    // Error appears in error summary + inline for both password fields
-    expect(getAllByText('Enter a strong password').length).toBeGreaterThanOrEqual(2);
+    expect(
+      getAllByText('For security reasons, you must enter a different password that is hard to guess').length,
+    ).toBeGreaterThanOrEqual(2);
+  });
+
+  it('should not run a client-side strength check', async () => {
+    type(document.getElementById('password') as HTMLInputElement, 'aaaaaaaaaaaa');
+    insertValidatePassword('aaaaaaaaaaaa');
+    click(getByText('Submit'));
+    fixture.detectChanges();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
+
+    expect(mockValidatePasswordService.validatePassword).toHaveBeenCalledWith({ password: 'aaaaaaaaaaaa' });
+    expect(document.querySelector('.govuk-error-summary')).toBeNull();
   });
 
   it('should require the passwords to match', async () => {
@@ -93,21 +109,6 @@ describe('PasswordComponent', () => {
     await fixture.whenStable();
 
     expect(getByText('Password and re-typed password do not match. Please enter both passwords again')).toBeTruthy();
-  });
-
-  it('should not accept a blacklisted password', async () => {
-    mockValidatePasswordService.validatePassword.mockReturnValue(
-      of({ errors: [{ code: 'PWNED', message: 'Password has been blacklisted. Select another password' }] }),
-    );
-
-    type(document.getElementById('password') as HTMLInputElement, 'password123123');
-    insertValidatePassword('password123123');
-    click(getByText('Submit'));
-    fixture.detectChanges();
-    await new Promise((r) => setTimeout(r, 400));
-    fixture.detectChanges();
-
-    expect(getAllByText('Password has been blacklisted. Select another password').length).toBeGreaterThanOrEqual(2);
   });
 
   it('should reject passwords below the minimum length', async () => {
@@ -138,30 +139,6 @@ describe('PasswordComponent', () => {
     fixture.detectChanges();
 
     expect(getAllByText('Password must be 127 characters or less').length).toBeGreaterThanOrEqual(2);
-  });
-
-  it('should reject passwords with blacklisted patterns', async () => {
-    mockValidatePasswordService.validatePassword.mockReturnValue(
-      of({
-        errors: [
-          {
-            code: 'BLACKLISTED_PATTERN',
-            message: 'Enter a password that does not contain words related to the service or your role',
-          },
-        ],
-      }),
-    );
-
-    type(document.getElementById('password') as HTMLInputElement, 'CCAadmin123!');
-    insertValidatePassword('CCAadmin123!');
-    click(getByText('Submit'));
-    fixture.detectChanges();
-    await new Promise((r) => setTimeout(r, 400));
-    fixture.detectChanges();
-
-    expect(
-      getAllByText('Enter a password that does not contain words related to the service or your role').length,
-    ).toBeGreaterThanOrEqual(2);
   });
 
   it('should show a message when the password check service is unavailable', async () => {
@@ -201,14 +178,6 @@ describe('PasswordComponent', () => {
     fixture.detectChanges();
 
     expect(getAllByText('A custom validation message from the server').length).toBeGreaterThanOrEqual(2);
-  });
-
-  it('should show the password strength feedback for a weak password', () => {
-    type(document.getElementById('password') as HTMLInputElement, 'aaaaaaaaaaaa');
-    fixture.detectChanges();
-
-    expect(fixture.debugElement.query(By.css('.psm__feedback'))).toBeTruthy();
-    expect(getByText('Repeated characters like "aaa" are easy to guess.')).toBeTruthy();
   });
 });
 

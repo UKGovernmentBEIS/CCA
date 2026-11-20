@@ -3,9 +3,12 @@ package uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.service;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
+import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.dto.EmissionsTradingSchemeDataReportDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.dto.EmissionsTradingSchemeDataReportInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.repository.EmissionsTradingSchemeDataEntityRepository;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.transform.EmissionsTradingSchemeDataMapper;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.time.Year;
 
@@ -23,5 +26,12 @@ public class EmissionsTradingSchemeDataQueryService {
         return emissionsTradingSchemeDataEntityRepository.findByFacilityIdAndTargetPeriodYear(facilityId, targetPeriodYear)
                 .map(ETS_MAPPER::toEmissionsTradingSchemeDataReportInfoDTO)
                 .orElse(null);
+    }
+
+    public EmissionsTradingSchemeDataReportDetailsDTO getEmissionsTradingSchemeDataReportDetails(Long facilityId,
+                                                                                                 Year targetPeriodYear) {
+        return emissionsTradingSchemeDataEntityRepository.findByFacilityIdAndTargetPeriodYear(facilityId, targetPeriodYear)
+                .map(ETS_MAPPER::toEmissionsTradingSchemeDataReportDetailsDTO)
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 }

@@ -73,6 +73,10 @@ class EmissionsTradingSchemeDataContainerTest {
                                         .primaryEnergy(BigDecimal.valueOf(1500000))
                                         .build()
                         ))
+                .calculatedResults(EmissionsTradingSchemeDataCalculatedResults.builder()
+                        .totalPrimaryEnergy(BigDecimal.valueOf(5000000))
+                        .totalCo2Emissions(BigDecimal.valueOf(2000000))
+                        .build())
                 .build();
 
         final Set<ConstraintViolation<EmissionsTradingSchemeDataContainer>> violations = validator.validate(data);
@@ -94,5 +98,48 @@ class EmissionsTradingSchemeDataContainerTest {
         assertThat(violations).isNotEmpty();
         assertThat(violations).extracting(ConstraintViolation::getMessage)
                 .containsExactly("{emissionstradingschemedata.energyFuelDetails.notEmpty}");
+    }
+
+    @Test
+    void validate_with_no_fuels_and_calculated_results_invalid() {
+
+        EmissionsTradingSchemeDataContainer data = EmissionsTradingSchemeDataContainer.builder()
+                .isUltraSmallEmitter(true)
+                .measurementType(MeasurementType.ENERGY_KWH)
+                .fuels(List.of())
+                .calculatedResults(EmissionsTradingSchemeDataCalculatedResults.builder()
+                        .totalPrimaryEnergy(BigDecimal.valueOf(5000000))
+                        .totalCo2Emissions(BigDecimal.valueOf(2000000))
+                        .build())
+                .build();
+
+        final Set<ConstraintViolation<EmissionsTradingSchemeDataContainer>> violations = validator.validate(data);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactly("{emissionstradingschemedata.calculatedResults}");
+    }
+
+    @Test
+    void validate_with_fuels_and_no_calculated_results_invalid() {
+
+        EmissionsTradingSchemeDataContainer data = EmissionsTradingSchemeDataContainer.builder()
+                .isUltraSmallEmitter(false)
+                .measurementType(MeasurementType.ENERGY_KWH)
+                .fuels(List.of(PerformanceDataFacilityFuel.builder()
+                        .name(NATURAL_GAS.getDescription())
+                        .fixedConversionFactorCode(NATURAL_GAS)
+                        .conversionFactor(PerformanceDataFacilityFixedConversionFactor.getValueByMeasurementType(NATURAL_GAS, MeasurementType.ENERGY_KWH))
+                        .deliveredEnergy(BigDecimal.valueOf(5000000))
+                        .primaryConversionFactor(NATURAL_GAS.getPrimaryFactor())
+                        .primaryEnergy(BigDecimal.valueOf(5000000))
+                        .build()))
+                .build();
+
+        final Set<ConstraintViolation<EmissionsTradingSchemeDataContainer>> violations = validator.validate(data);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactly("{emissionstradingschemedata.calculatedResults}");
     }
 }

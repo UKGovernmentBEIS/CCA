@@ -128,6 +128,7 @@ export * from './emissionsTradingSchemeDataCalculatedResults';
 export * from './emissionsTradingSchemeDataContainer';
 export * from './emissionsTradingSchemeDataInputDetails';
 export * from './emissionsTradingSchemeDataInputEnergyFuelDetails';
+export * from './emissionsTradingSchemeDataReportInfoDTO';
 export * from './emissionsTradingSchemeDataRequestCreateActionPayload';
 export * from './emissionsTradingSchemeDataRequestMetadata';
 export * from './emissionsTradingSchemeDataSaveRequestTaskActionPayload';

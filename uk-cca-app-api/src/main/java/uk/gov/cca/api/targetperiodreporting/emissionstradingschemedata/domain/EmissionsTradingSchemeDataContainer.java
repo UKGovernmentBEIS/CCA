@@ -20,6 +20,8 @@ import java.util.List;
 @SpELExpression(expression = "#isUltraSmallEmitter == null || T(java.lang.Boolean).TRUE.equals(#isUltraSmallEmitter) " +
         "|| T(java.lang.Boolean).FALSE.equals(#isUltraSmallEmitter) == (#fuels?.size() gt 0)",
         message = "emissionstradingschemedata.energyFuelDetails.notEmpty")
+@SpELExpression(expression = "((#fuels?.size() gt 0) == (#calculatedResults != null))",
+        message = "emissionstradingschemedata.calculatedResults")
 public class EmissionsTradingSchemeDataContainer {
 
     @NotNull
@@ -32,4 +34,7 @@ public class EmissionsTradingSchemeDataContainer {
 
     @Builder.Default
     private List<@Valid @NotNull PerformanceDataFacilityFuel> fuels = new ArrayList<>();
+
+    @Valid
+    private EmissionsTradingSchemeDataCalculatedResults calculatedResults;
 }

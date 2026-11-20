@@ -1,8 +1,8 @@
-package uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain;
+package uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +17,13 @@ import java.math.BigDecimal;
 public class EmissionsTradingSchemeDataCalculatedResults {
 
     @NotNull
-    @PositiveOrZero
+    @Positive
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal totalPrimaryEnergy;
 
     // tCO2e
     @NotNull
-    @PositiveOrZero
+    @Positive
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal totalCo2Emissions;
 }

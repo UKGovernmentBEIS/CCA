@@ -2,15 +2,13 @@ import { ChangeDetectorRef, Component, DestroyRef, inject, input, OnInit, signal
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 
-import { ButtonDirective, TagComponent, TextInputComponent } from '@netz/govuk-components';
-
-import { PasswordStrengthMeterComponent } from '../password-strength-meter/password-strength-meter.component';
+import { ButtonDirective, TextInputComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-password',
   templateUrl: './password.component.html',
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
-  imports: [TextInputComponent, ReactiveFormsModule, TagComponent, ButtonDirective, PasswordStrengthMeterComponent],
+  imports: [TextInputComponent, ReactiveFormsModule, ButtonDirective],
 })
 export class PasswordComponent implements OnInit {
   protected readonly formGroupDirective = inject(FormGroupDirective);
@@ -22,7 +20,6 @@ export class PasswordComponent implements OnInit {
 
   protected readonly showLabel = signal<'Show' | 'Hide'>('Show');
   protected readonly passwordInputType = signal<'password' | 'text'>('password');
-  protected readonly passwordStrength = signal<number | null>(null);
 
   ngOnInit(): void {
     this.formGroupDirective.form.statusChanges

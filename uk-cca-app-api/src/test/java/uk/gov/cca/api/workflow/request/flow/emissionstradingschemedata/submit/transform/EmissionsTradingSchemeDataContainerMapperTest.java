@@ -7,10 +7,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFixedConversionFactor;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFuel;
+import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.EmissionsTradingSchemeDataCalculatedResults;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.EmissionsTradingSchemeDataContainer;
 import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityFuelEnergyConsumption;
 import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityNonStandardFuel;
-import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataCalculatedResults;
 import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataInputDetails;
 import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataInputEnergyFuelDetails;
 
@@ -50,6 +50,7 @@ class EmissionsTradingSchemeDataContainerMapperTest {
                         ))
                         .calculatedResults(EmissionsTradingSchemeDataCalculatedResults.builder()
                                 .totalPrimaryEnergy(BigDecimal.valueOf(6500000))
+                                .totalCo2Emissions(BigDecimal.valueOf(5500000))
                                 .build())
                         .build())
                 .build();
@@ -74,6 +75,33 @@ class EmissionsTradingSchemeDataContainerMapperTest {
                                 .primaryEnergy(BigDecimal.valueOf(1500000))
                                 .build()
                 ))
+                .calculatedResults(EmissionsTradingSchemeDataCalculatedResults.builder()
+                        .totalPrimaryEnergy(BigDecimal.valueOf(6500000))
+                        .totalCo2Emissions(BigDecimal.valueOf(5500000))
+                        .build())
+                .build();
+
+
+        // invoke
+        EmissionsTradingSchemeDataContainer actual = mapper.toEmissionsTradingSchemeDataContainer(emissionsTradingSchemeDataInputDetails, measurementType, uketsId);
+
+        // verify
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void toEmissionsTradingSchemeDataContainer_without_energyFuelDetails() {
+        String uketsId = "uketsId";
+        MeasurementType measurementType = MeasurementType.ENERGY_KWH;
+        EmissionsTradingSchemeDataInputDetails emissionsTradingSchemeDataInputDetails = EmissionsTradingSchemeDataInputDetails.builder()
+                .isUltraSmallEmitter(true)
+                .provideFuelDetails(false)
+                .build();
+
+        EmissionsTradingSchemeDataContainer expected = EmissionsTradingSchemeDataContainer.builder()
+                .measurementType(measurementType)
+                .uketsId(uketsId)
+                .isUltraSmallEmitter(true)
                 .build();
 
 

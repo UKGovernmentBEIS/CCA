@@ -17,6 +17,7 @@ export * from './certificationPeriodViewInfo.service';
 export * from './companiesInformation.service';
 export * from './documentTemplateFiles.service';
 export * from './documentTemplates.service';
+export * from './emissionsTradingSchemeDataReportOfTheFacility.service';
 export * from './facilitiesSearchInfoView.service';
 export * from './facility.service';
 export * from './facilityAuditController.service';

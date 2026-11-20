@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", config = MapperConfig.class, imports = PerformanceFuelEnergyCalculationCommonFunctionUtil.class)
 public interface EmissionsTradingSchemeDataContainerMapper {
 
+    @Mapping(target = "calculatedResults", expression = "java(data.getEnergyFuelDetails() != null ? data.getEnergyFuelDetails().getCalculatedResults() : null)")
     EmissionsTradingSchemeDataContainer toEmissionsTradingSchemeDataContainer(EmissionsTradingSchemeDataInputDetails data, MeasurementType measurementType, String uketsId);
 
     @Mapping(target = "provideFuelDetails", expression = "java(!container.getIsUltraSmallEmitter() ? null : container.getIsUltraSmallEmitter() && container.getFuels() != null && container.getFuels().size() > 0)")

@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFixedConversionFactor;
 import uk.gov.cca.api.targetperiodreporting.common.domain.PerformanceDataFacilityFuel;
+import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.EmissionsTradingSchemeDataCalculatedResults;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.EmissionsTradingSchemeDataContainer;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.service.EmissionsTradingSchemeDataService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
@@ -17,7 +18,6 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilit
 import uk.gov.cca.api.workflow.request.flow.common.domain.PerformanceDataFacilityNonStandardFuel;
 import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.common.domain.EmissionsTradingSchemeDataRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataCalculatedResults;
 import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataInputDetails;
 import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataInputEnergyFuelDetails;
 import uk.gov.cca.api.workflow.request.flow.emissionstradingschemedata.submit.domain.EmissionsTradingSchemeDataSaveRequestTaskActionPayload;
@@ -196,6 +196,10 @@ class EmissionsTradingSchemeDataSubmitServiceTest {
                         .primaryConversionFactor(NATURAL_GAS.getPrimaryFactor())
                         .primaryEnergy(BigDecimal.valueOf(5000000))
                         .build()))
+                .calculatedResults(EmissionsTradingSchemeDataCalculatedResults.builder()
+                        .totalPrimaryEnergy(BigDecimal.valueOf(5000000))
+                        .totalCo2Emissions(BigDecimal.valueOf(912.700))
+                        .build())
                 .build();
 
         final EmissionsTradingSchemeDataSubmittedRequestActionPayload actionPayload =
@@ -207,10 +211,6 @@ class EmissionsTradingSchemeDataSubmitServiceTest {
                                 .creationDate(creationDate)
                                 .build())
                         .performanceData(dataContainer)
-                        .calculatedResults(EmissionsTradingSchemeDataCalculatedResults.builder()
-                                .totalPrimaryEnergy(BigDecimal.valueOf(5000000))
-                                .totalCo2Emissions(BigDecimal.valueOf(912.700))
-                                .build())
                         .build();
 
         when(emissionsTradingSchemeDataService.submitEmissionsTradingSchemeData(dataContainer, facilityId, targetYear)).thenReturn(reportVersion);

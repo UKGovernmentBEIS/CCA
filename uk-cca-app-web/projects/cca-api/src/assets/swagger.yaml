@@ -6649,18 +6649,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
   /v1.0/request-notes/{requestId}/files:
     get:
       tags:
@@ -7008,12 +7023,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - NONE
+                      - VIEW_ONLY
+                      - EXECUTE
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - NONE
+                      - VIEW_ONLY
+                      - EXECUTE
   /v1.0/notification-templates:
     get:
       tags:
@@ -7798,6 +7835,47 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/facilities/{facilityId}/emissions-trading-scheme-data-report/info:
+    get:
+      tags:
+        - Emissions Trading Scheme Data Report of the Facility
+      summary: >-
+        Retrieves the facility emissions trading scheme data report info if
+        exists
+      operationId: getEmissionsTradingSchemeDataReportInfo
+      parameters:
+        - name: facilityId
+          in: path
+          description: The facility id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: targetPeriodYear
+          in: query
+          description: The reporting year
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmissionsTradingSchemeDataReportInfoDTO'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -9071,6 +9149,15 @@ components:
         contentLength:
           type: integer
           format: int64
+        connection:
+          type: array
+          items:
+            type: string
+        ifModifiedSince:
+          type: integer
+          format: int64
+        contentType:
+          $ref: '#/components/schemas/MediaType'
         origin:
           type: string
         contentLanguage:
@@ -9121,15 +9208,6 @@ components:
           writeOnly: true
         cacheControl:
           type: string
-        connection:
-          type: array
-          items:
-            type: string
-        ifModifiedSince:
-          type: integer
-          format: int64
-        contentType:
-          $ref: '#/components/schemas/MediaType'
       additionalProperties:
         type: array
         items:
@@ -12372,11 +12450,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NotAccountRelatedUploadErrorReport'
-        numberOfFilesSucceeded:
+        numberOfFilesFailed:
           type: integer
           format: int32
           readOnly: true
-        numberOfFilesFailed:
+        numberOfFilesSucceeded:
           type: integer
           format: int32
           readOnly: true
@@ -12797,8 +12875,7 @@ components:
           enum:
             - INVALID_MIN_LENGTH
             - INVALID_MAX_LENGTH
-            - BLACKLISTED_PATTERN
-            - PWNED
+            - WEAK
             - PWNED_SERVICE_UNAVAILABLE
             - OTHER
         message:
@@ -14075,6 +14152,18 @@ components:
           $ref: '#/components/schemas/SectorAssociationDetailsResponseDTO'
         editable:
           type: boolean
+    EmissionsTradingSchemeDataReportInfoDTO:
+      type: object
+      properties:
+        targetPeriodYear:
+          type: integer
+          format: int16
+        reportVersion:
+          type: integer
+          format: int32
+        submissionDate:
+          type: string
+          format: date-time
     CcaMiReportUserDefinedDTO:
       required:
         - queryDefinition
@@ -20707,6 +20796,7 @@ components:
               - EXECUTE
     FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload:
       required:
+        - facilityId
         - performanceData
         - targetPeriodYear
       type: object
@@ -20715,6 +20805,9 @@ components:
           type: string
         businessId:
           type: string
+        facilityId:
+          type: integer
+          format: int64
         targetPeriodYear:
           type: integer
           format: int16

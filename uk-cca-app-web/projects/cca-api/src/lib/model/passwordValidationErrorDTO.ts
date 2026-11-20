@@ -9,12 +9,6 @@
  */
 
 export interface PasswordValidationErrorDTO {
-  code?:
-    | 'INVALID_MIN_LENGTH'
-    | 'INVALID_MAX_LENGTH'
-    | 'BLACKLISTED_PATTERN'
-    | 'PWNED'
-    | 'PWNED_SERVICE_UNAVAILABLE'
-    | 'OTHER';
+  code?: 'INVALID_MIN_LENGTH' | 'INVALID_MAX_LENGTH' | 'WEAK' | 'PWNED_SERVICE_UNAVAILABLE' | 'OTHER';
   message?: string;
 }

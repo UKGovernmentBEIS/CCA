@@ -1,22 +1,11 @@
-import { FactoryProvider, inject, InjectionToken } from '@angular/core';
-import {
-  AbstractControl,
-  AsyncValidatorFn,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
+import { FactoryProvider, InjectionToken } from '@angular/core';
+import { AsyncValidatorFn, FormBuilder, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 
 import { map, switchMap, take, timer } from 'rxjs';
 
-import { GovukValidators, MessageValidationErrors } from '@netz/govuk-components';
+import { GovukValidators } from '@netz/govuk-components';
 
-import { PasswordValidationResponseDTO, ValidatePasswordService } from 'cca-api';
-
-import { resolveZxcvbn } from '../password-strength-meter/password-strength-meter.service';
-import { ZXCVBN_CONFIG, ZxcvbnConfigType } from '../password-strength-meter/types';
+import { PasswordValidationErrorDTO, PasswordValidationResponseDTO, ValidatePasswordService } from 'cca-api';
 
 type PasswordFormModel = {
   email: FormControl<string | null>;
@@ -26,11 +15,10 @@ type PasswordFormModel = {
 
 export const PASSWORD_FORM = new InjectionToken<FormGroup<PasswordFormModel>>('Password form');
 
-const apiPasswordErrorMap: Record<string, string> = {
+const apiPasswordErrorMap: Partial<Record<NonNullable<PasswordValidationErrorDTO['code']>, string>> = {
   INVALID_MIN_LENGTH: 'Password must be 12 characters or more',
   INVALID_MAX_LENGTH: 'Password must be 127 characters or less',
-  BLACKLISTED_PATTERN: 'Enter a password that does not contain words related to the service or your role',
-  PWNED: 'Password has been blacklisted. Select another password',
+  WEAK: 'For security reasons, you must enter a different password that is hard to guess',
   PWNED_SERVICE_UNAVAILABLE: 'Password check service is temporarily unavailable. Please try again later',
 };
 
@@ -54,20 +42,9 @@ export const passwordFormFactory: FactoryProvider = {
   provide: PASSWORD_FORM,
   deps: [FormBuilder, ValidatePasswordService],
   useFactory: (fb: FormBuilder, validatePasswordService: ValidatePasswordService) => {
-    const zxcvbn = resolveZxcvbn(inject<ZxcvbnConfigType>(ZXCVBN_CONFIG, { optional: true }));
-
-    const strongPasswordValidator: ValidatorFn = (control: AbstractControl): MessageValidationErrors | null => {
-      const strength = zxcvbn.check(control.value ?? '').score;
-      return strength > 2 ? null : { weakPassword: 'Enter a strong password' };
-    };
-
     const apiPasswordValidator: AsyncValidatorFn = (control) =>
       timer(300).pipe(
-        switchMap(() =>
-          validatePasswordService.validatePassword({
-            password: control.value,
-          }),
-        ),
+        switchMap(() => validatePasswordService.validatePassword({ password: control.value })),
         map((res) => apiPasswordErrorMapper(res)),
         take(1),
       );
@@ -76,7 +53,7 @@ export const passwordFormFactory: FactoryProvider = {
       {
         email: fb.control({ value: null, disabled: true }),
         password: fb.control(null, {
-          validators: [GovukValidators.required('Please enter your password'), strongPasswordValidator],
+          validators: [GovukValidators.required('Please enter your password')],
           asyncValidators: apiPasswordValidator,
         }),
         validatePassword: fb.control(null, { validators: GovukValidators.required('Re-enter your password') }),

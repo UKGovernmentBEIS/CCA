@@ -12,6 +12,7 @@ import { FacilityPerformanceAccountTemplateDataContainer } from './facilityPerfo
 export interface FacilityPerformanceAccountTemplateProcessingSubmittedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
+  facilityId: number;
   targetPeriodYear: number;
   performanceData: FacilityPerformanceAccountTemplateDataContainer;
 }

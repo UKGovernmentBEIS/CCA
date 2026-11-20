@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.dto.EmissionsTradingSchemeDataReportDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.dto.EmissionsTradingSchemeDataReportInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.service.EmissionsTradingSchemeDataQueryService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
@@ -46,6 +47,26 @@ public class FacilityEmissionsTradingSchemeDataReportController {
 
         return new ResponseEntity<>(
                 emissionsTradingSchemeDataQueryService.getEmissionsTradingSchemeDataReportInfo(facilityId, targetPeriodYear),
+                HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/details")
+    @Operation(summary = "Retrieves the facility emissions trading scheme data report details")
+    @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = EmissionsTradingSchemeDataReportDetailsDTO.class))})
+    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @Authorized(resourceId = "#facilityId")
+    public ResponseEntity<EmissionsTradingSchemeDataReportDetailsDTO> getEmissionsTradingSchemeDataReportDetails(
+            @PathVariable("facilityId") @Parameter(description = "The facility id") Long facilityId,
+            @RequestParam @Parameter(name = "targetPeriodYear", description = "The reporting year") Year targetPeriodYear) {
+
+        return new ResponseEntity<>(
+                emissionsTradingSchemeDataQueryService.getEmissionsTradingSchemeDataReportDetails(facilityId, targetPeriodYear),
                 HttpStatus.OK);
     }
 }

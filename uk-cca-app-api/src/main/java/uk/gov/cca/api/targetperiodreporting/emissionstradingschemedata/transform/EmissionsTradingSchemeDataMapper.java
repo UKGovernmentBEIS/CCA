@@ -2,6 +2,7 @@ package uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.transfor
 
 import org.mapstruct.Mapper;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.EmissionsTradingSchemeDataEntity;
+import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.dto.EmissionsTradingSchemeDataReportDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.emissionstradingschemedata.domain.dto.EmissionsTradingSchemeDataReportInfoDTO;
 import uk.gov.netz.api.common.config.MapperConfig;
 
@@ -9,4 +10,6 @@ import uk.gov.netz.api.common.config.MapperConfig;
 public interface EmissionsTradingSchemeDataMapper {
 
     EmissionsTradingSchemeDataReportInfoDTO toEmissionsTradingSchemeDataReportInfoDTO(EmissionsTradingSchemeDataEntity entity);
+
+    EmissionsTradingSchemeDataReportDetailsDTO toEmissionsTradingSchemeDataReportDetailsDTO(EmissionsTradingSchemeDataEntity entity);
 }

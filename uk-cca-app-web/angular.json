@@ -121,7 +121,7 @@
     "govuk-components": {
       "projectType": "library",
       "root": "projects/govuk-components",
-      "sourceRoot": "projects/govuk-components/src",
+      "sourceRoot": "projects/govuk-components",
       "prefix": "govuk",
       "schematics": {
         "@schematics/angular:component": {
@@ -131,17 +131,16 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular/build:ng-packagr",
+          "builder": "@angular/build:library",
           "options": {
-            "project": "projects/govuk-components/ng-package.json"
+            "tsConfig": "projects/govuk-components/tsconfig.lib.json",
+            "outputPath": "dist/govuk-components"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/govuk-components/tsconfig.lib.prod.json"
             },
-            "development": {
-              "tsConfig": "projects/govuk-components/tsconfig.lib.json"
-            }
+            "development": {}
           },
           "defaultConfiguration": "production"
         },
@@ -163,21 +162,20 @@
     "cca-api": {
       "projectType": "library",
       "root": "projects/cca-api",
-      "sourceRoot": "projects/cca-api/src",
+      "sourceRoot": "projects/cca-api",
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular/build:ng-packagr",
+          "builder": "@angular/build:library",
           "options": {
-            "project": "projects/cca-api/ng-package.json"
+            "tsConfig": "projects/cca-api/tsconfig.lib.json",
+            "outputPath": "dist/cca-api"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/cca-api/tsconfig.lib.prod.json"
             },
-            "development": {
-              "tsConfig": "projects/cca-api/tsconfig.lib.json"
-            }
+            "development": {}
           },
           "defaultConfiguration": "production"
         },
@@ -196,16 +194,20 @@
       "prefix": "netz",
       "architect": {
         "build": {
-          "builder": "@angular/build:ng-packagr",
+          "builder": "@angular/build:library",
           "options": {
-            "project": "projects/common/ng-package.json"
+            "tsConfig": "projects/common/tsconfig.lib.json",
+            "outputPath": "dist/common",
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules/govuk-frontend/dist/", "node_modules/govuk-frontend/dist"]
+            }
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/common/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/common/tsconfig.lib.json"
+              "compilationMode": "full"
             }
           },
           "defaultConfiguration": "production"

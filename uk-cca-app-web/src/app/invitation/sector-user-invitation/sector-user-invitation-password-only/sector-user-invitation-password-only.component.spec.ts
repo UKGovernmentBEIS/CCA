@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { click, getAllByText, getByLabelText, getByText, type } from '@testing';
+import { click, getByLabelText, getByText, type } from '@testing';
 
 import { ValidatePasswordService } from 'cca-api';
 
@@ -104,7 +104,5 @@ describe('SectorUserInvitationPasswordOnlyComponent', () => {
         fixture.nativeElement,
       ),
     ).toBeTruthy();
-
-    expect(getAllByText('Enter a strong password', fixture.nativeElement)).toHaveLength(2);
   });
 });

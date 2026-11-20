@@ -15373,4 +15373,38 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_POPULATE_getEmissionsTradingSchemeDataReportDetails_service" author="P70311">
+        <sql>
+            INSERT INTO public.au_service (id, name)
+            VALUES (nextval('au_service_seq'), 'getEmissionsTradingSchemeDataReportDetails');
+
+            INSERT INTO au_service_rule(service_id, rule_id)
+            SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'getEmissionsTradingSchemeDataReportDetails'
+              AND aur.role_type in ('REGULATOR','SECTOR_USER', 'OPERATOR')
+              AND aur.resource_type = 'FACILITY'
+              AND aur.resource_sub_type IS NULL
+              AND aur.handler = 'facilityAccessHandler'
+              AND aur.scope is null;
+
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule AS asr
+                USING public.au_service AS aus, au_rule AS aur
+                WHERE asr.service_id = aus.id
+                AND asr.rule_id = aur.id
+                AND aus.name = 'getEmissionsTradingSchemeDataReportDetails'
+                AND aur.role_type IN ('REGULATOR','SECTOR_USER', 'OPERATOR')
+                AND aur.resource_type = 'FACILITY'
+                AND aur.resource_sub_type IS NULL
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope IS NULL;
+
+                DELETE FROM public.au_service
+                WHERE name = 'getEmissionsTradingSchemeDataReportDetails';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

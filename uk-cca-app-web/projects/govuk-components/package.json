@@ -1,13 +1,13 @@
 {
+  "exports": {
+    ".": "./src/public-api.ts"
+  },
   "name": "@netz/govuk-components",
   "version": "4.7.0",
   "peerDependencies": {
-    "@angular/common": "^22.2.5",
-    "@angular/core": "^22.2.5",
+    "@angular/common": "^22.3.0",
+    "@angular/core": "^22.3.0",
     "govuk-frontend": "^6.6.0"
-  },
-  "dependencies": {
-    "tslib": "^2.9.1"
   },
   "sideEffects": false
 }

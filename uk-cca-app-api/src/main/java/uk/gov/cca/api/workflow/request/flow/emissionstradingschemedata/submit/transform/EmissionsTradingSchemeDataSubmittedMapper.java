@@ -17,7 +17,6 @@ public interface EmissionsTradingSchemeDataSubmittedMapper {
 
     @Mapping(target = "payloadType", expression = "java(CcaRequestActionPayloadType.EMISSIONS_TRADING_SCHEME_DATA_SUBMITTED_PAYLOAD)")
     @Mapping(target = "details", expression = "java(toEmissionsTradingSchemeDataSubmissionDetails(request, requestPayload))")
-    @Mapping(target = "calculatedResults", expression = "java(requestPayload.getEtsDataInputDetails().getEnergyFuelDetails() != null ? requestPayload.getEtsDataInputDetails().getEnergyFuelDetails().getCalculatedResults() : null)")
     EmissionsTradingSchemeDataSubmittedRequestActionPayload toEmissionsTradingSchemeDataSubmittedRequestActionPayload(Request request, EmissionsTradingSchemeDataRequestPayload requestPayload, EmissionsTradingSchemeDataContainer performanceData);
 
     @Mapping(target = "targetPeriodYear", source = "requestPayload.targetYear")

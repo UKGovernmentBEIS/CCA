@@ -13,6 +13,6 @@ import { NotAccountRelatedUploadErrorReport } from './notAccountRelatedUploadErr
 export interface FileReports {
   accountFileReports?: Record<string, AccountUploadReport>;
   notAccountRelatedFileErrors?: NotAccountRelatedUploadErrorReport[];
-  readonly numberOfFilesSucceeded?: number;
   readonly numberOfFilesFailed?: number;
+  readonly numberOfFilesSucceeded?: number;
 }
