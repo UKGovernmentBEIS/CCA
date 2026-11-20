@@ -1,0 +1,37 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-summary [data]="summaryData()" />
+</div>
+
+@if (reportsFuels()) {
+  <h2 class="govuk-heading-m">Energy/fuel amount consumed</h2>
+  @if (tableRows().length) {
+    <div class="x-scroll govuk-!-margin-bottom-9">
+      <govuk-table [columns]="tableColumns()" [data]="tableRows()">
+        <ng-template let-column="column" let-row="row">
+          @switch (column.field) {
+            @case ('name') {
+              <span class="fuel-name">{{ row.name }}</span>
+            }
+            @case ('primaryConversionFactor') {
+              {{ row.primaryConversionFactor | number: '1.1-7' }}
+            }
+            @default {
+              {{ row[column.field] | number: '1.0-7' }}
+            }
+          }
+        </ng-template>
+      </govuk-table>
+    </div>
+  } @else {
+    <p class="govuk-body govuk-!-margin-bottom-8">No delivered energy values provided</p>
+  }
+
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-2">
+    Total {{ isCarbon() ? 'primary CO2e' : 'primary energy' }} ({{ measurementUnit() }})
+  </h3>
+  <p class="govuk-body govuk-!-margin-bottom-6">
+    {{ calculatedResults()?.totalPrimaryEnergy | number: '1.0-7' }} {{ measurementUnit() }}
+  </p>
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Total CO2e emissions (tCO2e)</h3>
+  <p class="govuk-body govuk-!-margin-bottom-9">{{ calculatedResults()?.totalCo2Emissions | number: '1.0-7' }} tCO2e</p>
+}

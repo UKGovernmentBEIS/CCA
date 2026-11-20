@@ -31,7 +31,7 @@ import {
   calculateEtsPrimaryAmount,
   createEtsFuelDetails,
   getEtsDeliveredUnit,
-  getEtsMeasurementUnit,
+  getEtsPrimaryUnit,
   isEtsCarbonMeasurement,
 } from '../../../ets-reporting-calculations';
 import {
@@ -82,7 +82,7 @@ export class EnergyFuelAmountDetailsComponent implements OnInit {
 
   protected readonly targetYear = this.store.select(etsReportingQuery.selectTargetYear);
   protected readonly measurementType = this.store.select(etsReportingQuery.selectMeasurementType);
-  protected readonly measurementUnit = computed(() => getEtsMeasurementUnit(this.measurementType()));
+  protected readonly measurementUnit = computed(() => getEtsPrimaryUnit(this.measurementType()));
   protected readonly isCarbonPrimaryOutput = computed(() => isEtsCarbonMeasurement(this.measurementType()));
   protected readonly deliveredUnit = computed(() => getEtsDeliveredUnit(this.measurementType()));
 

@@ -3,6 +3,12 @@ import { ItemActionTypePipe } from './item-action-type.pipe';
 describe('ItemActionTypePipe', () => {
   const pipe = new ItemActionTypePipe();
 
+  it('displays the ETS submitted action type', () => {
+    expect(pipe.transform('EMISSIONS_TRADING_SCHEME_DATA_SUBMITTED')).toBe(
+      'UK emissions trading scheme (UK ETS) report submitted',
+    );
+  });
+
   it('create an instance', () => {
     expect(pipe).toBeTruthy();
   });

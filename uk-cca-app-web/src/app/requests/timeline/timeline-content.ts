@@ -20,6 +20,7 @@ import { Cca3BuyoutSurplusComponent } from './cca3-buyout-surplus/cca3-buyout-su
 import { Cca3MigrationActivatedComponent } from './cca3-migration/activated/cca3-migration-activated.component';
 import { Cca3MigrationCompletedComponent } from './cca3-migration/completed/cca3-migration-completed.component';
 import { EnforcementResponseNoticeSentComponent } from './enforcement-response-notice-sent/enforcement-response-notice-sent.component';
+import { EtsReportingSubmittedComponent } from './ets-reporting-submitted/ets-reporting-submitted.component';
 import { DetailsCorrectiveActionsCompletedComponent } from './facility-audit/details-corrective-actions-completed/details-corrective-actions-completed.component';
 import { PreAuditReviewCompletedComponent } from './facility-audit/pre-audit-review-completed/pre-audit-review-completed.component';
 import { TrackCorrectiveActionsCompletedComponent } from './facility-audit/track-corrective-actions-completed/track-corrective-actions-completed.component';
@@ -638,6 +639,16 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: TprReportingFormSubmittedComponent,
+    };
+  },
+
+  EMISSIONS_TRADING_SCHEME_DATA_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: EtsReportingSubmittedComponent,
     };
   },
 

@@ -9,7 +9,7 @@ study [Angular Decimal Pipe](https://angular.io/api/common/DecimalPipe).
 
 ### Inputs
 
-- `label` - A label for the input.
+- `label` - A label for the input.  
 - `hint` - A hint displayed beneath the label.
 - `inputType` - Exposing the native input element `type` property. Defaults to `text`.
 - `autoComplete` - Exposing the native input element `autocomplete` property. Defaults to `on`.

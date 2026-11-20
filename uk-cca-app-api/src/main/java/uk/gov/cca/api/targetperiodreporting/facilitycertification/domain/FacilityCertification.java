@@ -1,12 +1,16 @@
 package uk.gov.cca.api.targetperiodreporting.facilitycertification.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -20,6 +24,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -55,4 +61,14 @@ public class FacilityCertification {
     @Column(name = "start_date")
     @PastOrPresent
     private LocalDate startDate;
+
+    @OneToMany(mappedBy = "facilityCertification", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("submissionDate desc")
+    @Builder.Default
+    private List<FacilityCertificationHistory> certificationHistoryList = new ArrayList<>();
+
+    public void addHistory(FacilityCertificationHistory history) {
+        history.setFacilityCertification(this);
+        this.certificationHistoryList.add(history);
+    }
 }

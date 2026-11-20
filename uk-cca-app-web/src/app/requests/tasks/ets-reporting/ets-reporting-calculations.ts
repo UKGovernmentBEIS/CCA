@@ -3,7 +3,7 @@ import {
   FuelReference,
   FuelTypeKey,
 } from '@requests/common/target-period-reporting/target-period-reporting-form.types';
-import { roundHalfUpTo7Decimals } from '@requests/common/target-period-reporting/utils';
+import { primaryCarbonDisplayUnit, roundHalfUpTo7Decimals } from '@requests/common/target-period-reporting/utils';
 import { MEASUREMENT_TYPE_TO_UNIT_MAP, MeasurementUnit } from '@shared/pipes';
 import { toBigNumber } from '@shared/utils';
 import BigNumber from 'bignumber.js';
@@ -36,10 +36,14 @@ export const ETS_FUEL_ENTRIES = (Object.entries(FUEL_MAP) as [FuelTypeKey, FuelR
   ([key]) => !EXCLUDED_FUELS.has(key),
 );
 
+export function getEtsFuelLabel(fuelKey: FuelTypeKey | undefined, fallback: string): string {
+  return ETS_FUEL_LABELS[fuelKey] ?? FUEL_MAP[fuelKey]?.label ?? fallback;
+}
+
 export function isEtsStandardFuelName(name: string): boolean {
   const normalisedName = name.trim().toLowerCase();
   return ETS_FUEL_ENTRIES.some(
-    ([key, reference]) => (ETS_FUEL_LABELS[key] ?? reference.label).toLowerCase() === normalisedName,
+    ([key, reference]) => getEtsFuelLabel(key, reference.label).toLowerCase() === normalisedName,
   );
 }
 
@@ -65,6 +69,11 @@ export function isEtsCarbonMeasurement(measurementType: EtsMeasurementType): boo
   return measurementType === 'CARBON_KG' || measurementType === 'CARBON_TONNE';
 }
 
+export function getEtsPrimaryUnit(measurementType: EtsMeasurementType): string {
+  const unit = getEtsMeasurementUnit(measurementType);
+  return isEtsCarbonMeasurement(measurementType) ? primaryCarbonDisplayUnit(unit) : unit;
+}
+
 export function getEtsDeliveredUnit(measurementType: EtsMeasurementType): MeasurementUnit {
   return isEtsCarbonMeasurement(measurementType) ? 'kWh' : getEtsMeasurementUnit(measurementType);
 }
@@ -81,7 +90,7 @@ export function mapEtsStandardFuelRows(
 ): EtsFuelRowInput[] {
   return ETS_FUEL_ENTRIES.map(([fuelKey, reference]) => ({
     fuelKey,
-    fuelType: ETS_FUEL_LABELS[fuelKey] ?? reference.label,
+    fuelType: getEtsFuelLabel(fuelKey, reference.label),
     co2ConversionFactor: etsCo2ConversionFactor(reference.co2ConversionFactor, measurementType).toFixed(),
     deliveredEnergy: normaliseEtsDecimal(standardFuels?.[fuelKey]?.deliveredEnergy) ?? '0',
     primaryEnergyConversionFactor: String(reference.primaryEnergyConversionFactor),

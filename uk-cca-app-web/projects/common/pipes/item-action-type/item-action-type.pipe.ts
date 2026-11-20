@@ -79,6 +79,7 @@ export const ItemActionEnum: Record<string, string> = {
   NON_COMPLIANCE_CANCELLED: 'Non-compliance details cancelled',
   PERFORMANCE_DATA_FACILITY_SUBMITTED: 'Target period reporting submitted',
   PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CANCELLED: 'Target period reporting cancelled',
+  EMISSIONS_TRADING_SCHEME_DATA_SUBMITTED: 'UK emissions trading scheme (UK ETS) report submitted',
   EMISSIONS_TRADING_SCHEME_DATA_CANCELLED: 'UK emissions trading scheme (UK ETS) report cancelled',
   PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED: 'Target period reporting submitted',
   PERFORMANCE_DATA_FACILITY_PROCESSING_SUBMITTED: 'Target period reporting submitted',

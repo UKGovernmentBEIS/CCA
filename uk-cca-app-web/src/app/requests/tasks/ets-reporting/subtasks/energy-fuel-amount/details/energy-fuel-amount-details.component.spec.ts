@@ -123,8 +123,8 @@ describe('ETS energy/fuel details', () => {
     ['ENERGY_KWH', 'kWh', 'Primary energy (kWh)', '1,000'],
     ['ENERGY_MWH', 'MWh', 'Primary energy (MWh)', '1,000'],
     ['ENERGY_GJ', 'GJ', 'Primary energy (GJ)', '1,000'],
-    ['CARBON_KG', 'kWh', 'Primary CO2e (kg)', '182.54'],
-    ['CARBON_TONNE', 'kWh', 'Primary CO2e (tonne)', '0.18254'],
+    ['CARBON_KG', 'kWh', 'Primary CO2e (kgCO2e)', '182.54'],
+    ['CARBON_TONNE', 'kWh', 'Primary CO2e (tCO2e)', '0.18254'],
   ])('uses the %s workflow snapshot for units and primary amounts', async (measurementType, unit, heading, primary) => {
     await setup(payloadFixture({ measurementType }));
     expect(text()).toContain(`CO2 conversion factor (kgCO2e/${unit})`);

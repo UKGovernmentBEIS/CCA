@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,19 +81,20 @@ public class FacilityCertificationRunFacilityService implements FacilityCertific
 
     private void addBuyOutProcessedFacilitiesToBeCertified(Map<Long, Long> facilitiesProcessed, Set<Long> facilitiesEligibleForCertification) {
         // Find facilities transactions
-        Map<Long, BuyOutSurplusTransactionDetailInfoDTO> transactionDetails = buyOutSurplusQueryService
+        Map<Long, List<BuyOutSurplusTransactionDetailInfoDTO>> transactionDetailsMap = buyOutSurplusQueryService
                 .getBuyOutSurplusTransactionDetailsByPerformanceDataIds(facilitiesProcessed.keySet()).stream()
-                .collect(Collectors.toMap(BuyOutSurplusTransactionDetailInfoDTO::getPerformanceDataId, Function.identity()));
+                .collect(Collectors.groupingBy(BuyOutSurplusTransactionDetailInfoDTO::getPerformanceDataId));
 
-        transactionDetails.values().forEach(info -> {
+        transactionDetailsMap.forEach((performanceDataId, transactionDetails) -> {
             // If it has transaction as not AWAITING_PAYMENT then certify facilities
-            if(!info.getPaymentStatus().equals(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT)) {
-                facilitiesEligibleForCertification.add(facilitiesProcessed.get(info.getPerformanceDataId()));
+            if(!transactionDetails.stream().allMatch(tr -> tr.getPaymentStatus().equals(BuyOutSurplusPaymentStatus.TERMINATED))
+                    && transactionDetails.stream().noneMatch(tr -> tr.getPaymentStatus().equals(BuyOutSurplusPaymentStatus.AWAITING_PAYMENT))) {
+                facilitiesEligibleForCertification.add(facilitiesProcessed.get(performanceDataId));
             }
         });
 
         // Certify facilities with no transaction details
-        SetUtils.difference(facilitiesProcessed.keySet(), transactionDetails.keySet())
+        SetUtils.difference(facilitiesProcessed.keySet(), transactionDetailsMap.keySet())
                 .forEach(pd -> facilitiesEligibleForCertification.add(facilitiesProcessed.get(pd)));
     }
 

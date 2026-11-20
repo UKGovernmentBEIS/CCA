@@ -18,6 +18,12 @@ describe('ItemActionHeaderPipe', () => {
     expect(pipe).toBeTruthy();
   });
 
+  it('displays the ETS submitted event and its submitter', () => {
+    expect(pipe.transform({ ...baseRequestAction, type: 'EMISSIONS_TRADING_SCHEME_DATA_SUBMITTED' })).toBe(
+      'UK emissions trading scheme (UK ETS) report submitted by John Bolt',
+    );
+  });
+
   it('keeps the CCA3 calculated title independent of submitter and outcome', () => {
     expect(
       pipe.transform({ ...baseRequestAction, type: 'BUY_OUT_SURPLUS_FACILITY_ACCOUNT_PROCESSING_SUBMITTED' }),

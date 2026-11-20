@@ -9071,15 +9071,6 @@ components:
         contentLength:
           type: integer
           format: int64
-        connection:
-          type: array
-          items:
-            type: string
-        ifModifiedSince:
-          type: integer
-          format: int64
-        contentType:
-          $ref: '#/components/schemas/MediaType'
         origin:
           type: string
         contentLanguage:
@@ -9130,6 +9121,15 @@ components:
           writeOnly: true
         cacheControl:
           type: string
+        connection:
+          type: array
+          items:
+            type: string
+        ifModifiedSince:
+          type: integer
+          format: int64
+        contentType:
+          $ref: '#/components/schemas/MediaType'
       additionalProperties:
         type: array
         items:
@@ -14490,6 +14490,9 @@ components:
         submittedDate:
           type: string
           format: date
+        reportVersion:
+          type: integer
+          format: int32
     SectorPerformanceAccountTemplateDataReportItemDTO:
       type: object
       properties:
@@ -16675,6 +16678,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProductVariableEnergyConsumptionData'
+    EmissionsTradingSchemeDataCalculatedResults:
+      required:
+        - totalCo2Emissions
+        - totalPrimaryEnergy
+      type: object
+      properties:
+        totalPrimaryEnergy:
+          type: string
+          format: decimal
+        totalCo2Emissions:
+          type: string
+          format: decimal
     UnderlyingAgreementSubmitRequestTaskPayload:
       type: object
       properties:
@@ -16782,6 +16797,22 @@ components:
           type: object
           additionalProperties:
             type: string
+    EmissionsTradingSchemeDataSubmittedRequestActionPayload:
+      required:
+        - details
+        - performanceData
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        details:
+          $ref: '#/components/schemas/EmissionsTradingSchemeDataSubmissionDetails'
+        performanceData:
+          $ref: '#/components/schemas/EmissionsTradingSchemeDataContainer'
+        calculatedResults:
+          $ref: '#/components/schemas/EmissionsTradingSchemeDataCalculatedResults'
     FacilityBaselineEnergyConsumption:
       required:
         - hasVariableEnergy
@@ -16987,6 +17018,28 @@ components:
             - OPRED
             - SCOTLAND
             - WALES
+    EmissionsTradingSchemeDataContainer:
+      required:
+        - isUltraSmallEmitter
+        - measurementType
+      type: object
+      properties:
+        measurementType:
+          type: string
+          enum:
+            - ENERGY_KWH
+            - ENERGY_MWH
+            - ENERGY_GJ
+            - CARBON_KG
+            - CARBON_TONNE
+        uketsId:
+          type: string
+        isUltraSmallEmitter:
+          type: boolean
+        fuels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerformanceDataFacilityFuel'
     AuditDetailsAndCorrectiveActions:
       required:
         - auditDetails
@@ -19083,6 +19136,22 @@ components:
           type: object
           additionalProperties:
             type: string
+    EmissionsTradingSchemeDataSubmissionDetails:
+      required:
+        - creationDate
+        - submissionDate
+        - targetPeriodYear
+      type: object
+      properties:
+        targetPeriodYear:
+          type: integer
+          format: int16
+        creationDate:
+          type: string
+          format: date-time
+        submissionDate:
+          type: string
+          format: date-time
     UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO:
       required:
         - financialIndependenceStatus

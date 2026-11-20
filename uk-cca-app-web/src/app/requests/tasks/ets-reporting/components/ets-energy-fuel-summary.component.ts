@@ -21,7 +21,7 @@ import {
   buildEtsFuelSummaryRows,
   createEtsFuelDetails,
   getEtsDeliveredUnit,
-  getEtsMeasurementUnit,
+  getEtsPrimaryUnit,
   isEtsCarbonMeasurement,
 } from '../ets-reporting-calculations';
 
@@ -58,7 +58,7 @@ export class EtsEnergyFuelSummaryComponent {
 
   protected readonly reportsFuels = computed(() => requiresEtsFuelDetails(this.inputDetails()));
   protected readonly energyFuelDetails = computed(() => this.inputDetails()?.energyFuelDetails);
-  protected readonly measurementUnit = computed(() => getEtsMeasurementUnit(this.measurementType()));
+  protected readonly measurementUnit = computed(() => getEtsPrimaryUnit(this.measurementType()));
   protected readonly isCarbon = computed(() => isEtsCarbonMeasurement(this.measurementType()));
   protected readonly primaryLabel = computed(() => (this.isCarbon() ? 'Primary CO2e' : 'Primary energy'));
   protected readonly tableRows = computed(() =>

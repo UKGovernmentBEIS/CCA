@@ -35,8 +35,6 @@ import uk.gov.netz.api.common.AbstractContainerBaseTest;
 @Import(ObjectMapper.class)
 class UnderlyingAgreementIT extends AbstractContainerBaseTest {
 
-	//TODO: Add una repository and relevant methods
-
 	@Autowired
     private UnderlyingAgreementDocumentRepository unaDocumentRepository;
 

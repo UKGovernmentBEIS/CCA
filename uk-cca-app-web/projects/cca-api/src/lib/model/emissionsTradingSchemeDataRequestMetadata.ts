@@ -13,4 +13,5 @@ export interface EmissionsTradingSchemeDataRequestMetadata {
   targetYear?: number;
   uketsId?: string;
   submittedDate?: string;
+  reportVersion?: number;
 }

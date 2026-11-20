@@ -43,4 +43,46 @@
             </sql>
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_CERTIFICATION_HISTORY_SEQUENCE" author="P70383">
+        <createSequence sequenceName="tpr_facility_certification_history_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS tpr_facility_certification_history_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_tpr_facility_certification_history_table" author="P70383">
+        <createTable tableName="tpr_facility_certification_history">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true"
+                             primaryKeyName="tpr_facility_certification_history_pk"
+                             nullable="false" />
+            </column>
+            <column name="facility_certification_id" type="bigint" remarks="Foreign key referencing tpr_facility_certification">
+                <constraints foreignKeyName="facility_certification_fk"
+                             references="tpr_facility_certification(id)"
+                             nullable="false" />
+            </column>
+            <column name="payload" type="jsonb" remarks="The historical data">
+                <constraints nullable="false" />
+            </column>
+            <column name="submitter_id" type="varchar(255)" remarks="The submitter uuid">
+                <constraints nullable="true" />
+            </column>
+            <column name="submitter" type="varchar(255)" remarks="The full name of the submitter">
+                <constraints nullable="false" />
+            </column>
+            <column name="submission_date" type="timestamp" remarks="The submission date of data entry">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS tpr_facility_certification_history CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

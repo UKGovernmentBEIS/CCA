@@ -8,6 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertification;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationHistory;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationHistoryPayload;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusDTO;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusUpdateDTO;
@@ -72,6 +74,16 @@ class FacilityCertificationServiceTest {
         // Verify
         assertThat(facilityCertificationEntity.getCertificationStatus()).isEqualTo(FacilityCertificationStatus.CERTIFIED);
         assertThat(facilityCertificationEntity.getStartDate()).isEqualTo(startDate);
+        assertThat(facilityCertificationEntity.getCertificationHistoryList()).hasSize(1)
+                .containsExactly(FacilityCertificationHistory.builder()
+                        .facilityCertification(facilityCertificationEntity)
+                        .payload(FacilityCertificationHistoryPayload.builder()
+                                .certificationStatus(FacilityCertificationStatus.CERTIFIED)
+                                .startDate(startDate)
+                                .comments("Automatically certified from the beginning of the Certification period")
+                                .build())
+                        .submitter("system")
+                        .build());
         verify(facilityCertificationRepository, times(1))
                 .findAllByFacilityIdInAndCertificationPeriodId(facilityIds, certificationPeriodId);
         verify(facilityCertificationRepository, times(1)).saveAll(List.of(newFacilityCertificationEntity));

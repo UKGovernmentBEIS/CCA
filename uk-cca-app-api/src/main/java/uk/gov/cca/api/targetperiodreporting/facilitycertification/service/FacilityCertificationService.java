@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertification;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationHistory;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationHistoryPayload;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationDTO;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusUpdateDTO;
@@ -21,6 +23,7 @@ import uk.gov.cca.api.targetperiodreporting.facilitycertification.validation.Fac
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.CertificationPeriodService;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusDTO;
+import uk.gov.netz.api.files.common.FileConstants;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -40,6 +43,7 @@ public class FacilityCertificationService {
     private final FacilityCertificationValidationService validatorService;
 
     private static final FacilityCertificationMapper FACILITY_CERTIFICATION_MAPPER = Mappers.getMapper(FacilityCertificationMapper.class);
+    private static final String SYSTEM_FACILITY_CERTIFY_COMMENT = "Automatically certified from the beginning of the Certification period";
 
     @Transactional
     public void certifyFacilities(@NotEmpty Set<Long> facilityIds,
@@ -52,6 +56,7 @@ public class FacilityCertificationService {
         facilities.forEach(facility -> {
             facility.setCertificationStatus(FacilityCertificationStatus.CERTIFIED);
             facility.setStartDate(startDate);
+            facility.addHistory(createSystemFacilityCertificationHistory(startDate));
         });
 
         // Insert facilities
@@ -59,14 +64,17 @@ public class FacilityCertificationService {
         Set<Long> newFacilityIds = SetUtils.difference(facilityIds, existFacilityIds);
 
         if (!newFacilityIds.isEmpty()) {
-            List<FacilityCertification> newFacilities = newFacilityIds.stream().map(facilityId ->
-                    FacilityCertification.builder()
-                            .facilityId(facilityId)
-                            .certificationPeriodId(certificationPeriodId)
-                            .certificationStatus(FacilityCertificationStatus.CERTIFIED)
-                            .startDate(startDate)
-                            .build()
-            ).toList();
+            List<FacilityCertification> newFacilities = newFacilityIds.stream().map(facilityId -> {
+                FacilityCertification facilityCertification = FacilityCertification.builder()
+                        .facilityId(facilityId)
+                        .certificationPeriodId(certificationPeriodId)
+                        .certificationStatus(FacilityCertificationStatus.CERTIFIED)
+                        .startDate(startDate)
+                        .build();
+                facilityCertification.addHistory(createSystemFacilityCertificationHistory(startDate));
+
+                return facilityCertification;
+            }).toList();
 
             facilityCertificationRepository.saveAll(newFacilities);
         }
@@ -150,4 +158,14 @@ public class FacilityCertificationService {
                         .toFacilityCertification(facilityId, updateDTO));
     }
 
+    private FacilityCertificationHistory createSystemFacilityCertificationHistory(LocalDate startDate) {
+        return FacilityCertificationHistory.builder()
+                .payload(FacilityCertificationHistoryPayload.builder()
+                        .certificationStatus(FacilityCertificationStatus.CERTIFIED)
+                        .startDate(startDate)
+                        .comments(SYSTEM_FACILITY_CERTIFY_COMMENT)
+                        .build())
+                .submitter(FileConstants.SYSTEM_USER)
+                .build();
+    }
 }

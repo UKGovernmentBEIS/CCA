@@ -121,8 +121,8 @@ describe('EtsEnergyFuelSummaryComponent', () => {
     ['ENERGY_KWH', 'Primary energy (kWh)', 'kgCO2e/kWh'],
     ['ENERGY_MWH', 'Primary energy (MWh)', 'kgCO2e/MWh'],
     ['ENERGY_GJ', 'Primary energy (GJ)', 'kgCO2e/GJ'],
-    ['CARBON_KG', 'Primary CO2e (kg)', 'kgCO2e/kWh'],
-    ['CARBON_TONNE', 'Primary CO2e (tonne)', 'kgCO2e/kWh'],
+    ['CARBON_KG', 'Primary CO2e (kgCO2e)', 'kgCO2e/kWh'],
+    ['CARBON_TONNE', 'Primary CO2e (tCO2e)', 'kgCO2e/kWh'],
   ])('uses snapshot units for %s', (measurementType, primaryHeader, conversionUnit) => {
     fixture.componentRef.setInput('measurementType', measurementType);
     fixture.detectChanges();

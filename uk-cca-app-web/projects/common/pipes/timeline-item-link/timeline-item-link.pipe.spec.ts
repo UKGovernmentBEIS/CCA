@@ -251,6 +251,13 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 
+  it.each([true, false])('links to ETS submitted details with workflow context %s', (isWorkflow) => {
+    expect(pipe.transform({ ...requestAction, type: 'EMISSIONS_TRADING_SCHEME_DATA_SUBMITTED' }, isWorkflow)).toEqual([
+      isWorkflow ? './timeline' : '/timeline',
+      requestAction.id,
+    ]);
+  });
+
   it('should return link for TPR CSV file upload', () => {
     requestAction.type = 'PERFORMANCE_DATA_FACILITY_UPLOAD_COMPLETED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);

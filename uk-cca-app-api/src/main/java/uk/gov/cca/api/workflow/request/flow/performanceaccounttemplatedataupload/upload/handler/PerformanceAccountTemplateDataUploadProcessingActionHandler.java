@@ -68,10 +68,9 @@ public class PerformanceAccountTemplateDataUploadProcessingActionHandler
 		final SectorAssociationInfo sectorInfo = requestPayload.getSectorAssociationInfo();
 		
 		final int reportYear = 2024;
-		final Year targetPeriodYear = Year.of(reportYear); //TODO make it configurable
+		final Year targetPeriodYear = Year.of(reportYear);
 		if(!requestTaskActionPayload.getPerformanceAccountTemplateDataUpload().getTargetPeriodType().equals(TargetPeriodType.TP6)) {
 			throw new RuntimeException("cannot submit pat");
-			//TODO remove me when configurable
 		}
 		
 		//validate files
